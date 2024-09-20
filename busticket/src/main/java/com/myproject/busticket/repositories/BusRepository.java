@@ -20,9 +20,11 @@ public interface BusRepository extends JpaRepository<Bus, Integer> {
     List<Bus> findByStatus(BusStatus status);
 
     // TODO: Custom query goes here if needed.
-    // Example:
-    @Query("SELECT b from buses where " + "b.id like %:keyword% " + "or b.plateNumber like %:keyword% "
-            + "or b.busType like %:keyword% " + "or b.status like %:keyword% " + "or b.driverId like %:keyword% ")
+    @Query("SELECT b FROM Bus b WHERE " +
+            "CAST(b.id AS string) LIKE %:keyword% OR " +
+            "b.plateNumber LIKE %:keyword% OR " +
+            "b.busType LIKE %:keyword% OR " +
+            "b.status LIKE %:keyword% OR " +
+            "CAST(b.driver.id AS string) LIKE %:keyword%")
     List<Bus> findByKeyword(String keyword);
-
 }

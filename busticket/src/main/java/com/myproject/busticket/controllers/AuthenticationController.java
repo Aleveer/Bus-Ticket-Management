@@ -48,10 +48,19 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDTO loginUserDto) {
-        User authenticatedUser = authenticationService.authenticate(loginUserDto);
+        User authenticatedUser = authenticationService.signin(loginUserDto);
         String jwtToken = jwtService.generateToken(authenticatedUser);
+        authenticatedUser.setLoginToken(jwtToken);
+        userService.save(authenticatedUser);
         LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
         return ResponseEntity.ok(loginResponse);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> signout(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        authenticationService.signout(email);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/verify")

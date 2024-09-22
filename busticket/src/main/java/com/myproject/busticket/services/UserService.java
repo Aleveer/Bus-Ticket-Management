@@ -21,6 +21,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
     public List<User> allUsers() {
         List<User> users = new ArrayList<>();
         userRepository.findAll().forEach(users::add);

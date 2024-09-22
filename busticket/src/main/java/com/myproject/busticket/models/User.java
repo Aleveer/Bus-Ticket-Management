@@ -52,6 +52,10 @@ public class User implements UserDetails {
 
     @Column(name = "verification_expiration")
     private LocalDateTime verificationExpiration;
+
+    @Column(name = "login_token")
+    private String loginToken;
+
     private boolean enabled;
 
     @Override

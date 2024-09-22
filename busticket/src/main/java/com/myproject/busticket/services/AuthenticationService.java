@@ -28,7 +28,6 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
-
     @Autowired
     private RoleRepository roleRepository;
 
@@ -57,19 +56,17 @@ public class AuthenticationService {
         user.setVerificationCode(generateVerificationCode());
         LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(15);
         user.setVerificationExpiration(expirationTime);
-        System.out.println("Verification code expiration time: " + expirationTime); // Logging the expiration time
         sendVerificationEmail(user);
         return userRepository.save(user);
     }
 
-    public User authenticate(LoginUserDTO input) {
+    // TODO: Implement the possible test cases for the following method:
+    public User signin(LoginUserDTO input) {
         User user = userRepository.findByEmail(input.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
         if (user.getStatus() == UserStatus.unverified) {
             throw new RuntimeException("Account not verified. Please verify your account.");
         }
-
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -80,8 +77,19 @@ public class AuthenticationService {
         } catch (Exception e) {
             throw new RuntimeException("Authentication failed", e);
         }
-
         return user;
+    }
+
+    public void signout(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.getLoginToken() == null) {
+            throw new RuntimeException("User is not logged in");
+        }
+
+        user.setLoginToken(null);
+        userRepository.save(user);
     }
 
     public void verifyUser(VerifyUserDTO input) {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 22, 2024 at 09:41 AM
+-- Generation Time: Sep 22, 2024 at 05:25 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -306,6 +306,7 @@ CREATE TABLE `users` (
   `status` enum('unverified','verified','banned') NOT NULL DEFAULT 'unverified',
   `verification_code` varchar(255) DEFAULT NULL,
   `verification_expiration` datetime DEFAULT NULL,
+  `login_token` text DEFAULT NULL,
   `enabled` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -313,8 +314,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `password`, `full_name`, `phone`, `role_id`, `status`, `verification_code`, `verification_expiration`, `enabled`) VALUES
-(10, 'theprogamingofdeath123@gmail.com', '$2a$10$8qEOe5vvHuigklNYAaNJdej/WVrph3mBC0qVAxEKrJKfECwCRImhG', 'Nguyen Van A', '01234567890', 1, 'verified', NULL, NULL, 1);
+INSERT INTO `users` (`id`, `email`, `password`, `full_name`, `phone`, `role_id`, `status`, `verification_code`, `verification_expiration`, `login_token`, `enabled`) VALUES
+(10, 'theprogamingofdeath123@gmail.com', '$2a$10$8qEOe5vvHuigklNYAaNJdej/WVrph3mBC0qVAxEKrJKfECwCRImhG', 'Nguyen Van A', '01234567890', 1, 'verified', NULL, NULL, NULL, 1);
 
 --
 -- Indexes for dumped tables

@@ -73,6 +73,21 @@ public class AuthenticationController {
         }
     }
 
+    @PostMapping("/request-password-reset")
+    public ResponseEntity<Void> requestPasswordReset(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        authenticationService.requestPasswordReset(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestBody Map<String, String> request) {
+        String token = request.get("token");
+        String newPassword = request.get("newPassword");
+        authenticationService.resetPassword(token, newPassword);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/resend")
     public ResponseEntity<?> resendVerificationCode(@RequestBody Map<String, String> payload) {
         String email = payload.get("email");

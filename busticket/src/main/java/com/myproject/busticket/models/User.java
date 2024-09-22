@@ -53,8 +53,14 @@ public class User implements UserDetails {
     @Column(name = "verification_expiration")
     private LocalDateTime verificationExpiration;
 
-    @Column(name = "login_token")
+    @Column(name = "login_token", columnDefinition = "TEXT")
     private String loginToken;
+
+    @Column(name = "password_reset_token", columnDefinition = "TEXT")
+    private String passwordResetToken;
+
+    @Column(name = "password_reset_expiration")
+    private LocalDateTime passwordResetExpiration;
 
     private boolean enabled;
 

@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.myproject.busticket.dto.LoginUserDTO;
-import com.myproject.busticket.dto.RegisterUserDTO;
-import com.myproject.busticket.dto.VerifyUserDTO;
+import com.myproject.busticket.models.LoginUserModel;
+import com.myproject.busticket.models.RegisterUserModel;
 import com.myproject.busticket.models.User;
+import com.myproject.busticket.models.VerifyUserModel;
 import com.myproject.busticket.responses.LoginResponse;
 import com.myproject.busticket.services.AuthenticationService;
 import com.myproject.busticket.services.JwtService;
@@ -32,7 +32,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDTO registerUserDto) {
+    public ResponseEntity<User> register(@RequestBody RegisterUserModel registerUserDto) {
         // TODO: Check for existing user by email before registering:
         try {
             if (userService.getUserByEmail(registerUserDto.getEmail()).isPresent()) {
@@ -47,7 +47,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDTO loginUserDto) {
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserModel loginUserDto) {
         User authenticatedUser = authenticationService.signin(loginUserDto);
         String jwtToken = jwtService.generateToken(authenticatedUser);
         authenticatedUser.setLoginToken(jwtToken);
@@ -64,7 +64,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<?> verifyUser(@RequestBody VerifyUserDTO verifyUserDto) {
+    public ResponseEntity<?> verifyUser(@RequestBody VerifyUserModel verifyUserDto) {
         try {
             authenticationService.verifyUser(verifyUserDto);
             return ResponseEntity.ok("Account verified successfully");

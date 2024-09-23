@@ -1,11 +1,11 @@
-package com.myproject.busticket.dto;
+package com.myproject.busticket.models;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class RegisterUserDTO {
+public class RegisterUserModel {
     private String email;
     private String password;
     private String username;

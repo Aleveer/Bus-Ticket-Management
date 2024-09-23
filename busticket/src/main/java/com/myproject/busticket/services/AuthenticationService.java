@@ -10,10 +10,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.myproject.busticket.dto.LoginUserDTO;
-import com.myproject.busticket.dto.RegisterUserDTO;
-import com.myproject.busticket.dto.VerifyUserDTO;
 import com.myproject.busticket.models.User;
+import com.myproject.busticket.models.VerifyUserModel;
+import com.myproject.busticket.models.LoginUserModel;
+import com.myproject.busticket.models.RegisterUserModel;
 import com.myproject.busticket.models.Role;
 import com.myproject.busticket.enums.UserStatus;
 import com.myproject.busticket.repositories.RoleRepository;
@@ -43,7 +43,7 @@ public class AuthenticationService {
         this.emailService = emailService;
     }
 
-    public User signup(RegisterUserDTO input) {
+    public User signup(RegisterUserModel input) {
         User user = new User();
         user.setEmail(input.getEmail());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
@@ -62,7 +62,7 @@ public class AuthenticationService {
     }
 
     // TODO: Implement the possible test cases for the following method:
-    public User signin(LoginUserDTO input) {
+    public User signin(LoginUserModel input) {
         User user = userRepository.findByEmail(input.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (user.getStatus() == UserStatus.unverified) {
@@ -170,7 +170,7 @@ public class AuthenticationService {
         return password.length() >= 8; // Example: minimum 8 characters
     }
 
-    public void verifyUser(VerifyUserDTO input) {
+    public void verifyUser(VerifyUserModel input) {
         Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();

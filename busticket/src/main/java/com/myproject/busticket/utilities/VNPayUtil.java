@@ -75,18 +75,18 @@ public class VNPayUtil {
                 .collect(Collectors.joining("&"));
     }
 
-    public static Map<String, String> extractParamsFromUrl(String url) {
+    public Map<String, String> extractParamsFromUrl(String url) {
         try {
-            Map<String, String> params = new HashMap<>();
             URL aURL = new URL(url);
             String query = aURL.getQuery();
             String[] pairs = query.split("&");
+            Map<String, String> queryPairs = new HashMap<>();
             for (String pair : pairs) {
                 int idx = pair.indexOf("=");
-                params.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
+                queryPairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
                         URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
             }
-            return params;
+            return queryPairs;
         } catch (Exception e) {
             throw new RuntimeException("Failed to extract parameters from URL", e);
         }

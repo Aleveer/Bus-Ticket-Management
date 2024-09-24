@@ -2,7 +2,9 @@ package com.myproject.busticket.services;
 
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.text.SimpleDateFormat;
 
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,13 +44,27 @@ public class VNPayService {
     // return new VNPayResponse("ok", "success", paymentUrl);
     // }
 
-    public VNPayResponse createVNPayPayment(long amount, String bankCode, String orderId, HttpServletRequest request) {
-        Map<String, String> vnpParamsMap = vnPayConfiguration.getVNPayConfig();
-        vnpParamsMap.put("vnp_Amount", String.valueOf(amount * 100)); // Amount in VNPay is in smallest currency unit
-        vnpParamsMap.put("vnp_BankCode", bankCode);
-        vnpParamsMap.put("vnp_TxnRef", orderId);
+    public VNPayResponse createVNPayPayment(long amount, String bankCode, String orderID, HttpServletRequest request) {
+        long vnpAmount = amount * 100L;
 
-        String queryUrl = VNPayUtil.getPaymentURL(vnpParamsMap, false);
+        Map<String, String> vnpParamsMap = vnPayConfiguration.getVNPayConfig();
+        vnpParamsMap.put("vnp_Amount", String.valueOf(vnpAmount));
+
+        if (bankCode != null && !bankCode.isEmpty()) {
+            vnpParamsMap.put("vnp_BankCode", bankCode);
+        }
+
+        vnpParamsMap.put("vnp_TxnRef", orderID);
+        vnpParamsMap.put("vnp_IpAddr", VNPayUtil.getIpAddress(request));
+        vnpParamsMap.put("vnp_OrderInfo",
+                "Thanh toan don hang thoi gian: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        vnpParamsMap.put("vnp_CreateDate", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+        vnpParamsMap.put("vnp_ExpireDate",
+                new SimpleDateFormat("yyyyMMddHHmmss").format(new Date(System.currentTimeMillis() + 15 * 60 * 1000))); // 15
+                                                                                                                       // minutes
+                                                                                                                       // expiry
+
+        String queryUrl = VNPayUtil.getPaymentURL(vnpParamsMap, true);
         String hashData = VNPayUtil.getPaymentURL(vnpParamsMap, false);
         String vnpSecureHash = VNPayUtil.hmacSHA512(vnPayConfiguration.getSecretKey(), hashData);
         queryUrl += "&vnp_SecureHash=" + vnpSecureHash;

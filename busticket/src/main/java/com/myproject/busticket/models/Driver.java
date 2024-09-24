@@ -36,6 +36,9 @@ public class Driver {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Column(name = "image")
+    private String image;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, columnDefinition = "enum('working', 'resting') default 'working'")
     private DriverStatus status;

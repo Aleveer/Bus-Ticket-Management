@@ -34,20 +34,11 @@ public class Schedule {
     @JoinColumn(name = "route_id", nullable = false)
     private Route route;
 
-    @Column(name = "start_destination", nullable = false)
-    private String startDestination;
-
-    @Column(name = "end_destination", nullable = false)
-    private String endDestination;
-
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
-
-    @Column(name = "description", nullable = false)
-    private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, columnDefinition = "enum('finished', 'unfinished', 'canceled', 'arriving') default 'unfinished'")

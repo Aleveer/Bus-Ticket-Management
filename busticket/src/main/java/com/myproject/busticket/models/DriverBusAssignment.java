@@ -21,8 +21,8 @@ public class DriverBusAssignment {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "driver_id", nullable = false)
-    private Driver driver;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User driver;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bus_id", nullable = false)

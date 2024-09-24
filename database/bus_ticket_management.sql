@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 24, 2024 at 07:35 AM
+-- Generation Time: Sep 24, 2024 at 10:58 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 SET
@@ -29,13 +29,13 @@ SET
 --
 -- Database: `bus_ticket_management`
 --
+-- --------------------------------------------------------
 DROP DATABASE IF EXISTS `bus_ticket_management`;
 
 CREATE DATABASE IF NOT EXISTS `bus_ticket_management` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 USE `bus_ticket_management`;
 
--- --------------------------------------------------------
 --
 -- Table structure for table `bookings`
 --
@@ -65,28 +65,11 @@ CREATE TABLE `booking_details` (
 CREATE TABLE `buses` (
   `id` int(11) NOT NULL,
   `plate_number` varchar(50) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `number_of_seats` tinyint(4) NOT NULL,
-  `driver_id` int(11) NOT NULL,
   `bus_type` varchar(50) NOT NULL,
   `status` enum('working', 'maintenance') NOT NULL DEFAULT 'working'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
-
---
--- Dumping data for table `buses`
---
-INSERT INTO
-  `buses` (
-    `id`,
-    `plate_number`,
-    `number_of_seats`,
-    `driver_id`,
-    `bus_type`,
-    `status`
-  )
-VALUES
-  (1, 'ABC123', 40, 1, 'Luxury', 'working'),
-  (2, 'XYZ789', 30, 2, 'Standard', 'maintenance'),
-  (3, 'DEF456', 50, 3, 'Double Decker', 'working');
 
 -- --------------------------------------------------------
 --
@@ -114,51 +97,11 @@ CREATE TABLE `discounts` (
 
 -- --------------------------------------------------------
 --
--- Table structure for table `drivers`
---
-CREATE TABLE `drivers` (
-  `id` int(11) NOT NULL,
-  `full_name` varchar(255) NOT NULL,
-  `phone` varchar(10) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `status` enum('working', 'resting') NOT NULL DEFAULT 'working'
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
-
---
--- Dumping data for table `drivers`
---
-INSERT INTO
-  `drivers` (`id`, `full_name`, `phone`, `email`, `status`)
-VALUES
-  (
-    1,
-    'John Doe',
-    '1234567890',
-    'john.doe@example.com',
-    'working'
-  ),
-  (
-    2,
-    'Jane Smith',
-    '0987654321',
-    'jane.smith@example.com',
-    'resting'
-  ),
-  (
-    3,
-    'Robert Brown',
-    '1122334455',
-    'robert.brown@example.com',
-    'working'
-  );
-
--- --------------------------------------------------------
---
 -- Table structure for table `driver_bus_assignments`
 --
 CREATE TABLE `driver_bus_assignments` (
   `id` int(11) NOT NULL,
-  `driver_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `bus_id` int(11) NOT NULL,
   `assignment_date` datetime NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
@@ -262,7 +205,7 @@ CREATE TABLE `routes` (
 CREATE TABLE `schedules` (
   `id` int(11) NOT NULL,
   `bus_id` int(11) NOT NULL,
-  `driver_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `route_id` int(11) NOT NULL,
   `start_time` datetime NOT NULL,
   `end_time` datetime NOT NULL,
@@ -333,7 +276,7 @@ CREATE TABLE `transaction_history` (
 CREATE TABLE `trip_history` (
   `id` int(11) NOT NULL,
   `bus_id` int(11) NOT NULL,
-  `driver_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `route_id` int(11) NOT NULL,
   `departure` varchar(255) NOT NULL,
   `arrival` varchar(255) NOT NULL,
@@ -434,7 +377,7 @@ ADD
 ADD
   UNIQUE KEY `plate_number` (`plate_number`),
 ADD
-  KEY `driver_id` (`driver_id`);
+  KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `checkpoints`
@@ -457,14 +400,6 @@ ADD
   PRIMARY KEY (`id`);
 
 --
--- Indexes for table `drivers`
---
-ALTER TABLE
-  `drivers`
-ADD
-  PRIMARY KEY (`id`);
-
---
 -- Indexes for table `driver_bus_assignments`
 --
 ALTER TABLE
@@ -472,9 +407,11 @@ ALTER TABLE
 ADD
   PRIMARY KEY (`id`),
 ADD
-  KEY `driver_id` (`driver_id`),
+  KEY `driver_id` (`user_id`),
 ADD
-  KEY `bus_id` (`bus_id`);
+  KEY `bus_id` (`bus_id`),
+ADD
+  KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `feedback`
@@ -566,9 +503,11 @@ ADD
 ADD
   KEY `bus_id` (`bus_id`),
 ADD
-  KEY `driver_id` (`driver_id`),
+  KEY `driver_id` (`user_id`),
 ADD
-  KEY `route_id` (`route_id`);
+  KEY `route_id` (`route_id`),
+ADD
+  KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `schedule_checkpoints`
@@ -628,11 +567,13 @@ ALTER TABLE
 ADD
   PRIMARY KEY (`id`),
 ADD
-  KEY `bus_id` (`bus_id`, `driver_id`),
+  KEY `bus_id` (`bus_id`, `user_id`),
 ADD
-  KEY `driver_id` (`driver_id`),
+  KEY `driver_id` (`user_id`),
 ADD
-  KEY `route_id` (`route_id`);
+  KEY `route_id` (`route_id`),
+ADD
+  KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `users`
@@ -689,15 +630,6 @@ ALTER TABLE
   `discounts`
 MODIFY
   `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `drivers`
---
-ALTER TABLE
-  `drivers`
-MODIFY
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  AUTO_INCREMENT = 4;
 
 --
 -- AUTO_INCREMENT for table `driver_bus_assignments`
@@ -834,7 +766,7 @@ ADD
 ALTER TABLE
   `buses`
 ADD
-  CONSTRAINT `buses_ibfk_1` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`);
+  CONSTRAINT `buses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `checkpoints`
@@ -852,7 +784,7 @@ ADD
 ALTER TABLE
   `driver_bus_assignments`
 ADD
-  CONSTRAINT `driver_bus_assignments_ibfk_1` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`),
+  CONSTRAINT `driver_bus_assignments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
 ADD
   CONSTRAINT `driver_bus_assignments_ibfk_2` FOREIGN KEY (`bus_id`) REFERENCES `buses` (`id`);
 
@@ -902,7 +834,7 @@ ALTER TABLE
 ADD
   CONSTRAINT `schedules_ibfk_1` FOREIGN KEY (`bus_id`) REFERENCES `buses` (`id`),
 ADD
-  CONSTRAINT `schedules_ibfk_2` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`),
+  CONSTRAINT `schedules_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
 ADD
   CONSTRAINT `schedules_ibfk_3` FOREIGN KEY (`route_id`) REFERENCES `routes` (`id`);
 
@@ -944,7 +876,7 @@ ALTER TABLE
 ADD
   CONSTRAINT `trip_history_ibfk_1` FOREIGN KEY (`bus_id`) REFERENCES `buses` (`id`),
 ADD
-  CONSTRAINT `trip_history_ibfk_2` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`),
+  CONSTRAINT `trip_history_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
 ADD
   CONSTRAINT `trip_history_ibfk_3` FOREIGN KEY (`route_id`) REFERENCES `routes` (`id`);
 

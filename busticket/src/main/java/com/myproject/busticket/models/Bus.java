@@ -37,8 +37,8 @@ public class Bus {
     private int numberOfSeats;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "driver_id", nullable = false)
-    private Driver driver;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User driver;
 
     @Column(name = "bus_type", nullable = false)
     private String busType;

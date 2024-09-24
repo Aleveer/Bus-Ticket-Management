@@ -44,7 +44,7 @@ public class BusService {
     }
 
     public List<Bus> getByDriverId(int id) {
-        return busRepository.findByDriverId(id);
+        return busRepository.findByUser_id(id);
     }
 
     // TODO: Implement more methods if needed.

@@ -1,7 +1,6 @@
 package com.myproject.busticket;
 
 import com.myproject.busticket.models.Bus;
-import com.myproject.busticket.models.User;
 import com.myproject.busticket.repositories.BusRepository;
 import com.myproject.busticket.services.BusService;
 
@@ -150,10 +149,10 @@ public class BusServiceTest {
     void testGetByDriverId() {
         Bus bus1 = new Bus();
         Bus bus2 = new Bus();
-        when(busRepository.findByDriverId(1)).thenReturn(Arrays.asList(bus1, bus2));
+        when(busRepository.findByUser_id(1)).thenReturn(Arrays.asList(bus1, bus2));
 
         List<Bus> buses = busService.getByDriverId(1);
         assertEquals(2, buses.size());
-        verify(busRepository, times(1)).findByDriverId(1);
+        verify(busRepository, times(1)).findByUser_id(1);
     }
 }

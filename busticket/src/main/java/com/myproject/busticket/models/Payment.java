@@ -9,10 +9,14 @@ import com.myproject.busticket.enums.PaymentStatus;
 
 import jakarta.persistence.Column;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.AllArgsConstructor;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "payment")
 @Data
 @NoArgsConstructor
@@ -23,7 +27,7 @@ public class Payment {
     private String id;
 
     @Column(name = "price", nullable = false)
-    private int price;
+    private double price;
 
     @Column(name = "status", nullable = false, columnDefinition = "enum('pending', 'completed') default 'pending'")
     private PaymentStatus status;

@@ -10,21 +10,19 @@ import java.util.List;
 
 @Repository
 public interface BusRepository extends JpaRepository<Bus, Integer> {
-
     Bus findByPlateNumber(String plateNumber);
 
-    List<Bus> findByDriverId(int id);
+    List<Bus> findByUser_id(int id);
 
     List<Bus> findByBusType(String busType);
 
     List<Bus> findByStatus(BusStatus status);
 
-    // TODO: Custom query goes here if needed.
     @Query("SELECT b FROM Bus b WHERE " +
             "CAST(b.id AS string) LIKE %:keyword% OR " +
             "b.plateNumber LIKE %:keyword% OR " +
             "b.busType LIKE %:keyword% OR " +
             "b.status LIKE %:keyword% OR " +
-            "CAST(b.driver.id AS string) LIKE %:keyword%")
+            "CAST(b.user.id AS string) LIKE %:keyword%")
     List<Bus> findByKeyword(String keyword);
 }

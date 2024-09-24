@@ -7,5 +7,5 @@ import com.myproject.busticket.models.Payment;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, String> {
-    Payment findByPaymentName(String paymentName);
+
 }

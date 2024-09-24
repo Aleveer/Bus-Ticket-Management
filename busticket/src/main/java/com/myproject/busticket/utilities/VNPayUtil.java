@@ -5,6 +5,11 @@ import lombok.experimental.UtilityClass;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.HashMap;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -68,5 +73,22 @@ public class VNPayUtil {
                         : entry.getKey()) + "=" +
                         URLEncoder.encode(entry.getValue(), StandardCharsets.US_ASCII))
                 .collect(Collectors.joining("&"));
+    }
+
+    public static Map<String, String> extractParamsFromUrl(String url) {
+        try {
+            Map<String, String> params = new HashMap<>();
+            URL aURL = new URL(url);
+            String query = aURL.getQuery();
+            String[] pairs = query.split("&");
+            for (String pair : pairs) {
+                int idx = pair.indexOf("=");
+                params.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
+                        URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+            }
+            return params;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to extract parameters from URL", e);
+        }
     }
 }

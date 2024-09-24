@@ -57,9 +57,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> signout(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Void> signOut(@RequestBody Map<String, String> request) {
         String email = request.get("email");
-        authenticationService.signout(email);
+        authenticationService.signOut(email);
         return ResponseEntity.ok().build();
     }
 

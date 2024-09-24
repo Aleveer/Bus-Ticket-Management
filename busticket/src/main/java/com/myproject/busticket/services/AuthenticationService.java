@@ -81,7 +81,7 @@ public class AuthenticationService {
         return user;
     }
 
-    public void signout(String email) {
+    public void signOut(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

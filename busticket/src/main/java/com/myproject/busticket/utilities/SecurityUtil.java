@@ -11,7 +11,7 @@ import com.myproject.busticket.models.User;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class SecurityUtility {
+public class SecurityUtil {
     public static User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof User) {

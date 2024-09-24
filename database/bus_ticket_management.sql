@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 22, 2024 at 06:29 PM
+-- Generation Time: Sep 24, 2024 at 07:35 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,10 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `bookings` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
   `number_of_tickets` int(11) NOT NULL,
-  `total_price` double NOT NULL,
-  `status` enum('paid','unpaid','canceled') NOT NULL DEFAULT 'unpaid',
   `ticket_type` enum('round_trip_ticket','one_way_ticket') NOT NULL DEFAULT 'one_way_ticket'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -74,6 +71,20 @@ INSERT INTO `buses` (`id`, `plate_number`, `number_of_seats`, `driver_id`, `bus_
 (1, 'ABC123', 40, 1, 'Luxury', 'working'),
 (2, 'XYZ789', 30, 2, 'Standard', 'maintenance'),
 (3, 'DEF456', 50, 3, 'Double Decker', 'working');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `checkpoints`
+--
+
+CREATE TABLE `checkpoints` (
+  `id` int(11) NOT NULL,
+  `route_id` int(11) NOT NULL,
+  `location_id` int(11) NOT NULL,
+  `stop_order` int(11) NOT NULL,
+  `stop_time` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -142,6 +153,17 @@ CREATE TABLE `feedback` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `locations`
+--
+
+CREATE TABLE `locations` (
+  `id` int(11) NOT NULL,
+  `location_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `notifications`
 --
 
@@ -151,6 +173,19 @@ CREATE TABLE `notifications` (
   `message` text NOT NULL,
   `is_read` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment`
+--
+
+CREATE TABLE `payment` (
+  `id` varchar(255) NOT NULL,
+  `price` int(11) NOT NULL,
+  `status` enum('completed','pending') NOT NULL,
+  `method` enum('VNPay','Cash') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -203,8 +238,8 @@ CREATE TABLE `roles_permissions` (
 CREATE TABLE `routes` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `start_point` varchar(255) NOT NULL,
-  `end_point` varchar(255) NOT NULL,
+  `start_location_id` int(11) NOT NULL,
+  `end_location_id` int(11) NOT NULL,
   `distance` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -219,12 +254,24 @@ CREATE TABLE `schedules` (
   `bus_id` int(11) NOT NULL,
   `driver_id` int(11) NOT NULL,
   `route_id` int(11) NOT NULL,
-  `start_destination` varchar(255) NOT NULL,
-  `end_destination` varchar(255) NOT NULL,
   `start_time` datetime NOT NULL,
   `end_time` datetime NOT NULL,
-  `description` text NOT NULL,
-  `status` enum('finished','unfinished','canceled','arriving') NOT NULL DEFAULT 'unfinished'
+  `status` enum('finished','unfinished','canceled','arriving','at_checkpoint') NOT NULL DEFAULT 'unfinished'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `schedule_checkpoints`
+--
+
+CREATE TABLE `schedule_checkpoints` (
+  `id` int(11) NOT NULL,
+  `schedule_id` int(11) NOT NULL,
+  `checkpoint_id` int(11) NOT NULL,
+  `arrival_time` datetime DEFAULT NULL,
+  `departure_time` datetime DEFAULT NULL,
+  `status` enum('arriving','at_checkpoint','departed') NOT NULL DEFAULT 'arriving'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -265,10 +312,10 @@ CREATE TABLE `spring_session` (
 
 CREATE TABLE `transaction_history` (
   `id` int(11) NOT NULL,
+  `order_id` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `method` enum('cash','credit') NOT NULL DEFAULT 'cash',
-  `payment_date` datetime NOT NULL,
-  `total_price` double NOT NULL
+  `booking_id` int(11) NOT NULL,
+  `payment_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -317,7 +364,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `full_name`, `phone`, `role_id`, `status`, `verification_code`, `verification_expiration`, `login_token`, `password_reset_token`, `password_reset_expiration`, `enabled`) VALUES
-(10, 'theprogamingofdeath123@gmail.com', '$2a$10$rJpQa/3MWVYsFlE8Fj4nsuaGHn6QL7ouMlE/eSn4TYSd9eq1OcO26', 'Nguyen Van A', '01234567890', 1, 'verified', NULL, NULL, NULL, NULL, NULL, 1);
+(13, 'theprogamingofdeath123@gmail.com', '$2a$10$lR7k0HEAXbfwD87pCQoCIuU/bqufIR29Fmh.wUYuLtH03avCbM68O', 'Nguyen Van A', '01234567890', 1, 'verified', NULL, NULL, 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGVwcm9nYW1pbmdvZmRlYXRoMTIzQGdtYWlsLmNvbSIsImlhdCI6MTcyNzA2ODgxOSwiZXhwIjoxNzI3MDcyNDE5fQ.uXfC5vPd5ED2n-Bl3K9e552Qy1t1WABycPgTMRh_d2Q', NULL, NULL, 1);
 
 --
 -- Indexes for dumped tables
@@ -327,8 +374,7 @@ INSERT INTO `users` (`id`, `email`, `password`, `full_name`, `phone`, `role_id`,
 -- Indexes for table `bookings`
 --
 ALTER TABLE `bookings`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `booking_details`
@@ -346,6 +392,14 @@ ALTER TABLE `buses`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `plate_number` (`plate_number`),
   ADD KEY `driver_id` (`driver_id`);
+
+--
+-- Indexes for table `checkpoints`
+--
+ALTER TABLE `checkpoints`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `route_id` (`route_id`,`stop_order`),
+  ADD KEY `location_id` (`location_id`);
 
 --
 -- Indexes for table `discounts`
@@ -376,11 +430,24 @@ ALTER TABLE `feedback`
   ADD KEY `trip_id` (`trip_id`);
 
 --
+-- Indexes for table `locations`
+--
+ALTER TABLE `locations`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `notifications`
 --
 ALTER TABLE `notifications`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `payment`
+--
+ALTER TABLE `payment`
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `order_id` (`id`);
 
 --
 -- Indexes for table `permission`
@@ -406,16 +473,26 @@ ALTER TABLE `roles_permissions`
 -- Indexes for table `routes`
 --
 ALTER TABLE `routes`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `start_location_id` (`start_location_id`),
+  ADD KEY `end_location_id` (`end_location_id`);
 
 --
 -- Indexes for table `schedules`
 --
 ALTER TABLE `schedules`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `bus_id` (`bus_id`,`driver_id`),
+  ADD KEY `bus_id` (`bus_id`),
   ADD KEY `driver_id` (`driver_id`),
   ADD KEY `route_id` (`route_id`);
+
+--
+-- Indexes for table `schedule_checkpoints`
+--
+ALTER TABLE `schedule_checkpoints`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `schedule_id` (`schedule_id`),
+  ADD KEY `checkpoint_id` (`checkpoint_id`);
 
 --
 -- Indexes for table `seats`
@@ -438,7 +515,9 @@ ALTER TABLE `spring_session`
 --
 ALTER TABLE `transaction_history`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `booking_id` (`booking_id`);
 
 --
 -- Indexes for table `trip_history`
@@ -480,6 +559,12 @@ ALTER TABLE `buses`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `checkpoints`
+--
+ALTER TABLE `checkpoints`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `discounts`
 --
 ALTER TABLE `discounts`
@@ -501,6 +586,12 @@ ALTER TABLE `driver_bus_assignments`
 -- AUTO_INCREMENT for table `feedback`
 --
 ALTER TABLE `feedback`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `locations`
+--
+ALTER TABLE `locations`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -540,6 +631,12 @@ ALTER TABLE `schedules`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `schedule_checkpoints`
+--
+ALTER TABLE `schedule_checkpoints`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `seats`
 --
 ALTER TABLE `seats`
@@ -561,17 +658,11 @@ ALTER TABLE `trip_history`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `bookings`
---
-ALTER TABLE `bookings`
-  ADD CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `booking_details`
@@ -586,6 +677,13 @@ ALTER TABLE `booking_details`
 --
 ALTER TABLE `buses`
   ADD CONSTRAINT `buses_ibfk_1` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`);
+
+--
+-- Constraints for table `checkpoints`
+--
+ALTER TABLE `checkpoints`
+  ADD CONSTRAINT `checkpoints_ibfk_1` FOREIGN KEY (`route_id`) REFERENCES `routes` (`id`),
+  ADD CONSTRAINT `checkpoints_ibfk_2` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`);
 
 --
 -- Constraints for table `driver_bus_assignments`
@@ -615,12 +713,26 @@ ALTER TABLE `roles_permissions`
   ADD CONSTRAINT `roles_permissions_ibfk_2` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`);
 
 --
+-- Constraints for table `routes`
+--
+ALTER TABLE `routes`
+  ADD CONSTRAINT `routes_ibfk_1` FOREIGN KEY (`start_location_id`) REFERENCES `locations` (`id`),
+  ADD CONSTRAINT `routes_ibfk_2` FOREIGN KEY (`end_location_id`) REFERENCES `locations` (`id`);
+
+--
 -- Constraints for table `schedules`
 --
 ALTER TABLE `schedules`
   ADD CONSTRAINT `schedules_ibfk_1` FOREIGN KEY (`bus_id`) REFERENCES `buses` (`id`),
   ADD CONSTRAINT `schedules_ibfk_2` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`),
   ADD CONSTRAINT `schedules_ibfk_3` FOREIGN KEY (`route_id`) REFERENCES `routes` (`id`);
+
+--
+-- Constraints for table `schedule_checkpoints`
+--
+ALTER TABLE `schedule_checkpoints`
+  ADD CONSTRAINT `schedule_checkpoints_ibfk_1` FOREIGN KEY (`schedule_id`) REFERENCES `schedules` (`id`),
+  ADD CONSTRAINT `schedule_checkpoints_ibfk_2` FOREIGN KEY (`checkpoint_id`) REFERENCES `checkpoints` (`id`);
 
 --
 -- Constraints for table `seats`
@@ -632,7 +744,9 @@ ALTER TABLE `seats`
 -- Constraints for table `transaction_history`
 --
 ALTER TABLE `transaction_history`
-  ADD CONSTRAINT `transaction_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `transaction_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `transaction_history_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `payment` (`id`),
+  ADD CONSTRAINT `transaction_history_ibfk_3` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`id`);
 
 --
 -- Constraints for table `trip_history`

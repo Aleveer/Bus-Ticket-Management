@@ -38,10 +38,6 @@ public class SeatService {
         return seatRepository.findByBus_id(id);
     }
 
-    public List<Seat> getByBusIdAndStatus(int id, String status) {
-        return seatRepository.findByBus_idAndStatus(id, status);
-    }
-
     public List<Seat> getByName(String name) {
         return seatRepository.findByName(name);
     }

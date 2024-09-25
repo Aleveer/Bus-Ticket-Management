@@ -1,7 +1,5 @@
 package com.myproject.busticket.models;
 
-import com.myproject.busticket.enums.SeatStatus;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,10 +24,6 @@ public class Seat {
 
     @Column(name = "name", nullable = false)
     private String name;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, columnDefinition = "enum('assigned', 'unassigned') default 'unassigned'")
-    private SeatStatus status;
 
     @Column(name = "price", nullable = false)
     private double price;

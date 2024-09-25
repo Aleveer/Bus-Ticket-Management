@@ -6,5 +6,7 @@ import com.myproject.busticket.models.Location;
 import java.util.List;
 
 public interface LocationRepository extends JpaRepository<Location, Integer> {
+    List<Location> findByAddress(String address);
+
     List<Location> findByName(String name);
 }

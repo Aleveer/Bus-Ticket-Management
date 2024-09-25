@@ -21,6 +21,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public User getById(int id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
     public User save(User user) {
         return userRepository.save(user);
     }

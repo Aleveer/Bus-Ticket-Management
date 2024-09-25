@@ -1,4 +1,4 @@
-package com.myproject.busticket.config;
+package com.myproject.busticket.components;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

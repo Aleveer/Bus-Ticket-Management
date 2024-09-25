@@ -8,4 +8,6 @@ import com.myproject.busticket.models.Discount;
 @Repository
 public interface DiscountRepository extends JpaRepository<Discount, Integer> {
     Discount findByCode(String code);
+
+    // TODO: Implement more methods / query if needed.
 }

@@ -26,4 +26,10 @@ public class Location {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "address", nullable = false)
+    private String address;
+
+    @Column(name = "description", nullable = false)
+    private String description;
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 24, 2024 at 10:58 AM
+-- Generation Time: Sep 25, 2024 at 03:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 SET
@@ -30,12 +30,6 @@ SET
 -- Database: `bus_ticket_management`
 --
 -- --------------------------------------------------------
-DROP DATABASE IF EXISTS `bus_ticket_management`;
-
-CREATE DATABASE IF NOT EXISTS `bus_ticket_management` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-
-USE `bus_ticket_management`;
-
 --
 -- Table structure for table `bookings`
 --
@@ -124,7 +118,9 @@ CREATE TABLE `feedback` (
 --
 CREATE TABLE `locations` (
   `id` int(11) NOT NULL,
-  `location_name` varchar(255) NOT NULL
+  `location_name` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -167,14 +163,6 @@ CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL DEFAULT 'customer'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
-
---
--- Dumping data for table `roles`
---
-INSERT INTO
-  `roles` (`id`, `name`)
-VALUES
-  (1, 'customer');
 
 -- --------------------------------------------------------
 --
@@ -305,42 +293,6 @@ CREATE TABLE `users` (
   `password_reset_expiration` datetime DEFAULT NULL,
   `enabled` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
-
---
--- Dumping data for table `users`
---
-INSERT INTO
-  `users` (
-    `id`,
-    `email`,
-    `password`,
-    `full_name`,
-    `phone`,
-    `role_id`,
-    `status`,
-    `verification_code`,
-    `verification_expiration`,
-    `login_token`,
-    `password_reset_token`,
-    `password_reset_expiration`,
-    `enabled`
-  )
-VALUES
-  (
-    13,
-    'theprogamingofdeath123@gmail.com',
-    '$2a$10$lR7k0HEAXbfwD87pCQoCIuU/bqufIR29Fmh.wUYuLtH03avCbM68O',
-    'Nguyen Van A',
-    '01234567890',
-    1,
-    'verified',
-    NULL,
-    NULL,
-    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGVwcm9nYW1pbmdvZmRlYXRoMTIzQGdtYWlsLmNvbSIsImlhdCI6MTcyNzA2ODgxOSwiZXhwIjoxNzI3MDcyNDE5fQ.uXfC5vPd5ED2n-Bl3K9e552Qy1t1WABycPgTMRh_d2Q',
-    NULL,
-    NULL,
-    1
-  );
 
 --
 -- Indexes for dumped tables

@@ -29,6 +29,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public Optional<User> findUsersByRole(String role) {
+        return userRepository.findByRole(role);
+    }
+
     public List<User> allUsers() {
         List<User> users = new ArrayList<>();
         userRepository.findAll().forEach(users::add);

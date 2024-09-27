@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.myproject.busticket.exceptions.ModelNotFoundException;
 import com.myproject.busticket.exceptions.TimeOutException;
+import com.myproject.busticket.exceptions.UserStatusException;
 import com.myproject.busticket.exceptions.ValidationException;
 import com.myproject.busticket.models.LoginUserModel;
 import com.myproject.busticket.models.RegisterUserModel;
@@ -54,49 +55,58 @@ public class AuthenticationController {
         return "verify";
     }
 
-    @GetMapping("/request-password-reset")
+    @GetMapping("/forgot-password")
     public String requestPasswordResetPage() {
-        return "request-password-reset";
+        return "forgot-password";
     }
 
     @GetMapping("/reset-password")
-    public String resetPasswordPage(@RequestParam String token, @RequestParam String email) {
+    public String resetPasswordPage(@RequestParam String token, Model model) {
+        model.addAttribute("token", token);
         return "reset-password";
     }
 
+    @ResponseBody
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody RegisterUserModel registerUserDto) {
-        // TODO: Check for existing user by email before registering:
+    public Map<String, Object> signUp(@RequestBody RegisterUserModel registerUserDto) {
+        Map<String, Object> response = new HashMap<>();
         try {
-            if (userService.getUserByEmail(registerUserDto.getEmail()).isPresent()) {
-                return ResponseEntity.badRequest().body(new User());
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(null);
+            User registeredUser = authenticationService.signUp(registerUserDto);
+            response.put("success", true);
+            response.put("message", "User registered successfully");
+            response.put("data", registeredUser);
+            return response;
+        } catch (ValidationException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return response;
         }
-
-        User registeredUser = authenticationService.signup(registerUserDto);
-        return ResponseEntity.ok(registeredUser);
     }
 
     @ResponseBody
     @PostMapping("/login")
-    public Map<String, Object> authenticate(@RequestBody LoginUserModel loginUserDto) {
+    public Map<String, Object> signIn(@RequestBody LoginUserModel loginUserDto) {
         Map<String, Object> response = new HashMap<>();
 
         try {
-            User authenticatedUser = authenticationService.signin(loginUserDto);
+            User authenticatedUser = authenticationService.signIn(loginUserDto);
             String jwtToken = jwtService.generateToken(authenticatedUser);
             authenticatedUser.setLoginToken(jwtToken);
             userService.save(authenticatedUser);
 
-            LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
-            response.put("response", loginResponse);
+            // LoginResponse loginResponse = new LoginResponse(jwtToken,
+            // jwtService.getExpirationTime());
+            response.put("success", true);
             response.put("message", "Login successful");
+            response.put("token", jwtToken);
+            return response;
+        } catch (UserStatusException e) {
+            response.put("success", false);
+            response.put("message", "Authentication failed: " + e.getMessage());
             return response;
         } catch (Exception e) {
             response.put("success", false);
-            response.put("message", "Authentication failed");
+            response.put("message", "An error occurred: " + e.getMessage());
             return response;
         }
     }
@@ -135,29 +145,55 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/request-password-reset")
-    public ResponseEntity<Void> requestPasswordReset(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
-        authenticationService.requestPasswordReset(email);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody Map<String, String> request) {
-        String token = request.get("token");
-        String newPassword = request.get("newPassword");
-        authenticationService.resetPassword(token, newPassword);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/resend")
-    public ResponseEntity<?> resendVerificationCode(@RequestBody Map<String, String> payload) {
-        String email = payload.get("email");
+    @ResponseBody
+    @PostMapping("/forgot-password")
+    public Map<String, Object> requestPasswordReset(@RequestBody Map<String, String> request) {
+        Map<String, Object> response = new HashMap<>();
         try {
+            String email = request.get("email");
+            authenticationService.requestPasswordReset(email);
+            response.put("success", true);
+            response.put("message", "Password reset link has been sent to your email");
+            return response;
+        } catch (ModelNotFoundException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return response;
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("/reset-password")
+    public Map<String, Object> resetPassword(@RequestBody Map<String, String> request) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String token = request.get("token");
+            String password = request.get("password");
+            authenticationService.resetPassword(token, password);
+            response.put("success", true);
+            response.put("message", "Password reset successful");
+            return response;
+        } catch (ModelNotFoundException | ValidationException | UserStatusException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return response;
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("/resend")
+    public ResponseEntity<Map<String, Object>> resendVerificationEmail(@RequestBody Map<String, String> request) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String email = request.get("email");
             authenticationService.resendVerificationCode(email);
-            return ResponseEntity.ok("Verification code sent");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            response.put("success", true);
+            response.put("message", "Verification email has been resent");
+            return ResponseEntity.ok(response);
+        } catch (ModelNotFoundException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 }

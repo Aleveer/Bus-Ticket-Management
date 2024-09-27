@@ -18,9 +18,11 @@ import com.myproject.busticket.models.Role;
 import com.myproject.busticket.enums.UserStatus;
 import com.myproject.busticket.exceptions.ModelNotFoundException;
 import com.myproject.busticket.exceptions.TimeOutException;
+import com.myproject.busticket.exceptions.UserStatusException;
 import com.myproject.busticket.exceptions.ValidationException;
 import com.myproject.busticket.repositories.RoleRepository;
 import com.myproject.busticket.repositories.UserRepository;
+import com.myproject.busticket.validations.UserValidation;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -35,6 +37,9 @@ public class AuthenticationService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private UserService userService;
+
     public AuthenticationService(
             UserRepository userRepository,
             AuthenticationManager authenticationManager,
@@ -46,12 +51,28 @@ public class AuthenticationService {
         this.emailService = emailService;
     }
 
-    public User signup(RegisterUserModel input) {
+    public User signUp(RegisterUserModel input) {
         User user = new User();
-        user.setEmail(input.getEmail());
+        if (!UserValidation.isValidEmail(input.getEmail())) {
+            throw new ValidationException("Invalid email");
+        }
+
+        if (UserValidation.isValidEmail(input.getEmail())) {
+            if (userService.getUserByEmail(input.getEmail()).isPresent()) {
+                throw new ValidationException("Email already exists");
+            }
+            user.setEmail(input.getEmail());
+        } else {
+            throw new ValidationException("Invalid email");
+        }
+
+        if (UserValidation.isValidPassword(input.getPassword())) {
+            user.setPassword(passwordEncoder.encode(input.getPassword()));
+        } else {
+            throw new ValidationException(
+                    "Invalid password. Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 special character, 1 number.");
+        }
         user.setPassword(passwordEncoder.encode(input.getPassword()));
-        // TODO: Prompt user to update their profile after registration: full name,
-        // TODO: phone number
         user.setFullName("Nguyen Van A");
         user.setPhone("01234567890");
         Role role = roleRepository.findByName("customer").orElseThrow(() -> new RuntimeException("Role not found"));
@@ -64,12 +85,14 @@ public class AuthenticationService {
         return userRepository.save(user);
     }
 
-    // TODO: Implement the possible test cases for the following method:
-    public User signin(LoginUserModel input) {
+    public User signIn(LoginUserModel input) {
         User user = userRepository.findByEmail(input.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserStatusException("User not found"));
         if (user.getStatus() == UserStatus.unverified) {
-            throw new RuntimeException("Account not verified. Please verify your account.");
+            throw new UserStatusException("Account not verified. Please verify your account.");
+        }
+        if (user.getStatus() == UserStatus.banned) {
+            throw new UserStatusException("Account is banned. Please contact customer support.");
         }
         try {
             authenticationManager.authenticate(
@@ -77,9 +100,9 @@ public class AuthenticationService {
                             input.getEmail(),
                             input.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new RuntimeException("Incorrect email or password");
+            throw new ValidationException("Incorrect email or password");
         } catch (Exception e) {
-            throw new RuntimeException("Authentication failed", e);
+            throw new ValidationException("Authentication failed");
         }
         return user;
     }
@@ -120,18 +143,18 @@ public class AuthenticationService {
     // another account
     public void requestPasswordReset(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserStatusException("User not found. Please check your input."));
 
         if (!user.isEnabled()) {
-            throw new RuntimeException("User account is disabled");
+            throw new UserStatusException("User account is disabled.");
         }
 
         if (user.getStatus() == UserStatus.unverified) {
-            throw new RuntimeException("User account is not verified");
+            throw new UserStatusException("User account is not verified.");
         }
 
         if (user.getStatus() == UserStatus.banned) {
-            throw new RuntimeException("User account is banned");
+            throw new UserStatusException("User account is banned. Please contact customer support.");
         }
 
         String token = UUID.randomUUID().toString();
@@ -147,30 +170,29 @@ public class AuthenticationService {
                 .orElseThrow(() -> new RuntimeException("Invalid password reset token"));
 
         if (user.getPasswordResetExpiration().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Password reset token has expired");
+            throw new UserStatusException("Password reset token has expired");
         }
 
         if (!user.isEnabled()) {
-            throw new RuntimeException("User account is disabled");
+            throw new UserStatusException("User account is disabled");
         }
 
         if (user.getStatus() != UserStatus.verified) {
-            throw new RuntimeException("User account is not verified");
+            throw new UserStatusException("User account is not verified");
         }
 
-        if (!isValidPassword(newPassword)) {
-            throw new RuntimeException("New password does not meet security requirements");
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw new ValidationException("New password must be different from the current password");
         }
 
-        user.setPassword(passwordEncoder.encode(newPassword));
+        if (!UserValidation.isValidPassword(newPassword)) {
+            throw new ValidationException(
+                    "New password does not meet security requirements. Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 special character, 1 number.");
+        }
+
         user.setPasswordResetToken(null);
         user.setPasswordResetExpiration(null);
         userRepository.save(user);
-    }
-
-    // TODO: Implement this in validation folder
-    private boolean isValidPassword(String password) {
-        return password.length() >= 8;
     }
 
     public void verifyUser(VerifyUserModel input) {
@@ -202,14 +224,14 @@ public class AuthenticationService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             if (user.isEnabled()) {
-                throw new RuntimeException("Account is already verified");
+                throw new UserStatusException("Account is already verified");
             }
             user.setVerificationCode(generateVerificationCode());
-            user.setVerificationExpiration(LocalDateTime.now().plusHours(1));
+            user.setVerificationExpiration(LocalDateTime.now().plusMinutes(15));
             sendVerificationEmail(user);
             userRepository.save(user);
         } else {
-            throw new RuntimeException("User not found");
+            throw new ModelNotFoundException("User not found");
         }
     }
 
@@ -241,7 +263,7 @@ public class AuthenticationService {
     // TODO: Update URL here if needed
     private void sendPasswordResetEmail(User user) {
         String subject = "Password Reset Request";
-        String resetLink = "http://localhost/reset-password?token=" + user.getPasswordResetToken();
+        String resetLink = "http://localhost:8080/auth/reset-password?token=" + user.getPasswordResetToken();
         String htmlMessage = "<html>"
                 + "<body style=\"font-family: Arial, sans-serif;\">"
                 + "<div style=\"background-color: #f5f5f5; padding: 20px;\">"

@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
   </head>
+
   <body>
     <h2>Login</h2>
-    <form th:action="@{/login}" method="post">
+    <form id="loginForm" th:action="@{/login}" method="post">
       <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required />
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required />
       </div>
       <div>
         <label for="password">Password:</label>
@@ -20,5 +21,57 @@
         <button type="submit">Login</button>
       </div>
     </form>
+    <p>Don't have an account? <a th:href="@{/auth/signup}">Sign up here</a></p>
+    <p>
+      Forgot your password?
+      <a th:href="@{/auth/forgot-password}">Reset password here</a>
+    </p>
+
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          let email = document.getElementById("email").value;
+          let password = document.getElementById("password").value;
+
+          fetch("/auth/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: email,
+              password: password,
+            }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.text(); // Get response as text
+            })
+            .then((text) => {
+              console.log("Raw response:", text); // Log raw response
+              try {
+                const data = JSON.parse(text); // Try to parse JSON
+                if (data.success) {
+                  alert("Login successful");
+                  //TODO: Direct to home page
+                  window.location.href = "/";
+                } else {
+                  alert("Failed to login: " + data.message);
+                }
+              } catch (error) {
+                console.error("Failed to parse JSON:", error);
+                alert("Failed to parse response: " + text);
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert(error.message);
+            });
+        });
+    </script>
   </body>
 </html>

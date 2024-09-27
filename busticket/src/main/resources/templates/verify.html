@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Account</title>
+  </head>
+  <body>
+    <h2>Verify Account</h2>
+    <form id="verifyForm" th:action="@{/auth/verify}" method="post">
+      <p>
+        Please verify the account associated with this email:
+        <strong th:text="${email}"></strong>
+      </p>
+      <div>
+        <label for="verificationCode">Verification Code:</label>
+        <input
+          type="text"
+          id="verificationCode"
+          name="verificationCode"
+          required
+        />
+      </div>
+      <div>
+        <button type="submit" id="verifyBtn">Verify</button>
+      </div>
+    </form>
+  </body>
+  <script>
+    document
+      .getElementById("verifyForm")
+      .addEventListener("submit", function (event) {
+        event.preventDefault();
+        let email = document.querySelector("strong").innerText;
+        let verificationCode =
+          document.getElementById("verificationCode").value;
+        fetch("/auth/verify", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            verificationCode: verificationCode,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert("Account verified successfully");
+              window.location.href = "/auth/login";
+            } else {
+              alert("Failed to verify account: " + data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+  </script>
+</html>

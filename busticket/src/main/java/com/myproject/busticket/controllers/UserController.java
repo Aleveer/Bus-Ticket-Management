@@ -24,7 +24,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    // TODO: Currently not working:
     @GetMapping("/me")
     public ResponseEntity<User> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

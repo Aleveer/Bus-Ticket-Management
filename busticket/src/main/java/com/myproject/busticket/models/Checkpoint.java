@@ -31,6 +31,6 @@ public class Checkpoint {
     @Column(name = "stop_order", nullable = false)
     private int stopOrder;
 
-    @Column(name = "departure_time", nullable = false)
-    private LocalDateTime departureTime;
+    @Column(name = "stop_time", nullable = false)
+    private LocalDateTime stopTime;
 }

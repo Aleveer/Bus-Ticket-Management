@@ -16,6 +16,9 @@ import com.myproject.busticket.models.LoginUserModel;
 import com.myproject.busticket.models.RegisterUserModel;
 import com.myproject.busticket.models.Role;
 import com.myproject.busticket.enums.UserStatus;
+import com.myproject.busticket.exceptions.ModelNotFoundException;
+import com.myproject.busticket.exceptions.TimeOutException;
+import com.myproject.busticket.exceptions.ValidationException;
 import com.myproject.busticket.repositories.RoleRepository;
 import com.myproject.busticket.repositories.UserRepository;
 
@@ -83,10 +86,10 @@ public class AuthenticationService {
 
     public void signOut(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ModelNotFoundException("User not found"));
 
         if (user.getLoginToken() == null) {
-            throw new RuntimeException("User is not logged in");
+            throw new ValidationException("User is not logged in");
         }
 
         user.setLoginToken(null);
@@ -167,15 +170,18 @@ public class AuthenticationService {
 
     // TODO: Implement this in validation folder
     private boolean isValidPassword(String password) {
-        return password.length() >= 8; // Example: minimum 8 characters
+        return password.length() >= 8;
     }
 
     public void verifyUser(VerifyUserModel input) {
         Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+            if (user.getStatus() == UserStatus.verified) {
+                throw new ValidationException("Account is already verified");
+            }
             if (user.getVerificationExpiration().isBefore(LocalDateTime.now())) {
-                throw new RuntimeException("Verification code has expired");
+                throw new TimeOutException("Verification code has expired");
             }
             if (user.getVerificationCode().equals(input.getVerificationCode())) {
                 user.setStatus(UserStatus.verified);
@@ -184,10 +190,10 @@ public class AuthenticationService {
                 user.setEnabled(true);
                 userRepository.save(user);
             } else {
-                throw new RuntimeException("Invalid verification code");
+                throw new ValidationException("Invalid verification code");
             }
         } else {
-            throw new RuntimeException("User not found");
+            throw new ModelNotFoundException("User not found");
         }
     }
 
@@ -217,6 +223,8 @@ public class AuthenticationService {
                 + "<p style=\"font-size: 16px;\">Please enter the verification code below to continue:</p>"
                 + "<div style=\"background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);\">"
                 + "<p style=\"font-size: 18px; font-weight: bold; color: #007bff;\">" + verificationCode + "</p>"
+                + "<a href=\"http://localhost:8080/auth/verify?email=" + user.getEmail()
+                + "\" style=\"font-size: 18px; font-weight: bold; color: #007bff;\">Verify Account</a>"
                 + "</div>"
                 + "</div>"
                 + "</body>"

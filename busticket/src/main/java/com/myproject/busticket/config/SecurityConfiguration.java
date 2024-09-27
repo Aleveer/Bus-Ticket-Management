@@ -38,6 +38,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/vnpay/**").permitAll()
                         .requestMatchers("/schedules/**").permitAll()
+                        .requestMatchers("/roles/**").permitAll()
+                        .requestMatchers("/permissions/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

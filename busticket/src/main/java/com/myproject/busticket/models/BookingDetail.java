@@ -41,7 +41,7 @@ public class BookingDetail {
     private Seat seat;
 
     @Column(name = "price_per_ticket", nullable = false)
-    private int pricePerTicket;
+    private double pricePerTicket;
 
     @Column(name = "booking_time", nullable = false)
     private LocalDateTime bookingTime;

@@ -30,15 +30,21 @@ import java.util.Random;
 
 @Service
 public class AuthenticationService {
-    private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final EmailService emailService;
+
+    @Autowired
+    private EmailService emailService;
+
     @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public AuthenticationService(
             UserRepository userRepository,
@@ -119,31 +125,14 @@ public class AuthenticationService {
         userRepository.save(user);
     }
 
-    // Implement forgot password feature
-    // Step 1: User requests a password reset
-    // Step 2: Generate a password reset token and send it to the user's email
-    // Step 3: User clicks on the link in the email and is redirected to a page to
-    // reset the password
-    // Step 4: User enters a new password and the password is updated in the
-    // database
-    // Step 5: User is redirected to the login page to log in with the new password
-    // Step 6: User logs in successfully
-    // Step 7: Password reset token is invalidated
-    // Step 8: User can no longer use the password reset link
-    // Step 9: User can request a new password reset if needed
-    // Step 10: User receives a new password reset token and the process repeats
-    // Step 11: Password reset token expires after a certain period of time
-    // Step 12: User must use the password reset token within the expiration time
-    // Step 13: User receives an error message if the password reset token is
-    // expired
-    // Step 14: User can request a new password reset if the token is expired
-    // Step 15: User receives a new password reset token and the process repeats
-    // Step 16: User can only reset the password for their own account
-    // Step 17: User receives an error message if they try to reset the password for
-    // another account
     public void requestPasswordReset(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserStatusException("User not found. Please check your input."));
+                .orElseThrow(
+                        () -> new ModelNotFoundException("An email was not found in our system. Please try again."));
+
+        if (!UserValidation.isValidEmail(email)) {
+            throw new ValidationException("Invalid email address");
+        }
 
         if (!user.isEnabled()) {
             throw new UserStatusException("User account is disabled.");

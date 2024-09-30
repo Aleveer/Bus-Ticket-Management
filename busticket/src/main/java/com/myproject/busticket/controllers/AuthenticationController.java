@@ -18,7 +18,6 @@ import com.myproject.busticket.models.LoginUserModel;
 import com.myproject.busticket.models.RegisterUserModel;
 import com.myproject.busticket.models.User;
 import com.myproject.busticket.models.VerifyUserModel;
-import com.myproject.busticket.responses.LoginResponse;
 import com.myproject.busticket.services.AuthenticationService;
 import com.myproject.busticket.services.JwtService;
 import com.myproject.busticket.services.UserService;
@@ -98,7 +97,7 @@ public class AuthenticationController {
             // jwtService.getExpirationTime());
             response.put("success", true);
             response.put("message", "Login successful");
-            response.put("token", jwtToken);
+            // response.put("token", jwtToken);
             return response;
         } catch (UserStatusException e) {
             response.put("success", false);
@@ -155,7 +154,7 @@ public class AuthenticationController {
             response.put("success", true);
             response.put("message", "Password reset link has been sent to your email");
             return response;
-        } catch (ModelNotFoundException e) {
+        } catch (ModelNotFoundException | UserStatusException e) {
             response.put("success", false);
             response.put("message", e.getMessage());
             return response;
@@ -171,7 +170,7 @@ public class AuthenticationController {
             String password = request.get("password");
             authenticationService.resetPassword(token, password);
             response.put("success", true);
-            response.put("message", "Password reset successful");
+            response.put("message", "Password reset successfully");
             return response;
         } catch (ModelNotFoundException | ValidationException | UserStatusException e) {
             response.put("success", false);

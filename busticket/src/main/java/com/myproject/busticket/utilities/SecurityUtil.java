@@ -6,24 +6,24 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.myproject.busticket.models.User;
+import com.myproject.busticket.models.Account;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class SecurityUtil {
-    public static User getCurrentUser() {
+    public static Account getCurrentAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof User) {
-            return (User) authentication.getPrincipal();
+        if (authentication != null && authentication.getPrincipal() instanceof Account) {
+            return (Account) authentication.getPrincipal();
         }
         return null;
     }
 
     public static String getCurrentMail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof User) {
-            return ((User) authentication.getPrincipal()).getUsername();
+        if (authentication != null && authentication.getPrincipal() instanceof Account) {
+            return ((Account) authentication.getPrincipal()).getUsername();
         }
         return null;
     }
@@ -35,7 +35,7 @@ public class SecurityUtil {
 
     public static Collection<? extends GrantedAuthority> getCurrentUserRoles() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof User) {
+        if (authentication != null && authentication.getPrincipal() instanceof Account) {
             return authentication.getAuthorities();
         }
         return null;

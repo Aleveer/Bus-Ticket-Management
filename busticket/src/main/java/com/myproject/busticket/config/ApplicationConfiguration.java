@@ -10,20 +10,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.myproject.busticket.repositories.UserRepository;
+import com.myproject.busticket.repositories.AccountRepository;
 
 @Configuration
 public class ApplicationConfiguration {
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
-    public ApplicationConfiguration(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public ApplicationConfiguration(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
     }
 
     @Bean
     UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return username -> accountRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("An account is not found."));
     }
 
     @Bean

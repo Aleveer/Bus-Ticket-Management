@@ -3,14 +3,14 @@ package com.myproject.busticket.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.myproject.busticket.models.User;
+import com.myproject.busticket.models.Account;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByEmail(String email);
+public interface AccountRepository extends JpaRepository<Account, Integer> {
+    Optional<Account> findByEmail(String email);
 
-    Optional<User> findByPasswordResetToken(String passwordResetToken);
+    Optional<Account> findByPasswordResetToken(String passwordResetToken);
 
     // Optional<User> findByRole(String role);
 }

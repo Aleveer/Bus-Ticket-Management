@@ -7,16 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myproject.busticket.enums.UserRole;
+import com.myproject.busticket.enums.AccountRole;
 import com.myproject.busticket.exceptions.ValidationException;
 import com.myproject.busticket.models.Bus;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Schedule;
-import com.myproject.busticket.models.User;
+import com.myproject.busticket.models.Account;
 import com.myproject.busticket.services.BusService;
 import com.myproject.busticket.services.RouteService;
 import com.myproject.busticket.services.ScheduleService;
-import com.myproject.busticket.services.UserService;
+import com.myproject.busticket.services.AccountService;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +32,7 @@ public class ScheduleController {
     private BusService busService;
 
     @Autowired
-    private UserService userService;
+    private AccountService userService;
 
     @Autowired
     private RouteService routeService;
@@ -53,7 +53,7 @@ public class ScheduleController {
             }
 
             // Check for driver:
-            User driver = userService.getById(Integer.parseInt(scheduleMap.get("user_id").toString()));
+            Account driver = userService.getById(Integer.parseInt(scheduleMap.get("user_id").toString()));
 
             if (driver == null) {
                 response.put("success", false);
@@ -61,7 +61,7 @@ public class ScheduleController {
                 return response;
             }
 
-            if (driver.getRole().toString() != UserRole.driver.toString()) {
+            if (driver.getRole().toString() != AccountRole.driver.toString()) {
                 response.put("success", false);
                 response.put("message", "User is not a driver");
                 return response;

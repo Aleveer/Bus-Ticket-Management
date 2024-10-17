@@ -12,22 +12,22 @@ import org.springframework.web.bind.annotation.*;
 
 import com.myproject.busticket.exceptions.ModelNotFoundException;
 import com.myproject.busticket.exceptions.TimeOutException;
-import com.myproject.busticket.exceptions.UserStatusException;
+import com.myproject.busticket.exceptions.AccountStatusException;
 import com.myproject.busticket.exceptions.ValidationException;
 import com.myproject.busticket.models.LoginUserModel;
 import com.myproject.busticket.models.RegisterUserModel;
-import com.myproject.busticket.models.User;
-import com.myproject.busticket.models.VerifyUserModel;
+import com.myproject.busticket.models.Account;
+import com.myproject.busticket.models.VerifyAccountModel;
 import com.myproject.busticket.services.AuthenticationService;
 import com.myproject.busticket.services.JwtService;
-import com.myproject.busticket.services.UserService;
+import com.myproject.busticket.services.AccountService;
 
 @RequestMapping("/auth")
 @Controller
 public class AuthenticationController {
 
     @Autowired
-    private UserService userService;
+    private AccountService accountService;
 
     private final JwtService jwtService;
 
@@ -70,10 +70,10 @@ public class AuthenticationController {
     public Map<String, Object> signUp(@RequestBody RegisterUserModel registerUserDto) {
         Map<String, Object> response = new HashMap<>();
         try {
-            User registeredUser = authenticationService.signUp(registerUserDto);
+            Account registerAccount = authenticationService.signUp(registerUserDto);
             response.put("success", true);
             response.put("message", "User registered successfully");
-            response.put("data", registeredUser);
+            response.put("data", registerAccount);
             return response;
         } catch (ValidationException e) {
             response.put("success", false);
@@ -88,10 +88,10 @@ public class AuthenticationController {
         Map<String, Object> response = new HashMap<>();
 
         try {
-            User authenticatedUser = authenticationService.signIn(loginUserDto);
-            String jwtToken = jwtService.generateToken(authenticatedUser);
-            authenticatedUser.setLoginToken(jwtToken);
-            userService.save(authenticatedUser);
+            Account authenticatedAccount = authenticationService.signIn(loginUserDto);
+            String jwtToken = jwtService.generateToken(authenticatedAccount);
+            authenticatedAccount.setLoginToken(jwtToken);
+            accountService.save(authenticatedAccount);
 
             // LoginResponse loginResponse = new LoginResponse(jwtToken,
             // jwtService.getExpirationTime());
@@ -99,7 +99,7 @@ public class AuthenticationController {
             response.put("message", "Login successful");
             // response.put("token", jwtToken);
             return response;
-        } catch (UserStatusException e) {
+        } catch (AccountStatusException e) {
             response.put("success", false);
             response.put("message", "Authentication failed: " + e.getMessage());
             return response;
@@ -123,17 +123,17 @@ public class AuthenticationController {
             throw e;
         } catch (Exception e) {
             response.put("success", false);
-            response.put("message", "An error occurred during sign out");
+            response.put("message", "An error occurred during signing out");
         }
 
         return response;
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<Map<String, Object>> verifyUser(@RequestBody VerifyUserModel verifyUserDto) {
+    public ResponseEntity<Map<String, Object>> verifyAccount(@RequestBody VerifyAccountModel verifyAccountModel) {
         Map<String, Object> response = new HashMap<>();
         try {
-            authenticationService.verifyUser(verifyUserDto);
+            authenticationService.verifyAccount(verifyAccountModel);
             response.put("success", true);
             response.put("message", "Account verified successfully");
             return ResponseEntity.ok(response);
@@ -154,7 +154,7 @@ public class AuthenticationController {
             response.put("success", true);
             response.put("message", "Password reset link has been sent to your email");
             return response;
-        } catch (ModelNotFoundException | UserStatusException e) {
+        } catch (ModelNotFoundException | AccountStatusException e) {
             response.put("success", false);
             response.put("message", e.getMessage());
             return response;
@@ -172,7 +172,7 @@ public class AuthenticationController {
             response.put("success", true);
             response.put("message", "Password reset successfully");
             return response;
-        } catch (ModelNotFoundException | ValidationException | UserStatusException e) {
+        } catch (ModelNotFoundException | ValidationException | AccountStatusException e) {
             response.put("success", false);
             response.put("message", e.getMessage());
             return response;

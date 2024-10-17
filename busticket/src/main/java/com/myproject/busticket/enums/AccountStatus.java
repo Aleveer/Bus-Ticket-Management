@@ -1,5 +1,5 @@
 package com.myproject.busticket.enums;
 
-public enum UserStatus {
+public enum AccountStatus {
     unverified, verified, banned
 }

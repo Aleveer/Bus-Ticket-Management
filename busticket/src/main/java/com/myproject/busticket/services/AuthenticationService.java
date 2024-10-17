@@ -10,19 +10,19 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.myproject.busticket.models.User;
-import com.myproject.busticket.models.VerifyUserModel;
+import com.myproject.busticket.models.Account;
+import com.myproject.busticket.models.VerifyAccountModel;
 import com.myproject.busticket.models.LoginUserModel;
 import com.myproject.busticket.models.RegisterUserModel;
 import com.myproject.busticket.models.Role;
-import com.myproject.busticket.enums.UserStatus;
+import com.myproject.busticket.enums.AccountStatus;
 import com.myproject.busticket.exceptions.ModelNotFoundException;
 import com.myproject.busticket.exceptions.TimeOutException;
-import com.myproject.busticket.exceptions.UserStatusException;
+import com.myproject.busticket.exceptions.AccountStatusException;
 import com.myproject.busticket.exceptions.ValidationException;
 import com.myproject.busticket.repositories.RoleRepository;
-import com.myproject.busticket.repositories.UserRepository;
-import com.myproject.busticket.validations.UserValidation;
+import com.myproject.busticket.repositories.AccountRepository;
+import com.myproject.busticket.validations.AccountValidation;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -41,64 +41,59 @@ public class AuthenticationService {
     private RoleRepository roleRepository;
 
     @Autowired
-    private UserService userService;
+    private AccountService accountService;
 
     @Autowired
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
 
     public AuthenticationService(
-            UserRepository userRepository,
+            AccountRepository accountRepository,
             AuthenticationManager authenticationManager,
             PasswordEncoder passwordEncoder,
             EmailService emailService) {
-        this.userRepository = userRepository;
+        this.accountRepository = accountRepository;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
     }
 
-    public User signUp(RegisterUserModel input) {
-        User user = new User();
-        if (!UserValidation.isValidEmail(input.getEmail())) {
+    public Account signUp(RegisterUserModel input) {
+        Account account = new Account();
+        if (!AccountValidation.isValidEmail(input.getEmail())) {
             throw new ValidationException("Invalid email");
         }
 
-        if (UserValidation.isValidEmail(input.getEmail())) {
-            if (userService.getUserByEmail(input.getEmail()).isPresent()) {
-                throw new ValidationException("Email already exists");
-            }
-            user.setEmail(input.getEmail());
-        } else {
-            throw new ValidationException("Invalid email");
+        if (accountService.getUserByEmail(input.getEmail()).isPresent()) {
+            throw new ValidationException("Email already exists");
         }
 
-        if (UserValidation.isValidPassword(input.getPassword())) {
-            user.setPassword(passwordEncoder.encode(input.getPassword()));
+        if (AccountValidation.isValidPassword(input.getPassword())) {
+            account.setPassword(passwordEncoder.encode(input.getPassword()));
         } else {
             throw new ValidationException(
                     "Invalid password. Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 special character, 1 number.");
         }
-        user.setPassword(passwordEncoder.encode(input.getPassword()));
-        user.setFullName("Nguyen Van A");
-        user.setPhone("01234567890");
+        account.setPassword(passwordEncoder.encode(input.getPassword()));
+        // user.setFullName("Nguyen Van A");
+        // user.setPhone("01234567890");
         Role role = roleRepository.findByName("customer").orElseThrow(() -> new RuntimeException("Role not found"));
-        user.setRole(role);
-        user.setStatus(UserStatus.unverified);
-        user.setVerificationCode(generateVerificationCode());
+        account.setRole(role);
+        account.setStatus(AccountStatus.unverified);
+        account.setVerificationCode(generateVerificationCode());
         LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(15);
-        user.setVerificationExpiration(expirationTime);
-        sendVerificationEmail(user);
-        return userRepository.save(user);
+        account.setVerificationExpiration(expirationTime);
+        sendVerificationEmail(account);
+        return accountRepository.save(account);
     }
 
-    public User signIn(LoginUserModel input) {
-        User user = userRepository.findByEmail(input.getEmail())
-                .orElseThrow(() -> new UserStatusException("User not found"));
-        if (user.getStatus() == UserStatus.unverified) {
-            throw new UserStatusException("Account not verified. Please verify your account.");
+    public Account signIn(LoginUserModel input) {
+        Account account = accountRepository.findByEmail(input.getEmail())
+                .orElseThrow(() -> new AccountStatusException("An account is not found"));
+        if (account.getStatus() == AccountStatus.unverified) {
+            throw new AccountStatusException("Account not verified. Please verify your account.");
         }
-        if (user.getStatus() == UserStatus.banned) {
-            throw new UserStatusException("Account is banned. Please contact customer support.");
+        if (account.getStatus() == AccountStatus.banned) {
+            throw new AccountStatusException("Account is banned. Please contact customer support.");
         }
         try {
             authenticationManager.authenticate(
@@ -110,123 +105,123 @@ public class AuthenticationService {
         } catch (Exception e) {
             throw new ValidationException("Authentication failed");
         }
-        return user;
+        return account;
     }
 
     public void signOut(String email) {
-        User user = userRepository.findByEmail(email)
+        Account account = accountRepository.findByEmail(email)
                 .orElseThrow(() -> new ModelNotFoundException("User not found"));
 
-        if (user.getLoginToken() == null) {
+        if (account.getLoginToken() == null) {
             throw new ValidationException("User is not logged in");
         }
 
-        user.setLoginToken(null);
-        userRepository.save(user);
+        account.setLoginToken(null);
+        accountRepository.save(account);
     }
 
     public void requestPasswordReset(String email) {
-        User user = userRepository.findByEmail(email)
+        Account account = accountRepository.findByEmail(email)
                 .orElseThrow(
                         () -> new ModelNotFoundException("An email was not found in our system. Please try again."));
 
-        if (!UserValidation.isValidEmail(email)) {
+        if (!AccountValidation.isValidEmail(email)) {
             throw new ValidationException("Invalid email address");
         }
 
-        if (!user.isEnabled()) {
-            throw new UserStatusException("User account is disabled.");
+        if (!account.isEnabled()) {
+            throw new AccountStatusException("User account is disabled.");
         }
 
-        if (user.getStatus() == UserStatus.unverified) {
-            throw new UserStatusException("User account is not verified.");
+        if (account.getStatus() == AccountStatus.unverified) {
+            throw new AccountStatusException("An account is not verified.");
         }
 
-        if (user.getStatus() == UserStatus.banned) {
-            throw new UserStatusException("User account is banned. Please contact customer support.");
+        if (account.getStatus() == AccountStatus.banned) {
+            throw new AccountStatusException("An account is banned. Please contact customer support.");
         }
 
         String token = UUID.randomUUID().toString();
-        user.setPasswordResetToken(token);
-        user.setPasswordResetExpiration(LocalDateTime.now().plusMinutes(15));
-        userRepository.save(user);
+        account.setPasswordResetToken(token);
+        account.setPasswordResetExpiration(LocalDateTime.now().plusMinutes(15));
+        accountRepository.save(account);
 
-        sendPasswordResetEmail(user);
+        sendPasswordResetEmail(account);
     }
 
     public void resetPassword(String token, String newPassword) {
-        User user = userRepository.findByPasswordResetToken(token)
+        Account account = accountRepository.findByPasswordResetToken(token)
                 .orElseThrow(() -> new RuntimeException("Invalid password reset token"));
 
-        if (user.getPasswordResetExpiration().isBefore(LocalDateTime.now())) {
-            throw new UserStatusException("Password reset token has expired");
+        if (account.getPasswordResetExpiration().isBefore(LocalDateTime.now())) {
+            throw new AccountStatusException("Password reset token has expired");
         }
 
-        if (!user.isEnabled()) {
-            throw new UserStatusException("User account is disabled");
+        if (!account.isEnabled()) {
+            throw new AccountStatusException("User account is disabled");
         }
 
-        if (user.getStatus() != UserStatus.verified) {
-            throw new UserStatusException("User account is not verified");
+        if (account.getStatus() != AccountStatus.verified) {
+            throw new AccountStatusException("User account is not verified");
         }
 
-        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+        if (passwordEncoder.matches(newPassword, account.getPassword())) {
             throw new ValidationException("New password must be different from the current password");
         }
 
-        if (!UserValidation.isValidPassword(newPassword)) {
+        if (!AccountValidation.isValidPassword(newPassword)) {
             throw new ValidationException(
                     "New password does not meet security requirements. Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 special character, 1 number.");
         }
 
-        user.setPasswordResetToken(null);
-        user.setPasswordResetExpiration(null);
-        userRepository.save(user);
+        account.setPasswordResetToken(null);
+        account.setPasswordResetExpiration(null);
+        accountRepository.save(account);
     }
 
-    public void verifyUser(VerifyUserModel input) {
-        Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
+    public void verifyAccount(VerifyAccountModel input) {
+        Optional<Account> optionalUser = accountRepository.findByEmail(input.getEmail());
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            if (user.getStatus() == UserStatus.verified) {
+            Account account = optionalUser.get();
+            if (account.getStatus() == AccountStatus.verified) {
                 throw new ValidationException("Account is already verified");
             }
-            if (user.getVerificationExpiration().isBefore(LocalDateTime.now())) {
+            if (account.getVerificationExpiration().isBefore(LocalDateTime.now())) {
                 throw new TimeOutException("Verification code has expired");
             }
-            if (user.getVerificationCode().equals(input.getVerificationCode())) {
-                user.setStatus(UserStatus.verified);
-                user.setVerificationCode(null);
-                user.setVerificationExpiration(null);
-                user.setEnabled(true);
-                userRepository.save(user);
+            if (account.getVerificationCode().equals(input.getVerificationCode())) {
+                account.setStatus(AccountStatus.verified);
+                account.setVerificationCode(null);
+                account.setVerificationExpiration(null);
+                account.setEnabled(true);
+                accountRepository.save(account);
             } else {
                 throw new ValidationException("Invalid verification code");
             }
         } else {
-            throw new ModelNotFoundException("User not found");
+            throw new ModelNotFoundException("An account is not found");
         }
     }
 
     public void resendVerificationCode(String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+        Optional<Account> optionalUser = accountRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            if (user.isEnabled()) {
-                throw new UserStatusException("Account is already verified");
+            Account account = optionalUser.get();
+            if (account.isEnabled()) {
+                throw new AccountStatusException("Account is already verified");
             }
-            user.setVerificationCode(generateVerificationCode());
-            user.setVerificationExpiration(LocalDateTime.now().plusMinutes(15));
-            sendVerificationEmail(user);
-            userRepository.save(user);
+            account.setVerificationCode(generateVerificationCode());
+            account.setVerificationExpiration(LocalDateTime.now().plusMinutes(15));
+            sendVerificationEmail(account);
+            accountRepository.save(account);
         } else {
-            throw new ModelNotFoundException("User not found");
+            throw new ModelNotFoundException("Account is not found");
         }
     }
 
-    private void sendVerificationEmail(User user) {
+    private void sendVerificationEmail(Account account) {
         String subject = "Account Verification";
-        String verificationCode = "VERIFICATION CODE " + user.getVerificationCode();
+        String verificationCode = "VERIFICATION CODE " + account.getVerificationCode();
         String htmlMessage = "<html>"
                 + "<body style=\"font-family: Arial, sans-serif;\">"
                 + "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
@@ -234,7 +229,7 @@ public class AuthenticationService {
                 + "<p style=\"font-size: 16px;\">Please enter the verification code below to continue:</p>"
                 + "<div style=\"background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);\">"
                 + "<p style=\"font-size: 18px; font-weight: bold; color: #007bff;\">" + verificationCode + "</p>"
-                + "<a href=\"http://localhost:8080/auth/verify?email=" + user.getEmail()
+                + "<a href=\"http://localhost:8080/auth/verify?email=" + account.getEmail()
                 + "\" style=\"font-size: 18px; font-weight: bold; color: #007bff;\">Verify Account</a>"
                 + "</div>"
                 + "</div>"
@@ -242,7 +237,7 @@ public class AuthenticationService {
                 + "</html>";
 
         try {
-            emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
+            emailService.sendVerificationEmail(account.getEmail(), subject, htmlMessage);
         } catch (MessagingException e) {
             // Handle email sending exception
             e.printStackTrace();
@@ -250,9 +245,9 @@ public class AuthenticationService {
     }
 
     // TODO: Update URL here if needed
-    private void sendPasswordResetEmail(User user) {
+    private void sendPasswordResetEmail(Account account) {
         String subject = "Password Reset Request";
-        String resetLink = "http://localhost:8080/auth/reset-password?token=" + user.getPasswordResetToken();
+        String resetLink = "http://localhost:8080/auth/reset-password?token=" + account.getPasswordResetToken();
         String htmlMessage = "<html>"
                 + "<body style=\"font-family: Arial, sans-serif;\">"
                 + "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
@@ -267,7 +262,7 @@ public class AuthenticationService {
                 + "</html>";
 
         try {
-            emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
+            emailService.sendVerificationEmail(account.getEmail(), subject, htmlMessage);
         } catch (MessagingException e) {
             // Handle email sending exception
             e.printStackTrace();

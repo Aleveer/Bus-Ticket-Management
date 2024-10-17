@@ -1,6 +1,6 @@
 package com.myproject.busticket.validations;
 
-public class UserValidation {
+public class AccountValidation {
 
     public static boolean isValidEmail(String email) {
         return email.matches("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");

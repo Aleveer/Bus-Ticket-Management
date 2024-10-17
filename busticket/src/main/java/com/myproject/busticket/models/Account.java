@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.myproject.busticket.enums.UserStatus;
+import com.myproject.busticket.enums.AccountStatus;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,15 +16,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "users")
+@Table(name = "account")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails {
+public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "account_id")
     private int id;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -33,10 +33,10 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "full_name", nullable = false)
+    @Column(name = "name", nullable = true)
     private String fullName;
 
-    @Column(name = "phone", nullable = false)
+    @Column(name = "phone", nullable = true)
     private String phone;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -45,7 +45,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, columnDefinition = "enum('unverified', 'verified', 'banned') default 'unverified'")
-    private UserStatus status;
+    private AccountStatus status;
 
     @Column(name = "verification_code")
     private String verificationCode;
@@ -96,7 +96,7 @@ public class User implements UserDetails {
 
     // Constructor for User without roleid, status, verificationCode,
     // verificationExpiration, enabled:
-    public User(String email, String password, String fullName, String phone) {
+    public Account(String email, String password, String fullName, String phone) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;

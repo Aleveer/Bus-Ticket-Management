@@ -9,36 +9,37 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myproject.busticket.models.User;
-import com.myproject.busticket.services.UserService;
+import com.myproject.busticket.models.Account;
+import com.myproject.busticket.services.AccountService;
 
 import java.util.List;
 
-@RequestMapping("/users")
+@RequestMapping("/accounts")
 @RestController
-public class UserController {
+public class AccountController {
     @Autowired
-    private final UserService userService;
+    private final AccountService accountService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
     @GetMapping("/me")
-    public ResponseEntity<User> authenticatedUser() {
+    public ResponseEntity<Account> authenticatedAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        User currentUser = (User) authentication.getPrincipal();
-        User user = new User(currentUser.getEmail(), currentUser.getPassword(), currentUser.getFullName(),
-                currentUser.getPhone());
-        return ResponseEntity.ok(user);
+        Account currentAccount = (Account) authentication.getPrincipal();
+        Account account = new Account(currentAccount.getEmail(), currentAccount.getPassword(),
+                currentAccount.getFullName(),
+                currentAccount.getPhone());
+        return ResponseEntity.ok(account);
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<User>> allUsers() {
-        List<User> users = userService.allUsers();
-        return ResponseEntity.ok(users);
+    public ResponseEntity<List<Account>> allAccounts() {
+        List<Account> accounts = accountService.allAccounts();
+        return ResponseEntity.ok(accounts);
     }
 }

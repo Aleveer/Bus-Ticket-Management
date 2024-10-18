@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3307:3307
--- Generation Time: Oct 17, 2024 at 02:41 AM
+-- Host: 127.0.0.1
+-- Generation Time: Oct 18, 2024 at 09:07 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 SET
@@ -12,7 +12,7 @@ SET
 START TRANSACTION;
 
 SET
-  time_zone = '+07:00';
+  time_zone = "+07:00";
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */
 ;
@@ -29,29 +29,30 @@ SET
 --
 -- Database: `bus_ticket_management`
 --
+-- --------------------------------------------------------
+--
 DROP DATABASE IF EXISTS `bus_ticket_management`;
 
 CREATE DATABASE IF NOT EXISTS `bus_ticket_management` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 USE `bus_ticket_management`;
 
--- --------------------------------------------------------
---
 -- Table structure for table `account`
 --
 CREATE TABLE `account` (
-  `account_id` varchar(10) NOT NULL,
-  `email` varchar(50) DEFAULT NULL,
-  `password` varchar(30) DEFAULT NULL,
-  `role_id` varchar(10) DEFAULT NULL,
+  `id` varchar(10) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(30) NOT NULL,
+  `role_id` varchar(10) NOT NULL,
   `name` varchar(70) DEFAULT NULL,
   `phone` varchar(12) DEFAULT NULL,
-  `verification_code` varchar(255) DEFAULT NULL,
-  `verification_expiration` datetime DEFAULT NULL,
-  `login_token` mediumtext DEFAULT NULL,
-  `password_reset_token` mediumtext DEFAULT NULL,
-  `password_reset_expiration` datetime DEFAULT NULL,
-  `enable` tinyint(4) DEFAULT NULL
+  `status` enum('unverified', 'verified', 'banned') NOT NULL DEFAULT 'unverified',
+  `verification_code` varchar(255) NOT NULL,
+  `verification_expiration` datetime NOT NULL,
+  `login_token` mediumtext NOT NULL,
+  `password_reset_token` mediumtext NOT NULL,
+  `password_reset_expiration` datetime NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --
@@ -59,18 +60,19 @@ CREATE TABLE `account` (
 --
 INSERT INTO
   `account` (
-    `account_id`,
+    `id`,
     `email`,
     `password`,
     `role_id`,
     `name`,
     `phone`,
+    `status`,
     `verification_code`,
     `verification_expiration`,
     `login_token`,
     `password_reset_token`,
     `password_reset_expiration`,
-    `enable`
+    `enabled`
   )
 VALUES
   (
@@ -80,6 +82,7 @@ VALUES
     'R01',
     'Nguyen Van A',
     '+84901234561',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -94,6 +97,7 @@ VALUES
     'R03',
     'Hoang Thi V',
     '+84901234582',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -108,6 +112,7 @@ VALUES
     'R02',
     'Pham Van Q',
     '+84901234577',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -122,6 +127,7 @@ VALUES
     'R02',
     'Do Thi L',
     '+84901234572',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -136,6 +142,7 @@ VALUES
     'R01',
     'Nguyen Van G',
     '+84901234567',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -150,6 +157,7 @@ VALUES
     'R01',
     'Tran Thi B',
     '+84901234562',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -164,6 +172,7 @@ VALUES
     'R03',
     'Pham Van W',
     '+84901234583',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -178,6 +187,7 @@ VALUES
     'R02',
     'Do Thi R',
     '+84901234578',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -192,6 +202,7 @@ VALUES
     'R02',
     'Nguyen Van M',
     '+84901234573',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -206,6 +217,7 @@ VALUES
     'R01',
     'Tran Thi H',
     '+84901234568',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -220,6 +232,7 @@ VALUES
     'R01',
     'Le Van C',
     '+84901234563',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -234,6 +247,7 @@ VALUES
     'R03',
     'Do Thi X',
     '+84901234584',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -248,6 +262,7 @@ VALUES
     'R02',
     'Nguyen Van S',
     '+84901234579',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -262,6 +277,7 @@ VALUES
     'R02',
     'Tran Thi N',
     '+84901234574',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -276,6 +292,7 @@ VALUES
     'R01',
     'Le Van I',
     '+84901234569',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -290,6 +307,7 @@ VALUES
     'R01',
     'Hoang Thi D',
     '+84901234564',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -304,6 +322,7 @@ VALUES
     'R03',
     'Nguyen Van Y',
     '+84901234585',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -318,6 +337,7 @@ VALUES
     'R02',
     'Tran Thi T',
     '+84901234580',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -332,6 +352,7 @@ VALUES
     'R02',
     'Le Van O',
     '+84901234575',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -346,6 +367,7 @@ VALUES
     'R01',
     'Hoang Thi J',
     '+84901234570',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -360,6 +382,7 @@ VALUES
     'R01',
     'Pham Van E',
     '+84901234565',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -374,6 +397,7 @@ VALUES
     'R03',
     'Tran Thi Z',
     '+84901234586',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -388,6 +412,7 @@ VALUES
     'R03',
     'Le Van U',
     '+84901234581',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -402,6 +427,7 @@ VALUES
     'R02',
     'Hoang Thi P',
     '+84901234576',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -416,6 +442,7 @@ VALUES
     'R02',
     'Pham Van K',
     '+84901234571',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -430,6 +457,7 @@ VALUES
     'R01',
     'Do Thi F',
     '+84901234566',
+    'unverified',
     '',
     '0000-00-00 00:00:00',
     '',
@@ -453,10 +481,9 @@ CREATE TABLE `account_notification` (
 --
 CREATE TABLE `bill` (
   `bill_id` varchar(25) NOT NULL,
-  `customer_id` varchar(10) DEFAULT NULL,
-  `payment_method` varchar(10) DEFAULT NULL,
-  `payment_day` datetime DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL
+  `customer_id` varchar(10) NOT NULL,
+  `payment_method` enum('cash', 'vnpay') NOT NULL DEFAULT 'cash',
+  `payment_date` datetime NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -465,10 +492,10 @@ CREATE TABLE `bill` (
 --
 CREATE TABLE `bill_detail` (
   `bill_id` varchar(25) NOT NULL,
-  `trip_id` varchar(30) DEFAULT NULL,
-  `number_of_ticket` smallint(6) DEFAULT NULL,
-  `fee` int(11) DEFAULT NULL,
-  `type_ticket` varchar(10) DEFAULT NULL
+  `trip_id` varchar(30) NOT NULL,
+  `number_of_ticket` smallint(6) NOT NULL,
+  `fee` int(11) NOT NULL,
+  `type_ticket` enum('one_way_ticket', 'round_trip_ticket') NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -477,10 +504,10 @@ CREATE TABLE `bill_detail` (
 --
 CREATE TABLE `booking` (
   `booking_Id` varchar(10) NOT NULL,
-  `trip_id` varchar(30) NOT NULL,
   `customer_id` varchar(10) NOT NULL,
-  `number_of_seat` smallint(6) DEFAULT NULL,
-  `is_round_trip` tinyint(1) DEFAULT NULL,
+  `trip_id` varchar(30) NOT NULL,
+  `number_of_seat` tinyint(4) NOT NULL,
+  `is_round_trip` tinyint(1) NOT NULL,
   `round_trip_id` varchar(50) DEFAULT NULL,
   `pickup_point` varchar(100) DEFAULT NULL,
   `drop_off_point` varchar(100) DEFAULT NULL
@@ -492,8 +519,8 @@ CREATE TABLE `booking` (
 --
 CREATE TABLE `bus` (
   `bus_id` varchar(12) NOT NULL,
-  `type` varchar(10) DEFAULT NULL,
-  `number_of_seat` smallint(6) DEFAULT NULL
+  `type` enum('limousine', 'bunk') NOT NULL DEFAULT 'bunk',
+  `number_of_seat` smallint(6) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --
@@ -521,9 +548,9 @@ VALUES
   ('29F.666-059', 'bunk', 36),
   ('29F.666-077', 'bunk', 36),
   ('30F.555-004', 'limousine', 34),
-  ('30F.555-028', 'seat', 45),
-  ('30F.555-046', 'seat', 45),
-  ('30F.555-064', 'seat', 45),
+  ('30F.555-028', 'bunk', 45),
+  ('30F.555-046', 'bunk', 45),
+  ('30F.555-064', 'bunk', 45),
   ('30F.666-019', 'limousine', 34),
   ('30F.666-037', 'limousine', 34),
   ('30F.666-055', 'limousine', 34),
@@ -545,10 +572,10 @@ VALUES
   ('43F.666-031', 'limousine', 34),
   ('43F.666-049', 'limousine', 34),
   ('43F.666-067', 'limousine', 34),
-  ('51F.555-020', 'seat', 45),
-  ('51F.555-038', 'seat', 45),
-  ('51F.555-056', 'seat', 45),
-  ('51F.555-074', 'seat', 45),
+  ('51F.555-020', 'bunk', 45),
+  ('51F.555-038', 'bunk', 45),
+  ('51F.555-056', 'bunk', 45),
+  ('51F.555-074', 'bunk', 45),
   ('51F.666-001', 'bunk', 36),
   ('51F.666-005', 'bunk', 36),
   ('51F.666-011', 'limousine', 34),
@@ -564,7 +591,7 @@ VALUES
   ('60F.666-035', 'limousine', 34),
   ('60F.666-053', 'limousine', 34),
   ('60F.666-071', 'limousine', 34),
-  ('75F.555-008', 'seat', 45),
+  ('75F.555-008', 'bunk', 45),
   ('75F.555-024', 'limousine', 34),
   ('75F.555-042', 'limousine', 34),
   ('75F.555-060', 'limousine', 34),
@@ -585,14 +612,24 @@ VALUES
 
 -- --------------------------------------------------------
 --
+-- Table structure for table `bus_seats`
+--
+CREATE TABLE `bus_seats` (
+  `id` int(11) NOT NULL,
+  `bus_id` varchar(10) NOT NULL,
+  `seat_name` varchar(10) NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+--
 -- Table structure for table `checkpoint`
 --
 CREATE TABLE `checkpoint` (
   `checkpoint_id` smallint(6) NOT NULL,
-  `name` varchar(70) DEFAULT NULL,
-  `phone` varchar(15) DEFAULT NULL,
-  `region` varchar(15) DEFAULT NULL,
-  `address` varchar(50) DEFAULT NULL
+  `place_name` varchar(70) NOT NULL,
+  `address` varchar(50) NOT NULL,
+  `phone` varchar(10) NOT NULL,
+  `region` varchar(50) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --
@@ -601,10 +638,10 @@ CREATE TABLE `checkpoint` (
 INSERT INTO
   `checkpoint` (
     `checkpoint_id`,
-    `name`,
+    `place_name`,
+    `address`,
     `phone`,
-    `region`,
-    `address`
+    `region`
   )
 VALUES
   (
@@ -632,7 +669,7 @@ VALUES
     4,
     '27 NGUYỄN ĐÁNG',
     'Số 27, đường Ng',
-    '02943 747 474',
+    '02943 747 ',
     'Miền Nam'
   ),
   (
@@ -646,14 +683,14 @@ VALUES
     6,
     'AN TRẠCH',
     '720 QL1A, ấp An',
-    '02993 872 872',
+    '02993 872 ',
     'Miền Nam'
   ),
   (
     7,
     'BẾN XE BÀ RỊA',
     'Km 65, Quốc lộ ',
-    '02543 826 768',
+    '02543 826 ',
     'Miền Nam'
   ),
   (
@@ -667,21 +704,21 @@ VALUES
     9,
     'BẾN XE CÀ MAU',
     'Quốc lộ 1A, Lý ',
-    '02903 651 651',
+    '02903 651 ',
     'Miền Nam'
   ),
   (
     10,
     'BẾN XE CHÂU ĐỐC',
     'QL 91,K Hòa Bìn',
-    '02963 989 999',
+    '02963 989 ',
     'Miền Nam'
   ),
   (
     11,
     'BẾN XE NĂM CĂN',
     'Thị Trấn Năm Că',
-    '02903 715 715',
+    '02903 715 ',
     'Miền Nam'
   ),
   (
@@ -695,7 +732,7 @@ VALUES
     13,
     'BẾN XE Ô MÔN',
     'Khu vực 5- P.Ch',
-    '02923 667 997',
+    '02923 667 ',
     'Miền Nam'
   ),
   (
@@ -723,7 +760,7 @@ VALUES
     17,
     'BÌNH MINH',
     'Ấp Thuận Tiến B',
-    '02703 742 999',
+    '02703 742 ',
     'Miền Nam'
   ),
   (
@@ -744,7 +781,7 @@ VALUES
     20,
     'BX CAO LÃNH',
     'QL30, Ấp An Địn',
-    '02773 636 636',
+    '02773 636 ',
     'Miền Nam'
   ),
   (
@@ -758,21 +795,21 @@ VALUES
     22,
     'BX ĐỒNG TÂM',
     '168 Quản lộ Phụ',
-    '02903 658 888',
+    '02903 658 ',
     'Miền Nam'
   ),
   (
     23,
     'BX HỒNG NGỰ',
     'Tổ 3, Ấp Bình H',
-    '02773 898 777',
+    '02773 898 ',
     'Miền Nam'
   ),
   (
     24,
     'BX LONG XUYÊN',
     '392 Phạm Cự Lượ',
-    '02963 989 999',
+    '02963 989 ',
     'Miền Nam'
   ),
   (
@@ -800,28 +837,28 @@ VALUES
     28,
     'BX NGÃ 5',
     '109 Nguyễn Trãi',
-    '02993 523 523',
+    '02993 523 ',
     'Miền Nam'
   ),
   (
     29,
     'BX NGÃ 7',
     'BX Ngã 7, P.Ngã',
-    '02933 868 866',
+    '02933 868 ',
     'Miền Nam'
   ),
   (
     30,
     'BX SA ĐÉC',
     '149/8 khóm Hoà ',
-    '02773 774 993',
+    '02773 774 ',
     'Miền Nam'
   ),
   (
     31,
     'BX SÓC TRĂNG',
     '38 Lê Duẩn, P3,',
-    '02993 868 868',
+    '02993 868 ',
     'Miền Nam'
   ),
   (
@@ -842,49 +879,49 @@ VALUES
     34,
     'BX THANH BÌNH',
     'QL30, Khóm Tân ',
-    '02773 833 068',
+    '02773 833 ',
     'Miền Nam'
   ),
   (
     35,
     'BX TRÀ VINH',
     'Số 554, QL 54, ',
-    '02943 747 474',
+    '02943 747 ',
     'Miền Nam'
   ),
   (
     36,
     'BX VỊ THANH',
     'Ấp 7, Xã Vị Tru',
-    '02933 583 583',
+    '02933 583 ',
     'Miền Nam'
   ),
   (
     37,
     'BX VĨNH CHÂU',
     'Đường Phan Than',
-    '02993 615 615',
+    '02993 615 ',
     'Miền Nam'
   ),
   (
     38,
     'BX VĨNH LONG',
     '1E, Đinh Tiên H',
-    '02703 879 777',
+    '02703 879 ',
     'Miền Nam'
   ),
   (
     39,
     'CÁI NƯỚC',
     'Quốc lộ 1A, Khó',
-    '02903 748 748',
+    '02903 748 ',
     'Miền Nam'
   ),
   (
     40,
     'CÁI TÀU HẠ',
     'QL 80, Khóm Phú',
-    '02773 611 333',
+    '02773 611 ',
     'Miền Nam'
   ),
   (
@@ -898,7 +935,7 @@ VALUES
     42,
     'ĐẦM DƠI',
     'Đường 30 tháng ',
-    '02903 956 956',
+    '02903 956 ',
     'Miền Nam'
   ),
   (
@@ -912,28 +949,28 @@ VALUES
     44,
     'LAI VUNG',
     '137A -QL 80, Xã',
-    '02773 849 443',
+    '02773 849 ',
     'Miền Nam'
   ),
   (
     45,
     'LẤP VÒ',
     '135 Đường 3/2, ',
-    '02773 688 988',
+    '02773 688 ',
     'Miền Nam'
   ),
   (
     46,
     'LỘ TẺ TRI TÔN',
     'Bến xe Châu Thà',
-    '02963 989 999',
+    '02963 989 ',
     'Miền Nam'
   ),
   (
     47,
     'LONG PHÚ',
     'Ấp 1, TT Long P',
-    '02993 712 713',
+    '02993 712 ',
     'Miền Nam'
   ),
   (
@@ -947,84 +984,84 @@ VALUES
     49,
     'MA LÂM',
     '474 đường 8 thá',
-    '02523 733 939',
+    '02523 733 ',
     'Miền Nam'
   ),
   (
     50,
     'MŨI NÉ',
     '20 Huỳnh Thúc K',
-    '02523 743 113',
+    '02523 743 ',
     'Miền Nam'
   ),
   (
     51,
     'MỸ THỚI',
     '26/32 Quốc Lộ 9',
-    '02963 989 999',
+    '02963 989 ',
     'Miền Nam'
   ),
   (
     52,
     'NGÃ TƯ ĐỒNG TÂM',
     'Quốc Lộ 1A, Ấp ',
-    '02733 618 666',
+    '02733 618 ',
     'Miền Nam'
   ),
   (
     53,
     'PHÚ HÒA',
     '455 Trần Phú, Ấ',
-    '02963 989 999',
+    '02963 989 ',
     'Miền Nam'
   ),
   (
     54,
     'PHƯỚC LONG',
     'Ấp Long Thành, ',
-    '02913 859 859',
+    '02913 859 ',
     'Miền Nam'
   ),
   (
     55,
     'SATRA TRẠM DỪNG',
     'Ấp Hòa Phúc, xã',
-    '02733 756 238',
+    '02733 756 ',
     'Miền Nam'
   ),
   (
     56,
     'SÔNG ĐỐC',
     'Tổ 5, Khóm 10, ',
-    '02903 890 890',
+    '02903 890 ',
     'Miền Nam'
   ),
   (
     57,
     'SONG PHÚ',
     'Lô 27-28-29 Khu',
-    '02703 959 999',
+    '02703 959 ',
     'Miền Nam'
   ),
   (
     58,
     'SUỐI LINH',
     'D9, Xa Lộ Hà Nộ',
-    '02518 890 638',
+    '02518 890 ',
     'Miền Nam'
   ),
   (
     59,
     'TÂN PHÚ',
     '782, Quốc Lộ 20',
-    '02513 698 002',
+    '02513 698 ',
     'Miền Nam'
   ),
   (
     60,
     'TRẦN ĐỀ',
     'Ấp Đầu Giồng, T',
-    '02993 717 718',
+    '02993 717 ',
     'Miền Nam'
   ),
   (
@@ -1052,42 +1089,42 @@ VALUES
     64,
     'VP BẠC LIÊU',
     'Bến xe Bạc Liêu',
-    '02913 932 345',
+    '02913 932 ',
     'Miền Nam'
   ),
   (
     65,
     'VP BÌNH PHÚ',
     'Ấp Nguyệt Lãng ',
-    '02943 888 474',
+    '02943 888 ',
     'Miền Nam'
   ),
   (
     66,
     'VP CÁI DẦU',
     'Tổ 5, Ấp Bình C',
-    '02963 989 999',
+    '02963 989 ',
     'Miền Nam'
   ),
   (
     67,
     'VP CÁI TẮC',
     'Bến xe Cái Tắc,',
-    '02933 947 947',
+    '02933 947 ',
     'Miền Nam'
   ),
   (
     68,
     'VP CHỢ CHÂU ĐỐC',
     'Đ.Nguyễn Hữu Cả',
-    '02963 989 999',
+    '02963 989 ',
     'Miền Nam'
   ),
   (
     69,
     'VP HÀ TIÊN',
     'Bến xe Hà Tiên,',
-    '02973 668 866',
+    '02973 668 ',
     'Miền Nam'
   ),
   (
@@ -1101,49 +1138,49 @@ VALUES
     71,
     'VP HỘ PHÒNG',
     'Bến xe Hộ phòng',
-    '02913 942 942',
+    '02913 942 ',
     'Miền Nam'
   ),
   (
     72,
     'VP HÒA BÌNH',
     'Số 617 Quốc Lộ ',
-    '02913 897 897',
+    '02913 897 ',
     'Miền Nam'
   ),
   (
     73,
     'VP KINH CÙNG',
     'Bến xe Kinh Cùn',
-    '02933 983 983',
+    '02933 983 ',
     'Miền Nam'
   ),
   (
     74,
     'VP MỸ LONG',
     'QL30, Ấp 2, xã ',
-    '02773 853 999',
+    '02773 853 ',
     'Miền Nam'
   ),
   (
     75,
     'VP MỸ THỌ',
     'QL30, Khóm Mỹ T',
-    '02773 986 939',
+    '02773 986 ',
     'Miền Nam'
   ),
   (
     76,
     'VP NGÃ 3 LỘ TẺ',
     'KV Thới Hòa 1 -',
-    '02923 642 668',
+    '02923 642 ',
     'Miền Nam'
   ),
   (
     77,
     'VP NÚI SAM',
     'Tân Lộ Kiều Lươ',
-    '02963 989 999',
+    '02963 989 ',
     'Miền Nam'
   ),
   (
@@ -1157,7 +1194,7 @@ VALUES
     79,
     'VP RẠCH GIÁ',
     'Bến xe Rạch Giá',
-    '02973 963 322',
+    '02973 963 ',
     'Miền Nam'
   ),
   (
@@ -1171,70 +1208,70 @@ VALUES
     81,
     'VP TÂN HIỆP',
     '81 Khu phố Đông',
-    '02973 733 668',
+    '02973 733 ',
     'Miền Nam'
   ),
   (
     82,
     'VP THỐT NỐT',
     'KV Qui Thạnh 1 ',
-    '02923 851 060',
+    '02923 851 ',
     'Miền Nam'
   ),
   (
     83,
     'VP THỨ 3',
     'Số 14, Khu phố ',
-    '02973 822 828',
+    '02973 822 ',
     'Miền Nam'
   ),
   (
     84,
     'VP TRÀ NÓC',
     '19/8 Lê Hồng Ph',
-    '02923 730 779',
+    '02923 730 ',
     'Miền Nam'
   ),
   (
     85,
     'VP TRẠM DỪNG BẾN TRE',
     'Đường Võ Nguyên',
-    '02753 646 464',
+    '02753 646 ',
     'Miền Nam'
   ),
   (
     86,
     'VP TRI TÔN',
     'Đường 3 tháng 2',
-    '02963 989 999',
+    '02963 989 ',
     'Miền Nam'
   ),
   (
     87,
     'VP VĨNH THUẬN',
     'Bến xe Vĩnh Thu',
-    '02973 636 366',
+    '02973 636 ',
     'Miền Nam'
   ),
   (
     88,
     'VP VỊNH TRE',
     'Số 1A, Đinh Tiê',
-    '02963 989 999',
+    '02963 989 ',
     'Miền Nam'
   ),
   (
     89,
     'VP VĨNH TƯỜNG',
     '242 QL 61A, KV ',
-    '02933 993 993',
+    '02933 993 ',
     'Miền Nam'
   ),
   (
     90,
     'VP VÕ THỊ SÁU',
     '17-19, Võ Thị S',
-    '02773 876 851',
+    '02773 876 ',
     'Miền Nam'
   ),
   (
@@ -1248,35 +1285,35 @@ VALUES
     92,
     'VP Y DƯỢC',
     '03 Mạc Thiên Tí',
-    '02838 555 175',
+    '02838 555 ',
     'Miền Nam'
   ),
   (
     93,
     'VP. BẾN XE BIÊN HÒA',
     '04, Nguyễn Ái Q',
-    '02518 890 638',
+    '02518 890 ',
     'Miền Nam'
   ),
   (
     94,
     'VP 172 LÊ DUẨN',
     'Số 172 Lê Duẩn,',
-    '02623 936 868',
+    '02623 936 ',
     'Miền Nam'
   ),
   (
     95,
     'VP BẢO LÂM',
     '95 Trần Phú,TT ',
-    '02633 734 734',
+    '02633 734 ',
     'Miền Nam'
   ),
   (
     96,
     'VP BẢO LỘC',
     '399 Trần Phú, P',
-    '02633 731 731',
+    '02633 731 ',
     'Miền Nam'
   ),
   (
@@ -1290,280 +1327,280 @@ VALUES
     98,
     'VP DI LINH',
     '735 Hùng Vương,',
-    '02633 788 799',
+    '02633 788 ',
     'Miền Nam'
   ),
   (
     99,
     'VP DRAN',
     'TDP Đường mới,T',
-    '02633 642 742',
+    '02633 642 ',
     'Miền Nam'
   ),
   (
     100,
     'VP ĐỨC TRỌNG',
     '795 Quốc lộ 20,',
-    '02633 651 651',
+    '02633 651 ',
     'Miền Nam'
   ),
   (
     101,
     'VP FI NÔM',
     '14 Tổ 13 - Ngã ',
-    '02633 658 678',
+    '02633 658 ',
     'Miền Nam'
   ),
   (
     102,
     'VP GIA NGHĨA',
     '226 Hai Bà Trưn',
-    '02613 676 767',
+    '02613 676 ',
     'Miền Nam'
   ),
   (
     103,
     'VP HOÀ NINH',
     'Ngã 3 Hoà Ninh ',
-    '02633 799 789',
+    '02633 799 ',
     'Miền Nam'
   ),
   (
     104,
     'VP KIẾN ĐỨC',
     'Ki-ot số 08 , N',
-    '02613 595 959',
+    '02613 595 ',
     'Miền Nam'
   ),
   (
     105,
     'VP LÊ QUÝ ĐÔN',
     '11A/2 Lê Quý Đô',
-    '02633 582 582',
+    '02633 582 ',
     'Miền Nam'
   ),
   (
     106,
     'VP TÀ HINE',
     'Ngã 3 Ninh Gia-',
-    '02633 628 638',
+    '02633 628 ',
     'Miền Nam'
   ),
   (
     107,
     'VP THẠNH MỸ',
     'Khu Phố Nghĩa Đ',
-    '02633 646 646',
+    '02633 646 ',
     'Miền Nam'
   ),
   (
     108,
     'VP TRẠI MÁT',
     '07 Huỳnh Tấn Ph',
-    '02633 535 558',
+    '02633 535 ',
     'Miền Nam'
   ),
   (
     109,
     '207 TÂY SƠN',
     '207 Tây Sơn, Ph',
-    '02563 947 947',
+    '02563 947 ',
     'Miền Trung'
   ),
   (
     110,
     '210 NGÔ GIA TỰ',
     '210 Ngô Gia Tự,',
-    '02593 828 223',
+    '02593 828 ',
     'Miền Trung'
   ),
   (
     111,
     'AN NHƠN',
     '02 Nguyễn Văn L',
-    '02563 789 889',
+    '02563 789 ',
     'Miền Trung'
   ),
   (
     112,
     'BẾN XE PHAN RANG',
     '52 Lê Duẩn, QL1',
-    '02593 828 222',
+    '02593 828 ',
     'Miền Trung'
   ),
   (
     113,
     'BẾN XE PHÍA BẮC HUẾ',
     '132 Lý Thái Tổ,',
-    '02343 766 868',
+    '02343 766 ',
     'Miền Trung'
   ),
   (
     114,
     'BẾN XE PHÍA NAM',
     '97 An dương vươ',
-    '02343 870 870',
+    '02343 870 ',
     'Miền Trung'
   ),
   (
     115,
     'BẾN XE QUẢNG NGÃI',
     '02 Trần Khánh D',
-    '02553 839 839',
+    '02553 839 ',
     'Miền Trung'
   ),
   (
     116,
     'BẾN XE QUY NHƠN',
     'TT Quy Nhơn, Ph',
-    '02563 946 166',
+    '02563 946 ',
     'Miền Trung'
   ),
   (
     117,
     'BÌNH SƠN',
     'Số 01 Lê Thị Hà',
-    '02553 525 252',
+    '02553 525 ',
     'Miền Trung'
   ),
   (
     118,
     'BX BẮC PHAN THIẾT',
     '01 Từ Văn Tư, P',
-    '02523 833 179',
+    '02523 833 ',
     'Miền Trung'
   ),
   (
     119,
     'BX NAM PHAN THIẾT',
     '64 Trần Quý Cáp',
-    '02523 730 252',
+    '02523 730 ',
     'Miền Trung'
   ),
   (
     120,
     'PHÚ QUÝ',
     '144 Quốc Lộ 1A,',
-    '02593 841 222',
+    '02593 841 ',
     'Miền Trung'
   ),
   (
     121,
     'SÔNG VỆ',
     'QL1A ,Thôn 3, X',
-    '02553 719 549',
+    '02553 719 ',
     'Miền Trung'
   ),
   (
     122,
     'VĂN PHÒNG 176 TRẦN QUÝ CÁP',
     '176 Trần Quý Cá',
-    '02583 560 093',
+    '02583 560 ',
     'Miền Trung'
   ),
   (
     123,
     'VĂN PHÒNG DIÊN KHÁNH',
     '62 Lạc Long Quâ',
-    '02583 851 851',
+    '02583 851 ',
     'Miền Trung'
   ),
   (
     124,
     'VĂN PHÒNG MỸ CA',
     '240 Đại Lộ Hùng',
-    '02583 977 968',
+    '02583 977 ',
     'Miền Trung'
   ),
   (
     125,
     'VĂN PHÒNG TAM KỲ',
     '252 Nguyễn Hoàn',
-    '02353 819 819',
+    '02353 819 ',
     'Miền Trung'
   ),
   (
     126,
     'VP 77 LÊ LỢI',
     '77 Lê Lợi, Phườ',
-    '02573 812 812',
+    '02573 812 ',
     'Miền Trung'
   ),
   (
     127,
     'VP BẾN XE CAM RANH',
     'Số 01 Lê Duẩn, ',
-    '02583 953 953',
+    '02583 953 ',
     'Miền Trung'
   ),
   (
     128,
     'VP BẾN XE ĐÀ NẴNG',
     'Số 97-99 Cao Sơ',
-    '02363 786 786',
+    '02363 786 ',
     'Miền Trung'
   ),
   (
     129,
     'VP BẾN XE ĐẠI LỘC',
     '279 Hùng Vương,',
-    '02353 747 747',
+    '02353 747 ',
     'Miền Trung'
   ),
   (
     130,
     'VP BẾN XE NAM TUY HOÀ',
     '507 Nguyễn Văn ',
-    '02573 793 793',
+    '02573 793 ',
     'Miền Trung'
   ),
   (
     131,
     'VP BẾN XE NINH HOÀ',
     'QL1A, Km1421, T',
-    '02583 645 666',
+    '02583 645 ',
     'Miền Trung'
   ),
   (
     132,
     'VP BẾN XE PHÍA BẮC',
     'Số 01 đường 2/4',
-    '02583 540 068',
+    '02583 540 ',
     'Miền Trung'
   ),
   (
     133,
     'VP BẾN XE PHÍA NAM',
     'Km6 đường 23/10',
-    '02583 891 955',
+    '02583 891 ',
     'Miền Trung'
   ),
   (
     134,
     'VP CẦU BẾN LỘI',
     '326 đường 19 th',
-    '02523 739 984',
+    '02523 739 ',
     'Miền Trung'
   ),
   (
     135,
     'VP NAM PHƯỚC',
     '284 Điện Biên P',
-    '02353 776 688',
+    '02353 776 ',
     'Miền Trung'
   ),
   (
     136,
     'VP NGUYỄN ĐỨC CẢNH',
     '14 Nguyễn Đức C',
-    '02583 880 079',
+    '02583 880 ',
     'Miền Trung'
   ),
   (
     137,
     'VP NGUYỄN THỊ MINH KHAI',
     '151 Nguyễn Thị ',
-    '02583 876 079',
+    '02583 876 ',
     'Miền Trung'
   ),
   (
@@ -1577,21 +1614,21 @@ VALUES
     139,
     'VP TRẦN PHÚ',
     'Số 16, Đ. Trần ',
-    '02363 786 786',
+    '02363 786 ',
     'Miền Trung'
   ),
   (
     140,
     'BẾN XE GIÁP BÁT',
     'KM Số 6, Đường ',
-    '02438 641 919',
+    '02438 641 ',
     'Miền Bắc'
   ),
   (
     141,
     'BẾN XE NAM ĐỊNH',
     'KM Số 2, Đường ',
-    '02283 863 863',
+    '02283 863 ',
     'Miền Bắc'
   );
 
@@ -1601,8 +1638,8 @@ VALUES
 --
 CREATE TABLE `controller` (
   `controller_id` varchar(15) NOT NULL,
-  `account_id` varchar(30) DEFAULT NULL,
-  `status` varchar(30) DEFAULT NULL
+  `account_id` varchar(30) NOT NULL,
+  `status` varchar(30) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --
@@ -1628,9 +1665,9 @@ VALUES
 --
 CREATE TABLE `customer` (
   `customer_id` varchar(10) NOT NULL,
-  `email` varchar(50) DEFAULT NULL,
-  `name` varchar(70) DEFAULT NULL,
-  `phone` varchar(12) DEFAULT NULL,
+  `email` varchar(50) NOT NULL,
+  `name` varchar(70) NOT NULL,
+  `phone` varchar(12) NOT NULL,
   `account_id` varchar(10) DEFAULT NULL,
   `status` varchar(30) DEFAULT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
@@ -1642,7 +1679,7 @@ CREATE TABLE `customer` (
 CREATE TABLE `driver` (
   `driver_id` varchar(10) NOT NULL,
   `account_id` varchar(10) DEFAULT NULL,
-  `status` varchar(30) DEFAULT NULL
+  `status` enum('active', 'inactive') NOT NULL DEFAULT 'active'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --
@@ -1667,11 +1704,11 @@ VALUES
 -- Table structure for table `feedback`
 --
 CREATE TABLE `feedback` (
-  `feedback_idid` varchar(30) NOT NULL,
+  `feedback_id` varchar(30) NOT NULL,
   `trip_id` varchar(10) DEFAULT NULL,
-  `account_id` varchar(10) DEFAULT NULL,
-  `comment` varchar(255) DEFAULT NULL,
-  `rating` smallint(6) DEFAULT NULL
+  `account_id` varchar(10) NOT NULL,
+  `comment` varchar(255) NOT NULL,
+  `rating` smallint(6) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1679,10 +1716,10 @@ CREATE TABLE `feedback` (
 -- Table structure for table `notification`
 --
 CREATE TABLE `notification` (
-  `notification_idid` varchar(20) NOT NULL,
-  `type` varchar(10) DEFAULT NULL,
-  `subject` varchar(50) DEFAULT NULL,
-  `message` varchar(255) DEFAULT NULL
+  `notification_id` varchar(20) NOT NULL,
+  `type` varchar(10) NOT NULL,
+  `subject` varchar(50) NOT NULL,
+  `message` varchar(255) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1691,7 +1728,7 @@ CREATE TABLE `notification` (
 --
 CREATE TABLE `permission` (
   `permission_id` varchar(10) NOT NULL,
-  `permission_name` varchar(10) DEFAULT NULL
+  `permission_name` varchar(50) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --
@@ -1711,7 +1748,7 @@ VALUES
 --
 CREATE TABLE `role` (
   `role_id` varchar(10) NOT NULL,
-  `role_name` varchar(10) NOT NULL
+  `role_name` varchar(50) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --
@@ -1763,9 +1800,9 @@ VALUES
 --
 CREATE TABLE `route` (
   `route_id` varchar(10) NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `time` varchar(15) DEFAULT NULL,
-  `distance` int(11) DEFAULT NULL
+  `name` varchar(100) NOT NULL,
+  `time` varchar(15) NOT NULL,
+  `distance` int(11) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --
@@ -1987,22 +2024,22 @@ VALUES
 
 -- --------------------------------------------------------
 --
--- Table structure for table `routecheckpoint`
+-- Table structure for table `route_checkpoint`
 --
-CREATE TABLE `routecheckpoint` (
+CREATE TABLE `route_checkpoint` (
   `route_id` varchar(10) NOT NULL,
   `checkpoint_id` smallint(6) NOT NULL,
-  `checkpoint_order` varchar(15) DEFAULT NULL,
-  `checkpoint_city` varchar(100) DEFAULT NULL,
-  `checkpoint_province` varchar(100) DEFAULT NULL,
-  `type` varchar(10) DEFAULT NULL
+  `checkpoint_order` varchar(15) NOT NULL,
+  `checkpoint_city` varchar(100) NOT NULL,
+  `checkpoint_province` varchar(100) NOT NULL,
+  `type` varchar(10) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --
--- Dumping data for table `routecheckpoint`
+-- Dumping data for table `route_checkpoint`
 --
 INSERT INTO
-  `routecheckpoint` (
+  `route_checkpoint` (
     `route_id`,
     `checkpoint_id`,
     `checkpoint_order`,
@@ -2559,12 +2596,13 @@ VALUES
 
 -- --------------------------------------------------------
 --
--- Table structure for table `seatbooking`
+-- Table structure for table `seat_reservations`
 --
-CREATE TABLE `seatbooking` (
-  `trip_id` varchar(30) NOT NULL,
-  `customer_id` varchar(10) NOT NULL,
-  `seat` varchar(5) NOT NULL
+CREATE TABLE `seat_reservations` (
+  `id` int(11) NOT NULL,
+  `seat_id` int(11) NOT NULL,
+  `trip_id` varchar(10) NOT NULL,
+  `status` enum('booked', 'available') NOT NULL DEFAULT 'available'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2587,8 +2625,8 @@ CREATE TABLE `spring_session` (
 --
 CREATE TABLE `staff` (
   `staff_id` varchar(10) NOT NULL,
-  `account_id` varchar(10) DEFAULT NULL,
-  `status` varchar(30) DEFAULT NULL
+  `account_id` varchar(10) NOT NULL,
+  `status` varchar(30) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --
@@ -2610,15 +2648,15 @@ VALUES
 --
 CREATE TABLE `trip` (
   `trip_id` varchar(30) NOT NULL,
-  `departure_time` datetime DEFAULT NULL,
-  `arrival_time` datetime DEFAULT NULL,
-  `price` int(11) DEFAULT NULL,
-  `bus_id` varchar(9) DEFAULT NULL,
-  `customer_id` varchar(10) DEFAULT NULL,
-  `driver_id` varchar(10) DEFAULT NULL,
-  `controller_id` varchar(30) DEFAULT NULL,
-  `staff_id` varchar(10) DEFAULT NULL,
-  `route_id` varchar(10) DEFAULT NULL
+  `departure_time` datetime NOT NULL,
+  `arrival_time` datetime NOT NULL,
+  `price` int(11) NOT NULL,
+  `status` enum('finished', 'arriving', 'waiting', 'started') NOT NULL DEFAULT 'waiting',
+  `bus_id` varchar(9) NOT NULL,
+  `driver_id` varchar(10) NOT NULL,
+  `controller_id` varchar(15) NOT NULL,
+  `staff_id` varchar(10) NOT NULL,
+  `route_id` varchar(10) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 --
@@ -2630,9 +2668,9 @@ CREATE TABLE `trip` (
 ALTER TABLE
   `account`
 ADD
-  PRIMARY KEY (`account_id`),
+  PRIMARY KEY (`id`),
 ADD
-  UNIQUE KEY `account_id` (`account_id`),
+  UNIQUE KEY `account_id` (`id`),
 ADD
   KEY `role_id` (`role_id`);
 
@@ -2656,7 +2694,9 @@ ALTER TABLE
 ADD
   PRIMARY KEY (`bill_id`),
 ADD
-  UNIQUE KEY `bill_id` (`bill_id`);
+  UNIQUE KEY `bill_id` (`bill_id`),
+ADD
+  KEY `customer_id` (`customer_id`);
 
 --
 -- Indexes for table `bill_detail`
@@ -2678,9 +2718,9 @@ ALTER TABLE
 ADD
   PRIMARY KEY (`booking_Id`),
 ADD
-  UNIQUE KEY `trip_id` (`trip_id`),
+  KEY `customer_id` (`customer_id`),
 ADD
-  KEY `customer_id` (`customer_id`);
+  KEY `trip_id` (`trip_id`);
 
 --
 -- Indexes for table `bus`
@@ -2691,6 +2731,16 @@ ADD
   PRIMARY KEY (`bus_id`),
 ADD
   UNIQUE KEY `bus_id` (`bus_id`);
+
+--
+-- Indexes for table `bus_seats`
+--
+ALTER TABLE
+  `bus_seats`
+ADD
+  PRIMARY KEY (`id`),
+ADD
+  KEY `bus_id` (`bus_id`);
 
 --
 -- Indexes for table `checkpoint`
@@ -2744,9 +2794,9 @@ ADD
 ALTER TABLE
   `feedback`
 ADD
-  PRIMARY KEY (`feedback_idid`),
+  PRIMARY KEY (`feedback_id`),
 ADD
-  UNIQUE KEY `feedback_idid` (`feedback_idid`),
+  UNIQUE KEY `feedback_idid` (`feedback_id`),
 ADD
   KEY `trip_id` (`trip_id`),
 ADD
@@ -2758,9 +2808,9 @@ ADD
 ALTER TABLE
   `notification`
 ADD
-  PRIMARY KEY (`notification_idid`),
+  PRIMARY KEY (`notification_id`),
 ADD
-  UNIQUE KEY `notification_idid` (`notification_idid`);
+  UNIQUE KEY `notification_idid` (`notification_id`);
 
 --
 -- Indexes for table `permission`
@@ -2800,7 +2850,9 @@ ADD
 ALTER TABLE
   `role_permission`
 ADD
-  PRIMARY KEY (`role_id`, `permission_id`);
+  PRIMARY KEY (`role_id`, `permission_id`),
+ADD
+  KEY `role_permission_ibfk_2` (`permission_id`);
 
 --
 -- Indexes for table `route`
@@ -2813,24 +2865,26 @@ ADD
   UNIQUE KEY `route_id` (`route_id`);
 
 --
--- Indexes for table `routecheckpoint`
+-- Indexes for table `route_checkpoint`
 --
 ALTER TABLE
-  `routecheckpoint`
+  `route_checkpoint`
 ADD
-  PRIMARY KEY (`route_id`, `checkpoint_id`);
+  PRIMARY KEY (`route_id`, `checkpoint_id`),
+ADD
+  KEY `routecheckpoint_ibfk_2` (`checkpoint_id`);
 
 --
--- Indexes for table `seatbooking`
+-- Indexes for table `seat_reservations`
 --
 ALTER TABLE
-  `seatbooking`
+  `seat_reservations`
 ADD
-  PRIMARY KEY (`trip_id`, `customer_id`, `seat`),
+  PRIMARY KEY (`id`),
 ADD
-  UNIQUE KEY `trip_id` (`trip_id`),
+  KEY `trip_id` (`trip_id`),
 ADD
-  KEY `customer_id` (`customer_id`);
+  KEY `seat_id` (`seat_id`);
 
 --
 -- Indexes for table `spring_session`
@@ -2866,11 +2920,30 @@ ADD
 ADD
   KEY `driver_id` (`driver_id`),
 ADD
-  KEY `controller_id` (`controller_id`),
-ADD
   KEY `staff_id` (`staff_id`),
 ADD
-  KEY `trip_ibfk_2` (`bus_id`);
+  KEY `trip_ibfk_2` (`bus_id`),
+ADD
+  KEY `controller_id` (`controller_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+--
+-- AUTO_INCREMENT for table `bus_seats`
+--
+ALTER TABLE
+  `bus_seats`
+MODIFY
+  `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `seat_reservations`
+--
+ALTER TABLE
+  `seat_reservations`
+MODIFY
+  `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -2889,17 +2962,23 @@ ADD
 ALTER TABLE
   `account_notification`
 ADD
-  CONSTRAINT `account_notification_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `account_notification_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
 ADD
-  CONSTRAINT `account_notification_ibfk_2` FOREIGN KEY (`notification_id`) REFERENCES `notification` (`notification_idid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  CONSTRAINT `account_notification_ibfk_2` FOREIGN KEY (`notification_id`) REFERENCES `notification` (`notification_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `bill`
+--
+ALTER TABLE
+  `bill`
+ADD
+  CONSTRAINT `bill_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`);
 
 --
 -- Constraints for table `bill_detail`
 --
 ALTER TABLE
   `bill_detail`
-ADD
-  CONSTRAINT `bill_detail_ibfk_1` FOREIGN KEY (`trip_id`) REFERENCES `booking` (`trip_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
 ADD
   CONSTRAINT `bill_detail_ibfk_2` FOREIGN KEY (`bill_id`) REFERENCES `bill` (`bill_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
@@ -2909,9 +2988,17 @@ ADD
 ALTER TABLE
   `booking`
 ADD
-  CONSTRAINT `booking_ibfk_1` FOREIGN KEY (`trip_id`) REFERENCES `trip` (`trip_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `booking_ibfk_2` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
 ADD
-  CONSTRAINT `booking_ibfk_2` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  CONSTRAINT `booking_ibfk_3` FOREIGN KEY (`trip_id`) REFERENCES `trip` (`trip_id`);
+
+--
+-- Constraints for table `bus_seats`
+--
+ALTER TABLE
+  `bus_seats`
+ADD
+  CONSTRAINT `bus_seats_ibfk_1` FOREIGN KEY (`bus_id`) REFERENCES `bus` (`bus_id`);
 
 --
 -- Constraints for table `controller`
@@ -2919,7 +3006,7 @@ ADD
 ALTER TABLE
   `controller`
 ADD
-  CONSTRAINT `controller_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  CONSTRAINT `controller_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `customer`
@@ -2927,7 +3014,7 @@ ADD
 ALTER TABLE
   `customer`
 ADD
-  CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `driver`
@@ -2935,7 +3022,7 @@ ADD
 ALTER TABLE
   `driver`
 ADD
-  CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `feedback`
@@ -2945,7 +3032,7 @@ ALTER TABLE
 ADD
   CONSTRAINT `feedback_ibfk_1` FOREIGN KEY (`trip_id`) REFERENCES `trip` (`trip_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
 ADD
-  CONSTRAINT `feedback_ibfk_2` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  CONSTRAINT `feedback_ibfk_2` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `role_notification`
@@ -2955,7 +3042,7 @@ ALTER TABLE
 ADD
   CONSTRAINT `role_notification_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
 ADD
-  CONSTRAINT `role_notification_ibfk_2` FOREIGN KEY (`notification_id`) REFERENCES `notification` (`notification_idid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  CONSTRAINT `role_notification_ibfk_2` FOREIGN KEY (`notification_id`) REFERENCES `notification` (`notification_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `role_permission`
@@ -2968,24 +3055,24 @@ ADD
   CONSTRAINT `role_permission_ibfk_2` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`permission_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `routecheckpoint`
+-- Constraints for table `route_checkpoint`
 --
 ALTER TABLE
-  `routecheckpoint`
+  `route_checkpoint`
 ADD
-  CONSTRAINT `routecheckpoint_ibfk_1` FOREIGN KEY (`route_id`) REFERENCES `route` (`route_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `route_checkpoint_ibfk_1` FOREIGN KEY (`route_id`) REFERENCES `route` (`route_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
 ADD
-  CONSTRAINT `routecheckpoint_ibfk_2` FOREIGN KEY (`checkpoint_id`) REFERENCES `checkpoint` (`checkpoint_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  CONSTRAINT `route_checkpoint_ibfk_2` FOREIGN KEY (`checkpoint_id`) REFERENCES `checkpoint` (`checkpoint_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `seatbooking`
+-- Constraints for table `seat_reservations`
 --
 ALTER TABLE
-  `seatbooking`
+  `seat_reservations`
 ADD
-  CONSTRAINT `seatbooking_ibfk_1` FOREIGN KEY (`trip_id`) REFERENCES `trip` (`trip_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `seat_reservations_ibfk_2` FOREIGN KEY (`trip_id`) REFERENCES `trip` (`trip_id`),
 ADD
-  CONSTRAINT `seatbooking_ibfk_2` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  CONSTRAINT `seat_reservations_ibfk_3` FOREIGN KEY (`seat_id`) REFERENCES `bus_seats` (`id`);
 
 --
 -- Constraints for table `staff`
@@ -2993,7 +3080,7 @@ ADD
 ALTER TABLE
   `staff`
 ADD
-  CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `trip`
@@ -3007,9 +3094,11 @@ ADD
 ADD
   CONSTRAINT `trip_ibfk_3` FOREIGN KEY (`driver_id`) REFERENCES `driver` (`driver_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
 ADD
-  CONSTRAINT `trip_ibfk_4` FOREIGN KEY (`controller_id`) REFERENCES `controller` (`controller_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `trip_ibfk_5` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
 ADD
-  CONSTRAINT `trip_ibfk_5` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  CONSTRAINT `trip_ibfk_6` FOREIGN KEY (`trip_id`) REFERENCES `bill_detail` (`trip_id`),
+ADD
+  CONSTRAINT `trip_ibfk_7` FOREIGN KEY (`controller_id`) REFERENCES `controller` (`controller_id`);
 
 COMMIT;
 

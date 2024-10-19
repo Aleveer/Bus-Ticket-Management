@@ -27,8 +27,8 @@ public class Feedback {
     @Column(name = "feedback_id")
     private int feedbackId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "trip_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+    @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })

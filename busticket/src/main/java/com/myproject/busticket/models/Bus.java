@@ -24,8 +24,8 @@ import lombok.Setter;
 public class Bus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bus_id")
-    private int id;
+    @Column(name = "bus_id", nullable = false, length = 12)
+    private String plate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, columnDefinition = "ENUM('limousine', 'bunk') DEFAULT 'bunk'")

@@ -94,8 +94,6 @@ public class Account implements UserDetails {
         return enabled;
     }
 
-    // Constructor for User without roleid, status, verificationCode,
-    // verificationExpiration, enabled:
     public Account(String email, String password, String fullName, String phone) {
         this.email = email;
         this.password = password;

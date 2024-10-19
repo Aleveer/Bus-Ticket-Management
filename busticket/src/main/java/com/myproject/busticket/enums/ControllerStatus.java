@@ -1,5 +1,5 @@
 package com.myproject.busticket.enums;
 
-public enum DriverStatus {
+public enum ControllerStatus {
     active, inactive
 }

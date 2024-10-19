@@ -16,28 +16,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "feedback")
+@Table(name = "seat_reservations")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Feedback {
+public class Seat_Reservations {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "feedback_id")
-    private int feedbackId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "trip_id", nullable = false)
-    private Trip trip;
+    @Column(name = "id")
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+    @JoinColumn(name = "seat_id")
+    private Bus_Seats seat;
 
-    @Column(name = "rating", nullable = false)
-    private int rating;
-
-    @Column(name = "comment", nullable = false, length = 255)
-    private String comment;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
 }

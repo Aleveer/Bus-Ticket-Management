@@ -1299,7 +1299,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'BLHCM',
@@ -1316,7 +1316,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'CDHCM',
@@ -1332,11 +1332,11 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     ('CMCT', 9, 'first', '', 'Cà Mau', 'departure'),
-    ('CMCT', 14, 'last', '', 'Cần Thơ', 'dropoff'),
-    ('CTCM', 9, 'last', '', 'Cà Mau', 'dropoff'),
+    ('CMCT', 14, 'last', '', 'Cần Thơ', 'drop_off'),
+    ('CTCM', 9, 'last', '', 'Cà Mau', 'drop_off'),
     ('CTCM', 14, 'first', '', 'Cần Thơ', 'departure'),
     ('CTHCM', 14, 'first', '', 'Cần Thơ', 'departure'),
     (
@@ -1345,7 +1345,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     ('CTHCM', 52, 'second', '', 'Tiền Giang', 'rest'),
     ('CTRG', 14, 'first', '', 'Cần Thơ', 'departure'),
@@ -1355,7 +1355,7 @@ VALUES
         'last',
         'Rạch Giá',
         'Kiên Giang',
-        'dropoff'
+        'drop_off'
     ),
     (
         'DLHCM',
@@ -1363,7 +1363,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     ('DLHCM', 59, 'second', '', 'Đồng Nai', 'rest'),
     (
@@ -1380,7 +1380,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'DNHCM',
@@ -1396,7 +1396,7 @@ VALUES
         'last',
         'Thủ Đức',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'DONAHCM',
@@ -1412,7 +1412,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'DTHCM',
@@ -1437,9 +1437,9 @@ VALUES
         'last',
         'Bảo Lộc',
         'Lâm Đồng',
-        'dropoff'
+        'drop_off'
     ),
-    ('HCMBR-VT', 15, 'last', '', 'BRVT', 'dropoff'),
+    ('HCMBR-VT', 15, 'last', '', 'BRVT', 'drop_off'),
     (
         'HCMBR-VT',
         27,
@@ -1454,7 +1454,7 @@ VALUES
         'last',
         'Châu Đốc',
         'An Giang',
-        'dropoff'
+        'drop_off'
     ),
     (
         'HCMCD',
@@ -1464,7 +1464,7 @@ VALUES
         'TP.Hồ Chí Minh',
         'departure'
     ),
-    ('HCMCT', 14, 'last', '', 'Cần Thơ', 'dropoff'),
+    ('HCMCT', 14, 'last', '', 'Cần Thơ', 'drop_off'),
     (
         'HCMCT',
         27,
@@ -1489,7 +1489,7 @@ VALUES
         'last',
         'Đà Lạt',
         'Lâm Đồng',
-        'dropoff'
+        'drop_off'
     ),
     (
         'HCMDN',
@@ -1499,7 +1499,7 @@ VALUES
         'TP.Hồ Chí Minh',
         'departure'
     ),
-    ('HCMDN', 128, 'last', '', 'Đà Nẵng', 'dropoff'),
+    ('HCMDN', 128, 'last', '', 'Đà Nẵng', 'drop_off'),
     (
         'HCMDONA',
         26,
@@ -1514,7 +1514,7 @@ VALUES
         'last',
         'Biên Hoà ',
         'Đồng Nai',
-        'dropoff'
+        'drop_off'
     ),
     (
         'HCMDT',
@@ -1530,7 +1530,7 @@ VALUES
         'last',
         'Sa Đéc',
         'Đồng Tháp',
-        'dropoff'
+        'drop_off'
     ),
     ('HCMDT', 52, 'second', '', 'Tiền Giang', 'rest'),
     (
@@ -1539,7 +1539,7 @@ VALUES
         'last',
         'Long Xuyên',
         'An Giang',
-        'dropoff'
+        'drop_off'
     ),
     (
         'HCMLX ',
@@ -1563,7 +1563,7 @@ VALUES
         'last',
         'Nha Trang',
         'Khánh Hoà',
-        'dropoff'
+        'drop_off'
     ),
     (
         'HCMPT',
@@ -1579,7 +1579,7 @@ VALUES
         'last',
         'Phan Thiết ',
         'Bình Thuận',
-        'dropoff'
+        'drop_off'
     ),
     (
         'HCMQNG',
@@ -1595,7 +1595,7 @@ VALUES
         'last',
         '',
         'Quảng Ngãi',
-        'dropoff'
+        'drop_off'
     ),
     (
         'HCMQNH',
@@ -1611,7 +1611,7 @@ VALUES
         'last',
         'Quy Nhơn',
         'Bình Định',
-        'dropoff'
+        'drop_off'
     ),
     (
         'HCMRG',
@@ -1627,7 +1627,7 @@ VALUES
         'last',
         'Rạch Giá',
         'Kiên Giang',
-        'dropoff'
+        'drop_off'
     ),
     (
         'HCMTH',
@@ -1643,7 +1643,7 @@ VALUES
         'last',
         'Tuy Hoà ',
         'Phú Yên',
-        'dropoff'
+        'drop_off'
     ),
     (
         'HCMTN',
@@ -1653,7 +1653,7 @@ VALUES
         'TP.Hồ Chí Minh',
         'departure'
     ),
-    ('HCMTN', 33, 'last', '', 'Tây Ninh', 'dropoff'),
+    ('HCMTN', 33, 'last', '', 'Tây Ninh', 'drop_off'),
     (
         'HCMTTH',
         27,
@@ -1662,7 +1662,7 @@ VALUES
         'TP.Hồ Chí Minh',
         'departure'
     ),
-    ('HCMTTH', 114, 'last', '', 'Huế ', 'dropoff'),
+    ('HCMTTH', 114, 'last', '', 'Huế ', 'drop_off'),
     (
         'HCMTV',
         27,
@@ -1671,9 +1671,9 @@ VALUES
         'TP.Hồ Chí Minh',
         'departure'
     ),
-    ('HCMTV', 35, 'last', '', 'Trà Vinh', 'dropoff'),
+    ('HCMTV', 35, 'last', '', 'Trà Vinh', 'drop_off'),
     ('HCMTV', 52, 'second', '', 'Tiền Giang', 'rest'),
-    ('HCMTV', 85, 'third', '', 'Bến Tre', 'en-route'),
+    ('HCMTV', 85, 'third', '', 'Bến Tre', 'en_route'),
     (
         'LXHCM',
         24,
@@ -1688,7 +1688,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'NTHCM',
@@ -1696,7 +1696,7 @@ VALUES
         'last',
         'Thủ Đức',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'NTHCM',
@@ -1712,7 +1712,7 @@ VALUES
         'last',
         'Thủ Đức',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'PTHCM',
@@ -1728,7 +1728,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'QNGHCM',
@@ -1744,7 +1744,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'QNHHCM',
@@ -1754,7 +1754,7 @@ VALUES
         'Bình Định',
         'departure'
     ),
-    ('RGCT', 14, 'last', '', 'Cần Thơ', 'dropoff'),
+    ('RGCT', 14, 'last', '', 'Cần Thơ', 'drop_off'),
     (
         'RGCT',
         79,
@@ -1769,7 +1769,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'RGHCM',
@@ -1785,7 +1785,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'THHCM',
@@ -1801,7 +1801,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'TNHCM',
@@ -1817,7 +1817,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     ('TTHHCM', 114, 'first', '', 'Huế ', 'departure'),
     (
@@ -1826,7 +1826,7 @@ VALUES
         'last',
         '',
         'TP.Hồ Chí Minh',
-        'dropoff'
+        'drop_off'
     ),
     (
         'TVHCM',
@@ -1837,7 +1837,7 @@ VALUES
         'departure'
     ),
     ('TVHCM', 52, 'third', '', 'Tiền Giang', 'rest'),
-    ('TVHCM', 85, 'second', '', 'Bến Tre', 'en-route');
+    ('TVHCM', 85, 'second', '', 'Bến Tre', 'en_route');
 
 INSERT INTO
     `account` (

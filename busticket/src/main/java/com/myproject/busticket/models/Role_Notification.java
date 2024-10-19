@@ -16,28 +16,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "feedback")
+@Table(name = "role_notification")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Feedback {
+public class Role_Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "feedback_id")
-    private int feedbackId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "trip_id", nullable = false)
-    private Trip trip;
+    @Column(name = "id")
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
-    @Column(name = "rating", nullable = false)
-    private int rating;
-
-    @Column(name = "comment", nullable = false, length = 255)
-    private String comment;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+    @JoinColumn(name = "notification_id", nullable = false)
+    private Notification notification;
 }

@@ -1,7 +1,5 @@
 package com.myproject.busticket.models;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,26 +12,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "route")
+@Table(name = "customer")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Route {
+public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "route_id")
-    private int routeId;
+    @Column(name = "customer_id")
+    private int customerId;
 
-    @Column(name = "code", nullable = false, length = 50, unique = true)
-    private String code;
+    @Column(name = "email", nullable = false, length = 255)
+    private String email;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name", nullable = false, length = 70)
     private String name;
 
-    @Column(name = "time", nullable = false)
-    private LocalDateTime time;
-
-    @Column(name = "distance", nullable = false)
-    private double distance;
+    @Column(name = "phone", nullable = false, length = 12)
+    private String phone;
 }

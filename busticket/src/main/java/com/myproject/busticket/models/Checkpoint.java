@@ -1,15 +1,18 @@
 package com.myproject.busticket.models;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "checkpoints")
+@Table(name = "checkpoint")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,20 +20,18 @@ import lombok.Setter;
 public class Checkpoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+    @Column(name = "checkpoint_id")
+    private int checkpointId;
 
-    @ManyToOne
-    @JoinColumn(name = "route_id", nullable = false)
-    private Route route;
+    @Column(name = "place_name", nullable = false, length = 70)
+    private String placeName;
 
-    @ManyToOne
-    @JoinColumn(name = "location_id", nullable = false)
-    private Location location;
+    @Column(name = "address", nullable = false, length = 100)
+    private String address;
 
-    @Column(name = "stop_order", nullable = false)
-    private int stopOrder;
+    @Column(name = "phone", nullable = false, length = 12)
+    private String phone;
 
-    @Column(name = "stop_time", nullable = false)
-    private LocalDateTime stopTime;
+    @Column(name = "region", nullable = false, length = 50)
+    private String region;
 }

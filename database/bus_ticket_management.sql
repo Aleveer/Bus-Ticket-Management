@@ -251,7 +251,7 @@ CREATE TABLE `route_checkpoint` (
   `checkpoint_order` varchar(15) NOT NULL,
   `checkpoint_city` varchar(100) NOT NULL,
   `checkpoint_province` varchar(100) NOT NULL,
-  `type` enum('departure', 'dropoff') NOT NULL DEFAULT 'departure'
+  `type` enum('departure', 'drop_off', 'en_route', 'rest') NOT NULL DEFAULT 'departure'
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------

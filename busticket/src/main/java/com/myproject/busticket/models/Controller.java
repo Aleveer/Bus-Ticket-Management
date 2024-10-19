@@ -1,5 +1,7 @@
 package com.myproject.busticket.models;
 
+import com.myproject.busticket.enums.ControllerStatus;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,28 +18,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "feedback")
+@Table(name = "controller")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Feedback {
+public class Controller {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "feedback_id")
-    private int feedbackId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "trip_id", nullable = false)
-    private Trip trip;
+    @Column(name = "controller_id")
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-    @Column(name = "rating", nullable = false)
-    private int rating;
-
-    @Column(name = "comment", nullable = false, length = 255)
-    private String comment;
+    @Column(name = "status", columnDefinition = "enum('active', 'inactive') default 'active'")
+    private ControllerStatus status;
 }

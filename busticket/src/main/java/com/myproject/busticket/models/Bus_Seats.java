@@ -16,28 +16,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "feedback")
+@Table(name = "bus_seats")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Feedback {
+public class Bus_Seats {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "feedback_id")
-    private int feedbackId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "trip_id", nullable = false)
-    private Trip trip;
+    @Column(name = "id")
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+    @JoinColumn(name = "bus_id", nullable = false)
+    private Bus bus;
 
-    @Column(name = "rating", nullable = false)
-    private int rating;
-
-    @Column(name = "comment", nullable = false, length = 255)
-    private String comment;
+    @Column(name = "seat_name", nullable = false, length = 10)
+    private String seatName;
 }

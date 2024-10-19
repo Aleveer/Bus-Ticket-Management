@@ -1,35 +1,35 @@
 package com.myproject.busticket.models;
 
-import jakarta.persistence.*;
+import com.myproject.busticket.enums.NotificationType;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "notifications")
+@Table(name = "notification")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Notification {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+    @GeneratedValue
+    @Column(name = "notification_id")
+    private int notificationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private Account user;
+    @Column(name = "type", columnDefinition = "enum('group', 'account') default 'group'", nullable = false)
+    private NotificationType type;
 
-    @Column(name = "message", nullable = false)
+    @Column(name = "subject", nullable = false, length = 50)
+    private String subject;
+
+    @Column(name = "message", nullable = false, length = 255)
     private String message;
-
-    @Column(name = "is_read", nullable = false)
-    private boolean isRead;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
 }

@@ -1,6 +1,7 @@
 package com.myproject.busticket.models;
 
-import jakarta.persistence.CascadeType;
+import com.myproject.busticket.enums.SeatAvailabilityStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,28 +17,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "feedback")
+@Table(name = "seat_availability")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Feedback {
+public class Seat_Availability {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "feedback_id")
-    private int feedbackId;
+    @Column(name = "id")
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "trip_id", nullable = false)
+    @JoinColumn(name = "seat_id")
+    private Bus_Seats seat;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trip_id")
     private Trip trip;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
-
-    @Column(name = "rating", nullable = false)
-    private int rating;
-
-    @Column(name = "comment", nullable = false, length = 255)
-    private String comment;
+    @Column(name = "status", columnDefinition = "enum('available','booked') default 'available'")
+    private SeatAvailabilityStatus status;
 }

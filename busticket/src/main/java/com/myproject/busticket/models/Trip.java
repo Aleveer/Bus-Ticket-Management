@@ -35,17 +35,21 @@ public class Trip {
     @Column(name = "status", nullable = false)
     private TripStatus status;
 
-    @Column(name = "bus_id", nullable = false)
-    private String busId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bus_id", nullable = false)
+    private Bus bus;
 
-    @Column(name = "driver_id", nullable = false)
-    private int driverId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "driver_id", nullable = false)
+    private Driver driver;
 
-    @Column(name = "controller_id", nullable = false)
-    private int controllerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "controller_id", nullable = false)
+    private Controller controller;
 
-    @Column(name = "staff_id", nullable = false)
-    private int staffId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "staff_id", nullable = false)
+    private Staff staff;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "route_code", referencedColumnName = "code", nullable = false)

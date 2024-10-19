@@ -76,7 +76,7 @@ public class AuthenticationService {
         account.setPassword(passwordEncoder.encode(input.getPassword()));
         // user.setFullName("Nguyen Van A");
         // user.setPhone("01234567890");
-        Role role = roleRepository.findByName("customer").orElseThrow(() -> new RuntimeException("Role not found"));
+        Role role = roleRepository.findByRoleName("customer").orElseThrow(() -> new RuntimeException("Role not found"));
         account.setRole(role);
         account.setStatus(AccountStatus.unverified);
         account.setVerificationCode(generateVerificationCode());

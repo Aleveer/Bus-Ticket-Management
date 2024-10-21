@@ -24,7 +24,7 @@ import lombok.Setter;
 public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "account_id")
+    @Column(name = "id")
     private int id;
 
     @Column(name = "email", nullable = false, unique = true)

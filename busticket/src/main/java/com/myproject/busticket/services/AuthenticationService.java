@@ -67,15 +67,14 @@ public class AuthenticationService {
             throw new ValidationException("Email already exists");
         }
 
-        if (AccountValidation.isValidPassword(input.getPassword())) {
-            account.setPassword(passwordEncoder.encode(input.getPassword()));
-        } else {
+        account.setEmail(input.getEmail());
+
+        if (!AccountValidation.isValidPassword(input.getPassword())) {
             throw new ValidationException(
                     "Invalid password. Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 special character, 1 number.");
         }
         account.setPassword(passwordEncoder.encode(input.getPassword()));
-        // user.setFullName("Nguyen Van A");
-        // user.setPhone("01234567890");
+
         Role role = roleRepository.findByRoleName("customer").orElseThrow(() -> new RuntimeException("Role not found"));
         account.setRole(role);
         account.setStatus(AccountStatus.unverified);

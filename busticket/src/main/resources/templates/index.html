@@ -53,8 +53,8 @@
                               <li><a href="#">Lịch Trình</a></li>
                               <li><a href="#">Tra Cứu Vé</a></li>
                               <li><a href="#">Hóa Đơn</a></li>
-                              <li><a href="#">Liên Hệ</a></li>
-                              <li><a href="#">Về Chúng Tôi</a></li>
+                              <li><a href="contact.html">Liên Hệ</a></li>
+                              <li><a href="about_us.html">Về Chúng Tôi</a></li>
                            </ul>
                         </div>
                      </div>
@@ -113,54 +113,53 @@
        <!-- header section start -->
       <div class="header_section">
          <div class="container">
-            <div class="containt_main d-flex flex-wrap"> 
-               <div class="row1 justify-content-between d-flex flex-nowrap">
-                  <div class="col-10">
-                     <div class="form-header">
-                        <label>
-                           <input type="radio" name="tripType" checked> Một chiều
-                        </label>
-                        <label>
-                           <input type="radio" name="tripType"> Khứ hồi
-                        </label>
+            <form class="search-form" id="searchForm" action="" method="post">
+            <div class="containt_main d-flex flex-wrap">                              
+                  <div class="row1 justify-content-between d-flex flex-nowrap">
+                     <div class="col-10">
+                        <div class="form-header">
+                           <label>
+                              <input type="radio" name="tripType" checked> Một chiều
+                           </label>
+                           <label>
+                              <input type="radio" name="tripType"> Khứ hồi
+                           </label>
+                        </div>
+                     </div>
+                     <div class="col-2 ">
+                        <a href="#">Hướng dẫn mua vé</a>
                      </div>
                   </div>
-                  <div class="col-2 ">
-                     <a href="#">Hướng dẫn mua vé</a>
-                  </div>
-               </div>
-               
-               <div class="row1 ">
-                  <form class="ticket-form">
-                     <div class="form-group">
-                        <label for="departure">Điểm đi</label>
-                        <input type="text" id="departure" value="Sóc Trăng">
-                     </div>
-                     <div class="swap-btn">⇆</div>
-                     <div class="form-group">
-                        <label for="destination">Điểm đến</label>
-                        <input type="text" id="destination" value="Châu Đốc">
-                     </div>
-                     <div class="form-group">
-                        <label for="date">Ngày đi</label>
-                        <input type="date" id="date" value="2024-10-16">
-                     </div>
-                     <div class="form-group">
-                        <label for="ticketNum">Số vé</label>
-                        <select id="ticketNum">
-                           <option value="1">1</option>
-                           <option value="2">2</option>
-                           <option value="3">3</option>
-                           <option value="4">4</option>
-                           <option value="5">5</option>
-                        </select>
-                     </div>
-                  </form>
-               </div>
-               <div class="btn-container d-flex justify-content-center">
                   
-                  <button type="submit" class="search-btn ">Tìm chuyến xe</button>
-               </div>   
+                  <div class="row1 d-flex flex-wrap">
+                        <div class="form-group">
+                           <label for="departure">Điểm đi</label>
+                           <input type="text" id="departure" value="Sóc Trăng">
+                        </div>
+                        <div class="swap-btn">⇆</div>
+                        <div class="form-group">
+                           <label for="destination">Điểm đến</label>
+                           <input type="text" id="destination" value="Châu Đốc">
+                        </div>
+                        <div class="form-group">
+                           <label for="date">Ngày đi</label>
+                           <input type="date" id="date" value="2024-10-16">
+                        </div>
+                        <div class="form-group">
+                           <label for="ticketNum">Số vé</label>
+                           <select id="ticketNum">
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                              <option value="4">4</option>
+                              <option value="5">5</option>
+                           </select>
+                        </div>
+                  </div>
+                  <div class="btn-container d-flex justify-content-center">
+                     <button type="submit" class="search-btn ">Tìm chuyến xe</button>
+                  </div>
+               </form>
             </div>
          </div>   
       </div>

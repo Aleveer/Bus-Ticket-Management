@@ -203,13 +203,25 @@ button {
     padding-top: 90px;
     padding-bottom: 0px;
 }
-
+.layout_padding_2 {
+    padding-top: 50px;
+    padding-bottom: 0px;
+}
 .padding_0 {
     padding: 0px;
 }
 
-
-
+.bold_text {
+    color:#69a8df ;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: left;
+    line-height: 30px;
+}
+.line-1 {
+    height: 1px;
+    background: black;
+  }
 /* banner bg main start */
 
 .banner_bg_main {
@@ -454,6 +466,8 @@ button {
     flex: 1;
     display: flex;
     flex-direction: column;
+    margin: 10px 10px ;
+
 }
 
 .form-group input,
@@ -655,8 +669,73 @@ a:hover {
 
 
 /* banner section end */
+/* about section start */
 
-
+.about_section {
+    width: 100%;
+    float: left;
+    padding-bottom: 70px;
+}
+.about_section_text {
+    display: flex;
+    width: 100%;
+    float: left;
+    padding-bottom: 20px;
+}
+.about_taital {
+    width: 100%;
+    font-size: 50px;
+    color: #69a8df;
+    text-align: center;
+    font-weight: bold;
+}
+.about_text {
+    width: 100%;
+    font-size: 16px;
+    color: #30302e;
+    text-align: center;
+    margin: -10px;
+}
+.about_text_2 {
+    width: 100%;
+    font-size: 16px;
+    color: #30302e;
+    text-align: left;
+    margin: 0px;
+}
+.about_text_3 {
+    width: 100%;
+    font-size: 16px;
+    color: #30302e;
+    text-align: center;
+    margin: -10px;
+    font-weight: bold;
+}
+.about_ul li{
+    list-style: circle;
+    list-style-position: inside;
+    font-size: 16px;
+    color: #30302e;
+    text-align: left;
+    margin: 0px;
+    padding: 10px 0px;
+}
+.about_ul_2 li{
+    list-style: circle;
+    list-style-position: inside;
+    font-size: 16px;
+    color: #30302e;
+    text-align: right;
+    margin: 0px;
+    padding: 10px 0px;
+}
+.about_img {
+    width: 100%;
+    text-align: center;
+    margin: 0px;
+    max-height: 400px;
+    max-width: fit-content;
+}
 /* fashion section start */
 
 .fashion_section {

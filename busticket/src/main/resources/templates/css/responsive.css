@@ -188,6 +188,9 @@
     .banner_taital {
         font-size: 50px;
     }
+    .about_section_text{
+        flex-wrap: wrap;
+    }
     #main_slider a.carousel-control-next {
         right: 40px;
         top: 110%;
@@ -236,6 +239,9 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
+    }
+    .about_section_text{
+        flex-wrap: wrap;
     }
     .toggle_icon {
         cursor: pointer;
@@ -375,6 +381,9 @@
     }
     .main {
         margin: 0px 0px;
+    }
+    .about_section_text{
+        flex-wrap: wrap;
     }
     .input-group {
         width: auto;

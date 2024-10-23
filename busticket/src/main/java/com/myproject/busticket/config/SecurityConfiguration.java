@@ -40,6 +40,12 @@ public class SecurityConfiguration {
                         .requestMatchers("/schedules/**").permitAll()
                         .requestMatchers("/roles/**").permitAll()
                         .requestMatchers("/permissions/**").permitAll()
+                        .requestMatchers("/users/**").permitAll()
+                        .requestMatchers("/home/**").permitAll()
+                        .requestMatchers("/static/**").permitAll()
+                        .requestMatchers("/css/**").permitAll()
+                        .requestMatchers("/js/**").permitAll()
+                        .requestMatchers("/images/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

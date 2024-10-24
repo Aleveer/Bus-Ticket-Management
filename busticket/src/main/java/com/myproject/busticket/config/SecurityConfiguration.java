@@ -46,6 +46,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/webjars/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -12,4 +12,13 @@ public class IndexPageController {
         return "index";
     }
 
+    @GetMapping("/about-us")
+    public String aboutUsPage() {
+        return "about_us";
+    }
+
+    @GetMapping("/contact")
+    public String contactPage() {
+        return "contact";
+    }
 }

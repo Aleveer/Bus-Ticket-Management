@@ -703,6 +703,13 @@ a:hover {
     text-align: center;
     font-weight: bold;
 }
+.about_taital_2 {
+    width: 100%;
+    font-size: 50px;
+    color: #f26522;
+    text-align: center;
+    font-weight: bold;
+}
 .about_text {
     width: 100%;
     font-size: 16px;

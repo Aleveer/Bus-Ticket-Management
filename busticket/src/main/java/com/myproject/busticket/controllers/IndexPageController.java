@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+
 @RequestMapping("/home")
 @Controller
 public class IndexPageController {
@@ -21,4 +22,10 @@ public class IndexPageController {
     public String contactPage() {
         return "contact";
     }
+
+    @GetMapping("/search-ticket-info")
+    public String searchTicketInfoPage() {
+        return "search-ticket-info";
+    }
+    
 }

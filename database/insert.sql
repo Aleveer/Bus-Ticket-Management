@@ -71,7 +71,7 @@ VALUES
     (5, 7);
 
 -- admin, generate_reports
---TODO: Add more roles-permissions if needed
+-- TODO: Add more roles-permissions if needed
 INSERT INTO
     `route` (`code`, `name`, `time`, `distance`)
 VALUES
@@ -5236,32 +5236,3 @@ FROM
         LIMIT
             3
     ) AS route ON 1 = 1;
-
-INSERT INTO
-    `seat_availability` (`id`, `seat_id`, `trip_id`, `status`)
-SELECT
-    NULL,
-    bs.id,
-    t.trip_id,
-    'available' -- or 'booked' depending on the requirement
-FROM
-    `trip` t
-    JOIN `bus_seats` bs ON t.bus_id = bs.bus_id
-WHERE
-    t.status = 'waiting';
-
-INSERT INTO
-    `seat_availability` (`id`, `seat_id`, `trip_id`, `status`)
-SELECT
-    NULL,
-    bs.id,
-    t.trip_id,
-    CASE
-        WHEN RAND() < 0.5 THEN 'available'
-        ELSE 'booked'
-    END AS status
-FROM
-    `trip` t
-    JOIN `bus_seats` bs ON t.bus_id = bs.bus_id
-WHERE
-    t.status IN ('waiting', 'finished', 'arriving', 'started');

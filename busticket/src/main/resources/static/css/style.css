@@ -4,7 +4,7 @@
 @import url(animate.min.css);
 @import url(normalize.css);
 @import url(icomoon.css);
-@import url(css/font-awesome.min.css);
+@import url(css/fontawesome.min.css);
 @import url(meanmenu.css);
 @import url(owl.carousel.min.css);
 @import url(swiper.min.css);
@@ -100,7 +100,7 @@ h4 a,
 h5 a,
 h6 a {
     color: #212121;
-    text-decoration: none!important;
+    text-decoration: none !important;
     opacity: 1
 }
 
@@ -145,7 +145,7 @@ img {
     height: auto;
 }
 
- :focus {
+:focus {
     outline: 0;
 }
 
@@ -203,25 +203,29 @@ button {
     padding-top: 90px;
     padding-bottom: 0px;
 }
+
 .layout_padding_2 {
     padding-top: 50px;
     padding-bottom: 0px;
 }
+
 .padding_0 {
     padding: 0px;
 }
 
 .bold_text {
-    color:#69a8df ;
+    color: #69a8df;
     font-size: 40px;
     font-weight: bold;
     text-align: left;
     line-height: 30px;
 }
+
 .line-1 {
     height: 1px;
     background: black;
-  }
+}
+
 /* banner bg main start */
 
 .banner_bg_main {
@@ -249,14 +253,16 @@ button {
     height: auto;
     padding: 10px 0px;
 }
+
 .logo {
     width: 100%;
     height: 70px;
-    float:left;
+    float: left;
     background-color: #2b2a29;
-    
+
 }
-.logo img{
+
+.logo img {
     width: 100%;
     height: 70px;
     border-bottom-left-radius: 30px;
@@ -264,6 +270,7 @@ button {
     padding: 0px 40px;
     margin-bottom: 15px;
 }
+
 .custom_menu {
     width: 100%;
     margin: 0 auto;
@@ -291,14 +298,19 @@ button {
 .custom_menu li a:hover {
     color: #f26522;
 }
+
 .custom_menu li.logo {
-    margin-left: 0; /* Remove margin for the logo */
-   
+    margin-left: 0;
+    /* Remove margin for the logo */
+
 }
+
 .custom_menu .logo img {
     margin-top: -8px;
-    width: 60px; /* Adjust the width as needed */
-    height:45px; /* Maintain aspect ratio */
+    width: 60px;
+    /* Adjust the width as needed */
+    height: 45px;
+    /* Maintain aspect ratio */
 }
 
 /* login menu start */
@@ -323,11 +335,13 @@ button {
 .login_menu li a:hover {
     color: #f26522;
 }
+
 .login_menu li a i {
-    margin-top : -5px;
+    margin-top: -5px;
     margin-left: 5px;
     font-size: 28px;
 }
+
 /* lego menu end */
 /* header top section end */
 
@@ -377,6 +391,7 @@ button {
     .sidenav {
         padding-top: 15px;
     }
+
     .sidenav a {
         font-size: 18px;
     }
@@ -445,11 +460,13 @@ button {
     box-shadow: #f2c3b6 0px 2px 10px 2px;
     position: relative;
 }
-.row1{
+
+.row1 {
     margin-top: 10px;
     margin-bottom: 10px;
     width: 100%;
 }
+
 .form-header {
 
     align-items: center;
@@ -480,7 +497,7 @@ button {
     flex: 1;
     display: flex;
     flex-direction: column;
-    margin: 10px 10px ;
+    margin: 10px 10px;
 
 }
 
@@ -490,19 +507,23 @@ button {
     border: 1px solid #ddd;
     border-radius: 4px;
 }
+
 .form-group :hover {
     border: 1px solid #eb5b2b;
 }
+
 .swap-btn {
     font-size: 24px;
     align-self: center;
     margin-top: 32px;
     cursor: pointer;
 }
+
 .btn-container {
     width: 100%;
-  
+
 }
+
 .search-btn {
     background-color: #eb5b2b;
     color: white;
@@ -619,11 +640,12 @@ a:hover {
     width: 100%;
     font-size: 60px;
     color: #252727;
-    text-shadow: 
-        -1px -1px 0 #fff,  
+    text-shadow:
+        -1px -1px 0 #fff,
         1px -1px 0 #fff,
         -1px 1px 0 #fff,
-        1px 1px 0 #fff; /* Outline color */
+        1px 1px 0 #fff;
+    /* Outline color */
     text-align: center;
     text-transform: uppercase;
     font-weight: bold;
@@ -690,12 +712,14 @@ a:hover {
     float: left;
     padding-bottom: 70px;
 }
+
 .about_section_text {
     display: flex;
     width: 100%;
     float: left;
     padding-bottom: 20px;
 }
+
 .about_taital {
     width: 100%;
     font-size: 50px;
@@ -703,6 +727,7 @@ a:hover {
     text-align: center;
     font-weight: bold;
 }
+
 .about_taital_2 {
     width: 100%;
     font-size: 50px;
@@ -710,6 +735,7 @@ a:hover {
     text-align: center;
     font-weight: bold;
 }
+
 .about_text {
     width: 100%;
     font-size: 16px;
@@ -717,6 +743,7 @@ a:hover {
     text-align: center;
     margin: -10px;
 }
+
 .about_text_2 {
     width: 100%;
     font-size: 16px;
@@ -724,6 +751,7 @@ a:hover {
     text-align: left;
     margin: 0px;
 }
+
 .about_text_3 {
     width: 100%;
     font-size: 16px;
@@ -733,7 +761,8 @@ a:hover {
     font-weight: bold;
     padding-bottom: 20px;
 }
-.about_ul li{
+
+.about_ul li {
     list-style: circle;
     list-style-position: inside;
     font-size: 16px;
@@ -742,7 +771,8 @@ a:hover {
     margin: 0px;
     padding: 10px 0px;
 }
-.about_ul_2 li{
+
+.about_ul_2 li {
     list-style: circle;
     list-style-position: inside;
     font-size: 16px;
@@ -751,6 +781,7 @@ a:hover {
     margin: 0px;
     padding: 10px 0px;
 }
+
 .about_img {
     width: 100%;
     text-align: center;
@@ -758,6 +789,7 @@ a:hover {
     max-height: 400px;
     max-width: fit-content;
 }
+
 /* fashion section start */
 
 .fashion_section {
@@ -774,13 +806,15 @@ a:hover {
     text-align: center;
     font-weight: bold;
 }
-.fashion_taital_2{
-    margin-top:-10px;
+
+.fashion_taital_2 {
+    margin-top: -10px;
     width: 100%;
     font-size: 16px;
     color: #30302e;
     text-align: center;
 }
+
 .fashion_section_2 {
     width: 100%;
     margin-top: 30px;
@@ -816,7 +850,7 @@ a:hover {
     width: 100%;
     text-align: center;
     margin: 50px 0px;
-    
+
 }
 
 .btn_main {
@@ -1005,6 +1039,7 @@ a:hover {
     0% {
         -webkit-transform: rotate(0deg);
     }
+
     100% {
         -webkit-transform: rotate(360deg);
     }
@@ -1014,6 +1049,7 @@ a:hover {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
@@ -1029,7 +1065,7 @@ a:hover {
 .banner_promote {
     width: 100%;
     display: flex;
-    
+
     height: auto;
     padding: 50px 0px;
 }

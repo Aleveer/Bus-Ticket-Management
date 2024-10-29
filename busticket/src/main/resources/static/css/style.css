@@ -633,7 +633,7 @@ a:hover {
     width: 100%;
     float: left;
     padding-bottom: 60px;
-    margin-bottom: 20px;
+    margin-bottom: 160px;
 }
 
 .banner_taital {
@@ -1214,3 +1214,15 @@ input.mail_bt::placeholder {
 
 
 /* copyright section end */
+
+/* captcha */
+.captcha {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    background-color: #000000;
+    color: #ffffff; ;
+    padding: 10px;
+    display: inline-block;
+    margin-right: 50px;
+  }

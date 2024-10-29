@@ -27,5 +27,8 @@ public class IndexPageController {
     public String searchTicketInfoPage() {
         return "search-ticket-info";
     }
-    
+    @GetMapping("/search-billing-info")
+    public String searchBillingInfoPage() {
+        return "search-billing-info";
+    }
 }

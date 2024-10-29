@@ -72,17 +72,25 @@
       <div class="container">
          <form class="search-form" id="searchForm" action="" method="post">
             <div class="containt_main d-flex flex-wrap">
-               <h1 class="about_taital_2">Tra cứu thông tin đặt vé</h1>
+               <h1 class="about_taital_2">Tra cứu hóa đơn</h1>
                <div class="row1 d-flex flex-grow">
-                  <div class="form-group">
-                     <label for="number">Số điện thoại</label>
-                     <input type="text" id="number" placeholder="Vui lòng nhập số điện thoại">
+                <div class="form-group">
+                   <label for="ticket-number">Mã hóa đơn</label>
+                   <input type="text" id="ticket-number" placeholder="Vui lòng nhập mã hóa đơn">
+                </div>
+             </div>
+               <div class="row1 d-flex ">
+                  <div class="form-group d-flex">
+                    <div class="captcha-container ">
+                        <span id="captcha" class="captcha "></span>
+                        <button type="button" id="refresh-captcha" class="btn btn-secondary">Refresh CAPTCHA</button>
+                      </div>
                   </div>
                </div>
                <div class="row1 d-flex flex-grow">
                   <div class="form-group">
-                     <label for="ticket-number">Mã Vé</label>
-                     <input type="text" id="ticket-number" placeholder="Vui lòng nhập mã vé">
+                     <label for="ticket-number">Mã xác thực</label>
+                     <input type="text" id="ticket-number" placeholder="Vui lòng nhập mã xác thực">
                   </div>
                </div>
                <div class="btn-container d-flex justify-content-center">
@@ -153,6 +161,39 @@
          document.getElementById("mySidenav").style.width = "0";
       }
    </script>
+   <script>
+    // Function to generate a random 6-letter string
+    function generateCaptcha() {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+      let captcha = '';
+      for (let i = 0; i < 6; i++) {
+        captcha += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return captcha;
+    }
+
+    // Function to refresh the CAPTCHA
+    function refreshCaptcha() {
+      const captcha = generateCaptcha();
+      document.getElementById('captcha').innerText = captcha;
+    }
+
+    // Initial CAPTCHA generation
+    refreshCaptcha();
+
+    // Event listener for the refresh button
+    document.getElementById('refresh-captcha').addEventListener('click', refreshCaptcha);
+
+    // Event listener for form submission
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+      const userInput = document.getElementById('captcha-input').value;
+      const captcha = document.getElementById('captcha').innerText;
+      if (userInput !== captcha) {
+        event.preventDefault();
+        alert('Mã xác thực không đúng. Vui lòng thử lại.');
+      }
+    });
+  </script>
 </body>
 
 </html>

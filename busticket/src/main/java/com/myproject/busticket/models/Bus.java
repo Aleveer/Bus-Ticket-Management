@@ -33,4 +33,13 @@ public class Bus {
 
     @Column(name = "number_of_seat")
     private int numberOfSeat;
+
+    @Override
+    public String toString() {
+        return "Bus{" +
+                "plate='" + plate + '\'' +
+                ", type=" + type +
+                ", numberOfSeat=" + numberOfSeat +
+                '}';
+    }
 }

@@ -37,7 +37,7 @@ public class BookingController {
     }
 
     @PostMapping("/booking")
-    public String viewTrip(Model model) {
+    public String searchForm(Model model) {
         return "booking";
     }
 

@@ -31,4 +31,8 @@ public class IndexPageController {
     public String searchBillingInfoPage() {
         return "search-billing-info";
     }
+    @GetMapping("/booking")
+    public String bookingPage() {
+        return "booking";
+    }
 }

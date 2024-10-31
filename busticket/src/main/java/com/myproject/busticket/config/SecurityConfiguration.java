@@ -35,6 +35,8 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/booking/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/vnpay/**").permitAll()
                         .requestMatchers("/schedules/**").permitAll()

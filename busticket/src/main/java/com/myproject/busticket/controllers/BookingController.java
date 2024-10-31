@@ -36,6 +36,11 @@ public class BookingController {
         return "bookingTest";
     }
 
+    @PostMapping("/booking")
+    public String viewTrip(Model model) {
+        return "booking";
+    }
+
     @PostMapping("/booking/testing")
     public String bookingTest(@RequestBody Map<String, Object> booking) {
         Map<String, String> tripDetail = (Map<String, String>) booking.get("tripDetail");

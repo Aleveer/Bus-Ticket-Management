@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 
-
+@RequestMapping("/home/index")
 @Controller
 public class BookingController {
     BookingService bookingService;
@@ -25,7 +25,7 @@ public class BookingController {
         this.customerService = customerService;
     }
 
-    @PostMapping("/booking/search")
+    @PostMapping("/search")
     public String searchForm(@RequestParam String tripType, @RequestParam String departure,
                              @RequestParam String destination,
                              @RequestParam String date,

@@ -4,12 +4,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.springframework.ui.Model;
+
 
 @RequestMapping("/home")
 @Controller
 public class IndexPageController {
     @GetMapping("/index")
-    public String indexPage() {
+    public String indexPage(Model model) {
+        model.addAttribute("tripType", "one-way");
         return "index";
     }
 

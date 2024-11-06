@@ -80,50 +80,23 @@
             </div>
         </div>
         <!-- user sign in/sign up section end -->
-        <!-- banner section start -->
-        <div class="banner_section layout_padding">
-            <div class="container">
-                <div id="my_slider" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="row">
-                            <div class="col-sm-12">
-                            <h1 class="banner_taital">Bắt Đầu <br>Chuyến đi dễ dàng</h1>
-                            <div class="buynow_bt"><a href="#">Đặt Ngay</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="row">
-                            <div class="col-sm-12">
-                            <h1 class="banner_taital">Đi dễ dàng <br>Đặt tự tin!</h1>
-                            <div class="buynow_bt"><a href="#">Đặt Ngay</a></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                </div>
-            </div>
-        </div>
-      <!-- banner section end -->
+       
    
    <!-- banner bg main end -->
 
    <!-- header section start -->
-  <div class="header_section">
+   <div class="header_section">
       <div class="container">
-         <form class="search-form" id="searchForm" action="" method="post">
+         <form class="search-form" id="searchForm" th:action="@{/home/index/search}"  method="post">
             <div class="containt_main d-flex flex-wrap">
                <div class="row1 justify-content-between d-flex flex-nowrap">
                   <div class="col-10">
                      <div class="form-header">
                         <label>
-                           <input type="radio" name="tripType" checked> Một chiều
+                           <input type="radio" name="tripType" value="one-way" th:checked="${tripType == 'one-way'}" checked> Một chiều
                         </label>
                         <label>
-                           <input type="radio" name="tripType"> Khứ hồi
+                           <input type="radio" name="tripType" value="round-trip" th:checked="${tripType == 'round-trip'}"> Khứ hồi
                         </label>
                      </div>
                   </div>
@@ -135,20 +108,20 @@
                <div class="row1 d-flex flex-wrap">
                   <div class="form-group">
                      <label for="departure">Điểm đi</label>
-                     <input type="text" id="departure" value="Sóc Trăng">
+                     <input type="text" id="departure" name="departure" th:value="${departure}">
                   </div>
                   <div class="swap-btn">⇆</div>
                   <div class="form-group">
                      <label for="destination">Điểm đến</label>
-                     <input type="text" id="destination" value="Châu Đốc">
+                     <input type="text" id="destination" name="destination" th:value="${destination}">
                   </div>
                   <div class="form-group">
                      <label for="date">Ngày đi</label>
-                     <input type="date" id="date" value="2024-10-16">
+                     <input type="date" id="date" name="date" th:value="${date}">
                   </div>
                   <div class="form-group">
                      <label for="ticketNum">Số vé</label>
-                     <select id="ticketNum">
+                     <select id="ticketNum" name="ticketNum" th:value="${ticketNum}">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -158,15 +131,31 @@
                   </div>
                </div>
                <div class="btn-container d-flex justify-content-center">
-                  <button type="submit" class="search-btn ">Tìm chuyến xe</button>
+                  <button type="submit" class="search-btn">Tìm chuyến xe</button>
                </div>
          </form>
       </div>
-   </div>
+   </div>   
    </div>
    <!-- header section end -->
-   
-
+   <!-- search booking section start -->
+   <div class="header_section">
+      <div class="container">
+         <form class="booking-detail-form" id="bookingDetailForm" th:action="@{/home/index/search}" method="post">
+            <div class="containt_main d-flex flex-wrap">   
+               <div class="row1 d-flex flex-wrap">
+                  <div class="form-group">
+                     <span th:text="${departureTime}"></span>
+                     <span th:text="${arrivalTime}"></span>
+                     <span th:text="${price}"></span>
+                     <span>Trip time</span>
+                     <span>Seat</span>
+                     <span>Bus Type</span>
+                  </div>   
+               </div>
+            </div>
+         </form>
+      </div>
    </div>
    <!-- footer section start -->
    <div class="footer_section layout_padding">

@@ -30,8 +30,13 @@ public class BookingController {
                              @RequestParam String destination,
                              @RequestParam String date,
                              @RequestParam int ticketNum) {
-
-        return "search-booking";
+        System.out.println("Info need search:");
+        System.out.println(tripType);
+        System.out.println(departure);
+        System.out.println(destination);
+        System.out.println(date);
+        System.out.println(ticketNum);
+        return "redirect:/home/index/search-booking";
     }
 
     @PostMapping("/booking/testing")

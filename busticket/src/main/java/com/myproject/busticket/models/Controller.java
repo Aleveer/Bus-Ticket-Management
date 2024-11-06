@@ -20,7 +20,7 @@ public class Controller {
     @Column(name = "controller_id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 

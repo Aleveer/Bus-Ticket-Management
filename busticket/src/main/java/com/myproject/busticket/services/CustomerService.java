@@ -19,6 +19,9 @@ public class CustomerService {
         return customerRepository.findByEmail(email) != null;
     }
 
+    public Customer getCustomerById(int customerId) {
+        return customerRepository.findById(customerId).orElse(null);
+    }
     public Customer create(Customer customer) {
         return customerRepository.saveAndFlush(customer);
     }

@@ -1,5 +1,6 @@
 package com.myproject.busticket.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.myproject.busticket.enums.StaffStatus;
 
 import jakarta.persistence.*;
@@ -20,7 +21,7 @@ public class Staff {
     @Column(name = "staff_id")
     private int staff_id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 

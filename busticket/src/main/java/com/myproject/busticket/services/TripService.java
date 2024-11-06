@@ -1,21 +1,27 @@
 package com.myproject.busticket.services;
 
+import com.myproject.busticket.dto.TripDTO;
+import com.myproject.busticket.mapper.TripMapper;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.repositories.TripRepository;
+import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TripService {
     TripRepository tripRepository;
-
+    TripMapper tripMapper = Mappers.getMapper(TripMapper.class);
     public TripService(TripRepository tripRepository) {
         this.tripRepository = tripRepository;
     }
 
-    public Trip findByTripId(int tripId){
-        return tripRepository.findByTripId(tripId).orElseThrow();
+    public TripDTO getById(int tripId) {
+        Optional<Trip> trip = tripRepository.findById(tripId);
+        return tripMapper.entityToDTO(trip.get());
     }
 
     public List<Trip> findAll(){

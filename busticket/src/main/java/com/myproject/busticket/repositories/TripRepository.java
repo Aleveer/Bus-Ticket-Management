@@ -8,5 +8,4 @@ import java.util.Optional;
 
 @Repository
 public interface TripRepository extends JpaRepository<Trip, Integer> {
-    Optional<Trip> findByTripId(int tripId);
 }

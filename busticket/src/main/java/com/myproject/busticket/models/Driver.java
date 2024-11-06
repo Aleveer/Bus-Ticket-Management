@@ -1,16 +1,9 @@
 package com.myproject.busticket.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.myproject.busticket.enums.DriverStatus;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,10 +21,12 @@ public class Driver {
     @Column(name = "driver_id")
     private int driverId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", columnDefinition = "enum('active', 'inactive') default 'active'")
     private DriverStatus status;
 }

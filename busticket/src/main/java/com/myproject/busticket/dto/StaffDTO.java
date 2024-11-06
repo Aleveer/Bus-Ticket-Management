@@ -14,6 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StaffDTO {
     private int staff_id;
-    private Account account;
+    private AccountDTO account;
     private StaffStatus status;
 }

@@ -12,6 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ControllerDTO {
     private int id;
-    private Account account;
+    private AccountDTO account;
     private ControllerStatus status;
 }

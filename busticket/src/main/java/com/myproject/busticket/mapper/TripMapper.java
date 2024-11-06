@@ -1,13 +1,15 @@
 package com.myproject.busticket.mapper;
 
+import com.myproject.busticket.dto.DriverDTO;
 import com.myproject.busticket.dto.TripDTO;
+import com.myproject.busticket.models.Driver;
 import com.myproject.busticket.models.Trip;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface TripMapper {
-    TripMapper INSTANCE = Mappers.getMapper( TripMapper.class );
 
-    TripDTO toTripDTO(Trip trip);
+    TripDTO entityToDTO(Trip trip);
+    DriverDTO entityToDTO(Driver driver);
 }

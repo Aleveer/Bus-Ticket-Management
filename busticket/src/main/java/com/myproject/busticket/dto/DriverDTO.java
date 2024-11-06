@@ -13,6 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DriverDTO {
     private int driverId;
-    private Account account;
+    private AccountDTO account;
     private DriverStatus status;
 }

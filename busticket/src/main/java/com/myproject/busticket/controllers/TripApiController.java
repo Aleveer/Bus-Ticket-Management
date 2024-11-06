@@ -1,7 +1,10 @@
 package com.myproject.busticket.controllers;
 
+import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.services.TripService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,8 +20,9 @@ public class TripApiController {
     }
 
     @GetMapping("/api/trip/{tripId}")
-    public Trip getTrip(@PathVariable int tripId) {
-        return tripService.findByTripId(tripId);
+    public TripDTO getById(@PathVariable int tripId) {
+        TripDTO trip = tripService.getById(tripId);
+        return trip;
     }
 
     @GetMapping("/api/trips")

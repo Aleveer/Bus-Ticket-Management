@@ -144,15 +144,30 @@
          <form class="booking-detail-form" id="bookingDetailForm" th:action="@{/home/index/search}" method="post">
             <div class="containt_main d-flex flex-wrap">   
                <div class="row1 d-flex flex-wrap">
-                  <div class="form-group">
-                     <span th:text="${departureTime}"></span>
-                     <span th:text="${arrivalTime}"></span>
-                     <span th:text="${price}"></span>
-                     <span>Trip time</span>
-                     <span>Seat</span>
-                     <span>Bus Type</span>
-                  </div>   
-               </div>
+                  <div class="trip-card-container">
+                     <div th:if="${trips.size() > 0}">
+                           <div th:each="trip : ${trips}" class="trip-card">
+                              <div class="trip-time">
+                                 <div class="time" th:text="${trip.departureTime}">22:00</div>
+                                 <div class="time" th:text="${trip.arrivalTime}">05:00</div>
+                              </div>
+                           <div class="trip-info">
+                              <div class="location" th:text="${trip.departureLocation}">Bến Xe Cà Mau</div>
+                              <div class="location" th:text="${trip.destinationLocation}">Bến Xe Châu Đốc</div>
+                              <div class="duration" th:text="${trip.duration}">7 giờ</div>
+                           </div>
+                           <div class="trip-details">
+                              <span th:text="${trip.vehicleType}">Limousine</span> • 
+                              <span th:text="${trip.availableSeats} + ' chỗ trống'">34 chỗ trống</span>
+                           </div>
+                           <div class="price" th:text="${trip.price} + ' đ'">215.000 đ</div>
+                           <button th:href="@{'/booking?tripId=' + ${trip.id}}" class="choose-trip-button">Chọn chuyến</button>
+                     </div>
+                  </div>
+                  <div th:if="${trips.size() == 0}">
+                      <p>No trips available for the selected criteria.</p>
+                  </div>    
+               </div>  
             </div>
          </form>
       </div>

@@ -23,7 +23,7 @@
    <!-- Responsive-->
    <link rel="stylesheet" th:href="@{/css/responsive.css}">
    <!-- fevicon -->
-   <link rel="icon" th:href="@{/images/fevicon.png}" type="image/gif" />
+   <link rel="icon"  type="image/gif" />
    <!-- Scrollbar Custom CSS -->
    <link rel="stylesheet" th:href="@{/css/jquery.mCustomScrollbar.min.css}">
    <!-- Tweaks for older IEs-->
@@ -35,7 +35,7 @@
    <!-- font awesome -->
    <!-- <link rel="stylesheet" type="text/css" th:href="@{https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css}"> -->
    <!--  -->
-   <link rel="stylesheet" th:href="@{/css/fontawesome.min.css}">
+   <link rel="stylesheet" th:href="@{/css/fontawesome.css/fontawesome.min.css}">
    <!-- owl stylesheets -->
    <link th:href="@{https://fonts.googleapis.com/css?family=Great+Vibes|Poppins:400,700&display=swap&subset=latin-ext}"
       rel="stylesheet">
@@ -87,7 +87,7 @@
    <!-- header section start -->
    <div class="header_section">
       <div class="container">
-         <form class="search-form" id="searchForm" th:action="@{/home/index/search}"  method="post">
+         <form class="search-form" id="searchForm" th:action="@{/home/index/search}"  method="get">
             <div class="containt_main d-flex flex-wrap">
                <div class="row1 justify-content-between d-flex flex-nowrap">
                   <div class="col-10">
@@ -141,16 +141,14 @@
    <!-- search booking section start -->
    <div class="header_section">
       <div class="container">
-         <form class="booking-detail-form" id="bookingDetailForm" th:action="@{/home/index/search}" method="post">
+         <form class="booking-detail-form" id="bookingDetailForm" th:action="@{/home/index/search}" method="get">
             <div class="containt_main d-flex flex-wrap">   
                <div class="row1 d-flex flex-wrap">
-                  <div class="form-group">
-                     <span th:text="${departureTime}"></span>
-                     <span th:text="${arrivalTime}"></span>
-                     <span th:text="${price}"></span>
-                     <span>Trip time</span>
-                     <span>Seat</span>
-                     <span>Bus Type</span>
+                  <div class="form-group" th:each="trip: ${trips}">
+                     <span th:text="${trip.departureTime}"></span>
+                     <span th:text="${trip.arrivalTime}"></span>
+                     <span th:text="${trip.price}"></span>
+                     <span  th:text="${trip.route.getName()}"></span>
                   </div>   
                </div>
             </div>

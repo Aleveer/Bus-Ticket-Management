@@ -1,14 +1,15 @@
 package com.myproject.busticket.controllers;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 
+import com.myproject.busticket.dto.TripDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.myproject.busticket.models.Booking;
 import com.myproject.busticket.services.BookingService;
@@ -28,17 +29,18 @@ public class BookingController {
         this.customerService = customerService;
     }
 
-    @PostMapping("/search")
+    @GetMapping("/search")
     public String searchForm(@RequestParam String tripType, @RequestParam String departure,
                              @RequestParam String destination,
                              @RequestParam String date,
-                             @RequestParam int ticketNum,Model model) {
-                            model.addAttribute("tripType", tripType);
-                            model.addAttribute("departure", departure);
-                            model.addAttribute("destination", destination);
-                            model.addAttribute("date", date);
-                            model.addAttribute("ticketNum", ticketNum);
-                        return "search-booking";
+                             @RequestParam String ticketNum,Model model) {
+        int numberOfTickets = Integer.parseInt(ticketNum);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime dateDeparture = LocalDate.parse(date, formatter).atStartOfDay();
+        System.out.println(dateDeparture);
+        List<TripDTO> trips = tripService.searchTrip(departure, destination, dateDeparture, numberOfTickets);
+        model.addAttribute("trips", trips);
+        return "search-booking";
     }
 
     @PostMapping("/booking/testing")

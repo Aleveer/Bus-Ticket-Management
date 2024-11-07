@@ -6,11 +6,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import com.myproject.busticket.dto.TripDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.models.Booking;
 import com.myproject.busticket.services.BookingService;
 import com.myproject.busticket.services.CustomerService;
@@ -40,6 +45,11 @@ public class BookingController {
         System.out.println(dateDeparture);
         List<TripDTO> trips = tripService.searchTrip(departure, destination, dateDeparture, numberOfTickets);
         model.addAttribute("trips", trips);
+        model.addAttribute("tripType", tripType);
+        model.addAttribute("departure", departure);
+        model.addAttribute("destination", destination);
+        model.addAttribute("date", date);
+        model.addAttribute("ticketNum", ticketNum);
         return "search-booking";
     }
 

@@ -226,6 +226,12 @@ button {
     background: black;
 }
 
+.space {
+    margin-top: 20px;
+}
+.nospace {
+    margin-top: 0px;
+}
 /* banner bg main start */
 
 .banner_bg_main {
@@ -517,6 +523,7 @@ button {
     align-self: center;
     margin-top: 32px;
     cursor: pointer;
+    background-color: #ffffff;
 }
 
 .btn-container {
@@ -761,7 +768,15 @@ a:hover {
     font-weight: bold;
     padding-bottom: 20px;
 }
-
+.about_text_4 {
+    width: 100%;
+    font-size: 16px;
+    color: #30302e;
+    text-align: center;
+    margin: -5px;
+    font-weight: bold;
+    padding-bottom: 20px;
+}
 .about_ul li {
     list-style: circle;
     list-style-position: inside;

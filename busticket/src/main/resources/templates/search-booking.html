@@ -110,7 +110,7 @@
                      <label for="departure">Điểm đi</label>
                      <input type="text" id="departure" name="departure" th:value="${departure}">
                   </div>
-                  <div class="swap-btn">⇆</div>
+                  <div class="swap-btn" onclick="swapValues()">⇆</div>
                   <div class="form-group">
                      <label for="destination">Điểm đến</label>
                      <input type="text" id="destination" name="destination" th:value="${destination}">
@@ -139,18 +139,41 @@
    </div>
    <!-- header section end -->
    <!-- search booking section start -->
-   <div class="header_section">
+   <div class="fashion_section">
       <div class="container">
          <form class="booking-detail-form" id="bookingDetailForm" th:action="@{/home/index/search}" method="get">
-            <div class="containt_main d-flex flex-wrap">   
-               <div class="row1 d-flex flex-wrap">
-                  <div class="form-group" th:each="trip: ${trips}">
-                     <span th:text="${trip.departureTime}"></span>
-                     <span th:text="${trip.arrivalTime}"></span>
-                     <span th:text="${trip.price}"></span>
-                     <span  th:text="${trip.route.getName()}"></span>
-                  </div>   
+            <div th:if="${#lists.isEmpty(trips)}" class="d-flex flex-column justify-content-center space">
+               <i class="bi bi-list-stars d-flex flex-grow justify-content-center  h1"></i>
+               <p class="d-flex flex-grow justify-content-center nospace about_text_4 ">Không tìm thấy chuyến xe nào.</p> 
+            </div>
+            <div th:if="${!#lists.isEmpty(trips)}">
+               <div class="route-info h3">
+                 <span th:text="${departure} + ' - ' + ${destination}"></span>
                </div>
+             </div>
+            <div class="trip-card d-flex flex-wrap" th:each="trip: ${trips}">   
+               <div class="trip-time">
+                     <span class="time" th:text="${#temporals.format(trip.departureTime,'HH:mm')}"></span>
+                     <span class="time" th:text="${#temporals.format(trip.arrivalTime,'HH:mm')}"></span>
+               </div>
+               <div class="price">
+                     <span th:text="${trip.price}"></span>
+               </div>
+               <div class="trip-details">
+                  <span th:text="${trip.bus.getType()}"></span> 
+                  
+               </div>
+               <div class="route">
+                  <div th:with="routeParts=${#strings.arraySplit(#strings.replace(trip.route.name, ' - ','|'),'|')}">
+                    <div class="departureLocation">
+                      <span th:text="${routeParts[0]}"></span>
+                    </div>
+                    <div class="destinationLocation">
+                      <span th:text="${routeParts.length > 1 ? routeParts[1] : ''}"></span>
+                    </div>
+                  </div>
+               </div>
+               <button th:href="@{'/booking?tripId=' + ${trip.tripId}}" class="choose-trip-button">Chọn chuyến</button>
             </div>
          </form>
       </div>
@@ -200,6 +223,15 @@
 
       function closeNav() {
          document.getElementById("mySidenav").style.width = "0";
+      }
+      // Function to swap the values of the departure and destination input fields
+      function swapValues() {
+         event.preventDefault();
+         const departureInput = document.getElementById('departure');
+         const destinationInput = document.getElementById('destination');
+         const temp = departureInput.value;
+         departureInput.value = destinationInput.value;
+         destinationInput.value = temp;
       }
    </script>
 </body>

@@ -90,7 +90,7 @@
                      <div class="row">
                         <div class="col-sm-12">
                            <h1 class="banner_taital">Bắt Đầu <br>Chuyến đi dễ dàng</h1>
-                           <div class="buynow_bt"><a href="#">Đặt Ngay</a></div>
+                           <div class="buynow_bt"><a onclick="scrollToSection()">Đặt Ngay</a></div>
                         </div>
                      </div>
                   </div>
@@ -98,7 +98,7 @@
                      <div class="row">
                         <div class="col-sm-12">
                            <h1 class="banner_taital">Đi dễ dàng <br>Đặt tự tin!</h1>
-                           <div class="buynow_bt"><a href="#">Đặt Ngay</a></div>
+                           <div class="buynow_bt"><a onclick="scrollToSection()">Đặt Ngay</a></div>
                         </div>
                      </div>
                   </div>
@@ -113,7 +113,7 @@
    <!-- banner bg main end -->
 
    <!-- header section start -->
-   <div class="header_section">
+   <div class="header_section" id="bookingSection">
       <div class="container">
          <form class="search-form" id="searchForm" th:action="@{/home/index/search}"  method="get">
             <div class="containt_main d-flex flex-wrap">
@@ -136,23 +136,18 @@
                <div class="row1 d-flex flex-wrap">
                   <div class="form-group">
                      <label for="departure">Điểm đi</label>
-                  
-                        <input type="text" id="departure"  name="departure" th:value="${departure}"  >
+                        <input type="text" list="departureList" id="departure"  name="departure" th:value="${departure}"  >
                         <datalist id="departureList">
-                           <option th:value="@{departure}">
-                        </datalist>
-                    
+                           <option th:each="location : ${departureLocations}" th:value="${location}"></option>
+                        </datalist>    
                   </div>
                   <button class="swap-btn" onclick="swapValues()">⇆</button>
                   <div class="form-group">
                      <label for="destination">Điểm đến</label>
-                  
-                        <input type="text" id="destination"  name="destination" th:value="${destination}" >
-                        <datalist id="departureList">
-                           <option th:value="@{destination}">
+                        <input type="text" list="destinationList" id="destination"  name="destination" th:value="${destination}" >
+                        <datalist id="destinationList">
+                           <option th:each="location : ${destinationLocations}" th:value="${location}"></option>
                         </datalist>
-                        
-             
                   </div>
                   <div class="form-group">
                      <label for="date">Ngày đi</label>
@@ -192,7 +187,7 @@
                               <h4 class="shirt_text">Tuyến xe từ TPHCM</h4>
                               <div class="tshirt_img"><img src="/images/tphcm.jpg"></div>
                               <div class="btn_main">
-                                 <div class="buy_bt"><a href="#">Đặt Ngay</a></div>
+                                 <div class="buy_bt"><a onclick="setText('TP.Hồ Chí Minh')">Đặt Ngay</a></div>
                                  <div class="seemore_bt"><a href="#">Xem Thêm</a></div>
                               </div>
                            </div>
@@ -202,7 +197,7 @@
                               <h4 class="shirt_text">Tuyến xe từ Vũng Tàu</h4>
                               <div class="tshirt_img"><img src="/images/vungtau.jpg"></div>
                               <div class="btn_main">
-                                 <div class="buy_bt"><a href="#">Đặt ngay</a></div>
+                                 <div class="buy_bt"><a onclick="setText('Vũng Tàu')">Đặt ngay</a></div>
                                  <div class="seemore_bt"><a href="#">Xem thêm</a></div>
                               </div>
                            </div>
@@ -213,7 +208,7 @@
 
                               <div class="tshirt_img"><img src="/images/cantho.jpg"></div>
                               <div class="btn_main">
-                                 <div class="buy_bt"><a href="#">Đặt ngay</a></div>
+                                 <div class="buy_bt"><a onclick="setText('Cần Thơ')">Đặt ngay</a></div>
                                  <div class="seemore_bt"><a href="#">Xem thêm</a></div>
                               </div>
                            </div>
@@ -295,6 +290,17 @@
          const temp = departureInput.value;
          departureInput.value = destinationInput.value;
          destinationInput.value = temp;
+      }
+      // Function to scroll to the booking section
+      function scrollToSection() {
+         const bookingSection = document.getElementById('bookingSection');
+         bookingSection.scrollIntoView({ behavior: 'smooth' });
+      }
+      // Function to set text in the departure input field
+      function setText(location) {
+         const departureInput = document.getElementById('departure');
+         departureInput.value = location;
+         scrollToSection(); // Scroll to the booking section after setting the text
       }
       // Set the default date when the page loads
       window.onload = setDefaultDate;

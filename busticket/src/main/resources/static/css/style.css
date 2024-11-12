@@ -672,6 +672,7 @@ a:hover {
     width: 170px;
     margin: 0 auto;
     padding-top: 30px;
+    color: #ffffff;
 }
 
 .buynow_bt a {
@@ -886,6 +887,7 @@ a:hover {
 .buy_bt {
     float: left;
     width: 100%;
+    color: #f26522;
 }
 
 .buy_bt a {

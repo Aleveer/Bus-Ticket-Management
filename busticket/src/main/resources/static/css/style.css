@@ -226,6 +226,22 @@ button {
     background: black;
 }
 
+.space {
+    margin-top: 20px;
+}
+.nospace {
+    margin-top: 0px;
+}
+
+.icon{
+   
+    margin: 10px 10px;
+   
+   
+    font-size: large;
+    color: green;
+}
+
 /* banner bg main start */
 
 .banner_bg_main {
@@ -517,6 +533,7 @@ button {
     align-self: center;
     margin-top: 32px;
     cursor: pointer;
+    background-color: #ffffff;
 }
 
 .btn-container {
@@ -655,6 +672,7 @@ a:hover {
     width: 170px;
     margin: 0 auto;
     padding-top: 30px;
+    color: #ffffff;
 }
 
 .buynow_bt a {
@@ -761,7 +779,15 @@ a:hover {
     font-weight: bold;
     padding-bottom: 20px;
 }
-
+.about_text_4 {
+    width: 100%;
+    font-size: 16px;
+    color: #30302e;
+    text-align: center;
+    margin: -5px;
+    font-weight: bold;
+    padding-bottom: 20px;
+}
 .about_ul li {
     list-style: circle;
     list-style-position: inside;
@@ -861,6 +887,7 @@ a:hover {
 .buy_bt {
     float: left;
     width: 100%;
+    color: #f26522;
 }
 
 .buy_bt a {
@@ -1227,15 +1254,18 @@ input.mail_bt::placeholder {
     margin-right: 50px;
   }
 
+
+  
 /* trip section start */
 .trip-card {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     background-color: #f9f9f9;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -1293,6 +1323,8 @@ input.mail_bt::placeholder {
 }
 
 .choose-trip-button {
+    margin-right: -5px;
+    margin-left: 10px;
     padding: 10px 20px;
     color: #fff;
     background-color: #ff7f50;
@@ -1315,5 +1347,26 @@ input.mail_bt::placeholder {
 .trip-card .trip-time,
 .trip-card .trip-info,
 .trip-card .trip-details {
-    margin-right: 10px;
+    margin-right: 25px;
+    margin-left: 10px;
+}
+
+.time-line {
+    width: 80%;
+    height: 2px;
+    background-color: #000;
+    margin: 0 10px;
+    align-self: center;
+  }
+
+.route{
+    margin-top: 10px;
+    width: 100%; /* Ensure the route information takes the full width */
+    text-align: center; /* Center the route information */
+}
+.locationContent{
+    margin-left: 10px;
+}
+.destinationLocation{
+    margin-left: 10px;
 }

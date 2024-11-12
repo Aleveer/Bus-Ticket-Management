@@ -31,10 +31,7 @@ public class TripService {
     }
 
     public List<TripDTO> searchTrip(String departure, String destination, LocalDateTime departureDate, int numberOfTickets){
-        List<Trip> trips = tripRepository.findTrip(departure, destination, departureDate, numberOfTickets);
-        for (Trip trip : trips) {
-            System.out.println(trip.getTripId());
-        }
-        return tripMapper.map(trips);
+        List<Trip> trip = tripRepository.findTrip(departure, destination, departureDate, numberOfTickets);
+        return tripMapper.map(trip);
     }
 }

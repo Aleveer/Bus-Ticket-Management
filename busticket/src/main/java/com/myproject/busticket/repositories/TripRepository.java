@@ -24,11 +24,14 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
             "AND ((r2.checkpoint_city=:destination OR r2.checkpoint_province=:destination) AND r2.type = \"drop_off\")\n" +
             "AND t.status = \"waiting\"\n" +
             "AND Date(t.departure_time) =:departureDate\n" +
-            "GROUP BY t.trip_id, bus.number_of_seat\n" +
-            "HAVING bus.number_of_seat - IFNULL(SUM(b.number_of_seat), 0) >=:numberOfTickets",
+            "GROUP BY t.trip_id\n" +
+            "HAVING (bus.number_of_seat - IFNULL(SUM(b.number_of_seat), 0)) >=:numberOfTickets",
             nativeQuery=true)
     List<Trip> findTrip(@Param("departure") String departure,
                         @Param("destination") String destination,
                         @Param("departureDate") LocalDateTime departureDate,
                         @Param("numberOfTickets") int numberOfTickets);
+
+    @Query()
+    int findNumberOfSeatAvailableByTripId(int tripId);
 }

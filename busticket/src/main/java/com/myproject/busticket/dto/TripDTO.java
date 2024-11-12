@@ -25,6 +25,7 @@ public class TripDTO {
     private StaffDTO staff;
     private RouteDTO route;
 
+    private int numberOfSeatAvailable;
     public TripDTO(){}
 
     public TripDTO(int TripId, LocalDateTime departureTime, LocalDateTime arrivalTime, float price, TripStatus status, BusDTO bus, DriverDTO driver, ControllerDTO controller, StaffDTO staff, RouteDTO route) {

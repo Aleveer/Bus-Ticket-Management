@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.myproject.busticket.dto.TripDTO;
+import com.myproject.busticket.models.Trip;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,9 @@ public class BookingController {
         LocalDateTime dateDeparture = LocalDate.parse(date, formatter).atStartOfDay();
         System.out.println(dateDeparture);
         List<TripDTO> trips = tripService.searchTrip(departure, destination, dateDeparture, numberOfTickets);
+        for (TripDTO trip : trips) {
+            System.out.println("ControllerDTO: " + trip.getNumberOfSeatAvailable());
+        }
         model.addAttribute("trips", trips);
         return "search-booking";
     }

@@ -58,4 +58,7 @@ public class Trip {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "route_code", referencedColumnName = "code", nullable = false)
     private Route route;
+
+    @Transient
+    private int numberOfSeatAvailable;
 }

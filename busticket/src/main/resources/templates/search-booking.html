@@ -152,28 +152,39 @@
                </div>
              </div>
             <div class="trip-card d-flex flex-wrap" th:each="trip: ${trips}">   
-               <div class="trip-time">
-                     <span class="time" th:text="${#temporals.format(trip.departureTime,'HH:mm')}"></span>
-                     <span class="time" th:text="${#temporals.format(trip.arrivalTime,'HH:mm')}"></span>
+               <div class="trip-time ">
+                  <div class="d-flex justify-content-between">
+                     <div class="d-flex flex-nowrap">
+                        <span class="time" th:text="${#temporals.format(trip.departureTime,'HH:mm')}"></span>
+                        <i class="bi bi-record-circle icon"></i>
+                     </div> 
+                     <div class="time-line"></div>
+                     <div class="d-flex flex-nowrap">    
+                        <i class="bi bi-geo-alt-fill icon"></i>
+                        <span class="time" th:text="${#temporals.format(trip.arrivalTime,'HH:mm')}"></span>
+                     </div>  
+                  </div>
+                  
+              </div>
+               <div class="trip-details">
+                  <span th:text="${trip.bus.getType()}"></span> 
                </div>
                <div class="price">
                      <span th:text="${trip.price}"></span>
                </div>
-               <div class="trip-details">
-                  <span th:text="${trip.bus.getType()}"></span> 
-                  
-               </div>
-               <div class="route">
-                  <div th:with="routeParts=${#strings.arraySplit(#strings.replace(trip.route.name, ' - ','|'),'|')}">
-                    <div class="departureLocation">
+               
+               <div class="route d-flex ">
+                  <div th:with="routeParts=${#strings.arraySplit(#strings.replace(trip.route.name, ' - ','|'),'|')}" class="d-flex flex-nowrap flex-grow-1 justify-content-between align-items-center locationContent">
+                    <div class="departureLocation h6">
                       <span th:text="${routeParts[0]}"></span>
                     </div>
-                    <div class="destinationLocation">
+                    <div class="destinationLocation h6">
                       <span th:text="${routeParts.length > 1 ? routeParts[1] : ''}"></span>
                     </div>
                   </div>
+                  <button th:href="@{'/booking?tripId=' + ${trip.tripId}}" class="choose-trip-button">Chọn chuyến</button>
                </div>
-               <button th:href="@{'/booking?tripId=' + ${trip.tripId}}" class="choose-trip-button">Chọn chuyến</button>
+               
             </div>
          </form>
       </div>

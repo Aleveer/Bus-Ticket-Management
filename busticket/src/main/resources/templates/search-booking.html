@@ -183,10 +183,11 @@
                       <span th:text="${routeParts.length > 1 ? routeParts[1] : ''}"></span>
                     </div>
                   </div>
-               </div>
                 <form class="booking-detail-form" id="bookingDetailForm" th:action="@{'/home/index/booking/' + ${trip.tripId}}" method="get">
                     <button  class="choose-trip-button">Chọn chuyến</button>
                 </form>
+               </div>
+               
             </div>
       </div>
    </div>

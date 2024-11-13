@@ -1,1 +1,202 @@
-<h1>Booking here</h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <!-- basic -->
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <!-- mobile metas -->
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+   <!-- site metas -->
+   <title>Easy Bus</title>
+   <meta name="keywords" content="">
+   <meta name="description" content="">
+   <meta name="author" content="">
+   <!--Bootstrap icon -->
+   <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css}">
+   <!-- bootstrap css -->
+   <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+   <!-- style css -->
+   <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+   <!-- Responsive-->
+   <link rel="stylesheet" th:href="@{/css/responsive.css}">
+   <!-- fevicon -->
+   <link rel="icon"  type="image/gif" />
+   <!-- Scrollbar Custom CSS -->
+   <link rel="stylesheet" th:href="@{/css/jquery.mCustomScrollbar.min.css}">
+   <!-- Tweaks for older IEs-->
+   <link rel="stylesheet"
+      th:href="@{https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css}"
+      integrity="sha384-NvKbDTEnL+A8F/AA5Tc5kmMLSJHUO868P+lDtTpJIeQdGYaUIuLr4lVGOEA1OcMy" crossorigin="anonymous">
+   <!-- fonts -->
+   <link th:href="@{https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap}" rel="stylesheet">
+   <!-- font awesome -->
+   <!-- <link rel="stylesheet" type="text/css" th:href="@{https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css}"> -->
+   <!--  -->
+   <link rel="stylesheet" th:href="@{/css/fontawesome.css/fontawesome.min.css}">
+   <!-- owl stylesheets -->
+   <link th:href="@{https://fonts.googleapis.com/css?family=Great+Vibes|Poppins:400,700&display=swap&subset=latin-ext}"
+      rel="stylesheet">
+   <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}">
+   <link rel="stylesoeet" th:href="@{/css/owl.theme.default.min.css}">
+   <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css}"
+      media="screen">
+</head>
+<body>
+    <!-- header top section start -->
+    <div class="logo_2 d-flex justify-content-center">
+        <a th:href="@{index}"><img th:src="@{/images/EasyBus_processed.png}" /></a>
+    </div>
+  
+    <!-- header top section end -->
+
+    <!-- booking section start -->
+    <div class="fashion_section">
+        <div class="container">
+        <div class="choose_seat trip-card d-flex flex-column justify-content-center col-sm-8">
+                <ul class="showcase">
+                    <li>
+                      <div class="seat"></div>
+                      <small>Available</small>
+                    </li>
+                    <li>
+                      <div class="seat selected"></div>
+                      <small>Selected</small>
+                    </li>
+                    <li>
+                      <div class="seat occupied"></div>
+                      <small>Occupied</small>
+                    </li>
+                  </ul>
+              
+                  <div class="seat_container">
+                    <div class="screen"></div>
+                    <div class="row_2">
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                    </div>
+                    <div class="row_2">
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat occupied"></div>
+                      <div class="seat occupied"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                    </div>
+                    <div class="row_2">
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat occupied"></div>
+                      <div class="seat occupied"></div>
+                    </div>
+                    <div class="row_2">
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                    </div>
+                    <div class="row_2">
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat occupied"></div>
+                      <div class="seat occupied"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                    </div>
+                    <div class="row_2">
+                      <div class="seat"></div>
+                      <div class="seat occupied"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat occupied"></div>
+                      <div class="seat occupied"></div>
+                      <div class="seat"></div>
+                    </div>
+                </div>
+              
+                  <p class="text">
+                    You have selected <span id="count">0</span> seats 
+                  </p>
+              </div>
+        </div>    
+    </div>
+    <script>
+        const container = document.querySelector(".seat_container");
+        const seats = document.querySelectorAll(".row_2 .seat:not(.occupied)");
+        const count = document.getElementById("count");
+        const total = document.getElementById("total");
+       
+
+        populateUI();
+
+        
+
+        updateSelectedCount = () => {
+        const selectedSeats = document.querySelectorAll(".row_2 .seat.selected");
+
+        const seatsIndex = [...selectedSeats].map((seat) => {
+            return [...seats].indexOf(seat);
+        });
+
+        localStorage.setItem("selectedSeats", JSON.stringify(seatsIndex));
+
+        const selectedSeatsCount = selectedSeats.length;
+
+        count.innerText = selectedSeatsCount;
+        
+        };
+
+        function populateUI() {
+        const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats"));
+
+        if (selectedSeats !== null && selectedSeats.length > 0) {
+            seats.forEach((seat, index) => {
+            if (selectedSeats.indexOf(index) > -1) {
+                seat.classList.add("selected");
+            }
+            });
+        }
+
+  
+
+        
+        }
+
+        
+
+        container.addEventListener("click", (e) => {
+        if (
+            e.target.classList.contains("seat") &&
+            !e.target.classList.contains("occupied")
+        ) {
+            e.target.classList.toggle("selected");
+            console.log(e.target);
+            updateSelectedCount();
+        }
+        });
+
+        updateSelectedCount();
+    </script>
+</body>
+</html>

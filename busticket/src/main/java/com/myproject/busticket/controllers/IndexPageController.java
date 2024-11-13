@@ -22,8 +22,8 @@ public class IndexPageController {
         List<String> provinces = routeCheckpointService.getAllProvinces();
         List<String> cities = routeCheckpointService.getAllCities();
         model.addAttribute("tripType", "one-way");
-        model.addAttribute("provinces", "provinces");
-        model.addAttribute("cities", "cities");
+        model.addAttribute("provinces", provinces);
+        model.addAttribute("cities", cities);
         return "index";
     }
 

@@ -9,7 +9,7 @@
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET time_zone = "+07:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -22,7 +22,11 @@ SET time_zone = "+00:00";
 --
 
 -- --------------------------------------------------------
+DROP DATABASE IF EXISTS `bus_ticket_management`;
 
+CREATE DATABASE IF NOT EXISTS `bus_ticket_management` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+USE `bus_ticket_management`;
 --
 -- Table structure for table `account`
 --

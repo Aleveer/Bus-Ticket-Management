@@ -240,6 +240,7 @@ button {
 }
 .text_right {
     text-align: right;
+    float: right;
 }
 
 .icon{

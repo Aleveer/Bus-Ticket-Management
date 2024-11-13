@@ -232,6 +232,15 @@ button {
 .nospace {
     margin-top: 0px;
 }
+.space_left {
+    margin-left: 5px;
+}
+.space_right {
+    margin-right: 5px;
+}
+.text_right {
+    text-align: right;
+}
 
 .icon{
    
@@ -1385,44 +1394,65 @@ input.mail_bt::placeholder {
 }
 
 /* choose seat section start */
-
-  
+.floor-container{
+    width: 100%;
+    font-size: 16px;
+    padding-bottom: 0px;
+}
+.floor-container .floor_1{
+    margin-right: 35px;
+    margin-left: -10px;
+    margin-top: 10px;
+}
+.floor-container .floor_2{
+    margin-left: 35px;
+    margin-top: 10px;
+}
   .seat_container {
     margin-top: 20px;
     perspective: 1000px;
     margin-bottom: 3px;
+    display: flex;
+    flex-wrap: nowrap;
   }
   
   .seat {
-    background-color: #444451;
-    height: 25px;
-    width: 30px;
+    background-color: #a5d5e5;
+    height: 30px;
+    width: 35px;
     margin: 5px;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-    padding-left: 4px;
-    padding-top: 2px;
-    color:white;
+    padding-left: 5px;
+    padding-top: 4px;
+    color:rgb(4, 25, 253);
+    font-weight: bold;
     font-size: 13px;
-    
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
   }
   
   
   .seat.selected {
     background-color: #eb5b2b;
+    color: white;
   }
   
   .seat.booked {
     background-color: #ada9a9;
-    height: 25px;
-    width: 30px;
+    height: 30px;
+    width: 35px;
     margin: 5px;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     padding-left: 4px;
     padding-top: 2px;
     color:white;
-    font-size: 13px;
+    font-size: 14px;
   }
   
   /* Selects the second row f*/
@@ -1430,7 +1460,7 @@ input.mail_bt::placeholder {
     margin-right: 18px;
   }
   
-  
+
   
   .seat:not(.booked) {
     cursor: pointer;
@@ -1450,6 +1480,7 @@ input.mail_bt::placeholder {
     list-style-type: none;
     display: flex;
     justify-content: space-between;
+    font-size: 16px;
   }
   
   .showcase li {
@@ -1470,12 +1501,17 @@ input.mail_bt::placeholder {
   .row_2_1 {
     display: flex;
   }
-  .row_2_1 .seat:nth-of-type(2){
-    margin-left: 45px;
-  }
-  .row_2_1 .seat:nth-of-type(3){
-    margin-left: 18px;
-  }
-  .row_2_1 .seat:nth-of-type(4){
-    margin-left: 34px;
-  }
+    .row_2_1 .seat:nth-of-type(2){
+        margin-right: 18px;
+    } 
+    
+/*choose seat section end */
+
+/* confirm info start */
+.confirm_info{
+    margin-left: 20px;
+    width: 100%;
+    float: left;
+    padding-bottom: 50px;
+    height: auto;
+}

@@ -1,17 +1,16 @@
 package com.myproject.busticket.services;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Service;
+
 import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.mapper.TripMapper;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.repositories.TripRepository;
-import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TripService {
@@ -21,7 +20,7 @@ public class TripService {
         this.tripRepository = tripRepository;
     }
 
-    public TripDTO getById(int tripId) {
+    public TripDTO findById(int tripId) {
         Optional<Trip> trip = tripRepository.findById(tripId);
         return tripMapper.entityToDTO(trip.get());
     }
@@ -34,4 +33,6 @@ public class TripService {
         List<Trip> trip = tripRepository.findTrip(departure, destination, departureDate, numberOfTickets);
         return tripMapper.map(trip);
     }
+
+    
 }

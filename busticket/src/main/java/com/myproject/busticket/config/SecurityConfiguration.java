@@ -50,6 +50,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/webjars/**").permitAll()
                         .requestMatchers("/theme-assets/**").permitAll()
+                        .requestMatchers("/admin/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

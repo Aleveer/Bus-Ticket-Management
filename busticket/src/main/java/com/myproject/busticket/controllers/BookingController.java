@@ -8,12 +8,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.models.Booking;
@@ -53,21 +48,14 @@ public class BookingController {
         return "search-booking";
     }
 
-    @PostMapping("/booking/testing")
-    public String bookingTest(@RequestBody Map<String, Object> booking) {
-        Map<String, String> tripDetail = (Map<String, String>) booking.get("tripDetail");
-        
-        return "redirect:/";
-    }
+    @GetMapping("/booking/{TripId}")
+    public String chooseInfo(@PathVariable Integer TripId, Model model) {
 
+        return "booking";
+    }
     @PostMapping("/booking/oneway")
     public String booking(@ModelAttribute Booking booking) {
-        if (!customerService.hasCustomer(booking.getCustomer().getEmail())){
-            customerService.create(booking.getCustomer());
-            booking.getCustomer().setCustomerId(customerService.findIDByEmail(booking.getCustomer().getEmail()));
-        }
-        // set isRoundTrip to false
-        bookingService.createTicket(booking);
+
         return "redirect:/";
     }
 

@@ -55,12 +55,12 @@
                     <div class="col-sm-12">
                         <div class="custom_menu">
                             <ul>
-                                <li><a th:href="@{index}">Trang Chủ</a></li>
+                                <li><a th:href="@{../index}">Trang Chủ</a></li>
                                 <li><a href="#">Lịch Trình</a></li>
-                                <li><a th:href="@{search-ticket-info}">Tra Cứu Vé</a></li>
-                                <li><a th:href="@{search-billing-info}">Hóa Đơn</a></li>
+                                <li><a th:href="@{../search-ticket-info}">Tra Cứu Vé</a></li>
+                                <li><a th:href="@{../search-billing-info}">Hóa Đơn</a></li>
                                 <li><a th:href="@{../contact}">Liên Hệ</a></li>
-                                <li><a th:href="@{about-us}">Về Chúng Tôi</a></li>
+                                <li><a th:href="@{../about-us}">Về Chúng Tôi</a></li>
                             </ul>
                         </div>
                     </div>
@@ -133,6 +133,7 @@
                <div class="btn-container d-flex justify-content-center">
                   <button type="submit" class="search-btn">Tìm chuyến xe</button>
                </div>
+            </div>
          </form>
       </div>
    </div>   
@@ -141,7 +142,7 @@
    <!-- search booking section start -->
    <div class="fashion_section">
       <div class="container">
-         <form class="booking-detail-form" id="bookingDetailForm" th:action="@{/home/index/search}" method="get">
+
             <div th:if="${#lists.isEmpty(trips)}" class="d-flex flex-column justify-content-center space">
                <i class="bi bi-list-stars d-flex flex-grow justify-content-center  h1"></i>
                <p class="d-flex flex-grow justify-content-center nospace about_text_4 ">Không tìm thấy chuyến xe nào.</p> 
@@ -182,11 +183,11 @@
                       <span th:text="${routeParts.length > 1 ? routeParts[1] : ''}"></span>
                     </div>
                   </div>
-                  <button th:href="@{'/booking?tripId=' + ${trip.tripId}}" class="choose-trip-button">Chọn chuyến</button>
                </div>
-               
+                <form class="booking-detail-form" id="bookingDetailForm" th:action="@{'/home/index/booking/' + ${trip.tripId}}" method="get">
+                    <button  class="choose-trip-button">Chọn chuyến</button>
+                </form>
             </div>
-         </form>
       </div>
    </div>
    <!-- footer section start -->
@@ -199,12 +200,12 @@
          </div>
          <div class="footer_menu">
             <ul>
-               <li><a th:href="@{index}">Trang Chủ</a></li>
+               <li><a th:href="@{../index}">Trang Chủ</a></li>
                <li><a href="#">Lịch Trình</a></li>
-               <li><a th:href="@{search-ticket-info}">Tra Cứu Vé</a></li>
-               <li><a th:href="@{search-billing-info}">Hóa Đơn</a></li>
-               <li><a th:href="@{contact}">Liên Hệ</a></li>
-               <li><a th:href="@{about-us}">Về Chúng Tôi</a></li>
+               <li><a th:href="@{../search-ticket-info}">Tra Cứu Vé</a></li>
+               <li><a th:href="@{/./search-billing-info}">Hóa Đơn</a></li>
+               <li><a th:href="@{../contact}">Liên Hệ</a></li>
+               <li><a th:href="@{../about-us}">Về Chúng Tôi</a></li>
             </ul>
          </div>
          <div class="location_main">Help Line Number : <a href="#">+84 1800 9999 1111</a></div>

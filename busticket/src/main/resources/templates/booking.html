@@ -66,29 +66,22 @@
                       <small>Selected</small>
                     </li>
                     <li>
-                      <div class="seat occupied"></div>
-                      <small>Occupied</small>
+                      <div class="seat booked"></div>
+                      <small>booked</small>
                     </li>
                   </ul>
-              
+                  
                   <div class="seat_container">
-                    <div class="screen"></div>
-                    <div class="row_2">
-                      <div class="seat"></div>
-                      <div class="seat"></div>
-                      <div class="seat"></div>
-                      <div class="seat"></div>
-                      <div class="seat"></div>
-                      <div class="seat"></div>
-                      <div class="seat"></div>
-                      <div class="seat"></div>
+                    <div class="row_2_1">
+                      <div class="seat" id="A01">A01</div>
+                      <div class="seat">A02</div>
+                      <div class="seat">B01</div>
+                      <div class="seat">B02</div>
                     </div>
                     <div class="row_2">
+                      <div class="seat booked"></div>
                       <div class="seat"></div>
                       <div class="seat"></div>
-                      <div class="seat"></div>
-                      <div class="seat occupied"></div>
-                      <div class="seat occupied"></div>
                       <div class="seat"></div>
                       <div class="seat"></div>
                       <div class="seat"></div>
@@ -100,8 +93,6 @@
                       <div class="seat"></div>
                       <div class="seat"></div>
                       <div class="seat"></div>
-                      <div class="seat occupied"></div>
-                      <div class="seat occupied"></div>
                     </div>
                     <div class="row_2">
                       <div class="seat"></div>
@@ -110,6 +101,12 @@
                       <div class="seat"></div>
                       <div class="seat"></div>
                       <div class="seat"></div>
+                    </div>
+                    <div class="row_2">
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
+                      <div class="seat"></div>
                       <div class="seat"></div>
                       <div class="seat"></div>
                     </div>
@@ -117,20 +114,8 @@
                       <div class="seat"></div>
                       <div class="seat"></div>
                       <div class="seat"></div>
-                      <div class="seat occupied"></div>
-                      <div class="seat occupied"></div>
                       <div class="seat"></div>
                       <div class="seat"></div>
-                      <div class="seat"></div>
-                    </div>
-                    <div class="row_2">
-                      <div class="seat"></div>
-                      <div class="seat occupied"></div>
-                      <div class="seat"></div>
-                      <div class="seat"></div>
-                      <div class="seat"></div>
-                      <div class="seat occupied"></div>
-                      <div class="seat occupied"></div>
                       <div class="seat"></div>
                     </div>
                 </div>
@@ -143,7 +128,7 @@
     </div>
     <script>
         const container = document.querySelector(".seat_container");
-        const seats = document.querySelectorAll(".row_2 .seat:not(.occupied)");
+        const seats = document.querySelectorAll(".row_2 .seat:not(.booked)");
         const count = document.getElementById("count");
         const total = document.getElementById("total");
        
@@ -188,7 +173,7 @@
         container.addEventListener("click", (e) => {
         if (
             e.target.classList.contains("seat") &&
-            !e.target.classList.contains("occupied")
+            !e.target.classList.contains("booked")
         ) {
             e.target.classList.toggle("selected");
             console.log(e.target);

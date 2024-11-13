@@ -1385,61 +1385,61 @@ input.mail_bt::placeholder {
 }
 
 /* choose seat section start */
-.movie-container {
-    margin: 20px 0;
-  }
-  
-  .movie-container select {
-    background-color: #fff;
-    border: 0;
-    border-radius: 5px;
-    font-size: 14px;
-    margin-left: 10px;
-    padding: 5px 15px 5px 15px;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-  }
+
   
   .seat_container {
+    margin-top: 20px;
     perspective: 1000px;
     margin-bottom: 3px;
   }
   
   .seat {
     background-color: #444451;
-    height: 12px;
-    width: 15px;
-    margin: 3px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    height: 25px;
+    width: 30px;
+    margin: 5px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding-left: 4px;
+    padding-top: 2px;
+    color:white;
+    font-size: 13px;
+    
   }
+  
   
   .seat.selected {
-    background-color: var(--selected-color);
+    background-color: #eb5b2b;
   }
   
-  .seat.occupied {
-    background-color: var(--available-color);
+  .seat.booked {
+    background-color: #ada9a9;
+    height: 25px;
+    width: 30px;
+    margin: 5px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding-left: 4px;
+    padding-top: 2px;
+    color:white;
+    font-size: 13px;
   }
   
   /* Selects the second row f*/
-  .seat:nth-of-type(2) {
+  .seat:nth-of-type(3) {
     margin-right: 18px;
   }
   
-  .seat:nth-last-of-type(2) {
-    margin-left: 18px;
-  }
   
-  .seat:not(.occupied) {
+  
+  .seat:not(.booked) {
     cursor: pointer;
-    transform: scale(1.2);
+
   }
   
-  .showcase .seat:not(.occupied) {
+  .showcase .seat:not(.booked) {
     cursor: default;
-    transform: scale(1);
+   
   }
   
   .showcase {
@@ -1467,11 +1467,15 @@ input.mail_bt::placeholder {
     display: flex;
   }
   
-  .screen {
-    background-color: #fff;
-    height: 70px;
-    width: 100%;
-    margin: 15px 0;
-    transform: rotateX(-45deg);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.7);
+  .row_2_1 {
+    display: flex;
+  }
+  .row_2_1 .seat:nth-of-type(2){
+    margin-left: 45px;
+  }
+  .row_2_1 .seat:nth-of-type(3){
+    margin-left: 18px;
+  }
+  .row_2_1 .seat:nth-of-type(4){
+    margin-left: 34px;
   }

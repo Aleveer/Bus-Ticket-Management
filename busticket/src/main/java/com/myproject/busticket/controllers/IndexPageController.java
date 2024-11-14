@@ -46,6 +46,4 @@ public class IndexPageController {
         return "search-billing-info";
     }
 
-    @GetMapping("/admin")
-    public  String adminPage(){ return "admin";}
 }

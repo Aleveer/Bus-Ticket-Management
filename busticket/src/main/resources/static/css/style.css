@@ -232,6 +232,16 @@ button {
 .nospace {
     margin-top: 0px;
 }
+.space_left {
+    margin-left: 5px;
+}
+.space_right {
+    margin-right: 5px;
+}
+.text_right {
+    text-align: right;
+    float: right;
+}
 
 .icon{
    
@@ -277,7 +287,13 @@ button {
     background-color: #2b2a29;
 
 }
+.logo_2 {
+    width: 100%;
+    height: 200px;
+    float: left;
+    background-color: #2b2a29;
 
+}
 .logo img {
     width: 100%;
     height: 70px;
@@ -286,7 +302,14 @@ button {
     padding: 0px 40px;
     margin-bottom: 15px;
 }
-
+.logo_2 img {
+    width: 100%;
+    height: 70px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    padding: 0px 40px;
+    margin-bottom: 15px;
+}
 .custom_menu {
     width: 100%;
     margin: 0 auto;
@@ -1369,4 +1392,127 @@ input.mail_bt::placeholder {
 }
 .destinationLocation{
     margin-left: 10px;
+}
+
+/* choose seat section start */
+.floor-container{
+    width: 100%;
+    font-size: 16px;
+    padding-bottom: 0px;
+}
+.floor-container .floor_1{
+    margin-right: 35px;
+    margin-left: -10px;
+    margin-top: 10px;
+}
+.floor-container .floor_2{
+    margin-left: 35px;
+    margin-top: 10px;
+}
+  .seat_container {
+    margin-top: 20px;
+    perspective: 1000px;
+    margin-bottom: 3px;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  
+  .seat {
+    background-color: #a5d5e5;
+    height: 30px;
+    width: 35px;
+    margin: 5px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding-left: 5px;
+    padding-top: 4px;
+    color:rgb(4, 25, 253);
+    font-weight: bold;
+    font-size: 13px;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+  }
+  
+  
+  .seat.selected {
+    background-color: #eb5b2b;
+    color: white;
+  }
+  
+  .seat.booked {
+    background-color: #ada9a9;
+    height: 30px;
+    width: 35px;
+    margin: 5px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding-left: 4px;
+    padding-top: 2px;
+    color:white;
+    font-size: 14px;
+  }
+  
+  /* Selects the second row f*/
+  .seat:nth-of-type(3) {
+    margin-right: 18px;
+  }
+  
+
+  
+  .seat:not(.booked) {
+    cursor: pointer;
+
+  }
+  
+  .showcase .seat:not(.booked) {
+    cursor: default;
+   
+  }
+  
+  .showcase {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #777;
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+  }
+  
+  .showcase li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+  }
+  
+  .showcase li small {
+    margin-left: 2px;
+  }
+  
+  .row_2 {
+    display: flex;
+  }
+  
+  .row_2_1 {
+    display: flex;
+  }
+    .row_2_1 .seat:nth-of-type(2){
+        margin-right: 18px;
+    } 
+    
+/*choose seat section end */
+
+/* confirm info start */
+.confirm_info{
+    margin-left: 20px;
+    width: 100%;
+    float: left;
+    padding-bottom: 50px;
+    height: auto;
 }

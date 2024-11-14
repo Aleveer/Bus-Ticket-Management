@@ -139,7 +139,7 @@
                         <input type="text" list="departureList" id="departure"  name="departure" th:value="${departure}"  >
                         <datalist id="departureList" >
                            <option th:each="province : ${provinces}" th:value="${province}"></option>
-                           <option th:each="citi : ${cities}" th:value="${citi}"></option>
+                           <option th:each="city : ${cities}" th:value="${city}"></option>
                         </datalist>    
                   </div>
                   <button class="swap-btn" onclick="swapValues()">⇆</button>
@@ -148,7 +148,7 @@
                         <input type="text" list="destinationList" id="destination"  name="destination" th:value="${destination}" >
                         <datalist id="destinationList">
                            <option th:each="province : ${provinces}" th:value="${province}"></option>
-                           <option th:each="citi : ${cities}" th:value="${citi}"></option>
+                           <option th:each="city : ${cities}" th:value="${city}"></option>
                         </datalist>
                   </div>
                   <div class="form-group">

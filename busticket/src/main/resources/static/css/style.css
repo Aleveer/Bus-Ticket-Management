@@ -1443,7 +1443,7 @@ input.mail_bt::placeholder {
     color: white;
   }
   
-  .seat.booked {
+  .booked {
     background-color: #ada9a9;
     height: 30px;
     width: 35px;

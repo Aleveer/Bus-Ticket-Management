@@ -102,7 +102,7 @@
           </li>
           <li class=" nav-item"><a href="typography.html"><i class="ft-bold"></i><span class="menu-title" data-i18n="">Typography</span></a>
           </li>
-          <li class="active"><a th:href="@{addTrip}"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Tables</span></a>
+          <li class="active"><a th:href="@{addTrip}"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Trip</span></a>
           </li>
           <li class=" nav-item"><a href="form-elements.html"><i class="ft-layout"></i><span class="menu-title" data-i18n="">Form Elements</span></a>
           </li>
@@ -134,69 +134,13 @@
           </div>
         </div>
         <div class="content-body"><!-- Basic Tables start -->
-<div class="row">
-	<div class="col-12">
-		<div class="card">
-			<div class="card-header">
-				<h4 class="card-title">Basic Tables</h4>
-				<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-				<div class="heading-elements">
-					<ul class="list-inline mb-0">
-						<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-						<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
-						<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-						<li><a data-action="close"><i class="ft-x"></i></a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="card-content collapse show">
-				<div class="card-body">
-					<p class="card-text">Using the most basic table markup, here’s how <code>.table</code>-based tables look in Bootstrap. You can use any example of below table for your table and it can be use with any type of bootstrap tables. </p>
-					<p><span class="text-bold-600">Example 1:</span> Table with outer spacing</p>
-					<div class="table-responsive">
-						<table class="table">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th>First Name</th>
-									<th>Last Name</th>
-									<th>Username</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<th scope="row">1</th>
-									<td>Mark</td>
-									<td>Otto</td>
-									<td>@mdo</td>
-								</tr>
-								<tr>
-									<th scope="row">2</th>
-									<td>Jacob</td>
-									<td>Thornton</td>
-									<td>@fat</td>
-								</tr>
-								<tr>
-									<th scope="row">3</th>
-									<td>Larry</td>
-									<td>the Bird</td>
-									<td>@twitter</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 <!-- Basic Tables end -->
 <!-- Striped rows start -->
 <div class="row">
 	<div class="col-12">
 		<div class="card">
 			<div class="card-header">
-				<h4 class="card-title">Striped rows</h4>
+				<h4 class="card-title">Trip</h4>
 				<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
 				<div class="heading-elements">
 					<ul class="list-inline mb-0">
@@ -208,38 +152,37 @@
 				</div>
 			</div>
 			<div class="card-content collapse show">
-				<div class="card-body">
-					<p class="card-text">Use <code class="highlighter-rouge">.table-striped</code> to add zebra-striping to any table row within the <code class="highlighter-rouge">&lt;tbody&gt;</code>. This styling doesn't work in IE8 and below as <code>:nth-child</code> CSS selector isn't supported.</p>
-				</div>
 				<div class="table-responsive">
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th scope="col">#</th>
-								<th scope="col">First Name</th>
-								<th scope="col">Last Name</th>
-								<th scope="col">Username</th>
-							</tr>
+								<th scope="col">Id</th>
+								<th scope="col">Depature Time</th>
+								<th scope="col">Arrival Time</th>
+								<th scope="col">Price</th>
+								<th scope="col">Status</th>
+								<th scope="col">Bus</th>
+								<th scope="col">Driver</th>
+								<th scope="col">Controller</th>
+								<th scope="col">Staff</th>
+								<th scope="col">Route</th>
+                                <th scope="col">Avalible Seat</th>
+                            </tr>
 						</thead>
 						<tbody>
-							<tr>
-								<th scope="row">1</th>
-								<td>Mark</td>
-								<td>Otto</td>
-								<td>@mdo</td>
-							</tr>
-							<tr>
-								<th scope="row">2</th>
-								<td>Jacob</td>
-								<td>Thornton</td>
-								<td>@fat</td>
-							</tr>
-							<tr>
-								<th scope="row">3</th>
-								<td>Larry</td>
-								<td>the Bird</td>
-								<td>@twitter</td>
-							</tr>
+<!--							<tr th:each="trip : ${trips}">-->
+<!--                                <td th:text="${trip.tripId}"></td>-->
+<!--                                <td th:text="${trip.departureTime}"></td>-->
+<!--                                <td th:text="${trip.arrivalTime}"></td>-->
+<!--                                <td th:text="${trip.price}"></td>-->
+<!--                                <td th:text="${trip.status}"></td>-->
+<!--                                <td th:text="${trip.bus.plate}"></td>-->
+<!--                                <td th:text="${trip.driver.account.accountId}"></td>-->
+<!--                                <td th:text="${trip.controller.account.accountId}"></td>-->
+<!--                                <td th:text="${trip.staff.account.accountId}"></td>-->
+<!--                                <td th:text="${trip.route.name}"></td>-->
+<!--                                <td th:text="${trip.numberOfSeatAvailable}"></td>-->
+<!--                            </tr>-->
 						</tbody>
 					</table>
 				</div>
@@ -250,124 +193,9 @@
 <!-- Striped rows end -->
 
 <!-- Table head options start -->
-<div class="row">
-	<div class="col-12">
-		<div class="card">
-			<div class="card-header">
-				<h4 class="card-title">Table head options</h4>
-				<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-				<div class="heading-elements">
-					<ul class="list-inline mb-0">
-						<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-						<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
-						<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-						<li><a data-action="close"><i class="ft-x"></i></a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="card-content collapse show">
-				<div class="card-body">
-					<p>Similar to default and inverse tables, use one of two modifier classes <code class="highlighter-rouge">.thead-default</code> or <code class="highlighter-rouge">.thead-inverse</code> to make <code class="highlighter-rouge">&lt;thead&gt;</code>s appear light or dark gray.</p>
-				</div>
-				<div class="table-responsive">
-					<table class="table">
-						<thead class="thead-dark">
-							<tr>
-								<th scope="col">#</th>
-								<th scope="col">First Name</th>
-								<th scope="col">Last Name</th>
-								<th scope="col">Username</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<th scope="row">1</th>
-								<td>Mark</td>
-								<td>Otto</td>
-								<td>@mdo</td>
-							</tr>
-							<tr>
-								<th scope="row">2</th>
-								<td>Jacob</td>
-								<td>Thornton</td>
-								<td>@fat</td>
-							</tr>
-							<tr>
-								<th scope="row">3</th>
-								<td>Larry</td>
-								<td>the Bird</td>
-								<td>@twitter</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 <!-- Table head options end -->
 
 <!-- Bordered table start -->
-<div class="row">
-	<div class="col-12">
-		<div class="card">
-			<div class="card-header">
-				<h4 class="card-title">Bordered table</h4>
-				<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-				<div class="heading-elements">
-					<ul class="list-inline mb-0">
-						<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-						<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
-						<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-						<li><a data-action="close"><i class="ft-x"></i></a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="card-content collapse show">
-				<div class="card-body">
-					<p class="card-text">Add <code>.table-bordered</code> for borders on all sides of the table and cells.</p>
-				</div>
-				<div class="table-responsive">
-					<table class="table table-bordered mb-0">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>First Name</th>
-								<th>Last Name</th>
-								<th>Username</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<th scope="row">1</th>
-								<td>Mark</td>
-								<td>Otto</td>
-								<td>@mdo</td>
-							</tr>
-							<tr>
-								<th scope="row">2</th>
-								<td>Mark</td>
-								<td>Otto</td>
-								<td>@TwBootstrap</td>
-							</tr>
-							<tr>
-								<th scope="row">3</th>
-								<td>Jacob</td>
-								<td>Thornton</td>
-								<td>@fat</td>
-							</tr>
-							<tr>
-								<th scope="row">4</th>
-								<td colspan="2">Larry the Bird</td>
-								<td>@twitter</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 <!-- Bordered table end -->
         </div>
       </div>

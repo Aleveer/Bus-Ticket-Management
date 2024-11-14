@@ -62,8 +62,11 @@ public class BookingController {
     public String chooseInfo(@PathVariable Integer TripId, Model model) {
         TripDTO selectedTrip = tripService.findById(TripId);
         List<SeatReservationsDTO> statusSeats = seatReservationsService.getListStatusSeat(TripId);
+        List<SeatReservationsDTO> firstFloor = statusSeats.subList(0, 18);
+        List<SeatReservationsDTO> secondFloor = statusSeats.subList(18, statusSeats.size());
         model.addAttribute("selectedTrip", selectedTrip);
-        model.addAttribute("statusSeats", statusSeats);
+        model.addAttribute("firstFloor", firstFloor);
+        model.addAttribute("secondFloor", secondFloor);
         return "booking";
     }
     @PostMapping("/booking/oneway")

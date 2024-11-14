@@ -34,10 +34,4 @@ public class Booking {
 
     @Column(name = "round_trip_id")
     private String roundTripId;
-
-    @Column(name = "pickup_point", nullable = false)
-    private String pickupPoint;
-
-    @Column(name = "drop_off_point", nullable = false)
-    private String dropOffPoint;
 }

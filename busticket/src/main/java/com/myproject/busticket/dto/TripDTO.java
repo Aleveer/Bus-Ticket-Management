@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class TripDTO {
     private int tripId;
     private LocalDateTime departureTime;
@@ -26,18 +26,5 @@ public class TripDTO {
     private RouteDTO route;
 
     private int numberOfSeatAvailable;
-    public TripDTO(){}
 
-    public TripDTO(int TripId, LocalDateTime departureTime, LocalDateTime arrivalTime, float price, TripStatus status, BusDTO bus, DriverDTO driver, ControllerDTO controller, StaffDTO staff, RouteDTO route) {
-        this.tripId = TripId;
-        this.departureTime = departureTime;
-        this.arrivalTime = arrivalTime;
-        this.price = price;
-        this.status = status;
-        this.bus = bus;
-        this.driver = driver;
-        this.controller = controller;
-        this.staff = staff;
-        this.route = route;
-    }
 }

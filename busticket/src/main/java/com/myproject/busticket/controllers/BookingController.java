@@ -6,6 +6,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+import com.myproject.busticket.dto.SeatReservationsDTO;
+import com.myproject.busticket.services.SeatReservationsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +26,13 @@ public class BookingController {
     BookingService bookingService;
     CustomerService customerService;
     TripService tripService;
-    public BookingController(BookingService bookingService, TripService tripService, CustomerService customerService) {
+
+    SeatReservationsService seatReservationsService;
+    public BookingController(BookingService bookingService, TripService tripService, CustomerService customerService, SeatReservationsService seatReservationsService) {
         this.bookingService = bookingService;
         this.tripService = tripService;
         this.customerService = customerService;
+        this.seatReservationsService = seatReservationsService;
     }
 
     @GetMapping("/search")
@@ -50,7 +56,8 @@ public class BookingController {
 
     @GetMapping("/booking/{TripId}")
     public String chooseInfo(@PathVariable Integer TripId, Model model) {
-
+        List<SeatReservationsDTO> statusSeats = seatReservationsService.getListStatusSeat(TripId);
+        model.addAttribute("statusSeats", statusSeats);
         return "booking";
     }
     @PostMapping("/booking/oneway")

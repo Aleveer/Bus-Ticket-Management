@@ -78,17 +78,17 @@
                   <div class="seat_container">
                     <div class="first_floor">
                       <div th:each="i: ${#numbers.sequence(0, (firstFloor.size() / 3) - 1)}" class="row_2">
-                          <div th:each="seatReservation: ${firstFloor.subList(i * 3, i * 3 + 3)}" class="seat" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></div>
+                          <div th:each="seatReservation: ${firstFloor.subList(i * 3, i * 3 + 3)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></div>
                       </div>
                     </div>
                       <div class="second_floor">
                           <div th:each="i: ${#numbers.sequence(0, (secondFloor.size() / 3) - 1)}" class="row_2">
-                              <div th:each="seatReservation: ${secondFloor.subList(i * 3, i * 3 + 3)}" class="seat" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></div>
+                              <div th:each="seatReservation: ${secondFloor.subList(i * 3, i * 3 + 3)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></div>
                           </div>
                       </div>
                   </div>
                 </div>
-          </div>
+         
             <div class="confirm_info trip-card d-flex align-self-start flex-column col-sm-4">
               <h3 class="full">Thông tin lượt đi</h3>
               <div class="full d-flex justify-content-between">

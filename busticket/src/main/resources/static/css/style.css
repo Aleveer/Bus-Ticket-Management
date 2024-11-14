@@ -232,6 +232,16 @@ button {
 .nospace {
     margin-top: 0px;
 }
+.space_left {
+    margin-left: 5px;
+}
+.space_right {
+    margin-right: 5px;
+}
+.text_right {
+    text-align: right;
+    float: right;
+}
 
 .icon{
    
@@ -1385,61 +1395,82 @@ input.mail_bt::placeholder {
 }
 
 /* choose seat section start */
-.movie-container {
-    margin: 20px 0;
-  }
-  
-  .movie-container select {
-    background-color: #fff;
-    border: 0;
-    border-radius: 5px;
-    font-size: 14px;
-    margin-left: 10px;
-    padding: 5px 15px 5px 15px;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-  }
-  
+.floor-container{
+    width: 100%;
+    font-size: 16px;
+    padding-bottom: 0px;
+}
+.floor-container .floor_1{
+    margin-right: 35px;
+    margin-left: -10px;
+    margin-top: 10px;
+}
+.floor-container .floor_2{
+    margin-left: 35px;
+    margin-top: 10px;
+}
   .seat_container {
+    margin-top: 20px;
     perspective: 1000px;
     margin-bottom: 3px;
+    display: flex;
+    flex-wrap: nowrap;
   }
   
   .seat {
-    background-color: #444451;
-    height: 12px;
-    width: 15px;
-    margin: 3px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    background-color: #a5d5e5;
+    height: 30px;
+    width: 35px;
+    margin: 5px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding-left: 5px;
+    padding-top: 4px;
+    color:rgb(4, 25, 253);
+    font-weight: bold;
+    font-size: 13px;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
   }
+  
   
   .seat.selected {
-    background-color: var(--selected-color);
+    background-color: #eb5b2b;
+    color: white;
   }
   
-  .seat.occupied {
-    background-color: var(--available-color);
+  .seat.booked {
+    background-color: #ada9a9;
+    height: 30px;
+    width: 35px;
+    margin: 5px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding-left: 4px;
+    padding-top: 2px;
+    color:white;
+    font-size: 14px;
   }
   
   /* Selects the second row f*/
-  .seat:nth-of-type(2) {
+  .seat:nth-of-type(3) {
     margin-right: 18px;
   }
   
-  .seat:nth-last-of-type(2) {
-    margin-left: 18px;
-  }
+
   
-  .seat:not(.occupied) {
+  .seat:not(.booked) {
     cursor: pointer;
-    transform: scale(1.2);
+
   }
   
-  .showcase .seat:not(.occupied) {
+  .showcase .seat:not(.booked) {
     cursor: default;
-    transform: scale(1);
+   
   }
   
   .showcase {
@@ -1450,6 +1481,7 @@ input.mail_bt::placeholder {
     list-style-type: none;
     display: flex;
     justify-content: space-between;
+    font-size: 16px;
   }
   
   .showcase li {
@@ -1467,11 +1499,20 @@ input.mail_bt::placeholder {
     display: flex;
   }
   
-  .screen {
-    background-color: #fff;
-    height: 70px;
-    width: 100%;
-    margin: 15px 0;
-    transform: rotateX(-45deg);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.7);
+  .row_2_1 {
+    display: flex;
   }
+    .row_2_1 .seat:nth-of-type(2){
+        margin-right: 18px;
+    } 
+    
+/*choose seat section end */
+
+/* confirm info start */
+.confirm_info{
+    margin-left: 20px;
+    width: 100%;
+    float: left;
+    padding-bottom: 50px;
+    height: auto;
+}

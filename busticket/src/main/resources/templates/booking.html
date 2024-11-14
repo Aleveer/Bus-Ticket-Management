@@ -78,12 +78,12 @@
                   <div class="seat_container">
                     <div class="first_floor">
                       <div th:each="i: ${#numbers.sequence(0, (firstFloor.size() / 3) - 1)}" class="row_2">
-                          <div th:each="seatReservation: ${firstFloor.subList(i * 3, i * 3 + 3)}" class="seat" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:value="${seatReservation.seat.getSeatName()}"></div>
+                          <div th:each="seatReservation: ${firstFloor.subList(i * 3, i * 3 + 3)}" class="seat" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></div>
                       </div>
                     </div>
                       <div class="second_floor">
                           <div th:each="i: ${#numbers.sequence(0, (secondFloor.size() / 3) - 1)}" class="row_2">
-                              <div th:each="seatReservation: ${secondFloor.subList(i * 3, i * 3 + 3)}" class="seat" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:value="${seatReservation.seat.getSeatName()}"></div>
+                              <div th:each="seatReservation: ${secondFloor.subList(i * 3, i * 3 + 3)}" class="seat" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></div>
                           </div>
                       </div>
                   </div>
@@ -141,13 +141,11 @@
 
           count.innerText = selectedSeatsCount;
           total.innerText = (selectedSeatsCount * ticketPrice).toFixed(2);
-            const selectedSeatNumbers = [...selectedSeats]
-          console.log(selectedSeatNumbers)
+            
+          
           // Update seat numbers
-          // const selectedSeatNumbers = [...selectedSeats].map(seat => {
-          //     seat.value
-          // console.log(typeof (seat.name))}).join(', ');
-          // seatNumber.innerText = selectedSeatNumbers;
+         const selectedSeatNumbers = [...selectedSeats].map(seat => seat.dataset.name).join(', ');
+          seatNumber.innerText = selectedSeatNumbers;
         };
 
         function populateUI() {

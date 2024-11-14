@@ -56,7 +56,9 @@ public class BookingController {
 
     @GetMapping("/booking/{TripId}")
     public String chooseInfo(@PathVariable Integer TripId, Model model) {
+        TripDTO selectedTrip = tripService.findById(TripId);
         List<SeatReservationsDTO> statusSeats = seatReservationsService.getListStatusSeat(TripId);
+        model.addAttribute("selectedTrip", selectedTrip);
         model.addAttribute("statusSeats", statusSeats);
         return "booking";
     }

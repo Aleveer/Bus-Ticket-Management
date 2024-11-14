@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.myproject.busticket.dto.SeatReservationsDTO;
-import com.myproject.busticket.services.SeatReservationsService;
+import com.myproject.busticket.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.models.Booking;
-import com.myproject.busticket.services.BookingService;
-import com.myproject.busticket.services.CustomerService;
-import com.myproject.busticket.services.TripService;
 
 
 @RequestMapping("/home/index")
@@ -26,13 +23,15 @@ public class BookingController {
     BookingService bookingService;
     CustomerService customerService;
     TripService tripService;
+    RouteCheckpointService routeCheckpointService;
 
     SeatReservationsService seatReservationsService;
-    public BookingController(BookingService bookingService, TripService tripService, CustomerService customerService, SeatReservationsService seatReservationsService) {
+    public BookingController(BookingService bookingService, TripService tripService, CustomerService customerService, SeatReservationsService seatReservationsService, RouteCheckpointService routeCheckpointService) {
         this.bookingService = bookingService;
         this.tripService = tripService;
         this.customerService = customerService;
         this.seatReservationsService = seatReservationsService;
+        this.routeCheckpointService = routeCheckpointService;
     }
 
     @GetMapping("/search")
@@ -43,8 +42,13 @@ public class BookingController {
         int numberOfTickets = Integer.parseInt(ticketNum);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime dateDeparture = LocalDate.parse(date, formatter).atStartOfDay();
-        System.out.println(dateDeparture);
         List<TripDTO> trips = tripService.searchTrip(departure, destination, dateDeparture, numberOfTickets);
+        List<String> provinces = routeCheckpointService.getAllProvinces();
+        List<String> cities = routeCheckpointService.getAllCities();
+        model.addAttribute("tripType", "one-way");
+        model.addAttribute("provinces", provinces);
+        model.addAttribute("cities", cities);
+
         model.addAttribute("trips", trips);
         model.addAttribute("tripType", tripType);
         model.addAttribute("departure", departure);

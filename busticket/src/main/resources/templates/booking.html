@@ -53,8 +53,8 @@
     <!-- header top section end -->
 
     <!-- booking section start -->
-    <div class="fashion_section">
-      <div class="container d-flex flex-nowrap">
+    <div class="booking_section">
+      <div class="all-container container d-flex flex-nowrap ">
         <div class="choose_seat trip-card d-flex flex-column justify-content-center col-sm-8">
             <h3 class="full">Chọn ghế</h3>
                 <ul class="showcase">
@@ -78,19 +78,19 @@
                   <div class="seat_container">
                     <div class="first_floor">
                       <div th:each="i: ${#numbers.sequence(0, (firstFloor.size() / 3) - 1)}" class="row_2">
-                          <div th:each="seatReservation: ${firstFloor.subList(i * 3, i * 3 + 3)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></div>
+                          <span th:each="seatReservation: ${firstFloor.subList(i * 3, i * 3 + 3)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                       </div>
                     </div>
                       <div class="second_floor">
                           <div th:each="i: ${#numbers.sequence(0, (secondFloor.size() / 3) - 1)}" class="row_2">
-                              <div th:each="seatReservation: ${secondFloor.subList(i * 3, i * 3 + 3)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></div>
+                              <span th:each="seatReservation: ${secondFloor.subList(i * 3, i * 3 + 3)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                           </div>
                       </div>
                   </div>
                 </div>
          
             <div class="confirm_info trip-card d-flex align-self-start flex-column col-sm-4">
-              <h3 class="full">Thông tin lượt đi</h3>
+              <h3 class="full text-dark">Thông tin lượt đi</h3>
               <div class="full d-flex justify-content-between">
                 <h4 class="full d-flex   ">Tuyến xe</h4>
                 <span th:text="${selectedTrip.route.name}" class="full d-flex justify-content-end text_right "></span>
@@ -119,11 +119,95 @@
             </div>
         </div>    
     </div>
+    <!-- booking section end -->
+    <!--User information start-->
+    <div class="about_section">
+      <div class="container  d-flex flex-nowrap">
+        <div class="choose_seat box-card d-flex  flex-wrap justify-content-start col-sm-8">
+            <div class="full d-flex justify-content-between ">
+              <h3 class="full d-flex text-dark ">Thông tin khách hàng</h3>
+              <h3 class="full d-flex justify-content-center text-danger">Điều khoản lưu ý</h3>
+            </div>
+            <div class="full d-flex flex-nowrap user-info-container ">
+              <div class="d-flex flex-column col-sm-6 user-info">
+                <div class="form-group">
+                  <label for="name">Họ và tên</label>
+                  <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group ">
+                  <label for="phone">Số điện thoại</label>
+                  <input type="text" class="form-control " id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+              </div>
+              <div class="d-flex flex-column rule">
+                  <h5>
+                  <p>(*)Thông tin vé: Vui lòng kiểm tra kỹ thông tin vé (lịch trình, điểm đón/trả, giá vé) trước khi thanh toán.</p>
+                  <p>(*)Thanh toán và hoàn vé: Vé đã thanh toán không hoàn lại tiền, trừ trường hợp xe hủy chuyến hoặc có thông báo đặc biệt từ nhà xe.</p>
+                  <p>(*)Điều kiện lên xe: Khách hàng cần mang theo vé điện tử hoặc mã đặt vé và giấy tờ tùy thân khi lên xe.</p>
+                  <p>(*)Quy định hành lý: Khách hàng tự bảo quản hành lý cá nhân và tuân thủ quy định về hành lý của nhà xe.</p>
+                  </h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container d-flex ">
+          <div class="choose_seat box-card d-flex  flex-wrap justify-content-between col-sm-8">
+            <h4 class="text d-flex flex-nowrap">
+              <span class="space_left about_taital_3" id="price">  </span> <span class="about_taital_3"> đ</span>
+            </h4>
+            <div>
+              <button type="button" class="payment-button" onclick="history.back()">Hủy</button>
+              <button type="button" class="payment-button">Thanh Toán</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    
+      <!-- footer section start -->
+    <div class="footer_section layout_padding">
+      <div class="container">
+        <div class="footer_logo"><a th:href="@{index}"><img src="/images/EasyBus_processed2.png"></a></div>
+        <div class="input_bt">
+            <input type="text" class="mail_bt" placeholder="Your Email" name="Your Email">
+            <span class="subscribe_bt" id="basic-addon2"><a href="#">Subscribe</a></span>
+        </div>
+        <div class="footer_menu">
+            <ul>
+              <li><a th:href="@{index}">Trang Chủ</a></li>
+              <li><a href="#">Lịch Trình</a></li>
+              <li><a th:href="@{search-ticket-info}">Tra Cứu Vé</a></li>
+              <li><a th:href="@{search-billing-info}">Hóa Đơn</a></li>
+              <li><a th:href="@{contact}">Liên Hệ</a></li>
+              <li><a th:href="@{about-us}">Về Chúng Tôi</a></li>
+            </ul>
+        </div>
+        <div class="location_main">Help Line Number : <a href="#">+84 1800 9999 1111</a></div>
+      </div>
+  </div>
+  <!-- footer section end -->
+  <!-- copyright section start -->
+  <div class="copyright_section">
+      <div class="container">
+        <p class="copyright_text">© 2024 All Rights Reserved. Design by Nhóm 10</a></p>
+      </div>
+  </div>
+  <!-- copyright section end -->
+   <!-- Javascript files-->
+   <script th:src="@{/js/jquery.min.js}"></script>
+   <script th:src="@{/js/popper.min.js}"></script>
+   <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+   <script th:src="@{/js/jquery-3.0.0.min.js}"></script>
+   <script th:src="@{/js/plugin.js}"></script>
     <script>
         const container = document.querySelector(".seat_container");
         const seats = document.querySelectorAll(".row_2 .seat:not(.booked)");
         const count = document.getElementById("count");
         const total = document.getElementById("total");
+        const price = document.getElementById("price");
         const seatNumber = document.getElementById("seat_number");
         const ticketPrice = document.getElementById("ticketPrice").value;
         populateUI();
@@ -141,7 +225,7 @@
 
           count.innerText = selectedSeatsCount;
           total.innerText = (selectedSeatsCount * ticketPrice).toFixed(2);
-            
+          price.innerText = (selectedSeatsCount * ticketPrice).toFixed(2);
           
           // Update seat numbers
          const selectedSeatNumbers = [...selectedSeats].map(seat => seat.dataset.name).join(', ');

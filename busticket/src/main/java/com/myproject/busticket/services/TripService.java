@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.myproject.busticket.dto.TripDTO;
@@ -34,5 +36,7 @@ public class TripService {
         return tripMapper.map(trip);
     }
 
-    
+    public Page<Trip> getAll(Pageable pageable){
+        return tripRepository.findAll(pageable);
+    }
 }

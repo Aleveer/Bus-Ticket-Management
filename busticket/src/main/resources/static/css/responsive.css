@@ -488,4 +488,11 @@
     .location_main {
         padding: 30px 0px 30px 0px;
     }
+    .all-container{
+        display: flex;
+        flex-wrap: wrap !important;
+    }
+    .confirm_info{
+        margin: 0px;
+    }
 }

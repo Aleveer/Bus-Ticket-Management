@@ -46,7 +46,7 @@
         if( $sidebar_img_container.length > 0 && $sidebar_img !== undefined ){
             $sidebar_img_container.css('background-image','url("' + $sidebar_img + '")');
         }
-        
+
         $('.nav-link-search').on('click', function() {
             var $this = $(this),
                 searchInput = $(this).siblings('.search-input');
@@ -57,7 +57,7 @@
                 searchInput.addClass('open');
             }
         });
-        
+
         //Hide navbar search box on close click
         var toogleBtn = $(".header-navbar .navbar-search-close");
         $(toogleBtn).click(function(event) {
@@ -114,44 +114,20 @@
             }
         }
 
-        // Collapsible Card
-        $('a[data-action="collapse"]').on('click', function(e) {
-            e.preventDefault();
-            $(this).closest('.card').children('.card-content').collapse('toggle');
-            $(this).closest('.card').find('[data-action="collapse"] i').toggleClass('ft-minus ft-plus');
-
+        // Search trip
+        $('a[data-action="search"]').on('click', function() {
+            var searchInput = $('.search-input');
+            searchInput.toggleClass('open');
+            if (searchInput.hasClass('open')) {
+                searchInput.focus();
+            } else {
+                searchInput.blur();
+            }
         });
-
-        // Toggle fullscreen
-        $('a[data-action="expand"]').on('click', function(e) {
-            e.preventDefault();
-            $(this).closest('.card').find('[data-action="expand"] i').toggleClass('ft-maximize ft-minimize');
-            $(this).closest('.card').toggleClass('card-fullscreen');
-        });
-
-        // Reload Card
-        $('a[data-action="reload"]').on('click', function() {
-            var block_ele = $(this).closest('.card');
-
-            // Block Element
-            block_ele.block({
-                message: '<div class="ft-refresh-cw icon-spin font-medium-2"></div>',
-                timeout: 2000, //unblock after 2 seconds
-                overlayCSS: {
-                    backgroundColor: '#FFF',
-                    cursor: 'wait',
-                },
-                css: {
-                    border: 0,
-                    padding: 0,
-                    backgroundColor: 'none'
-                }
-            });
-        });
-
-        // Close Card
-        $('a[data-action="close"]').on('click', function() {
-            $(this).closest('.card').removeClass().slideUp('fast');
+        //Add trip
+        $('a[data-action="add-trip"]').on('click', function() {
+            // Trigger a modal or navigate to add-trip page
+            window.location.href = "/addTrip"; // Replace with the add-trip functionality
         });
 
 
@@ -257,6 +233,12 @@
         e.preventDefault();
         $(this).find('i').toggleClass('pe-is-i-angle-down pe-is-i-angle-up');
         $('.main-menu-footer').toggleClass('footer-close footer-open');
+        return false;
+    });
+
+    $(document).on('click', '[data-action="search"]', function(e) {
+        e.preventDefault();
+        $('#searchBox').toggle(); // Hiển thị hoặc ẩn hộp tìm kiếm
         return false;
     });
 

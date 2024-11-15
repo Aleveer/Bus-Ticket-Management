@@ -7,7 +7,7 @@
     <meta name="description" content="Chameleon Admin is a modern Bootstrap 4 webapp &amp; admin dashboard html template with a large number of components, elegant design, clean and organized code.">
     <meta name="keywords" content="admin template, Chameleon admin template, dashboard template, gradient admin template, responsive admin template, webapp, eCommerce dashboard, analytic dashboard">
     <meta name="author" content="ThemeSelect">
-    <title>Tables - Chameleon Admin - Modern Bootstrap 4 WebApp & Dashboard HTML Template + UI Kit</title>
+    <title>Trip</title>
     <link rel="apple-touch-icon" href="/theme-assets/images/ico/apple-icon-120.png}">
     <link rel="shortcut icon" type="image/x-icon" href="/theme-assets/images/ico/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i%7CComfortaa:300,400,700" rel="stylesheet">
@@ -24,6 +24,8 @@
     <!-- END Page Level CSS-->
     <!-- BEGIN Custom CSS-->
     <!-- END Custom CSS-->
+    <!-- Pagination-->
+    <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}">
   </head>
   <body class="vertical-layout vertical-menu 2-columns   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-menu" data-color="bg-gradient-x-purple-blue" data-col="2-columns">
 
@@ -90,26 +92,12 @@
       </div>
       <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-          <li class=" nav-item"><a th:href="@{admin}"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
+          <li class="active"><a th:href="@{admin}"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
           </li>
-          <li class=" nav-item"><a href="charts.html"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Charts</span></a>
-          </li>
-          <li class=" nav-item"><a href="icons.html"><i class="ft-droplet"></i><span class="menu-title" data-i18n="">Icons</span></a>
-          </li>
-          <li class=" nav-item"><a href="cards.html"><i class="ft-layers"></i><span class="menu-title" data-i18n="">Cards</span></a>
-          </li>
-          <li class=" nav-item"><a href="buttons.html"><i class="ft-box"></i><span class="menu-title" data-i18n="">Buttons</span></a>
-          </li>
-          <li class=" nav-item"><a href="typography.html"><i class="ft-bold"></i><span class="menu-title" data-i18n="">Typography</span></a>
-          </li>
-          <li class="active"><a th:href="@{addTrip}"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Trip</span></a>
-          </li>
-          <li class=" nav-item"><a href="form-elements.html"><i class="ft-layout"></i><span class="menu-title" data-i18n="">Form Elements</span></a>
-          </li>
-          <li class=" nav-item"><a href="https://themeselection.com/demo/chameleon-admin-template/documentation"><i class="ft-book"></i><span class="menu-title" data-i18n="">Documentation</span></a>
+          <li class=" nav-item"><a th:href="@{admin-trip}"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Trip</span></a>
           </li>
         </ul>
-      </div><a class="btn btn-danger btn-block btn-glow btn-upgrade-pro mx-1" href="https://themeselection.com/products/chameleon-admin-modern-bootstrap-webapp-dashboard-html-template-ui-kit/" target="_blank">Download PRO!</a>
+      </div>
       <div class="navigation-background"></div>
     </div>
 
@@ -142,14 +130,18 @@
 			<div class="card-header">
 				<h4 class="card-title">Trip</h4>
 				<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-				<div class="heading-elements">
-					<ul class="list-inline mb-0">
-						<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-						<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
-						<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-						<li><a data-action="close"><i class="ft-x"></i></a></li>
-					</ul>
-				</div>
+              <div class="heading-elements">
+                <ul class="list-inline mb-0">
+                  <li><a data-action="search" title="Search"><i class="ft-search"></i></a></li>
+                  <li><a data-action="add-trip" title="Add Trip"><i class="ft-plus"></i></a></li>
+                </ul>
+              </div>
+              <div class="search-box" id="searchBox" style="display: none;">
+                <input type="text" class="input-search" placeholder="Search trip...">
+                <button class="btn-search" id="searchButton">
+                  <i class="ft-search"></i>
+                </button>
+              </div>
 			</div>
 			<div class="card-content collapse show">
 				<div class="table-responsive">
@@ -157,8 +149,8 @@
 						<thead>
 							<tr>
 								<th scope="col">Id</th>
-								<th scope="col">Depature Time</th>
-								<th scope="col">Arrival Time</th>
+								<th scope="col">Depature</th>
+								<th scope="col">Arrival </th>
 								<th scope="col">Price</th>
 								<th scope="col">Status</th>
 								<th scope="col">Bus</th>
@@ -166,26 +158,48 @@
 								<th scope="col">Controller</th>
 								<th scope="col">Staff</th>
 								<th scope="col">Route</th>
-                                <th scope="col">Avalible Seat</th>
+                                <th scope="col">Seat</th>
                             </tr>
 						</thead>
 						<tbody>
-<!--							<tr th:each="trip : ${trips}">-->
-<!--                                <td th:text="${trip.tripId}"></td>-->
-<!--                                <td th:text="${trip.departureTime}"></td>-->
-<!--                                <td th:text="${trip.arrivalTime}"></td>-->
-<!--                                <td th:text="${trip.price}"></td>-->
-<!--                                <td th:text="${trip.status}"></td>-->
-<!--                                <td th:text="${trip.bus.plate}"></td>-->
-<!--                                <td th:text="${trip.driver.account.accountId}"></td>-->
-<!--                                <td th:text="${trip.controller.account.accountId}"></td>-->
-<!--                                <td th:text="${trip.staff.account.accountId}"></td>-->
-<!--                                <td th:text="${trip.route.name}"></td>-->
-<!--                                <td th:text="${trip.numberOfSeatAvailable}"></td>-->
-<!--                            </tr>-->
+							<tr th:each="trip : ${trips}">
+                                <td th:text="${trip.tripId}"></td>
+                                <td th:text="${trip.departureTime}"></td>
+                                <td th:text="${trip.arrivalTime}"></td>
+                                <td th:text="${trip.price}"></td>
+                                <td th:text="${trip.status}"></td>
+                                <td th:text="${trip.bus.plate}"></td>
+                                <td th:text="${trip.driver.driverId}"></td>
+                                <td th:text="${trip.controller.id}"></td>
+                                <td th:text="${trip.staff.staff_id}"></td>
+                                <td th:text="${trip.route.routeId}"></td>
+                                <td th:text="${trip.numberOfSeatAvailable}"></td>
+                            </tr>
 						</tbody>
 					</table>
-				</div>
+                  <div class="pagination">
+                    <ul class="pagination-list">
+                      <!-- Nút Previous -->
+                      <li th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a th:href="@{/admin/admin-trip(page=${currentPage - 1})}" th:disabled="${currentPage == 0}" aria-label="Previous">
+                          &laquo;
+                        </a>
+                      </li>
+
+                      <!-- Các số trang -->
+                      <li th:each="pageNum : ${pageNumbers}" th:classappend="${pageNum == currentPage} ? 'active'">
+                        <a th:href="@{/admin/admin-trip(page=${pageNum})}" th:text="${pageNum}"></a>
+                      </li>
+
+                      <!-- Nút Next -->
+                      <li th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                        <a th:href="@{/admin/admin-trip(page=${currentPage + 1})}" th:disabled="${currentPage == totalPages - 1}" aria-label="Next">
+                          &raquo;
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
 			</div>
 		</div>
 	</div>

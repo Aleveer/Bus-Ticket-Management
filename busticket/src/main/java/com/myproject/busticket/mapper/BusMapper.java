@@ -20,4 +20,5 @@ public interface BusMapper {
     Bus dtoToEntity(BusDTO busDTO);
 
     List<BusDTO> map(List<Bus> buses);
+
 }

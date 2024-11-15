@@ -27,6 +27,10 @@ public class RouteService {
         return routeRepository.findRouteByDistance(min, max);
     }
 
+    public Route getRouteByCode(String code) {
+        return routeRepository.findByCode(code).get();
+    }
+
     public Page<Route> getAll(Pageable pageable) {
         return routeRepository.findAll(pageable);
     }

@@ -72,7 +72,7 @@
                                                 <th scope="col">Status</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="accountTableBody">
                                             <tr th:each="account : ${accounts}">
                                                 <td th:text="${account.id}"></td>
                                                 <td th:text="${account.email}"></td>
@@ -84,28 +84,18 @@
                                         </tbody>
                                     </table>
                                     <div class="pagination">
-                                        <ul class="pagination-list">
-                                            <!-- Nút Previous -->
+                                        <ul class="pagination-list" id="paginationControls">
                                             <li th:if="${currentPage > 0}">
-                                                <a th:href="@{/admin/account-management(page=${currentPage - 1})}"
-                                                    aria-label="Previous">
-                                                    &laquo;
-                                                </a>
+                                                <a onclick="loadAccounts('${currentPage - 1}')"
+                                                    aria-label="Previous">&laquo;</a>
                                             </li>
-
-                                            <!-- Các số trang -->
                                             <li th:each="pageNum : ${pageNumbers}"
                                                 th:class-append="${pageNum == currentPage} ? 'active'">
-                                                <a th:href="@{/admin/account-management(page=${pageNum})}"
-                                                    th:text="${pageNum}"></a>
+                                                <a onclick="loadAccounts('${pageNum}')" th:text="${pageNum}"></a>
                                             </li>
-
-                                            <!-- Nút Next -->
                                             <li th:if="${currentPage < totalPages - 1}">
-                                                <a th:href="@{/admin/account-management(page=${currentPage + 1})}"
-                                                    aria-label="Next">
-                                                    &raquo;
-                                                </a>
+                                                <a onclick="loadAccounts('${currentPage + 1}')"
+                                                    aria-label="Next">&raquo;</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -140,6 +130,90 @@
     <!-- END CHAMELEON  JS-->
     <!-- BEGIN PAGE LEVEL JS-->
     <!-- END PAGE LEVEL JS-->
+    <script>
+        function loadAccounts(page) {
+            $.ajax({
+                url: '/admin/api/accounts',
+                data: { page: page, size: 10 },
+                success: function (data) {
+                    var accounts = data.accounts;
+                    var totalPages = data.totalPages;
+                    var currentPage = data.currentPage;
+
+                    // Clear the table body
+                    $('#accountTableBody').empty();
+
+                    // Populate the table with accounts
+                    accounts.forEach(function (account) {
+                        $('#accountTableBody').append(
+                            '<tr>' +
+                            '<td>' + account.id + '</td>' +
+                            '<td>' + account.email + '</td>' +
+                            '<td>' + account.role.roleName + '</td>' +
+                            '<td>' + account.fullName + '</td>' +
+                            '<td>' + account.phone + '</td>' +
+                            '<td>' + account.status + '</td>' +
+                            '</tr>'
+                        );
+                    });
+
+                    // Clear the pagination controls
+                    $('#paginationControls').empty();
+
+                    // Add Previous button
+                    if (currentPage > 0) {
+                        $('#paginationControls').append(
+                            '<li><a href="#" onclick="loadAccounts(' + (currentPage - 1) + ')">&laquo;</a></li>'
+                        );
+                    }
+
+                    // Add page numbers with ellipsis
+                    var startPage = Math.max(0, currentPage - 2);
+                    var endPage = Math.min(totalPages - 1, currentPage + 2);
+
+                    if (startPage > 0) {
+                        $('#paginationControls').append(
+                            '<li><a href="#" onclick="loadAccounts(0)">1</a></li>'
+                        );
+                        if (startPage > 1) {
+                            $('#paginationControls').append(
+                                '<li><span>...</span></li>'
+                            );
+                        }
+                    }
+
+                    for (var i = startPage; i <= endPage; i++) {
+                        $('#paginationControls').append(
+                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a href="#" onclick="loadAccounts(' + i + ')">' + (i + 1) + '</a></li>'
+                        );
+                    }
+
+                    if (endPage < totalPages - 1) {
+                        if (endPage < totalPages - 2) {
+                            $('#paginationControls').append(
+                                '<li><span>...</span></li>'
+                            );
+                        }
+                        $('#paginationControls').append(
+                            '<li><a href="#" onclick="loadAccounts(' + (totalPages - 1) + ')">' + totalPages + '</a></li>'
+                        );
+                    }
+
+                    // Add Next button
+                    if (currentPage < totalPages - 1) {
+                        $('#paginationControls').append(
+                            '<li><a href="#" onclick="loadAccounts(' + (currentPage + 1) + ')">&raquo;</a></li>'
+                        );
+                    }
+                }
+            });
+        }
+
+        // Load the first page of accounts when the page loads
+        $(document).ready(function () {
+            loadAccounts(0);
+        });
+    </script>
 </body>
 
 </html>

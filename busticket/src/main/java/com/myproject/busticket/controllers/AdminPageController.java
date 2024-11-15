@@ -9,19 +9,26 @@ import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.services.AccountService;
 import com.myproject.busticket.services.BusService;
 import com.myproject.busticket.services.CheckpointService;
+import com.myproject.busticket.services.ControllerService;
+import com.myproject.busticket.services.DriverService;
 import com.myproject.busticket.services.RoleService;
 import com.myproject.busticket.services.RouteService;
+import com.myproject.busticket.services.StaffService;
 import com.myproject.busticket.services.TripService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -30,6 +37,9 @@ import java.util.stream.IntStream;
 public class AdminPageController {
 	TripService tripService;
 	BusService busService;
+	DriverService driverService;
+	ControllerService controllerService;
+	StaffService staffService;
 	RouteService routeService;
 	CheckpointService checkpointService;
 	AccountService accountService;
@@ -70,6 +80,28 @@ public class AdminPageController {
 		model.addAttribute("pageNumbers", pageNumbers);
 
 		return "trip-management";
+	}
+
+	@GetMapping("/api/trips")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> getTrips(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Trip> tripsPage = tripService.getAll(pageable);
+
+		// TODO: Mapping to TripDTO
+		List<Trip> trips = tripsPage.getContent().stream()
+				.map(trip -> new Trip(trip.getTripId(), trip.getDepartureTime(), trip.getArrivalTime(),
+						trip.getPrice(), trip.getStatus(), trip.getBus(), trip.getDriver(), trip.getController(),
+						trip.getStaff(), trip.getRoute(), trip.getNumberOfSeatAvailable()))
+				.collect(Collectors.toList());
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("trips", trips);
+		response.put("currentPage", page);
+		response.put("totalPages", tripsPage.getTotalPages());
+
+		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/bus-management")
@@ -155,6 +187,7 @@ public class AdminPageController {
 						account.getPasswordResetToken(), account.getPasswordResetExpiration(),
 						account.isEnabled()))
 				.collect(Collectors.toList());
+
 		int totalPages = accountPages.getTotalPages();
 		int startPage = Math.max(0, page - 2);
 		int endPage = Math.min(totalPages - 1, page + 2);
@@ -165,9 +198,36 @@ public class AdminPageController {
 
 		model.addAttribute("accounts", accountDTOs);
 		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", accountPages.getTotalPages());
+		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("pageNumbers", pageNumbers);
 
 		return "account-management";
+	}
+
+	@GetMapping("/api/accounts")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> getAccounts(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Account> accountPages = accountService.getAll(pageable);
+
+		List<AccountDTO> accountDTOs = accountPages.getContent().stream()
+				.map(account -> new AccountDTO(account.getId(), account.getEmail(),
+						account.getPassword(),
+						account.getFullName(), account.getPhone(),
+						roleService.getRoleById(account.getRole().getRoleId()),
+						account.getStatus(),
+						account.getVerificationCode(), account.getVerificationExpiration(),
+						account.getLoginToken(),
+						account.getPasswordResetToken(), account.getPasswordResetExpiration(),
+						account.isEnabled()))
+				.collect(Collectors.toList());
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("accounts", accountDTOs);
+		response.put("currentPage", page);
+		response.put("totalPages", accountPages.getTotalPages());
+
+		return ResponseEntity.ok(response);
 	}
 }

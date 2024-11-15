@@ -24,4 +24,8 @@ public class BusService {
     public Page<Bus> getAll(Pageable pageable) {
         return busRepository.findAll(pageable);
     }
+
+    public Bus getByBusPlate(String string) {
+        return busRepository.findByPlate(string);
+    }
 }

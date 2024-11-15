@@ -1,6 +1,7 @@
 package com.myproject.busticket.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,8 @@ public interface RouteRepository extends JpaRepository<Route, Integer> {
 
     @Query(value = "SELECT r FROM Route r WHERE r.distance BETWEEN :min AND :max", nativeQuery = true)
     List<Route> findRouteByDistance(@Param("min") double min, @Param("max") double max);
+
+    Optional<Route> findByCode(String code);
 
     // TODO: More methods here if needed
 }

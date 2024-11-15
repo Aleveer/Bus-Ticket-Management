@@ -1,7 +1,6 @@
 package com.myproject.busticket.dto;
 
 import com.myproject.busticket.models.Bus;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

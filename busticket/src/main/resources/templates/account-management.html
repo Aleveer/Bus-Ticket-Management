@@ -2,7 +2,7 @@
 <html class="loading" lang="en" data-text-direction="ltr">
 
 <head>
-    <title>Checkpoint Management</title>
+    <title>Account Management</title>
     <div th:insert="~{dashboard-header.html}"></div>
     <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}" />
 </head>
@@ -40,7 +40,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Checkpoint</h4>
+                                <h4 class="card-title">Account</h4>
                                 <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                                 <div class="heading-elements">
                                     <ul class="list-inline mb-0">
@@ -48,13 +48,12 @@
                                             <a data-action="search" title="Search"><i class="ft-search"></i></a>
                                         </li>
                                         <li>
-                                            <a data-action="add-checkpoint" title="Add Checkpoint"><i
-                                                    class="ft-plus"></i></a>
+                                            <a data-action="add-account" title="Add Account"><i class="ft-plus"></i></a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="search-box" id="searchBox" style="display: none">
-                                    <input type="text" class="input-search" placeholder="Search checkpoint..." />
+                                    <input type="text" class="input-search" placeholder="Search account..." />
                                     <button class="btn-search" id="searchButton">
                                         <i class="ft-search"></i>
                                     </button>
@@ -66,19 +65,21 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">Id</th>
-                                                <th scope="col">Location</th>
-                                                <th scope="col">Address</th>
-                                                <th scope="col">Contact Number</th>
-                                                <th scope="col">Region</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">Role</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Phone</th>
+                                                <th scope="col">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr th:each="checkpoint : ${checkpoints}">
-                                                <td th:text="${checkpoint.checkpointId}"></td>
-                                                <td th:text="${checkpoint.placeName}"></td>
-                                                <td th:text="${checkpoint.address}"></td>
-                                                <td th:text="${checkpoint.phone}"></td>
-                                                <td th:text="${checkpoint.region}"></td>
+                                            <tr th:each="account : ${accounts}">
+                                                <td th:text="${account.id}"></td>
+                                                <td th:text="${account.email}"></td>
+                                                <td th:text="${account.role.roleName}"></td>
+                                                <td th:text="${account.fullName}"></td>
+                                                <td th:text="${account.phone}"></td>
+                                                <td th:text="${account.status}"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -86,7 +87,7 @@
                                         <ul class="pagination-list">
                                             <!-- Nút Previous -->
                                             <li th:if="${currentPage > 0}">
-                                                <a th:href="@{/admin/checkpoint-management(page=${currentPage - 1})}"
+                                                <a th:href="@{/admin/account-management(page=${currentPage - 1})}"
                                                     aria-label="Previous">
                                                     &laquo;
                                                 </a>
@@ -95,13 +96,13 @@
                                             <!-- Các số trang -->
                                             <li th:each="pageNum : ${pageNumbers}"
                                                 th:class-append="${pageNum == currentPage} ? 'active'">
-                                                <a th:href="@{/admin/checkpoint-management(page=${pageNum})}"
+                                                <a th:href="@{/admin/account-management(page=${pageNum})}"
                                                     th:text="${pageNum}"></a>
                                             </li>
 
                                             <!-- Nút Next -->
                                             <li th:if="${currentPage < totalPages - 1}">
-                                                <a th:href="@{/admin/checkpoint-management(page=${currentPage + 1})}"
+                                                <a th:href="@{/admin/account-management(page=${currentPage + 1})}"
                                                     aria-label="Next">
                                                     &raquo;
                                                 </a>

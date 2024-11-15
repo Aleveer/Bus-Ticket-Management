@@ -75,9 +75,9 @@
                                     <div class="pagination">
                                         <ul class="pagination-list">
                                             <!-- Nút Previous -->
-                                            <li th:class-append="${currentPage == 0} ? 'disabled'">
+                                            <li th:if="${currentPage > 0}">
                                                 <a th:href="@{/admin/bus-management(page=${currentPage - 1})}"
-                                                    th:disabled="${currentPage == 0}" aria-label="Previous">
+                                                    aria-label="Previous">
                                                     &laquo;
                                                 </a>
                                             </li>
@@ -90,9 +90,9 @@
                                             </li>
 
                                             <!-- Nút Next -->
-                                            <li th:class-append="${currentPage == totalPages - 1} ? 'disabled'">
+                                            <li th:if="${currentPage < totalPages - 1}">
                                                 <a th:href="@{/admin/bus-management(page=${currentPage + 1})}"
-                                                    th:disabled="${currentPage == totalPages - 1}" aria-label="Next">
+                                                    aria-label="Next">
                                                     &raquo;
                                                 </a>
                                             </li>

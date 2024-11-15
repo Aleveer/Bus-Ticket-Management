@@ -2,8 +2,6 @@ package com.myproject.busticket.services;
 
 import com.myproject.busticket.models.Driver;
 import com.myproject.busticket.repositories.DriverRepository;
-import com.myproject.busticket.repositories.TripRepository;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 
 @Service

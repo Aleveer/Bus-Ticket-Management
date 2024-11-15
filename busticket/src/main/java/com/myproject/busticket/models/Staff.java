@@ -1,6 +1,5 @@
 package com.myproject.busticket.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.myproject.busticket.enums.StaffStatus;
 
 import jakarta.persistence.*;

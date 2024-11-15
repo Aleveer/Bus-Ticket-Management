@@ -1,11 +1,15 @@
 package com.myproject.busticket.controllers;
 
+import com.myproject.busticket.dto.AccountDTO;
+import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.Bus;
 import com.myproject.busticket.models.Checkpoint;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Trip;
+import com.myproject.busticket.services.AccountService;
 import com.myproject.busticket.services.BusService;
 import com.myproject.busticket.services.CheckpointService;
+import com.myproject.busticket.services.RoleService;
 import com.myproject.busticket.services.RouteService;
 import com.myproject.busticket.services.TripService;
 import org.springframework.data.domain.Page;
@@ -24,117 +28,146 @@ import java.util.stream.IntStream;
 @RequestMapping("/admin")
 @Controller
 public class AdminPageController {
-    TripService tripService;
-    BusService busService;
-    RouteService routeService;
-    CheckpointService checkpointService;
+	TripService tripService;
+	BusService busService;
+	RouteService routeService;
+	CheckpointService checkpointService;
+	AccountService accountService;
+	RoleService roleService;
 
-    public AdminPageController(TripService tripService, BusService busService, RouteService routeService,
-            CheckpointService checkpointService) {
-        this.busService = busService;
-        this.tripService = tripService;
-        this.routeService = routeService;
-        this.checkpointService = checkpointService;
-    }
+	public AdminPageController(TripService tripService, BusService busService, RouteService routeService,
+			CheckpointService checkpointService, AccountService accountService, RoleService roleService) {
+		this.busService = busService;
+		this.tripService = tripService;
+		this.routeService = routeService;
+		this.checkpointService = checkpointService;
+		this.accountService = accountService;
+		this.roleService = roleService;
+	}
 
-    @GetMapping("/dashboard")
-    public String dashBoardPage() {
-        return "admin";
-    }
+	@GetMapping("/dashboard")
+	public String dashBoardPage() {
+		return "admin";
+	}
 
-    @GetMapping("/trip-management")
-    public String adminTripPage(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, Model model) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Trip> tripsPage = tripService.getAll(pageable);
+	@GetMapping("/trip-management")
+	public String adminTripPage(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size, Model model) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Trip> tripsPage = tripService.getAll(pageable);
 
-        int totalPages = tripsPage.getTotalPages();
+		int totalPages = tripsPage.getTotalPages();
+		int startPage = Math.max(0, page - 2);
+		int endPage = Math.min(totalPages - 1, page + 2);
 
-        // Tính toán startPage và endPage để giới hạn chỉ 5 trang
-        int startPage = Math.max(0, page - 2); // Hiển thị từ 2 trang trước
-        int endPage = Math.min(totalPages - 1, page + 2); // Hiển thị đến 2 trang sau
+		List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
+				.boxed()
+				.collect(Collectors.toList());
 
-        // Tạo danh sách các trang sẽ hiển thị
-        List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
-                .boxed()
-                .collect(Collectors.toList());
+		model.addAttribute("trips", tripsPage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", tripsPage.getTotalPages());
+		model.addAttribute("pageNumbers", pageNumbers);
 
-        model.addAttribute("trips", tripsPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", tripsPage.getTotalPages());
-        model.addAttribute("pageNumbers", pageNumbers); // Danh sách các trang hiển thị
+		return "trip-management";
+	}
 
-        return "trip-management";
-    }
+	@GetMapping("/bus-management")
+	public String adminBusPage(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size, Model model) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Bus> busesPage = busService.getAll(pageable);
 
-    @GetMapping("/bus-management")
-    public String adminBusPage(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, Model model) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Bus> busesPage = busService.getAll(pageable);
+		int totalPages = busesPage.getTotalPages();
+		int startPage = Math.max(0, page - 2);
+		int endPage = Math.min(totalPages - 1, page + 2);
 
-        int totalPages = busesPage.getTotalPages();
+		List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
+				.boxed()
+				.collect(Collectors.toList());
 
-        // Tính toán startPage và endPage để giới hạn chỉ 5 trang
-        int startPage = Math.max(0, page - 2); // Hiển thị từ 2 trang trước
-        int endPage = Math.min(totalPages - 1, page + 2); // Hiển thị đến 2 trang sau
+		model.addAttribute("buses", busesPage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", busesPage.getTotalPages());
+		model.addAttribute("pageNumbers", pageNumbers);
 
-        // Tạo danh sách các trang sẽ hiển thị
-        List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
-                .boxed()
-                .collect(Collectors.toList());
+		return "bus-management";
+	}
 
-        model.addAttribute("buses", busesPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", busesPage.getTotalPages());
-        model.addAttribute("pageNumbers", pageNumbers); // Danh sách các trang hiển thị
+	@GetMapping("/route-management")
+	public String adminRoutePage(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size, Model model) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Route> routesPage = routeService.getAll(pageable);
 
-        return "bus-management";
-    }
+		int totalPages = routesPage.getTotalPages();
+		int startPage = Math.max(0, page - 2);
+		int endPage = Math.min(totalPages - 1, page + 2);
 
-    @GetMapping("/route-management")
-    public String adminRoutePage(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, Model model) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Route> routesPage = routeService.getAll(pageable);
+		List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
+				.boxed()
+				.collect(Collectors.toList());
 
-        int totalPages = routesPage.getTotalPages();
+		model.addAttribute("routes", routesPage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", routesPage.getTotalPages());
+		model.addAttribute("pageNumbers", pageNumbers);
 
-        int startPage = Math.max(0, page - 2);
-        int endPage = Math.min(totalPages - 1, page + 2);
+		return "route-management";
+	}
 
-        List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
-                .boxed()
-                .collect(Collectors.toList());
+	@GetMapping("/checkpoint-management")
+	public String adminCheckpointPage(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size, Model model) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Checkpoint> checkpointPages = checkpointService.getAll(pageable);
 
-        model.addAttribute("routes", routesPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", routesPage.getTotalPages());
-        model.addAttribute("pageNumbers", pageNumbers);
+		int totalPages = checkpointPages.getTotalPages();
+		int startPage = Math.max(0, page - 2);
+		int endPage = Math.min(totalPages - 1, page + 2);
 
-        return "route-management";
-    }
+		List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
+				.boxed()
+				.collect(Collectors.toList());
 
-    @GetMapping("/checkpoint-management")
-    public String adminCheckpointPage(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, Model model) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Checkpoint> checkpointPages = checkpointService.getAll(pageable);
+		model.addAttribute("checkpoints", checkpointPages.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", checkpointPages.getTotalPages());
+		model.addAttribute("pageNumbers", pageNumbers);
 
-        int totalPages = checkpointPages.getTotalPages();
+		return "checkpoint-management";
+	}
 
-        int startPage = Math.max(0, page - 2);
-        int endPage = Math.min(totalPages - 1, page + 2);
+	@GetMapping("/account-management")
+	public String adminUserPage(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size, Model model) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Account> accountPages = accountService.getAll(pageable);
 
-        List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
-                .boxed()
-                .collect(Collectors.toList());
+		List<AccountDTO> accountDTOs = accountPages.getContent().stream()
+				.map(account -> new AccountDTO(account.getId(), account.getEmail(),
+						account.getPassword(),
+						account.getFullName(), account.getPhone(),
+						roleService.getRoleById(account.getRole().getRoleId()),
+						account.getStatus(),
+						account.getVerificationCode(), account.getVerificationExpiration(),
+						account.getLoginToken(),
+						account.getPasswordResetToken(), account.getPasswordResetExpiration(),
+						account.isEnabled()))
+				.collect(Collectors.toList());
+		int totalPages = accountPages.getTotalPages();
+		int startPage = Math.max(0, page - 2);
+		int endPage = Math.min(totalPages - 1, page + 2);
 
-        model.addAttribute("checkpoints", checkpointPages.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", checkpointPages.getTotalPages());
-        model.addAttribute("pageNumbers", pageNumbers);
+		List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
+				.boxed()
+				.collect(Collectors.toList());
 
-        return "checkpoint-management";
-    }
+		model.addAttribute("accounts", accountDTOs);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", accountPages.getTotalPages());
+		model.addAttribute("pageNumbers", pageNumbers);
+
+		return "account-management";
+	}
 }

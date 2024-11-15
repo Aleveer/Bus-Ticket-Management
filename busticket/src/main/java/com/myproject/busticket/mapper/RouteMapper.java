@@ -11,5 +11,7 @@ import com.myproject.busticket.models.Route;
 public interface RouteMapper {
     RouteDTO entityToDTO(Route route);
 
+    Route dtoToEntity(RouteDTO routeDTO);
+
     List<RouteDTO> map(List<Route> routes);
 }

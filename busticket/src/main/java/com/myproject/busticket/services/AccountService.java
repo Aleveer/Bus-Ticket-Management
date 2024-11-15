@@ -1,5 +1,7 @@
 package com.myproject.busticket.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.myproject.busticket.models.Account;
@@ -37,5 +39,9 @@ public class AccountService {
         List<Account> users = new ArrayList<>();
         accountRepository.findAll().forEach(users::add);
         return users;
+    }
+
+    public Page<Account> getAll(Pageable pageable) {
+        return accountRepository.findAll(pageable);
     }
 }

@@ -93,9 +93,8 @@
                   <div class="pagination">
                     <ul class="pagination-list">
                       <!-- Nút Previous -->
-                      <li th:class-append="${currentPage == 0} ? 'disabled'">
-                        <a th:href="@{/admin/trip-management(page=${currentPage - 1})}"
-                          th:disabled="${currentPage == 0}" aria-label="Previous">
+                      <li th:if="${currentPage > 0}">
+                        <a th:href="@{/admin/trip-management(page=${currentPage - 1})}" aria-label="Previous">
                           &laquo;
                         </a>
                       </li>
@@ -106,9 +105,8 @@
                       </li>
 
                       <!-- Nút Next -->
-                      <li th:class-append="${currentPage == totalPages - 1} ? 'disabled'">
-                        <a th:href="@{/admin/trip-management(page=${currentPage + 1})}"
-                          th:disabled="${currentPage == totalPages - 1}" aria-label="Next">
+                      <li th:if="${currentPage < totalPages - 1}">
+                        <a th:href="@{/admin/trip-management(page=${currentPage + 1})}" aria-label="Next">
                           &raquo;
                         </a>
                       </li>

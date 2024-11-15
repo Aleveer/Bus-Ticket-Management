@@ -4,18 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
-
 import com.myproject.busticket.dto.SeatReservationsDTO;
 import com.myproject.busticket.services.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.models.Booking;
-
 
 @RequestMapping("/home/index")
 @Controller
@@ -26,7 +22,9 @@ public class BookingController {
     RouteCheckpointService routeCheckpointService;
 
     SeatReservationsService seatReservationsService;
-    public BookingController(BookingService bookingService, TripService tripService, CustomerService customerService, SeatReservationsService seatReservationsService, RouteCheckpointService routeCheckpointService) {
+
+    public BookingController(BookingService bookingService, TripService tripService, CustomerService customerService,
+            SeatReservationsService seatReservationsService, RouteCheckpointService routeCheckpointService) {
         this.bookingService = bookingService;
         this.tripService = tripService;
         this.customerService = customerService;
@@ -36,9 +34,9 @@ public class BookingController {
 
     @GetMapping("/search")
     public String searchForm(@RequestParam String tripType, @RequestParam String departure,
-                             @RequestParam String destination,
-                             @RequestParam String date,
-                             @RequestParam String ticketNum,Model model) {
+            @RequestParam String destination,
+            @RequestParam String date,
+            @RequestParam String ticketNum, Model model) {
         int numberOfTickets = Integer.parseInt(ticketNum);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime dateDeparture = LocalDate.parse(date, formatter).atStartOfDay();
@@ -69,6 +67,7 @@ public class BookingController {
         model.addAttribute("secondFloor", secondFloor);
         return "booking";
     }
+
     @PostMapping("/booking/oneway")
     public String booking(@ModelAttribute Booking booking) {
 
@@ -77,13 +76,14 @@ public class BookingController {
 
     @PostMapping("/booking/roundtrip")
     public String booking(@ModelAttribute Booking outboundTicket, @ModelAttribute Booking returnTicket) {
-        if (!customerService.hasCustomer(outboundTicket.getCustomer().getEmail())){
+        if (!customerService.hasCustomer(outboundTicket.getCustomer().getEmail())) {
             customerService.create(outboundTicket.getCustomer());
-            outboundTicket.getCustomer().setCustomerId(customerService.findIDByEmail(outboundTicket.getCustomer().getEmail()));
+            outboundTicket.getCustomer()
+                    .setCustomerId(customerService.findIDByEmail(outboundTicket.getCustomer().getEmail()));
         }
 
-        //set isRoundTrip to true
-        //set roundTripID
+        // set isRoundTrip to true
+        // set roundTripID
         bookingService.createTicket(outboundTicket);
         bookingService.createTicket(returnTicket);
         return "redirect:/";

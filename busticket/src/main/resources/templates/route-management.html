@@ -69,7 +69,7 @@
                                                 <th scope="col">Distance</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="routeTableBody">
                                             <tr th:each="route : ${routes}">
                                                 <td th:text="${route.routeId}"></td>
                                                 <td th:text="${route.code}"></td>
@@ -80,28 +80,18 @@
                                         </tbody>
                                     </table>
                                     <div class="pagination">
-                                        <ul class="pagination-list">
-                                            <!-- Nút Previous -->
+                                        <ul class="pagination-list" id="paginationControls">
                                             <li th:if="${currentPage > 0}">
-                                                <a th:href="@{/admin/route-management(page=${currentPage - 1})}"
-                                                    aria-label="Previous">
-                                                    &laquo;
-                                                </a>
+                                                <a onclick="loadRoutes('${currentPage - 1}')"
+                                                    aria-label="Previous">&laquo;</a>
                                             </li>
-
-                                            <!-- Các số trang -->
                                             <li th:each="pageNum : ${pageNumbers}"
                                                 th:class-append="${pageNum == currentPage} ? 'active'">
-                                                <a th:href="@{/admin/route-management(page=${pageNum})}"
-                                                    th:text="${pageNum}"></a>
+                                                <a onclick="loadRoutes('${pageNum}')" th:text="${pageNum}"></a>
                                             </li>
-
-                                            <!-- Nút Next -->
                                             <li th:if="${currentPage < totalPages - 1}">
-                                                <a th:href="@{/admin/route-management(page=${currentPage + 1})}"
-                                                    aria-label="Next">
-                                                    &raquo;
-                                                </a>
+                                                <a onclick="loadRoutes('${currentPage + 1}')"
+                                                    aria-label="Next">&raquo;</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -136,6 +126,89 @@
     <!-- END CHAMELEON  JS-->
     <!-- BEGIN PAGE LEVEL JS-->
     <!-- END PAGE LEVEL JS-->
+    <script>
+        function loadRoutes(page) {
+            $.ajax({
+                url: '/admin/api/routes',
+                data: { page: page, size: 10 },
+                success: function (data) {
+                    var routes = data.routes;
+                    var totalPages = data.totalPages;
+                    var currentPage = data.currentPage;
+
+                    // Clear the table body
+                    $('#routeTableBody').empty();
+
+                    // Populate the table with routes
+                    routes.forEach(function (route) {
+                        $('#routeTableBody').append(
+                            '<tr>' +
+                            '<td>' + route.routeId + '</td>' +
+                            '<td>' + route.code + '</td>' +
+                            '<td>' + route.name + '</td>' +
+                            '<td>' + route.time + '</td>' +
+                            '<td>' + route.distance + '</td>' +
+                            '</tr>'
+                        );
+                    });
+
+                    // Clear the pagination controls
+                    $('#paginationControls').empty();
+
+                    // Add Previous button
+                    if (currentPage > 0) {
+                        $('#paginationControls').append(
+                            '<li><a onclick="loadRoutes(' + (currentPage - 1) + ')">&laquo;</a></li>'
+                        );
+                    }
+
+                    // Add page numbers with ellipsis
+                    var startPage = Math.max(0, currentPage - 2);
+                    var endPage = Math.min(totalPages - 1, currentPage + 2);
+
+                    if (startPage > 0) {
+                        $('#paginationControls').append(
+                            '<li><a onclick="loadRoutes(0)">1</a></li>'
+                        );
+                        if (startPage > 1) {
+                            $('#paginationControls').append(
+                                '<li><span>...</span></li>'
+                            );
+                        }
+                    }
+
+                    for (var i = startPage; i <= endPage; i++) {
+                        $('#paginationControls').append(
+                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadRoutes(' + i + ')">' + (i + 1) + '</a></li>'
+                        );
+                    }
+
+                    if (endPage < totalPages - 1) {
+                        if (endPage < totalPages - 2) {
+                            $('#paginationControls').append(
+                                '<li><span>...</span></li>'
+                            );
+                        }
+                        $('#paginationControls').append(
+                            '<li><a onclick="loadRoutes(' + (totalPages - 1) + ')">' + totalPages + '</a></li>'
+                        );
+                    }
+
+                    // Add Next button
+                    if (currentPage < totalPages - 1) {
+                        $('#paginationControls').append(
+                            '<li><a onclick="loadRoutes(' + (currentPage + 1) + ')">&raquo;</a></li>'
+                        );
+                    }
+                }
+            });
+        }
+
+        // Load the first page of routes when the page loads
+        $(document).ready(function () {
+            loadRoutes(0);
+        });
+    </script>
 </body>
 
 </html>

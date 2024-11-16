@@ -163,7 +163,7 @@
                     // Add Previous button
                     if (currentPage > 0) {
                         $('#paginationControls').append(
-                            '<li><a href="#" onclick="loadAccounts(' + (currentPage - 1) + ')">&laquo;</a></li>'
+                            '<li><a onclick="loadAccounts(' + (currentPage - 1) + ')">&laquo;</a></li>'
                         );
                     }
 
@@ -173,7 +173,7 @@
 
                     if (startPage > 0) {
                         $('#paginationControls').append(
-                            '<li><a href="#" onclick="loadAccounts(0)">1</a></li>'
+                            '<li><a onclick="loadAccounts(0)">1</a></li>'
                         );
                         if (startPage > 1) {
                             $('#paginationControls').append(
@@ -184,7 +184,7 @@
 
                     for (var i = startPage; i <= endPage; i++) {
                         $('#paginationControls').append(
-                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a href="#" onclick="loadAccounts(' + i + ')">' + (i + 1) + '</a></li>'
+                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadAccounts(' + i + ')">' + (i + 1) + '</a></li>'
                         );
                     }
 
@@ -195,14 +195,14 @@
                             );
                         }
                         $('#paginationControls').append(
-                            '<li><a href="#" onclick="loadAccounts(' + (totalPages - 1) + ')">' + totalPages + '</a></li>'
+                            '<li><a onclick="loadAccounts(' + (totalPages - 1) + ')">' + totalPages + '</a></li>'
                         );
                     }
 
                     // Add Next button
                     if (currentPage < totalPages - 1) {
                         $('#paginationControls').append(
-                            '<li><a href="#" onclick="loadAccounts(' + (currentPage + 1) + ')">&raquo;</a></li>'
+                            '<li><a onclick="loadAccounts(' + (currentPage + 1) + ')">&raquo;</a></li>'
                         );
                     }
                 }

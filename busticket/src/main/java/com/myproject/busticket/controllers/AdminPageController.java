@@ -126,6 +126,28 @@ public class AdminPageController {
 		return "bus-management";
 	}
 
+	@GetMapping("/api/buses")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> getBuses(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Bus> busPages = busService.getAll(pageable);
+
+		// List<BusDTO> busDTOs = busPages.getContent().stream()
+		// .map(bus -> new BusDTO(bus.getPlate(), bus.getNumberOfSeat(), bus.getType()))
+		// .collect(Collectors.toList());
+		List<Bus> buses = busPages.getContent().stream()
+				.map(bus -> new Bus(bus.getPlate(), bus.getType(), bus.getNumberOfSeat()))
+				.collect(Collectors.toList());
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("buses", buses);
+		response.put("currentPage", page);
+		response.put("totalPages", busPages.getTotalPages());
+
+		return ResponseEntity.ok(response);
+	}
+
 	@GetMapping("/route-management")
 	public String adminRoutePage(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size, Model model) {
@@ -148,6 +170,26 @@ public class AdminPageController {
 		return "route-management";
 	}
 
+	@GetMapping("/api/routes")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> getRoutes(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Route> routePages = routeService.getAll(pageable);
+
+		List<Route> routes = routePages.getContent().stream()
+				.map(route -> new Route(route.getRouteId(), route.getCode(), route.getName(), route.getTime(),
+						route.getDistance()))
+				.collect(Collectors.toList());
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("routes", routes);
+		response.put("currentPage", page);
+		response.put("totalPages", routePages.getTotalPages());
+
+		return ResponseEntity.ok(response);
+	}
+
 	@GetMapping("/checkpoint-management")
 	public String adminCheckpointPage(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size, Model model) {
@@ -168,6 +210,27 @@ public class AdminPageController {
 		model.addAttribute("pageNumbers", pageNumbers);
 
 		return "checkpoint-management";
+	}
+
+	@GetMapping("/api/checkpoints")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> getCheckpoints(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Checkpoint> checkpointPages = checkpointService.getAll(pageable);
+
+		List<Checkpoint> checkpoints = checkpointPages.getContent().stream()
+				.map(checkpoint -> new Checkpoint(checkpoint.getCheckpointId(),
+						checkpoint.getPlaceName(), checkpoint.getAddress(),
+						checkpoint.getPhone(), checkpoint.getRegion()))
+				.collect(Collectors.toList());
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("checkpoints", checkpoints);
+		response.put("currentPage", page);
+		response.put("totalPages", checkpointPages.getTotalPages());
+
+		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/account-management")

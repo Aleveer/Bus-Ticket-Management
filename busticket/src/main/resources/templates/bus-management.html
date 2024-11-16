@@ -66,35 +66,27 @@
                                                 <th scope="col">Seats</th>
                                             </tr>
                                         </thead>
-                                        <tr th:each="bus : ${buses}">
-                                            <td th:text="${bus.plate}"></td>
-                                            <td th:text="${bus.type}"></td>
-                                            <td th:text="${bus.numberOfSeat}"></td>
-                                        </tr>
+                                        <tbody id="busTableBody">
+                                            <tr th:each="bus : ${buses}">
+                                                <td th:text="${bus.plate}"></td>
+                                                <td th:text="${bus.type}"></td>
+                                                <td th:text="${bus.numberOfSeat}"></td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                     <div class="pagination">
-                                        <ul class="pagination-list">
-                                            <!-- Nút Previous -->
+                                        <ul class="pagination-list" id="paginationControls">
                                             <li th:if="${currentPage > 0}">
-                                                <a th:href="@{/admin/bus-management(page=${currentPage - 1})}"
-                                                    aria-label="Previous">
-                                                    &laquo;
-                                                </a>
+                                                <a onclick="loadBuses('${currentPage - 1}')"
+                                                    aria-label="Previous">&laquo;</a>
                                             </li>
-
-                                            <!-- Các số trang -->
                                             <li th:each="pageNum : ${pageNumbers}"
                                                 th:class-append="${pageNum == currentPage} ? 'active'">
-                                                <a th:href="@{/admin/bus-management(page=${pageNum})}"
-                                                    th:text="${pageNum}"></a>
+                                                <a onclick="loadBuses('${pageNum}')" th:text="${pageNum}"></a>
                                             </li>
-
-                                            <!-- Nút Next -->
                                             <li th:if="${currentPage < totalPages - 1}">
-                                                <a th:href="@{/admin/bus-management(page=${currentPage + 1})}"
-                                                    aria-label="Next">
-                                                    &raquo;
-                                                </a>
+                                                <a onclick="loadBuses('${currentPage + 1}')"
+                                                    aria-label="Next">&raquo;</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -129,6 +121,78 @@
     <!-- END CHAMELEON  JS-->
     <!-- BEGIN PAGE LEVEL JS-->
     <!-- END PAGE LEVEL JS-->
+    <script>
+        function loadBuses(page) {
+            $.ajax({
+                url: '/admin/api/buses',
+                data: { page: page, size: 10 },
+                success: function (data) {
+                    var buses = data.buses;
+                    var totalPages = data.totalPages;
+                    var currentPage = data.currentPage;
+                    // Clear the table body
+                    $('#busTableBody').empty();
+                    // Populate the table with buses
+                    buses.forEach(function (bus) {
+                        $('#busTableBody').append(
+                            '<tr>' +
+                            '<td>' + bus.plate + '</td>' +
+                            '<td>' + bus.type + '</td>' +
+                            '<td>' + bus.numberOfSeat + '</td>' +
+                            '</tr>'
+                        );
+                    });
+                    // Clear the pagination controls
+                    $('#paginationControls').empty();
+                    // Add Previous button
+                    if (currentPage > 0) {
+                        $('#paginationControls').append(
+                            '<li><a onclick="loadBuses(' + (currentPage - 1) + ')">&laquo;</a></li>'
+                        );
+                    }
+                    // Add page numbers with ellipsis
+                    var startPage = Math.max(0, currentPage - 2);
+                    var endPage = Math.min(totalPages - 1, currentPage + 2);
+                    if (startPage > 0) {
+                        $('#paginationControls').append(
+                            '<li><a onclick="loadBuses(0)">1</a></li>'
+                        );
+                        if (startPage > 1) {
+                            $('#paginationControls').append(
+                                '<li><span>...</span></li>'
+                            );
+                        }
+                    }
+                    for (var i = startPage; i <= endPage; i++) {
+                        $('#paginationControls').append(
+                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadBuses(' + i + ')">' + (i + 1) + '</a></li>'
+                        );
+                    }
+                    if (endPage < totalPages - 1) {
+                        if (endPage < totalPages - 2) {
+                            $('#paginationControls').append(
+                                '<li><span>...</span></li>'
+                            );
+                        }
+                        $('#paginationControls').append(
+                            '<li><a onclick="loadBuses(' + (totalPages - 1) + ')">' + totalPages + '</a></li>'
+                        );
+                    }
+                    // Add Next button
+                    if (currentPage < totalPages - 1) {
+                        $('#paginationControls').append(
+                            '<li><a onclick="loadBuses(' + (currentPage + 1) + ')">&raquo;</a></li>'
+                        );
+                    }
+                }
+            });
+        }
+
+        // Load the first page of buses when the page loads
+        $(document).ready(function () {
+            loadBuses(0);
+        });
+    </script>
 </body>
 
 </html>

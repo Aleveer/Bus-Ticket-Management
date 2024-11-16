@@ -35,6 +35,10 @@ public class RouteService {
         return routeRepository.findAll(pageable);
     }
 
+    public List<Route> getAll() {
+        return routeRepository.findAll();
+    }
+
     public Route save(Route route) {
         return routeRepository.save(route);
     }

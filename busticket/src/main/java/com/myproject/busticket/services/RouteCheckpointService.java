@@ -9,22 +9,30 @@ import java.util.List;
 
 @Service
 public class RouteCheckpointService {
-    RouteCheckpointRepository checkpointRepository;
+    RouteCheckpointRepository routeCheckpointRepository;
 
-    public RouteCheckpointService(RouteCheckpointRepository checkpointRepository) {
-        this.checkpointRepository = checkpointRepository;
+    public RouteCheckpointService(RouteCheckpointRepository routeCheckpointRepository) {
+        this.routeCheckpointRepository = routeCheckpointRepository;
     }
 
     public List<String> getAllProvinces() {
-        return checkpointRepository.findAllCheckpointProvinces();
+        return routeCheckpointRepository.findAllCheckpointProvinces();
     }
 
     public List<String> getAllCities() {
-        return checkpointRepository.findAllCheckpointCities();
+        return routeCheckpointRepository.findAllCheckpointCities();
     }
 
     public List<Route_Checkpoint> findByRoute(Route route) {
-        return checkpointRepository.findByRoute(route);
+        return routeCheckpointRepository.findByRoute(route);
+    }
+
+    public String findDepartureName(String routeCode) {
+        return routeCheckpointRepository.findDepartureName(routeCode);
+    }
+
+    public String findDropOffName(String routeCode) {
+        return routeCheckpointRepository.findDropOffName(routeCode);
     }
 
     public Route_Checkpoint save(Route_Checkpoint routeCheckpoint) {

@@ -26,4 +26,8 @@ public class RouteCheckpointService {
     public List<Route_Checkpoint> findByRoute(Route route) {
         return checkpointRepository.findByRoute(route);
     }
+
+    public Route_Checkpoint save(Route_Checkpoint routeCheckpoint) {
+        return checkpointRepository.save(routeCheckpoint);
+    }
 }

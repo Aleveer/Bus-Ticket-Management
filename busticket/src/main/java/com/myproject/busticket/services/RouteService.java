@@ -28,10 +28,14 @@ public class RouteService {
     }
 
     public Route getRouteByCode(String code) {
-        return routeRepository.findByCode(code).get();
+        return routeRepository.findByCode(code).orElse(null);
     }
 
     public Page<Route> getAll(Pageable pageable) {
         return routeRepository.findAll(pageable);
+    }
+
+    public Route save(Route route) {
+        return routeRepository.save(route);
     }
 }

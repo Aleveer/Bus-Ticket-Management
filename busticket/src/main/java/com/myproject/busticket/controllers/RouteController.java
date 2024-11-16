@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.myproject.busticket.models.Route;
@@ -34,5 +35,17 @@ public class RouteController {
         model.addAttribute("route", route);
         model.addAttribute("checkpoints", checkpoints);
         return "route-detail";
+    }
+
+    @GetMapping("/new-route")
+    public String newRoute(Model model) {
+        model.addAttribute("route", new Route());
+        return "new-route";
+    }
+
+    @PostMapping("/new-route")
+    public String saveRoute(Route route) {
+        routeService.save(route);
+        return "redirect:/admin/route-management";
     }
 }

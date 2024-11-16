@@ -1,12 +1,14 @@
 package com.myproject.busticket.controllers;
 
 import com.myproject.busticket.dto.AccountDTO;
+import com.myproject.busticket.enums.CheckpointType;
 import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.Bus;
 import com.myproject.busticket.models.Checkpoint;
 import com.myproject.busticket.models.Customer;
 import com.myproject.busticket.models.Driver;
 import com.myproject.busticket.models.Route;
+import com.myproject.busticket.models.RouteRequest;
 import com.myproject.busticket.models.Route_Checkpoint;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.services.AccountService;
@@ -19,9 +21,13 @@ import com.myproject.busticket.services.RouteCheckpointService;
 import com.myproject.busticket.services.RouteService;
 import com.myproject.busticket.services.TripService;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +37,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -218,6 +226,76 @@ public class ApiController {
         response.put("route", route);
         response.put("checkpoints", routeCheckpointsDTO);
 
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/admin/api/new-route")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> saveRoute(@RequestBody Map<String, Object> routeRequest) {
+        Map<String, Object> response = new HashMap<>();
+
+        // Extract route details from the request
+        String code = (String) routeRequest.get("code");
+        String name = (String) routeRequest.get("name");
+        String timeString = (String) routeRequest.get("time");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime time;
+        try {
+            time = LocalDateTime.parse(timeString, formatter);
+        } catch (Exception e) {
+            response.put("message", "Invalid date format.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        double distance = Double.parseDouble(routeRequest.get("distance").toString());
+
+        // Validate route details
+        if (code == null || code.isEmpty() ||
+                name == null || name.isEmpty() ||
+                time == null ||
+                distance <= 0) {
+            response.put("message", "Invalid input data.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // Check if the route already exists
+        Route existingRoute = routeService.getRouteByCode(code);
+        if (existingRoute != null) {
+            response.put("message", "Route with this code already exists.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // Create and save the new route
+        Route newRoute = new Route();
+        newRoute.setCode(code);
+        newRoute.setName(name);
+        newRoute.setTime(time);
+        newRoute.setDistance(distance);
+        Route savedRoute = routeService.save(newRoute);
+
+        // Extract and save the route checkpoints
+        int i = 1;
+        // Fix checkpoint data extraction
+        List<Map<String, Object>> checkpoints = (List<Map<String, Object>>) routeRequest.get("checkpoints");
+        for (Map<String, Object> checkpointData : checkpoints) {
+            Route_Checkpoint routeCheckpoint = new Route_Checkpoint();
+            routeCheckpoint.setRoute(savedRoute);
+            routeCheckpoint.setCheckpointOrder(String.valueOf(i++));
+
+            // Ensure checkpointId is correctly retrieved and cast to an integer
+            Integer checkpointId = (Integer) checkpointData.get("checkpointId");
+            if (checkpointId == null) {
+                response.put("message", "Invalid checkpoint data.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            routeCheckpoint.setCheckpoint(checkpointService.getById(checkpointId));
+            routeCheckpoint.setCheckpointCity((String) checkpointData.get("checkpointCity"));
+            routeCheckpoint.setCheckpointProvince((String) checkpointData.get("checkpointProvince"));
+            routeCheckpoint.setType(CheckpointType.departure);
+            routeCheckpointService.save(routeCheckpoint);
+        }
+
+        response.put("message", "Route saved successfully.");
         return ResponseEntity.ok(response);
     }
 }

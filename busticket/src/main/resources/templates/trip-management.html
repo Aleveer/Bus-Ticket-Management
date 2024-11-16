@@ -138,7 +138,7 @@
     function loadTrips(page) {
       $.ajax({
         url: '/admin/api/trips',
-        data: { page: page, size: 10 },
+        data: { page: page, size: 15 },
         success: function (data) {
           var trips = data.trips;
           var totalPages = data.totalPages;

@@ -125,7 +125,7 @@
         function loadBuses(page) {
             $.ajax({
                 url: '/admin/api/buses',
-                data: { page: page, size: 10 },
+                data: { page: page, size: 15 },
                 success: function (data) {
                     var buses = data.buses;
                     var totalPages = data.totalPages;

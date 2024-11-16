@@ -133,7 +133,7 @@
         function loadCheckpoints(page) {
             $.ajax({
                 url: '/admin/api/checkpoints',
-                data: { page: page, size: 10 },
+                data: { page: page, size: 15 },
                 success: function (data) {
                     var checkpoints = data.checkpoints;
                     var totalPages = data.totalPages;

@@ -130,7 +130,7 @@
         function loadRoutes(page) {
             $.ajax({
                 url: '/admin/api/routes',
-                data: { page: page, size: 10 },
+                data: { page: page, size: 15 },
                 success: function (data) {
                     var routes = data.routes;
                     var totalPages = data.totalPages;

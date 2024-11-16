@@ -5,6 +5,8 @@ import com.myproject.busticket.enums.CheckpointType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -46,6 +48,7 @@ public class Route_Checkpoint {
     @Column(name = "checkpoint_province", nullable = false, length = 100)
     private String checkpointProvince;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, columnDefinition = "ENUM('departure', 'drop_off', 'en_route', 'rest') DEFAULT 'departure'")
     private CheckpointType type;
 

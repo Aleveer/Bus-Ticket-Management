@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html class="loading" lang="en" data-text-direction="ltr">
+
+<head>
+    <title>Account Management</title>
+    <div th:insert="~{dashboard-header.html}"></div>
+    <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}" />
+</head>
+
+<body class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar" data-open="click"
+    data-menu="vertical-menu" data-color="bg-gradient-x-purple-blue" data-col="2-columns">
+    <!--navigation bar-->
+    <nav th:insert="~{navigation-bar.html}"></nav>
+    <!-- main menu-->
+    <div th:insert="~{main-menu.html}"></div>
+
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-wrapper-before"></div>
+            <div class="content-header row">
+                <div class="content-header-left col-md-4 col-12 mb-2">
+                    <h3 class="content-header-title">Tables</h3>
+                </div>
+                <div class="content-header-right col-md-8 col-12">
+                    <div class="breadcrumbs-top float-md-right">
+                        <div class="breadcrumb-wrapper mr-1">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                                <li class="breadcrumb-item active">Tables</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-body">
+                <!-- Basic Tables start -->
+                <!-- Basic Tables end -->
+                <!-- Striped rows start -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Account</h4>
+                                <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li>
+                                            <a data-action="search" title="Search"><i class="ft-search"></i></a>
+                                        </li>
+                                        <li>
+                                            <a data-action="add-account" title="Add Account"><i class="ft-plus"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="search-box" id="searchBox" style="display: none">
+                                    <input type="text" class="input-search" placeholder="Search account..." />
+                                    <button class="btn-search" id="searchButton">
+                                        <i class="ft-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-content collapse show">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Id</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">Role</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Phone</th>
+                                                <th scope="col">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="accountTableBody">
+                                            <tr th:each="account : ${accounts}">
+                                                <td th:text="${account.id}"></td>
+                                                <td th:text="${account.email}"></td>
+                                                <td th:text="${account.role.roleName}"></td>
+                                                <td th:text="${account.fullName}"></td>
+                                                <td th:text="${account.phone}"></td>
+                                                <td th:text="${account.status}"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="pagination">
+                                        <ul class="pagination-list" id="paginationControls">
+                                            <li th:if="${currentPage > 0}">
+                                                <a onclick="loadAccounts('${currentPage - 1}')"
+                                                    aria-label="Previous">&laquo;</a>
+                                            </li>
+                                            <li th:each="pageNum : ${pageNumbers}"
+                                                th:class-append="${pageNum == currentPage} ? 'active'">
+                                                <a onclick="loadAccounts('${pageNum}')" th:text="${pageNum}"></a>
+                                            </li>
+                                            <li th:if="${currentPage < totalPages - 1}">
+                                                <a onclick="loadAccounts('${currentPage + 1}')"
+                                                    aria-label="Next">&raquo;</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Striped rows end -->
+
+                <!-- Table head options start -->
+                <!-- Table head options end -->
+
+                <!-- Bordered table start -->
+                <!-- Bordered table end -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div th:insert="~{dashboard-footer.html}"></div>
+    </footer>
+
+    <!-- BEGIN VENDOR JS-->
+    <script th:src="@{/theme-assets/vendors/js/vendors.min.js}" type="text/javascript"></script>
+    <!-- BEGIN VENDOR JS-->
+    <!-- BEGIN PAGE VENDOR JS-->
+    <!-- END PAGE VENDOR JS-->
+    <!-- BEGIN CHAMELEON  JS-->
+    <script th:src="@{/theme-assets/js/core/app-menu-lite.js}" type="text/javascript"></script>
+    <script th:src="@{/theme-assets/js/core/app-lite.js}" type="text/javascript"></script>
+    <!-- END CHAMELEON  JS-->
+    <!-- BEGIN PAGE LEVEL JS-->
+    <!-- END PAGE LEVEL JS-->
+    <script>
+        function loadAccounts(page) {
+            $.ajax({
+                url: '/admin/api/accounts',
+                data: { page: page, size: 15 },
+                success: function (data) {
+                    var accounts = data.accounts;
+                    var totalPages = data.totalPages;
+                    var currentPage = data.currentPage;
+
+                    // Clear the table body
+                    $('#accountTableBody').empty();
+
+                    // Populate the table with accounts
+                    accounts.forEach(function (account) {
+                        $('#accountTableBody').append(
+                            '<tr>' +
+                            '<td>' + account.id + '</td>' +
+                            '<td>' + account.email + '</td>' +
+                            '<td>' + account.role.roleName + '</td>' +
+                            '<td>' + account.fullName + '</td>' +
+                            '<td>' + account.phone + '</td>' +
+                            '<td>' + account.status + '</td>' +
+                            '</tr>'
+                        );
+                    });
+
+                    // Clear the pagination controls
+                    $('#paginationControls').empty();
+
+                    // Add Previous button
+                    if (currentPage > 0) {
+                        $('#paginationControls').append(
+                            '<li><a onclick="loadAccounts(' + (currentPage - 1) + ')">&laquo;</a></li>'
+                        );
+                    }
+
+                    // Add page numbers with ellipsis
+                    var startPage = Math.max(0, currentPage - 2);
+                    var endPage = Math.min(totalPages - 1, currentPage + 2);
+
+                    if (startPage > 0) {
+                        $('#paginationControls').append(
+                            '<li><a onclick="loadAccounts(0)">1</a></li>'
+                        );
+                        if (startPage > 1) {
+                            $('#paginationControls').append(
+                                '<li><span>...</span></li>'
+                            );
+                        }
+                    }
+
+                    for (var i = startPage; i <= endPage; i++) {
+                        $('#paginationControls').append(
+                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadAccounts(' + i + ')">' + (i + 1) + '</a></li>'
+                        );
+                    }
+
+                    if (endPage < totalPages - 1) {
+                        if (endPage < totalPages - 2) {
+                            $('#paginationControls').append(
+                                '<li><span>...</span></li>'
+                            );
+                        }
+                        $('#paginationControls').append(
+                            '<li><a onclick="loadAccounts(' + (totalPages - 1) + ')">' + totalPages + '</a></li>'
+                        );
+                    }
+
+                    // Add Next button
+                    if (currentPage < totalPages - 1) {
+                        $('#paginationControls').append(
+                            '<li><a onclick="loadAccounts(' + (currentPage + 1) + ')">&raquo;</a></li>'
+                        );
+                    }
+                }
+            });
+        }
+
+        // Load the first page of accounts when the page loads
+        $(document).ready(function () {
+            loadAccounts(0);
+        });
+    </script>
+</body>
+
+</html>

@@ -2,9 +2,7 @@ package com.myproject.busticket.services;
 
 import com.myproject.busticket.dto.SeatReservationsDTO;
 import com.myproject.busticket.mapper.SeatReservationsMapper;
-import com.myproject.busticket.mapper.TripMapper;
 import com.myproject.busticket.models.SeatReservations;
-import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.repositories.SeatReservationsRepository;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;

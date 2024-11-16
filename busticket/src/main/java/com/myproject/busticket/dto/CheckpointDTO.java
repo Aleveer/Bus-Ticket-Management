@@ -1,6 +1,5 @@
 package com.myproject.busticket.dto;
 
-import com.myproject.busticket.enums.DriverStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DriverDTO {
-    private int driverId;
-    private AccountDTO account;
-    private DriverStatus status;
+public class CheckpointDTO {
+    private int checkpointId;
+    private String placeName;
+    private String address;
+    private String phone;
+    private String region;
 }

@@ -18,6 +18,7 @@ import com.myproject.busticket.repositories.TripRepository;
 public class TripService {
     TripRepository tripRepository;
     TripMapper tripMapper = Mappers.getMapper(TripMapper.class);
+
     public TripService(TripRepository tripRepository) {
         this.tripRepository = tripRepository;
     }
@@ -27,16 +28,17 @@ public class TripService {
         return tripMapper.entityToDTO(trip.get());
     }
 
-    public List<Trip> findAll(){
+    public List<Trip> findAll() {
         return tripRepository.findAll();
     }
 
-    public List<TripDTO> searchTrip(String departure, String destination, LocalDateTime departureDate, int numberOfTickets){
+    public List<TripDTO> searchTrip(String departure, String destination, LocalDateTime departureDate,
+            int numberOfTickets) {
         List<Trip> trip = tripRepository.findTrip(departure, destination, departureDate, numberOfTickets);
         return tripMapper.map(trip);
     }
 
-    public Page<Trip> getAll(Pageable pageable){
+    public Page<Trip> getAll(Pageable pageable) {
         return tripRepository.findAll(pageable);
     }
 }

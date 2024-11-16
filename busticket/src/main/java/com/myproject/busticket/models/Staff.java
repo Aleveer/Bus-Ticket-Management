@@ -1,6 +1,5 @@
 package com.myproject.busticket.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.myproject.busticket.enums.StaffStatus;
 
 import jakarta.persistence.*;
@@ -19,7 +18,7 @@ public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "staff_id")
-    private int staff_id;
+    private int staffId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")

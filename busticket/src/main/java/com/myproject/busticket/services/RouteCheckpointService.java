@@ -1,5 +1,7 @@
 package com.myproject.busticket.services;
 
+import com.myproject.busticket.models.Route;
+import com.myproject.busticket.models.Route_Checkpoint;
 import com.myproject.busticket.repositories.RouteCheckpointRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +21,9 @@ public class RouteCheckpointService {
 
     public List<String> getAllCities() {
         return checkpointRepository.findAllCheckpointCities();
+    }
+
+    public List<Route_Checkpoint> findByRoute(Route route) {
+        return checkpointRepository.findByRoute(route);
     }
 }

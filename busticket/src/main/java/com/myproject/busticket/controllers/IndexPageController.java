@@ -1,8 +1,6 @@
 package com.myproject.busticket.controllers;
 
-import com.myproject.busticket.dto.SeatReservationsDTO;
 import com.myproject.busticket.services.RouteCheckpointService;
-import com.myproject.busticket.services.SeatReservationsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,17 +9,15 @@ import org.springframework.ui.Model;
 
 import java.util.List;
 
-
 @RequestMapping("/home")
 @Controller
 public class IndexPageController {
     RouteCheckpointService routeCheckpointService;
 
-    public IndexPageController(RouteCheckpointService routeCheckpointService
-                               ) {
+    public IndexPageController(RouteCheckpointService routeCheckpointService) {
         this.routeCheckpointService = routeCheckpointService;
-
     }
+
     @GetMapping("/index")
     public String indexPage(Model model) {
         List<String> provinces = routeCheckpointService.getAllProvinces();
@@ -46,6 +42,7 @@ public class IndexPageController {
     public String searchTicketInfoPage() {
         return "search-ticket-info";
     }
+
     @GetMapping("/search-billing-info")
     public String searchBillingInfoPage() {
         return "search-billing-info";

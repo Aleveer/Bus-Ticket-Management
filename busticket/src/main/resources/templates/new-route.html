@@ -257,7 +257,7 @@
     document
       .getElementById("routeForm")
       .addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent the default form submission
+        event.preventDefault();
 
         const formData = new FormData(event.target);
         const jsonData = {};
@@ -265,7 +265,6 @@
           jsonData[key] = value;
         });
 
-        // Add selected checkpoints to jsonData
         jsonData.checkpoints = selectedCheckpoints.map((cp) => ({
           checkpointId: cp.id,
           checkpointCity: cp.name,
@@ -283,19 +282,14 @@
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log("Success:", data);
-            //Show success message:
             alert("Route created successfully!");
-            //Go back to the routes page:
             window.location.href = "/admin/route-management";
           })
           .catch((error) => {
-            console.error("Error:", error);
-            // Handle error, e.g., show an error message
+            alert("Error: " + error.message);
           });
       });
 
-    // Load the first page of checkpoints when the page loads
     $(document).ready(function () {
       loadCheckpoints(0);
     });

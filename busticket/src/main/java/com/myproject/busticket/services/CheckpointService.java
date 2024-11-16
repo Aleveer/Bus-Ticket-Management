@@ -23,6 +23,10 @@ public class CheckpointService {
         return checkpointRepository.findAll(pageable);
     }
 
+    public List<Checkpoint> getAll() {
+        return checkpointRepository.findAll();
+    }
+
     public List<Checkpoint> findByPlaceName(String placeName) {
         return checkpointRepository.findByPlaceName(placeName);
     }

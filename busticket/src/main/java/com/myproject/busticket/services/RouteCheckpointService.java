@@ -41,4 +41,8 @@ public class RouteCheckpointService {
     public Route_Checkpoint save(Route_Checkpoint routeCheckpoint) {
         return routeCheckpointRepository.save(routeCheckpoint);
     }
+
+    public void delete(Route_Checkpoint oldRouteCheckpoint) {
+        routeCheckpointRepository.delete(oldRouteCheckpoint);
+    }
 }

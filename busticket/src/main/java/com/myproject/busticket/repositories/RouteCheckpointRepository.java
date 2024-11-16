@@ -18,26 +18,24 @@ public interface RouteCheckpointRepository extends JpaRepository<Route_Checkpoin
     List<Route_Checkpoint> findByRoute(Route route);
 
     @Query("""
-            SELECT CASE
-                WHEN rc.checkpointCity = '' THEN rc.checkpointProvince
-                ELSE IFNULL(rc.checkpointCity, rc.checkpointProvince)
-            END
-            FROM Route_Checkpoint rc
-            WHERE
-	            rc.route.code =:route_code AND rc.type = "departure"
-"""
-            )
+                        SELECT CASE
+                            WHEN rc.checkpointCity = '' THEN rc.checkpointProvince
+                            ELSE IFNULL(rc.checkpointCity, rc.checkpointProvince)
+                        END
+                        FROM Route_Checkpoint rc
+                        WHERE
+            	            rc.route.code =:route_code AND rc.type = "departure"
+            """)
     String findDepartureName(@Param("route_code") String routeCode);
 
     @Query("""
-            SELECT CASE
-                WHEN rc.checkpointCity = '' THEN rc.checkpointProvince
-                ELSE IFNULL(rc.checkpointCity, rc.checkpointProvince)
-            END
-            FROM Route_Checkpoint rc
-            WHERE
-	            rc.route.code =:route_code AND rc.type = "drop_off"
-"""
-    )
+                        SELECT CASE
+                            WHEN rc.checkpointCity = '' THEN rc.checkpointProvince
+                            ELSE IFNULL(rc.checkpointCity, rc.checkpointProvince)
+                        END
+                        FROM Route_Checkpoint rc
+                        WHERE
+            	            rc.route.code =:route_code AND rc.type = "drop_off"
+            """)
     String findDropOffName(@Param("route_code") String routeCode);
 }

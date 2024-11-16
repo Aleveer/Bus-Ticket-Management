@@ -2,7 +2,6 @@ package com.myproject.busticket.models;
 
 import com.myproject.busticket.enums.CheckpointType;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -35,7 +34,7 @@ public class Route_Checkpoint {
     @JoinColumn(name = "route_code", referencedColumnName = "code", nullable = false)
     private Route route;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "checkpoint_id", nullable = false)
     private Checkpoint checkpoint;
 

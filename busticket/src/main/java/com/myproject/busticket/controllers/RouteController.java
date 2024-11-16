@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.myproject.busticket.models.Checkpoint;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Route_Checkpoint;
+import com.myproject.busticket.services.CheckpointService;
 import com.myproject.busticket.services.RouteCheckpointService;
 import com.myproject.busticket.services.RouteService;
 
@@ -22,6 +24,9 @@ public class RouteController {
 
     @Autowired
     private RouteCheckpointService routeCheckpointService;
+
+    @Autowired
+    private CheckpointService checkpointService;
 
     @GetMapping("/route-detail/{routeCode}")
     public String getRouteDetails(@PathVariable String routeCode, Model model) {
@@ -48,4 +53,29 @@ public class RouteController {
         routeService.save(route);
         return "redirect:/admin/route-management";
     }
+
+    @GetMapping("/update-route/{routeCode}")
+    public String updateRoute(@PathVariable String routeCode, Model model) {
+        Route route = routeService.getRouteByCode(routeCode);
+        List<Route_Checkpoint> route_Checkpoints = routeCheckpointService.findByRoute(route);
+
+        if (route_Checkpoints.isEmpty()) {
+            model.addAttribute("errorMessage", "No checkpoints found for this route.");
+            return "redirect:/admin/route-management";
+        }
+
+        List<Checkpoint> checkpoints = checkpointService.getAll();
+
+        model.addAttribute("route", route);
+        model.addAttribute("checkpoints", checkpoints);
+        model.addAttribute("selectedCheckpoints", route_Checkpoints);
+        return "update-route";
+    }
+
+    @PostMapping("/update-route/{routeCode}")
+    public String updateRoute(@PathVariable String routeCode, Route route) {
+        routeService.save(route);
+        return "redirect:/admin/route-management";
+    }
+
 }

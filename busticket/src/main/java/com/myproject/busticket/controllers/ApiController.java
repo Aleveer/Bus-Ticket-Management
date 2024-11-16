@@ -295,4 +295,76 @@ public class ApiController {
         response.put("message", "Route saved successfully.");
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/admin/api/update-route/{routeCode}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateRoute(@PathVariable String routeCode,
+            @RequestBody Map<String, Object> routeRequest) {
+        Map<String, Object> response = new HashMap<>();
+
+        // String code = (String) routeRequest.get("code");
+        String name = (String) routeRequest.get("name");
+        String time = (String) routeRequest.get("time");
+        double distance = Double.parseDouble(routeRequest.get("distance").toString());
+
+        if (name == null || name.isEmpty() ||
+                time == null ||
+                distance <= 0) {
+            response.put("message", "Invalid input data.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Route existingRoute = routeService.getRouteByCode(routeCode);
+        if (existingRoute != null && !existingRoute.getCode().equals(routeCode)) {
+            response.put("message", "Route with this code already exists.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Route route = routeService.getRouteByCode(routeCode);
+        route.setName(name);
+        route.setTime(time);
+        route.setDistance(distance);
+        routeService.save(route);
+
+        List<Route_Checkpoint> oldRouteCheckpoints = routeCheckpointService.findByRoute(route);
+        if (oldRouteCheckpoints.isEmpty()) {
+            response.put("message", "No checkpoints found for this route.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // Delete old checkpoints:
+        for (Route_Checkpoint oldRouteCheckpoint : oldRouteCheckpoints) {
+            routeCheckpointService.delete(oldRouteCheckpoint);
+        }
+
+        // TODO: Fix checkpoint city and province
+        List<Map<String, Object>> checkpoints = (List<Map<String, Object>>) routeRequest.get("checkpoints");
+        for (Map<String, Object> checkpointData : checkpoints) {
+            Route_Checkpoint routeCheckpoint = new Route_Checkpoint();
+            routeCheckpoint.setRoute(route);
+
+            Object checkpointIdObj = checkpointData.get("checkpointId");
+            if (checkpointIdObj == null) {
+                response.put("message", "Checkpoint ID is missing.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            Integer checkpointId;
+            try {
+                checkpointId = Integer.parseInt(checkpointIdObj.toString());
+            } catch (NumberFormatException e) {
+                response.put("message", "Invalid checkpoint ID format.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            routeCheckpoint.setCheckpoint(checkpointService.getById(checkpointId));
+            routeCheckpoint.setCheckpointCity((String) checkpointData.get("checkpointCity"));
+            routeCheckpoint.setCheckpointProvince((String) checkpointData.get("checkpointProvince"));
+            routeCheckpoint.setType(CheckpointType.departure);
+            routeCheckpointService.save(routeCheckpoint);
+        }
+
+        response.put("message", "Route updated successfully.");
+        return ResponseEntity.ok(response);
+    }
 }

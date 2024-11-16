@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.ui.Model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @RequestMapping("/home")
@@ -39,7 +38,7 @@ public class IndexPageController {
     public String schedulePage(Model model) {
         List<ScheduleDTO> schedules = new ArrayList<>();
         List<Route> routes = routeService.getAll();
-        for (Route route : routes){
+        for (Route route : routes) {
             ScheduleDTO schedule = new ScheduleDTO();
             schedule.setCode(route.getCode());
             schedule.setDepartureName(routeCheckpointService.findDepartureName(route.getCode()));
@@ -51,6 +50,7 @@ public class IndexPageController {
         model.addAttribute("schedules", schedules);
         return "schedule";
     }
+
     @GetMapping("/about-us")
     public String aboutUsPage() {
         return "about_us";

@@ -34,4 +34,8 @@ public class RouteService {
     public Page<Route> getAll(Pageable pageable) {
         return routeRepository.findAll(pageable);
     }
+
+    public List<Route> getAll() {
+        return routeRepository.findAll();
+    }
 }

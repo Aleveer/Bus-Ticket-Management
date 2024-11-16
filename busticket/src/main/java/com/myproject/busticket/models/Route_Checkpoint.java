@@ -40,7 +40,7 @@ public class Route_Checkpoint {
     private Checkpoint checkpoint;
 
     @Column(name = "checkpoint_order", nullable = false, length = 15)
-    private String checkpointOrder;
+    private int checkpointOrder;
 
     @Column(name = "checkpoint_city", nullable = false, length = 100)
     private String checkpointCity;

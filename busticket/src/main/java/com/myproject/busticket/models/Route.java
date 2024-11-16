@@ -32,7 +32,7 @@ public class Route {
     private String name;
 
     @Column(name = "time", nullable = false)
-    private LocalDateTime time;
+    private String time;
 
     @Column(name = "distance", nullable = false)
     private double distance;

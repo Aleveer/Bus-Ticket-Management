@@ -67,6 +67,7 @@
                                                 <th scope="col">Name</th>
                                                 <th scope="col">Time</th>
                                                 <th scope="col">Distance</th>
+                                                <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="routeTableBody">
@@ -76,6 +77,20 @@
                                                 <td th:text="${route.name}"></td>
                                                 <td th:text="${route.time}"></td>
                                                 <td th:text="${route.distance}"></td>
+                                                <td>
+                                                    <button class="btn btn-primary btn-sm" title="View Details"
+                                                        onclick="viewRouteDetails('${route.code}')">
+                                                        <i class="ft-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-warning btn-sm" title="Update Route"
+                                                        onclick="updateRoute('${route.code}')">
+                                                        <i class="ft-settings"></i>
+                                                    </button>
+                                                    <button class="btn btn-danger btn-sm" title="Delete Route"
+                                                        onclick="deleteRoute('${route.code}')">
+                                                        <i class="ft-trash"></i>
+                                                    </button>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -148,6 +163,17 @@
                             '<td>' + route.name + '</td>' +
                             '<td>' + route.time + '</td>' +
                             '<td>' + route.distance + '</td>' +
+                            '<td>' +
+                            '<button class="btn btn-primary btn-sm" title="View Details" onclick="viewRouteDetails(\'' + route.code + '\')">' +
+                            '<i class="ft-eye"></i>' +
+                            '</button>' +
+                            '<button class="btn btn-warning btn-sm" title="Update Route" onclick="updateRoute(\'' + route.code + '\')">' +
+                            '<i class="ft-settings"></i>' +
+                            '</button>' +
+                            '<button class="btn btn-danger btn-sm" title="Delete Route" onclick="deleteRoute(\'' + route.code + '\')">' +
+                            '<i class="ft-trash"></i>' +
+                            '</button>' +
+                            '</td>' +
                             '</tr>'
                         );
                     });
@@ -202,6 +228,22 @@
                     }
                 }
             });
+        }
+
+        function viewRouteDetails(routeCode) {
+            window.location.href = '/admin/route-detail/' + routeCode;
+        }
+
+        function updateRoute(routeCode) {
+            // Implement the logic to update the route
+            alert('Update route: ' + routeCode);
+        }
+
+        function deleteRoute(routeCode) {
+            if (confirm('Are you sure you want to delete this route?')) {
+                // Implement the logic to delete the route
+                alert('Delete route: ' + routeCode);
+            }
         }
 
         // Load the first page of routes when the page loads

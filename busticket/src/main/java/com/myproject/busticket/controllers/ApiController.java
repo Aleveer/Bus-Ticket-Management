@@ -7,6 +7,7 @@ import com.myproject.busticket.models.Checkpoint;
 import com.myproject.busticket.models.Customer;
 import com.myproject.busticket.models.Driver;
 import com.myproject.busticket.models.Route;
+import com.myproject.busticket.models.Route_Checkpoint;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.services.AccountService;
 import com.myproject.busticket.services.BusService;
@@ -14,6 +15,7 @@ import com.myproject.busticket.services.CheckpointService;
 import com.myproject.busticket.services.CustomerService;
 import com.myproject.busticket.services.DriverService;
 import com.myproject.busticket.services.RoleService;
+import com.myproject.busticket.services.RouteCheckpointService;
 import com.myproject.busticket.services.RouteService;
 import com.myproject.busticket.services.TripService;
 
@@ -49,6 +51,9 @@ public class ApiController {
 
     @Autowired
     private CheckpointService checkpointService;
+
+    @Autowired
+    private RouteCheckpointService routeCheckpointService;
 
     @Autowired
     private AccountService accountService;
@@ -177,6 +182,41 @@ public class ApiController {
         response.put("accounts", accountDTOs);
         response.put("currentPage", page);
         response.put("totalPages", accountPages.getTotalPages());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/route-detail/{routeCode}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getRouteDetails(@PathVariable String routeCode) {
+        Route route = routeService.getRouteByCode(routeCode);
+        List<Route_Checkpoint> routeCheckpoints = routeCheckpointService.findByRoute(route);
+
+        if (routeCheckpoints.isEmpty()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("errorMessage", "No checkpoints found for this route.");
+            return ResponseEntity.ok(response);
+        }
+
+        List<Map<String, Object>> routeCheckpointsDTO = routeCheckpoints.stream()
+                .map(routeCheckpoint -> {
+                    Map<String, Object> checkpointDTO = new HashMap<>();
+                    checkpointDTO.put("id", routeCheckpoint.getId());
+                    checkpointDTO.put("routeCode", routeCheckpoint.getRoute().getCode());
+                    checkpointDTO.put("checkpointId", routeCheckpoint.getCheckpoint().getCheckpointId());
+                    checkpointDTO.put("placeName", routeCheckpoint.getCheckpoint().getPlaceName());
+                    checkpointDTO.put("address", routeCheckpoint.getCheckpoint().getAddress());
+                    checkpointDTO.put("checkpointOrder", routeCheckpoint.getCheckpointOrder());
+                    checkpointDTO.put("checkpointCity", routeCheckpoint.getCheckpointCity());
+                    checkpointDTO.put("checkpointProvince", routeCheckpoint.getCheckpointProvince());
+                    checkpointDTO.put("type", routeCheckpoint.getType().name());
+                    return checkpointDTO;
+                })
+                .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("route", route);
+        response.put("checkpoints", routeCheckpointsDTO);
 
         return ResponseEntity.ok(response);
     }

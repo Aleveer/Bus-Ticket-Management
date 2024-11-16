@@ -12,6 +12,7 @@ import com.myproject.busticket.services.CheckpointService;
 import com.myproject.busticket.services.ControllerService;
 import com.myproject.busticket.services.DriverService;
 import com.myproject.busticket.services.RoleService;
+import com.myproject.busticket.services.RouteCheckpointService;
 import com.myproject.busticket.services.RouteService;
 import com.myproject.busticket.services.StaffService;
 import com.myproject.busticket.services.TripService;
@@ -39,15 +40,18 @@ public class AdminPageController {
 	CheckpointService checkpointService;
 	AccountService accountService;
 	RoleService roleService;
+	RouteCheckpointService routeCheckpointService;
 
 	public AdminPageController(TripService tripService, BusService busService, RouteService routeService,
-			CheckpointService checkpointService, AccountService accountService, RoleService roleService) {
+			CheckpointService checkpointService, AccountService accountService, RoleService roleService,
+			RouteCheckpointService routeCheckpointService) {
 		this.busService = busService;
 		this.tripService = tripService;
 		this.routeService = routeService;
 		this.checkpointService = checkpointService;
 		this.accountService = accountService;
 		this.roleService = roleService;
+		this.routeCheckpointService = routeCheckpointService;
 	}
 
 	@GetMapping("/dashboard")

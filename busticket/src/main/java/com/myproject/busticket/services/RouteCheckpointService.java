@@ -6,7 +6,6 @@ import com.myproject.busticket.repositories.RouteCheckpointRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RouteCheckpointService {
@@ -24,7 +23,7 @@ public class RouteCheckpointService {
         return checkpointRepository.findAllCheckpointCities();
     }
 
-    public Optional<Route_Checkpoint> findByRoute(Route route) {
+    public List<Route_Checkpoint> findByRoute(Route route) {
         return checkpointRepository.findByRoute(route);
     }
 }

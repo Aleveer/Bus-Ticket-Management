@@ -2,216 +2,212 @@
 <html class="loading" lang="en" data-text-direction="ltr">
 
 <head>
-    <title>Checkpoint Management</title>
-    <div th:insert="~{dashboard-header.html}"></div>
-    <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}" />
+  <title>Checkpoint Management</title>
+  <div th:insert="~{dashboard-header.html}"></div>
+  <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}" />
 </head>
 
 <body class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar" data-open="click"
-    data-menu="vertical-menu" data-color="bg-gradient-x-purple-blue" data-col="2-columns">
-    <!--navigation bar-->
-    <nav th:insert="~{navigation-bar.html}"></nav>
-    <!-- main menu-->
-    <div th:insert="~{main-menu.html}"></div>
+  data-menu="vertical-menu" data-color="bg-gradient-x-purple-blue" data-col="2-columns">
+  <!--navigation bar-->
+  <nav th:insert="~{navigation-bar.html}"></nav>
+  <!-- main menu-->
+  <div th:insert="~{main-menu.html}"></div>
 
-    <div class="app-content content">
-        <div class="content-wrapper">
-            <div class="content-wrapper-before"></div>
-            <div class="content-header row">
-                <div class="content-header-left col-md-4 col-12 mb-2">
-                    <h3 class="content-header-title">Tables</h3>
-                </div>
-                <div class="content-header-right col-md-8 col-12">
-                    <div class="breadcrumbs-top float-md-right">
-                        <div class="breadcrumb-wrapper mr-1">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                                <li class="breadcrumb-item active">Tables</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="content-body">
-                <!-- Basic Tables start -->
-                <!-- Basic Tables end -->
-                <!-- Striped rows start -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Checkpoint</h4>
-                                <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-                                <div class="heading-elements">
-                                    <ul class="list-inline mb-0">
-                                        <li>
-                                            <a data-action="search" title="Search"><i class="ft-search"></i></a>
-                                        </li>
-                                        <li>
-                                            <a data-action="add-checkpoint" title="Add Checkpoint"><i
-                                                    class="ft-plus"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="search-box" id="searchBox" style="display: none">
-                                    <input type="text" class="input-search" placeholder="Search checkpoint..." />
-                                    <button class="btn-search" id="searchButton">
-                                        <i class="ft-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="card-content collapse show">
-                                <div class="table-responsive">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Id</th>
-                                                <th scope="col">Location</th>
-                                                <th scope="col">Address</th>
-                                                <th scope="col">Contact Number</th>
-                                                <th scope="col">Region</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="checkpointTableBody">
-                                            <tr th:each="checkpoint : ${checkpoints}">
-                                                <td th:text="${checkpoint.checkpointId}"></td>
-                                                <td th:text="${checkpoint.placeName}"></td>
-                                                <td th:text="${checkpoint.address}"></td>
-                                                <td th:text="${checkpoint.phone}"></td>
-                                                <td th:text="${checkpoint.region}"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <div class="pagination">
-                                        <ul class="pagination-list" id="paginationControls">
-                                            <li th:if="${currentPage > 0}">
-                                                <a onclick="loadCheckpoints('${currentPage - 1}')"
-                                                    aria-label="Previous">&laquo;</a>
-                                            </li>
-                                            <li th:each="pageNum : ${pageNumbers}"
-                                                th:class-append="${pageNum == currentPage} ? 'active'">
-                                                <a onclick="loadCheckpoints('${pageNum}')" th:text="${pageNum}"></a>
-                                            </li>
-                                            <li th:if="${currentPage < totalPages - 1}">
-                                                <a onclick="loadCheckpoints('${currentPage + 1}')"
-                                                    aria-label="Next">&raquo;</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Striped rows end -->
-
-                <!-- Table head options start -->
-                <!-- Table head options end -->
-
-                <!-- Bordered table start -->
-                <!-- Bordered table end -->
-            </div>
+  <div class="app-content content">
+    <div class="content-wrapper">
+      <div class="content-wrapper-before"></div>
+      <div class="content-header row">
+        <div class="content-header-left col-md-4 col-12 mb-2">
+          <h3 class="content-header-title">Tables</h3>
         </div>
+        <div class="content-header-right col-md-8 col-12">
+          <div class="breadcrumbs-top float-md-right">
+            <div class="breadcrumb-wrapper mr-1">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Tables</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-body">
+        <!-- Basic Tables start -->
+        <!-- Basic Tables end -->
+        <!-- Striped rows start -->
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Checkpoint</h4>
+                <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                <div class="heading-elements">
+                  <ul class="list-inline mb-0">
+                    <li>
+                      <a data-action="search" title="Search"><i class="ft-search"></i></a>
+                    </li>
+                    <li>
+                      <a data-action="add-checkpoint" title="Add Checkpoint"><i class="ft-plus"></i></a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="search-box" id="searchBox" style="display: none">
+                  <input type="text" class="input-search" placeholder="Search checkpoint..." />
+                  <button class="btn-search" id="searchButton">
+                    <i class="ft-search"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-content collapse show">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Contact Number</th>
+                        <th scope="col">Region</th>
+                      </tr>
+                    </thead>
+                    <tbody id="checkpointTableBody">
+                      <tr th:each="checkpoint : ${checkpoints}">
+                        <td th:text="${checkpoint.checkpointId}"></td>
+                        <td th:text="${checkpoint.placeName}"></td>
+                        <td th:text="${checkpoint.address}"></td>
+                        <td th:text="${checkpoint.phone}"></td>
+                        <td th:text="${checkpoint.region}"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="pagination">
+                    <ul class="pagination-list" id="paginationControls">
+                      <li th:if="${currentPage > 0}">
+                        <a onclick="loadCheckpoints('${currentPage - 1}')" aria-label="Previous">&laquo;</a>
+                      </li>
+                      <li th:each="pageNum : ${pageNumbers}" th:class-append="${pageNum == currentPage} ? 'active'">
+                        <a onclick="loadCheckpoints('${pageNum}')" th:text="${pageNum}"></a>
+                      </li>
+                      <li th:if="${currentPage < totalPages - 1}">
+                        <a onclick="loadCheckpoints('${currentPage + 1}')" aria-label="Next">&raquo;</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Striped rows end -->
+
+        <!-- Table head options start -->
+        <!-- Table head options end -->
+
+        <!-- Bordered table start -->
+        <!-- Bordered table end -->
+      </div>
     </div>
+  </div>
 
-    <footer>
-        <div th:insert="~{dashboard-footer.html}"></div>
-    </footer>
+  <footer>
+    <div th:insert="~{dashboard-footer.html}"></div>
+  </footer>
 
-    <!-- BEGIN VENDOR JS-->
-    <script th:src="@{/theme-assets/vendors/js/vendors.min.js}" type="text/javascript"></script>
-    <!-- BEGIN VENDOR JS-->
-    <!-- BEGIN PAGE VENDOR JS-->
-    <!-- END PAGE VENDOR JS-->
-    <!-- BEGIN CHAMELEON  JS-->
-    <script th:src="@{/theme-assets/js/core/app-menu-lite.js}" type="text/javascript"></script>
-    <script th:src="@{/theme-assets/js/core/app-lite.js}" type="text/javascript"></script>
-    <!-- END CHAMELEON  JS-->
-    <!-- BEGIN PAGE LEVEL JS-->
-    <!-- END PAGE LEVEL JS-->
-    <script>
-        function loadCheckpoints(page) {
-            $.ajax({
-                url: '/admin/api/checkpoints',
-                data: { page: page, size: 15 },
-                success: function (data) {
-                    var checkpoints = data.checkpoints;
-                    var totalPages = data.totalPages;
-                    var currentPage = data.currentPage;
+  <!-- BEGIN VENDOR JS-->
+  <script th:src="@{/theme-assets/vendors/js/vendors.min.js}" type="text/javascript"></script>
+  <!-- BEGIN VENDOR JS-->
+  <!-- BEGIN PAGE VENDOR JS-->
+  <!-- END PAGE VENDOR JS-->
+  <!-- BEGIN CHAMELEON  JS-->
+  <script th:src="@{/theme-assets/js/core/app-menu-lite.js}" type="text/javascript"></script>
+  <script th:src="@{/theme-assets/js/core/app-lite.js}" type="text/javascript"></script>
+  <!-- END CHAMELEON  JS-->
+  <!-- BEGIN PAGE LEVEL JS-->
+  <!-- END PAGE LEVEL JS-->
+  <script>
+    function loadCheckpoints(page) {
+      $.ajax({
+        url: '/admin/api/checkpoints',
+        data: { page: page, size: 15 },
+        success: function (data) {
+          var checkpoints = data.checkpoints;
+          var totalPages = data.totalPages;
+          var currentPage = data.currentPage;
 
-                    // Clear the table body
-                    $('#checkpointTableBody').empty();
+          // Clear the table body
+          $('#checkpointTableBody').empty();
 
-                    // Populate the table with checkpoints
-                    checkpoints.forEach(function (checkpoint) {
-                        $('#checkpointTableBody').append(
-                            '<tr>' +
-                            '<td>' + checkpoint.checkpointId + '</td>' +
-                            '<td>' + checkpoint.placeName + '</td>' +
-                            '<td>' + checkpoint.address + '</td>' +
-                            '<td>' + checkpoint.phone + '</td>' +
-                            '<td>' + checkpoint.region + '</td>' +
-                            '</tr>'
-                        );
-                    });
+          // Populate the table with checkpoints
+          checkpoints.forEach(function (checkpoint) {
+            $('#checkpointTableBody').append(
+              '<tr>' +
+              '<td>' + checkpoint.checkpointId + '</td>' +
+              '<td>' + checkpoint.placeName + '</td>' +
+              '<td>' + checkpoint.address + '</td>' +
+              '<td>' + checkpoint.phone + '</td>' +
+              '<td>' + checkpoint.region + '</td>' +
+              '</tr>'
+            );
+          });
 
-                    // Clear the pagination controls
-                    $('#paginationControls').empty();
+          // Clear the pagination controls
+          $('#paginationControls').empty();
 
-                    // Add Previous button
-                    if (currentPage > 0) {
-                        $('#paginationControls').append(
-                            '<li><a onclick="loadCheckpoints(' + (currentPage - 1) + ')">&laquo;</a></li>'
-                        );
-                    }
+          // Add Previous button
+          if (currentPage > 0) {
+            $('#paginationControls').append(
+              '<li><a onclick="loadCheckpoints(' + (currentPage - 1) + ')">&laquo;</a></li>'
+            );
+          }
 
-                    // Add page numbers with ellipsis
-                    var startPage = Math.max(0, currentPage - 2);
-                    var endPage = Math.min(totalPages - 1, currentPage + 2);
+          // Add page numbers with ellipsis
+          var startPage = Math.max(0, currentPage - 2);
+          var endPage = Math.min(totalPages - 1, currentPage + 2);
 
-                    if (startPage > 0) {
-                        $('#paginationControls').append(
-                            '<li><a onclick="loadCheckpoints(0)">1</a></li>'
-                        );
-                        if (startPage > 1) {
-                            $('#paginationControls').append(
-                                '<li><span>...</span></li>'
-                            );
-                        }
-                    }
+          if (startPage > 0) {
+            $('#paginationControls').append(
+              '<li><a onclick="loadCheckpoints(0)">1</a></li>'
+            );
+            if (startPage > 1) {
+              $('#paginationControls').append(
+                '<li><span>...</span></li>'
+              );
+            }
+          }
 
-                    for (var i = startPage; i <= endPage; i++) {
-                        $('#paginationControls').append(
-                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadCheckpoints(' + i + ')">' + (i + 1) + '</a></li>'
-                        );
-                    }
+          for (var i = startPage; i <= endPage; i++) {
+            $('#paginationControls').append(
+              '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadCheckpoints(' + i + ')">' + (i + 1) + '</a></li>'
+            );
+          }
 
-                    if (endPage < totalPages - 1) {
-                        if (endPage < totalPages - 2) {
-                            $('#paginationControls').append(
-                                '<li><span>...</span></li>'
-                            );
-                        }
-                        $('#paginationControls').append(
-                            '<li><a onclick="loadCheckpoints(' + (totalPages - 1) + ')">' + totalPages + '</a></li>'
-                        );
-                    }
+          if (endPage < totalPages - 1) {
+            if (endPage < totalPages - 2) {
+              $('#paginationControls').append(
+                '<li><span>...</span></li>'
+              );
+            }
+            $('#paginationControls').append(
+              '<li><a onclick="loadCheckpoints(' + (totalPages - 1) + ')">' + totalPages + '</a></li>'
+            );
+          }
 
-                    // Add Next button
-                    if (currentPage < totalPages - 1) {
-                        $('#paginationControls').append(
-                            '<li><a onclick="loadCheckpoints(' + (currentPage + 1) + ')">&raquo;</a></li>'
-                        );
-                    }
-                }
-            });
+          // Add Next button
+          if (currentPage < totalPages - 1) {
+            $('#paginationControls').append(
+              '<li><a onclick="loadCheckpoints(' + (currentPage + 1) + ')">&raquo;</a></li>'
+            );
+          }
         }
+      });
+    }
 
-        // Load the first page of accounts when the page loads
-        $(document).ready(function () {
-            loadCheckpoints(0);
-        });
-    </script>
+    // Load the first page of accounts when the page loads
+    $(document).ready(function () {
+      loadCheckpoints(0);
+    });
+  </script>
 </body>
 
 </html>

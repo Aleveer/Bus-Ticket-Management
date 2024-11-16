@@ -42,4 +42,16 @@ public class RouteService {
     public Route save(Route route) {
         return routeRepository.save(route);
     }
+
+    public void deleteById(int id) {
+        routeRepository.deleteById(id);
+    }
+
+    public Route deleteByCode(String code) {
+        Route route = routeRepository.findByCode(code).orElse(null);
+        if (route != null) {
+            routeRepository.delete(route);
+        }
+        return route;
+    }
 }

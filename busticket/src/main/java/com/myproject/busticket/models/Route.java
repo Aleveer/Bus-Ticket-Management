@@ -1,7 +1,5 @@
 package com.myproject.busticket.models;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +29,7 @@ public class Route {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "time", nullable = false)
+    @Column(name = "time", nullable = false, length = 20)
     private String time;
 
     @Column(name = "distance", nullable = false)

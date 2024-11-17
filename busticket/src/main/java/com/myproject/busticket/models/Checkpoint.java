@@ -29,9 +29,16 @@ public class Checkpoint {
     @Column(name = "address", nullable = false, length = 100)
     private String address;
 
+    @Column(name = "province", nullable = false, length = 255)
+    private String province;
+
+    @Column(name = "city", nullable = false, length = 255)
+    private String city;
+
     @Column(name = "phone", nullable = false, length = 12)
     private String phone;
 
     @Column(name = "region", nullable = false, length = 50)
     private String region;
+
 }

@@ -1,6 +1,7 @@
 package com.myproject.busticket.controllers;
 
 import com.myproject.busticket.dto.AccountDTO;
+import com.myproject.busticket.dto.RouteCheckpointDTO;
 import com.myproject.busticket.enums.CheckpointType;
 import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.Bus;
@@ -20,6 +21,7 @@ import com.myproject.busticket.services.RouteCheckpointService;
 import com.myproject.busticket.services.RouteService;
 import com.myproject.busticket.services.TripService;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -153,6 +155,8 @@ public class ApiController {
                         checkpoint.getCheckpointId(),
                         checkpoint.getPlaceName(),
                         checkpoint.getAddress(),
+                        checkpoint.getProvince(),
+                        checkpoint.getCity(),
                         checkpoint.getPhone(),
                         checkpoint.getRegion()))
                 .collect(Collectors.toList());
@@ -204,21 +208,18 @@ public class ApiController {
             return ResponseEntity.ok(response);
         }
 
-        List<Map<String, Object>> routeCheckpointsDTO = routeCheckpoints.stream()
-                .map(routeCheckpoint -> {
-                    Map<String, Object> checkpointDTO = new HashMap<>();
-                    checkpointDTO.put("id", routeCheckpoint.getId());
-                    checkpointDTO.put("routeCode", routeCheckpoint.getRoute().getCode());
-                    checkpointDTO.put("checkpointId", routeCheckpoint.getCheckpoint().getCheckpointId());
-                    checkpointDTO.put("placeName", routeCheckpoint.getCheckpoint().getPlaceName());
-                    checkpointDTO.put("address", routeCheckpoint.getCheckpoint().getAddress());
-                    checkpointDTO.put("checkpointOrder", routeCheckpoint.getCheckpointOrder());
-                    checkpointDTO.put("checkpointCity", routeCheckpoint.getCheckpointCity());
-                    checkpointDTO.put("checkpointProvince", routeCheckpoint.getCheckpointProvince());
-                    checkpointDTO.put("type", routeCheckpoint.getType().name());
-                    return checkpointDTO;
-                })
+        List<RouteCheckpointDTO> routeCheckpointsDTO = routeCheckpoints.stream()
+                .map(rc -> new RouteCheckpointDTO(
+                        rc.getCheckpoint().getCheckpointId(),
+                        rc.getCheckpoint().getPlaceName(),
+                        rc.getCheckpoint().getAddress(),
+                        rc.getCheckpoint().getProvince(),
+                        rc.getCheckpoint().getCity(),
+                        rc.getCheckpointOrder(),
+                        rc.getType()))
                 .collect(Collectors.toList());
+
+        routeCheckpointsDTO.sort((rc1, rc2) -> rc1.getCheckpointOrder() - rc2.getCheckpointOrder());
 
         Map<String, Object> response = new HashMap<>();
         response.put("route", route);
@@ -262,7 +263,19 @@ public class ApiController {
         routeService.save(newRoute);
 
         int i = 1;
+
         List<Map<String, Object>> checkpoints = (List<Map<String, Object>>) routeRequest.get("checkpoints");
+        if (checkpoints.isEmpty()) {
+            response.put("message", "No checkpoints found for this route.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (checkpoints.size() < 2) {
+            response.put("message", "A route must have at least 2 checkpoints.");
+            routeService.deleteByCode(code);
+            return ResponseEntity.badRequest().body(response);
+        }
+
         for (Map<String, Object> checkpointData : checkpoints) {
             Route_Checkpoint routeCheckpoint = new Route_Checkpoint();
             routeCheckpoint.setRoute(newRoute);
@@ -286,8 +299,6 @@ public class ApiController {
             }
 
             routeCheckpoint.setCheckpoint(checkpointService.getById(checkpointId));
-            routeCheckpoint.setCheckpointCity((String) checkpointData.get("checkpointCity"));
-            routeCheckpoint.setCheckpointProvince((String) checkpointData.get("checkpointProvince"));
             routeCheckpoint.setType(CheckpointType.departure);
             routeCheckpointService.save(routeCheckpoint);
         }
@@ -302,69 +313,163 @@ public class ApiController {
             @RequestBody Map<String, Object> routeRequest) {
         Map<String, Object> response = new HashMap<>();
 
-        // String code = (String) routeRequest.get("code");
         String name = (String) routeRequest.get("name");
         String time = (String) routeRequest.get("time");
         double distance = Double.parseDouble(routeRequest.get("distance").toString());
 
-        if (name == null || name.isEmpty() ||
-                time == null ||
-                distance <= 0) {
+        if (!isValidInput(name, time, distance)) {
             response.put("message", "Invalid input data.");
             return ResponseEntity.badRequest().body(response);
         }
 
         Route existingRoute = routeService.getRouteByCode(routeCode);
-        if (existingRoute != null && !existingRoute.getCode().equals(routeCode)) {
-            response.put("message", "Route with this code already exists.");
+        if (existingRoute == null) {
+            response.put("message", "Route not found.");
             return ResponseEntity.badRequest().body(response);
         }
 
-        Route route = routeService.getRouteByCode(routeCode);
-        route.setName(name);
-        route.setTime(time);
-        route.setDistance(distance);
-        routeService.save(route);
+        List<Route_Checkpoint> oldRouteCheckpoints = routeCheckpointService.findByRoute(existingRoute);
+        List<Map<String, Object>> newCheckpoints = (List<Map<String, Object>>) routeRequest.get("checkpoints");
 
-        List<Route_Checkpoint> oldRouteCheckpoints = routeCheckpointService.findByRoute(route);
-        if (oldRouteCheckpoints.isEmpty()) {
+        if (newCheckpoints.isEmpty()) {
             response.put("message", "No checkpoints found for this route.");
             return ResponseEntity.badRequest().body(response);
         }
 
-        // Delete old checkpoints:
+        if (!hasChanges(existingRoute, name, time, distance, oldRouteCheckpoints, newCheckpoints)) {
+            response.put("message", "Nothing has been changed.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // Proceed with the update
+        updateRouteDetails(existingRoute, name, time, distance);
+        updateRouteCheckpoints(existingRoute, oldRouteCheckpoints, newCheckpoints);
+
+        response.put("message", "Route updated successfully.");
+        return ResponseEntity.ok(response);
+    }
+
+    private boolean isValidInput(String name, String time, double distance) {
+        return name != null && !name.isEmpty() && time != null && distance > 0;
+    }
+
+    private boolean hasChanges(Route existingRoute, String name, String time, double distance,
+            List<Route_Checkpoint> oldRouteCheckpoints, List<Map<String, Object>> newCheckpoints) {
+        if (!existingRoute.getName().equals(name) ||
+                !existingRoute.getTime().equals(time) ||
+                existingRoute.getDistance() != distance) {
+            return true;
+        }
+
+        if (oldRouteCheckpoints.size() != newCheckpoints.size()) {
+            return true;
+        }
+
+        oldRouteCheckpoints.sort(Comparator.comparingInt(Route_Checkpoint::getCheckpointOrder));
+        newCheckpoints.sort(Comparator.comparingInt(c -> (int) c.get("checkpointOrder")));
+
+        // Check if same checkpoints but different order by checkpointOrder:
+        for (int i = 0; i < newCheckpoints.size(); i++) {
+            Map<String, Object> checkpointData = newCheckpoints.get(i);
+            int checkpointId = (int) checkpointData.get("checkpointId");
+            String type = (String) checkpointData.get("type");
+            int checkpointOrder = (int) checkpointData.get("checkpointOrder");
+
+            Route_Checkpoint routeCheckpoint = oldRouteCheckpoints.get(i);
+
+            if (routeCheckpoint.getCheckpoint().getCheckpointId() != checkpointId ||
+                    !routeCheckpoint.getType().name().equals(type) ||
+                    routeCheckpoint.getCheckpointOrder() != checkpointOrder) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void updateRouteDetails(Route existingRoute, String name, String time, double distance) {
+        existingRoute.setName(name);
+        existingRoute.setTime(time);
+        existingRoute.setDistance(distance);
+        routeService.save(existingRoute);
+    }
+
+    private void updateRouteCheckpoints(Route existingRoute, List<Route_Checkpoint> oldRouteCheckpoints,
+            List<Map<String, Object>> newCheckpoints) {
+        if (newCheckpoints.size() < 2) {
+            throw new IllegalArgumentException("A route must have at least 2 checkpoints.");
+        }
+
+        // Delete old checkpoints
         for (Route_Checkpoint oldRouteCheckpoint : oldRouteCheckpoints) {
             routeCheckpointService.delete(oldRouteCheckpoint);
         }
 
-        // TODO: Fix checkpoint city and province
-        List<Map<String, Object>> checkpoints = (List<Map<String, Object>>) routeRequest.get("checkpoints");
-        for (Map<String, Object> checkpointData : checkpoints) {
+        // Add new checkpoints
+        int i = 1;
+        for (Map<String, Object> checkpointData : newCheckpoints) {
             Route_Checkpoint routeCheckpoint = new Route_Checkpoint();
-            routeCheckpoint.setRoute(route);
+            routeCheckpoint.setRoute(existingRoute);
 
-            Object checkpointIdObj = checkpointData.get("checkpointId");
-            if (checkpointIdObj == null) {
-                response.put("message", "Checkpoint ID is missing.");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            Integer checkpointId;
-            try {
-                checkpointId = Integer.parseInt(checkpointIdObj.toString());
-            } catch (NumberFormatException e) {
-                response.put("message", "Invalid checkpoint ID format.");
-                return ResponseEntity.badRequest().body(response);
-            }
-
+            Integer checkpointId = parseCheckpointId(checkpointData.get("checkpointId"));
             routeCheckpoint.setCheckpoint(checkpointService.getById(checkpointId));
-            routeCheckpoint.setCheckpointCity((String) checkpointData.get("checkpointCity"));
-            routeCheckpoint.setCheckpointProvince((String) checkpointData.get("checkpointProvince"));
-            routeCheckpoint.setType(CheckpointType.departure);
+
+            String type = (String) checkpointData.get("type");
+            if (type == null || type.isEmpty()) {
+                throw new IllegalArgumentException("Checkpoint type is missing.");
+            }
+
+            routeCheckpoint.setType(parseCheckpointType(type));
+            routeCheckpoint.setCheckpointOrder(checkpointData.get("checkpointOrder") == null ? i++
+                    : (int) checkpointData.get("checkpointOrder"));
             routeCheckpointService.save(routeCheckpoint);
         }
+    }
 
-        response.put("message", "Route updated successfully.");
+    private Integer parseCheckpointId(Object checkpointIdObj) {
+        try {
+            return Integer.parseInt(checkpointIdObj.toString());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid checkpoint ID format.");
+        }
+    }
+
+    private CheckpointType parseCheckpointType(String type) {
+        try {
+            return CheckpointType.valueOf(type.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid checkpoint type.");
+        }
+    }
+
+    @GetMapping("/admin/api/selected-checkpoints/{routeCode}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getSelectedCheckpoints(@PathVariable String routeCode) {
+        Route route = routeService.getRouteByCode(routeCode);
+        List<Route_Checkpoint> routeCheckpoints = routeCheckpointService.findByRoute(route);
+
+        if (routeCheckpoints.isEmpty()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("errorMessage", "No checkpoints found for this route.");
+            return ResponseEntity.ok(response);
+        }
+
+        List<RouteCheckpointDTO> selectedCheckpointsDTO = routeCheckpoints.stream()
+                .map(rc -> new RouteCheckpointDTO(
+                        rc.getCheckpoint().getCheckpointId(),
+                        rc.getCheckpoint().getPlaceName(),
+                        rc.getCheckpoint().getAddress(),
+                        rc.getCheckpoint().getProvince(),
+                        rc.getCheckpoint().getCity(),
+                        rc.getCheckpointOrder(),
+                        rc.getType()))
+                .collect(Collectors.toList());
+
+        selectedCheckpointsDTO.sort((rc1, rc2) -> rc1.getCheckpointOrder() - rc2.getCheckpointOrder());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("route", route);
+        response.put("selectedCheckpoints", selectedCheckpointsDTO);
+
         return ResponseEntity.ok(response);
     }
 }

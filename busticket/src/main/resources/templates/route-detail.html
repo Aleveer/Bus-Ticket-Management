@@ -10,7 +10,7 @@
     />
     <style>
       .table-responsive {
-        max-height: 400px; /* Adjust the height as needed */
+        max-height: 400px;
         overflow-y: auto;
       }
     </style>
@@ -41,24 +41,24 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th scope="col">Checkpoint ID</th>
+              <th scope="col">ID</th>
               <th scope="col">Location</th>
               <th scope="col">Address</th>
-              <th scope="col">Order</th>
-              <th scope="col">City</th>
               <th scope="col">Province</th>
+              <th scope="col">City</th>
+              <th scope="col">Order</th>
               <th scope="col">Type</th>
             </tr>
           </thead>
           <tbody>
             <tr th:each="checkpoint : ${checkpoints}">
-              <td th:text="${checkpoint.checkpoint.checkpointId}"></td>
-              <td th:text="${checkpoint.checkpoint.placeName}"></td>
-              <td th:text="${checkpoint.checkpoint.address}"></td>
+              <td th:text="${checkpoint.checkpointId}"></td>
+              <td th:text="${checkpoint.placeName}"></td>
+              <td th:text="${checkpoint.address}"></td>
+              <td th:text="${checkpoint.province}"></td>
+              <td th:text="${checkpoint.city}"></td>
               <td th:text="${checkpoint.checkpointOrder}"></td>
-              <td th:text="${checkpoint.checkpointCity}"></td>
-              <td th:text="${checkpoint.checkpointProvince}"></td>
-              <td th:text="${checkpoint.type}"></td>
+              <td th:text="${checkpoint.checkpointType}"></td>
             </tr>
           </tbody>
         </table>

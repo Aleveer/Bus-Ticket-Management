@@ -41,12 +41,6 @@ public class Route_Checkpoint {
     @Column(name = "checkpoint_order", nullable = false, length = 15)
     private int checkpointOrder;
 
-    @Column(name = "checkpoint_city", nullable = false, length = 100)
-    private String checkpointCity;
-
-    @Column(name = "checkpoint_province", nullable = false, length = 100)
-    private String checkpointProvince;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, columnDefinition = "ENUM('departure', 'drop_off', 'en_route', 'rest') DEFAULT 'departure'")
     private CheckpointType type;

@@ -1658,53 +1658,53 @@ VALUES
     ('TVHCM', 85, 2, 'en_route');
 
 INSERT INTO
-    `bus` (`bus_id`, `type`, `number_of_seat`)
+    `bus` (`bus_id`, `seat_type`, `number_of_seat`)
 VALUES
-    ('14F.555-016', 'bunk', 36),
-    ('14F.555-034', 'bunk', 36),
-    ('14F.555-052', 'bunk', 36),
-    ('14F.555-070', 'bunk', 36),
-    ('14F.666-007', 'bunk', 36),
-    ('14F.666-025', 'bunk', 36),
-    ('14F.666-043', 'bunk', 36),
-    ('14F.666-061', 'bunk', 36),
-    ('14F.666-079', 'bunk', 36),
-    ('29F.555-014', 'bunk', 36),
-    ('29F.555-032', 'bunk', 36),
-    ('29F.555-050', 'bunk', 36),
-    ('29F.555-068', 'bunk', 36),
-    ('29F.666-023', 'bunk', 36),
-    ('29F.666-041', 'bunk', 36),
-    ('29F.666-059', 'bunk', 36),
-    ('29F.666-077', 'bunk', 36),
-    ('36F.555-018', 'bunk', 36),
-    ('36F.555-036', 'bunk', 36),
-    ('36F.555-054', 'bunk', 36),
-    ('36F.555-072', 'bunk', 36),
-    ('36F.666-027', 'bunk', 36),
-    ('36F.666-045', 'bunk', 36),
-    ('36F.666-063', 'bunk', 36),
-    ('43F.666-003', 'bunk', 36),
-    ('51F.555-020', 'bunk', 45),
-    ('51F.555-038', 'bunk', 45),
-    ('51F.555-056', 'bunk', 45),
-    ('51F.555-074', 'bunk', 45),
-    ('51F.666-001', 'bunk', 36),
-    ('51F.666-005', 'bunk', 36),
-    ('60F.555-010', 'bunk', 36),
-    ('92F.555-012', 'bunk', 36),
-    ('92F.555-030', 'bunk', 36),
-    ('92F.555-048', 'bunk', 36),
-    ('92F.555-066', 'bunk', 36),
-    ('92F.666-021', 'bunk', 36),
-    ('92F.666-039', 'bunk', 36),
-    ('92F.666-057', 'bunk', 36),
-    ('92F.666-075', 'bunk', 36),
+    ('14F.555-016', 'economy', 36),
+    ('14F.555-034', 'economy', 36),
+    ('14F.555-052', 'economy', 36),
+    ('14F.555-070', 'economy', 36),
+    ('14F.666-007', 'economy', 36),
+    ('14F.666-025', 'economy', 36),
+    ('14F.666-043', 'economy', 36),
+    ('14F.666-061', 'economy', 36),
+    ('14F.666-079', 'economy', 36),
+    ('29F.555-014', 'economy', 36),
+    ('29F.555-032', 'economy', 36),
+    ('29F.555-050', 'economy', 36),
+    ('29F.555-068', 'economy', 36),
+    ('29F.666-023', 'economy', 36),
+    ('29F.666-041', 'economy', 36),
+    ('29F.666-059', 'economy', 36),
+    ('29F.666-077', 'economy', 36),
+    ('36F.555-018', 'economy', 36),
+    ('36F.555-036', 'economy', 36),
+    ('36F.555-054', 'economy', 36),
+    ('36F.555-072', 'economy', 36),
+    ('36F.666-027', 'economy', 36),
+    ('36F.666-045', 'economy', 36),
+    ('36F.666-063', 'economy', 36),
+    ('43F.666-003', 'economy', 36),
+    ('51F.555-020', 'economy', 45),
+    ('51F.555-038', 'economy', 45),
+    ('51F.555-056', 'economy', 45),
+    ('51F.555-074', 'economy', 45),
+    ('51F.666-001', 'economy', 36),
+    ('51F.666-005', 'economy', 36),
+    ('60F.555-010', 'economy', 36),
+    ('92F.555-012', 'economy', 36),
+    ('92F.555-030', 'economy', 36),
+    ('92F.555-048', 'economy', 36),
+    ('92F.555-066', 'economy', 36),
+    ('92F.666-021', 'economy', 36),
+    ('92F.666-039', 'economy', 36),
+    ('92F.666-057', 'economy', 36),
+    ('92F.666-075', 'economy', 36),
     ('29F.555-002', 'limousine', 34),
     ('30F.555-004', 'limousine', 34),
-    ('30F.555-028', 'bunk', 45),
-    ('30F.555-046', 'bunk', 45),
-    ('30F.555-064', 'bunk', 45),
+    ('30F.555-028', 'economy', 45),
+    ('30F.555-046', 'economy', 45),
+    ('30F.555-064', 'economy', 45),
     ('30F.666-019', 'limousine', 34),
     ('30F.666-037', 'limousine', 34),
     ('30F.666-055', 'limousine', 34),
@@ -1725,7 +1725,7 @@ VALUES
     ('60F.666-035', 'limousine', 34),
     ('60F.666-053', 'limousine', 34),
     ('60F.666-071', 'limousine', 34),
-    ('75F.555-008', 'bunk', 45),
+    ('75F.555-008', 'economy', 45),
     ('75F.555-024', 'limousine', 34),
     ('75F.555-042', 'limousine', 34),
     ('75F.555-060', 'limousine', 34),
@@ -4970,23 +4970,23 @@ INSERT INTO
 SELECT
     NULL,
     CASE
-        WHEN RAND() < 0.5 THEN DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 30) DAY) -- Random past date within 30 days
-        ELSE DATE_ADD(NOW(), INTERVAL FLOOR(RAND() * 30) DAY) -- Random future date within 30 days
+        WHEN RAND () < 0.5 THEN DATE_SUB (NOW (), INTERVAL FLOOR(RAND () * 30) DAY) -- Random past date within 30 days
+        ELSE DATE_ADD (NOW (), INTERVAL FLOOR(RAND () * 30) DAY) -- Random future date within 30 days
     END AS departure_time,
     CASE
-        WHEN RAND() < 0.5 THEN DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 30 + 1) DAY) -- Random past date within 31 days
-        ELSE DATE_ADD(NOW(), INTERVAL FLOOR(RAND() * 30 + 1) DAY) -- Random future date within 31 days
+        WHEN RAND () < 0.5 THEN DATE_SUB (NOW (), INTERVAL FLOOR(RAND () * 30 + 1) DAY) -- Random past date within 31 days
+        ELSE DATE_ADD (NOW (), INTERVAL FLOOR(RAND () * 30 + 1) DAY) -- Random future date within 31 days
     END AS arrival_time,
-    ROUND(RAND() * 100 + 20, 2) AS price,
+    ROUND(RAND () * 100 + 20, 2) AS price,
     -- Random price between 20 and 120
     CASE
-        WHEN RAND() < 0.5 THEN CASE
-            WHEN RAND() < 0.5 THEN 'finished'
+        WHEN RAND () < 0.5 THEN CASE
+            WHEN RAND () < 0.5 THEN 'finished'
             ELSE 'arriving'
         END
         ELSE CASE
-            WHEN RAND() < 0.7 THEN 'waiting'
-            WHEN RAND() < 0.85 THEN 'arriving'
+            WHEN RAND () < 0.7 THEN 'waiting'
+            WHEN RAND () < 0.85 THEN 'arriving'
             ELSE 'started'
         END
     END AS status,
@@ -5010,7 +5010,7 @@ FROM
         FROM
             `bus`
         ORDER BY
-            RAND()
+            RAND ()
         LIMIT
             3
     ) AS bus ON 1 = 1
@@ -5020,7 +5020,7 @@ FROM
         FROM
             `driver`
         ORDER BY
-            RAND()
+            RAND ()
         LIMIT
             3
     ) AS driver ON 1 = 1
@@ -5030,7 +5030,7 @@ FROM
         FROM
             `controller`
         ORDER BY
-            RAND()
+            RAND ()
         LIMIT
             3
     ) AS controller ON 1 = 1
@@ -5040,7 +5040,7 @@ FROM
         FROM
             `staff`
         ORDER BY
-            RAND()
+            RAND ()
         LIMIT
             3
     ) AS staff ON 1 = 1
@@ -5050,7 +5050,90 @@ FROM
         FROM
             `route`
         ORDER BY
-            RAND()
+            RAND ()
         LIMIT
             3
     ) AS route ON 1 = 1;
+
+-- Insert data into booking table
+INSERT INTO
+    `booking` (
+        `customer_id`,
+        `trip_id`,
+        `number_of_seat`,
+        `is_round_trip`,
+        `round_trip_id`,
+        `pickup_point`,
+        `dropoff_point`
+    )
+VALUES
+    (
+        1,
+        244,
+        2,
+        0,
+        NULL,
+        'Pickup Point A',
+        'Dropoff Point B'
+    );
+
+-- Insert data into seat_reservations table
+INSERT INTO
+    `seat_reservations` (
+        `seat_id`,
+        `booking_id`,
+        `trip_id`,
+        `status`
+    )
+VALUES
+    (
+        2846,
+        8991,
+        244,
+        'booked'
+    );
+
+-- Additional test data
+INSERT INTO
+    `booking` (
+        `customer_id`,
+        `trip_id`,
+        `number_of_seat`,
+        `is_round_trip`,
+        `round_trip_id`,
+        `pickup_point`,
+        `dropoff_point`
+    )
+VALUES
+    (
+        2,
+        -- Assuming customer_id 2 exists
+        245,
+        -- Assuming trip_id 2 exists
+        1,
+        -- Number of seats booked
+        1,
+        -- Round trip
+        'RT123',
+        -- Round trip ID
+        'Pickup Point C',
+        'Dropoff Point D'
+    );
+
+INSERT INTO
+    `seat_reservations` (
+        `seat_id`,
+        `booking_id`,
+        `trip_id`,
+        `status`
+    )
+VALUES
+    (
+        2847,
+        -- Assuming seat_id 2 exists
+        8992,
+        -- Assuming booking_id 2 exists
+        244,
+        -- Assuming trip_id 2 exists
+        'reserved' -- Status of the seat reservation
+    );

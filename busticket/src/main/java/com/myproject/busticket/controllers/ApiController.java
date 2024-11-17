@@ -3,22 +3,27 @@ package com.myproject.busticket.controllers;
 import com.myproject.busticket.dto.AccountDTO;
 import com.myproject.busticket.dto.RouteCheckpointDTO;
 import com.myproject.busticket.enums.CheckpointType;
+import com.myproject.busticket.enums.SeatType;
 import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.Bus;
+import com.myproject.busticket.models.Bus_Seats;
 import com.myproject.busticket.models.Checkpoint;
 import com.myproject.busticket.models.Customer;
 import com.myproject.busticket.models.Driver;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Route_Checkpoint;
+import com.myproject.busticket.models.SeatReservations;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.services.AccountService;
 import com.myproject.busticket.services.BusService;
+import com.myproject.busticket.services.Bus_SeatsService;
 import com.myproject.busticket.services.CheckpointService;
 import com.myproject.busticket.services.CustomerService;
 import com.myproject.busticket.services.DriverService;
 import com.myproject.busticket.services.RoleService;
 import com.myproject.busticket.services.RouteCheckpointService;
 import com.myproject.busticket.services.RouteService;
+import com.myproject.busticket.services.SeatReservationsService;
 import com.myproject.busticket.services.TripService;
 
 import java.util.Comparator;
@@ -50,6 +55,12 @@ public class ApiController {
 
     @Autowired
     private BusService busService;
+
+    @Autowired
+    private Bus_SeatsService bus_SeatsService;
+
+    @Autowired
+    private SeatReservationsService seatReservationService;
 
     @Autowired
     private RouteService routeService;
@@ -111,7 +122,7 @@ public class ApiController {
         Page<Bus> busPages = busService.getAll(pageable);
 
         List<Bus> buses = busPages.getContent().stream()
-                .map(bus -> new Bus(bus.getPlate(), bus.getType(), bus.getNumberOfSeat()))
+                .map(bus -> new Bus(bus.getPlate(), bus.getSeatType(), bus.getNumberOfSeat()))
                 .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();
@@ -676,6 +687,140 @@ public class ApiController {
 
         checkpointService.deleteById(checkpointId);
         response.put("message", "Checkpoint deleted successfully.");
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/admin/api/new-bus")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> saveBus(@RequestBody Map<String, Object> busRequest) {
+        Map<String, Object> response = new HashMap<>();
+        String plate = (String) busRequest.get("plate");
+        String seatTypeStr = (String) busRequest.get("seatType");
+        String numberOfSeatStr = (String) busRequest.get("numberOfSeat");
+        List<String> seatNames = (List<String>) busRequest.get("seatNames");
+        int numberOfSeat;
+        try {
+            numberOfSeat = Integer.parseInt(numberOfSeatStr);
+        } catch (NumberFormatException e) {
+            response.put("message", "Invalid number of seats format.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if (plate == null || plate.isEmpty() || seatTypeStr == null || seatTypeStr.isEmpty() || numberOfSeat <= 0
+                || seatNames == null || seatNames.size() != numberOfSeat) {
+            response.put("message", "Invalid input data.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        Bus existingBus = busService.getByBusPlate(plate);
+        if (existingBus != null) {
+            response.put("message", "Bus with this plate already exists.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        SeatType seatType;
+        try {
+            seatType = parseSeatType(seatTypeStr);
+        } catch (IllegalArgumentException e) {
+            response.put("message", "Invalid seat type.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        Bus newBus = new Bus();
+        newBus.setPlate(plate);
+        newBus.setSeatType(seatType);
+        newBus.setNumberOfSeat(numberOfSeat);
+        busService.save(newBus);
+
+        for (String seatName : seatNames) {
+            Bus_Seats seat = new Bus_Seats();
+            seat.setBus(newBus);
+            seat.setSeatName(seatName);
+            bus_SeatsService.save(seat);
+        }
+
+        response.put("message", "Bus saved successfully.");
+        return ResponseEntity.ok(response);
+    }
+
+    private SeatType parseSeatType(String seatType) {
+        try {
+            return SeatType.valueOf(seatType.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid seat type.");
+        }
+    }
+
+    @GetMapping("/bus-detail/{plate}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getBusDetails(@PathVariable String plate) {
+        Bus bus = busService.getByBusPlate(plate);
+        if (bus == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Bus not found."));
+        }
+
+        List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(bus);
+        List<Map<String, Object>> seatDetails = seats.stream()
+                .map(seat -> {
+                    Map<String, Object> seatMap = new HashMap<>();
+                    seatMap.put("seatName", seat.getSeatName());
+                    seatMap.put("booked", seatReservationService.isSeatBooked(seat));
+                    return seatMap;
+                })
+                .collect(Collectors.toList());
+
+        List<SeatReservations> reservations = seatReservationService.findByBus(bus);
+        List<Map<String, Object>> reservationDetails = reservations.stream()
+                .map(reservation -> {
+                    Map<String, Object> reservationMap = new HashMap<>();
+                    reservationMap.put("seatName", reservation.getSeat().getSeatName());
+                    reservationMap.put("customerName", reservation.getBooking().getCustomer().getName());
+                    reservationMap.put("customerEmail", reservation.getBooking().getCustomer().getEmail());
+                    reservationMap.put("trip", reservation.getTrip().getTripId());
+                    reservationMap.put("status", reservation.getStatus().name());
+                    return reservationMap;
+                })
+                .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("busPlate", bus.getPlate());
+        response.put("seatType", bus.getSeatType().name());
+        response.put("numberOfSeats", bus.getNumberOfSeat());
+        response.put("seats", seatDetails);
+        response.put("reservations", reservationDetails);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/admin/api/delete-bus")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deleteBus(@RequestBody Map<String, Object> busRequest) {
+        Map<String, Object> response = new HashMap<>();
+        String plate = (String) busRequest.get("plate");
+        Bus existingBus = busService.getByBusPlate(plate);
+        if (existingBus == null) {
+            response.put("message", "Bus not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (!tripService.findByBus(existingBus).isEmpty()) {
+            response.put("message", "Bus has trips and cannot be deleted.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // Check for seat reservations
+        List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(existingBus);
+        for (Bus_Seats seat : seats) {
+            if (!seatReservationService.getBySeatId(seat).isEmpty()) {
+                response.put("message", "Bus has seat reservations and cannot be deleted.");
+                return ResponseEntity.badRequest().body(response);
+            }
+        }
+
+        // Delete seats
+        for (Bus_Seats seat : seats) {
+            bus_SeatsService.delete(seat);
+        }
+
+        // Delete bus
+        busService.delete(existingBus);
+        response.put("message", "Bus deleted successfully.");
         return ResponseEntity.ok(response);
     }
 

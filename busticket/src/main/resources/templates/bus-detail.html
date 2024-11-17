@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bus Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        .seat {
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            text-align: center;
+            line-height: 40px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .booked {
+            background-color: #f8d7da;
+            /* Light red for booked seats */
+            color: #721c24;
+            /* Dark red text */
+        }
+
+        .available {
+            background-color: #d4edda;
+            /* Light green for available seats */
+            color: #155724;
+            /* Dark green text */
+        }
+
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2>Bus Details</h2>
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>Bus Information</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Plate:</strong> <span th:text="${bus.plate}"></span></p>
+                <p><strong>Seat Type:</strong> <span th:text="${bus.seatType}"></span></p>
+                <p><strong>Number of Seats:</strong> <span th:text="${bus.numberOfSeat}"></span></p>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>Seats</h4>
+            </div>
+            <div class="card-body">
+                <div class="seat-grid">
+                    <div th:each="seat : ${seatDetails}" th:class="${seat.booked} ? 'seat booked' : 'seat available'"
+                        th:text="${seat.seatName}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>Reservations</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Seat Name</th>
+                            <th scope="col">Customer Name</th>
+                            <th scope="col">Customer Email</th>
+                            <th scope="col">Trip</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="reservation : ${reservationDetails}">
+                            <td th:text="${reservation.seatName}"></td>
+                            <td th:text="${reservation.customerName}"></td>
+                            <td th:text="${reservation.customerEmail}"></td>
+                            <td th:text="${reservation.trip}"></td>
+                            <td th:text="${reservation.status}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <a href="/admin/bus-management" class="btn btn-secondary">Back to Bus Management</a>
+    </div>
+</body>
+
+</html>

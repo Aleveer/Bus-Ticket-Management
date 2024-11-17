@@ -110,7 +110,7 @@ CREATE TABLE `booking` (
 --
 CREATE TABLE `bus` (
   `bus_id` varchar(12) NOT NULL,
-  `type` enum('limousine', 'bunk') NOT NULL DEFAULT 'bunk',
+  `seat_type` enum('limousine', 'economy') NOT NULL DEFAULT 'economy',
   `number_of_seat` tinyint(50) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 

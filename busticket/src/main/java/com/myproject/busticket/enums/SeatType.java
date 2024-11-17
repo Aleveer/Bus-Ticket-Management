@@ -1,6 +1,6 @@
 package com.myproject.busticket.enums;
 
-public enum BusType {
+public enum SeatType {
     limousine,
-    bunk
+    economy
 }

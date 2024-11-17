@@ -1,6 +1,5 @@
 package com.myproject.busticket.models;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,7 +26,7 @@ public class Bus_Seats {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bus_id", nullable = false)
     private Bus bus;
 

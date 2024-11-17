@@ -19,15 +19,15 @@ public class SeatReservations {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seat_id")
     private Bus_Seats seat;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booking_id")
     private Booking booking;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trip_id")
     private Trip trip;
 

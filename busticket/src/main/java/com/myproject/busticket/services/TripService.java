@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.mapper.TripMapper;
+import com.myproject.busticket.models.Bus;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.repositories.TripRepository;
@@ -31,6 +32,10 @@ public class TripService {
 
     public List<Trip> findAll() {
         return tripRepository.findAll();
+    }
+
+    public List<Trip> findByBus(Bus bus) {
+        return tripRepository.findByBus(bus);
     }
 
     public List<TripDTO> searchTrip(String departure, String destination, LocalDateTime departureDate,

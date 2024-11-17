@@ -196,10 +196,8 @@
                         );
                     });
 
-                    // Clear the pagination controls
                     $("#paginationControls").empty();
 
-                    // Add Previous button
                     if (currentPage > 0) {
                         $("#paginationControls").append(
                             '<li><a onclick="loadRoutes(' +
@@ -208,7 +206,6 @@
                         );
                     }
 
-                    // Add page numbers with ellipsis
                     var startPage = Math.max(0, currentPage - 2);
                     var endPage = Math.min(totalPages - 1, currentPage + 2);
 
@@ -279,7 +276,6 @@
                         if (data.message) {
                             alert(data.message);
                             if (data.message === "Route deleted successfully.") {
-                                // Reload the routes after successful deletion
                                 loadRoutes(0);
                             }
                         }
@@ -290,7 +286,6 @@
             }
         }
 
-        // Load the first page of routes when the page loads
         $(document).ready(function () {
             loadRoutes(0);
         });

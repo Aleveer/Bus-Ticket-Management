@@ -1,6 +1,6 @@
 package com.myproject.busticket.dto;
 
-import com.myproject.busticket.enums.BusType;
+import com.myproject.busticket.enums.SeatType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,5 +13,5 @@ import lombok.Setter;
 public class BusDTO {
     private String busId;
     private int numberOfSeats;
-    private BusType type;
+    private SeatType type;
 }

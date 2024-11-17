@@ -28,4 +28,12 @@ public class BusService {
     public Bus getByBusPlate(String string) {
         return busRepository.findByPlate(string);
     }
+
+    public Bus save(Bus bus) {
+        return busRepository.save(bus);
+    }
+
+    public void delete(Bus bus) {
+        busRepository.delete(bus);
+    }
 }

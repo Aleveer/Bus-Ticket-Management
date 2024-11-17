@@ -368,11 +368,23 @@ public class ApiController {
         oldRouteCheckpoints.sort(Comparator.comparingInt(Route_Checkpoint::getCheckpointOrder));
         newCheckpoints.sort(Comparator.comparingInt(c -> (int) c.get("checkpointOrder")));
 
+        // Check for changes in checkpoint type:
+        for (int i = 0; i < newCheckpoints.size(); i++) {
+            Map<String, Object> checkpointData = newCheckpoints.get(i);
+            String type = (String) checkpointData.get("checkpointType");
+
+            Route_Checkpoint routeCheckpoint = oldRouteCheckpoints.get(i);
+
+            if (!routeCheckpoint.getType().name().equals(type)) {
+                return true;
+            }
+        }
+
         // Check if same checkpoints but different order by checkpointOrder:
         for (int i = 0; i < newCheckpoints.size(); i++) {
             Map<String, Object> checkpointData = newCheckpoints.get(i);
             int checkpointId = (int) checkpointData.get("checkpointId");
-            String type = (String) checkpointData.get("type");
+            String type = (String) checkpointData.get("checkpointType");
             int checkpointOrder = (int) checkpointData.get("checkpointOrder");
 
             Route_Checkpoint routeCheckpoint = oldRouteCheckpoints.get(i);
@@ -383,6 +395,7 @@ public class ApiController {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -413,11 +426,12 @@ public class ApiController {
             Integer checkpointId = parseCheckpointId(checkpointData.get("checkpointId"));
             routeCheckpoint.setCheckpoint(checkpointService.getById(checkpointId));
 
-            String type = (String) checkpointData.get("type");
+            String type = (String) checkpointData.get("checkpointType");
             if (type == null || type.isEmpty()) {
                 throw new IllegalArgumentException("Checkpoint type is missing.");
             }
 
+            // TODO: Check if type is valid
             routeCheckpoint.setType(parseCheckpointType(type));
             routeCheckpoint.setCheckpointOrder(checkpointData.get("checkpointOrder") == null ? i++
                     : (int) checkpointData.get("checkpointOrder"));

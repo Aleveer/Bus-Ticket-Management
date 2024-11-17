@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.myproject.busticket.models.Checkpoint;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Route_Checkpoint;
 import org.springframework.data.repository.query.Param;
@@ -38,4 +39,6 @@ public interface RouteCheckpointRepository extends JpaRepository<Route_Checkpoin
                     rc.route.code = :route_code AND rc.type = 'drop_off'
             """)
     String findDropOffName(@Param("route_code") String routeCode);
+
+    List<Route_Checkpoint> findByCheckpoint(Checkpoint checkpoint);
 }

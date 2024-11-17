@@ -1,5 +1,6 @@
 package com.myproject.busticket.services;
 
+import com.myproject.busticket.models.Checkpoint;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Route_Checkpoint;
 import com.myproject.busticket.repositories.RouteCheckpointRepository;
@@ -36,6 +37,10 @@ public class RouteCheckpointService {
 
     public String findDropOffName(String routeCode) {
         return routeCheckpointRepository.findDropOffName(routeCode);
+    }
+
+    public List<Route_Checkpoint> findByCheckpoint(Checkpoint checkpoint) {
+        return routeCheckpointRepository.findByCheckpoint(checkpoint);
     }
 
     public Route_Checkpoint save(Route_Checkpoint routeCheckpoint) {

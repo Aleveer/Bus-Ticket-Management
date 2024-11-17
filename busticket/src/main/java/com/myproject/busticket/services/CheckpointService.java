@@ -34,4 +34,12 @@ public class CheckpointService {
     public Checkpoint getById(int id) {
         return checkpointRepository.findById(id).orElse(null);
     }
+
+    public Checkpoint save(Checkpoint checkpoint) {
+        return checkpointRepository.save(checkpoint);
+    }
+
+    public void deleteById(int id) {
+        checkpointRepository.deleteById(id);
+    }
 }

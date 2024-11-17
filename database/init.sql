@@ -643,6 +643,15 @@ MODIFY
   AUTO_INCREMENT = 2845;
 
 --
+-- AUTO_INCREMENT for table `checkpoint`
+--
+ALTER TABLE
+  `checkpoint`
+MODIFY
+  `checkpoint_id` smallint(6) NOT NULL AUTO_INCREMENT,
+  AUTO_INCREMENT = 11;
+
+--
 -- AUTO_INCREMENT for table `controller`
 --
 ALTER TABLE

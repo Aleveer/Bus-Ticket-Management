@@ -5,6 +5,7 @@
   <title>Checkpoint Management</title>
   <div th:insert="~{dashboard-header.html}"></div>
   <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 </head>
 
 <body class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar" data-open="click"
@@ -48,7 +49,8 @@
                       <a data-action="search" title="Search"><i class="ft-search"></i></a>
                     </li>
                     <li>
-                      <a data-action="add-checkpoint" title="Add Checkpoint"><i class="ft-plus"></i></a>
+                      <a data-action="add-checkpoint" title="Add Checkpoint" onclick="showNewCheckpointModal()"><i
+                          class="ft-plus"></i></a>
                     </li>
                   </ul>
                 </div>
@@ -71,6 +73,7 @@
                         <th scope="col">City</th>
                         <th scope="col">Contact Number</th>
                         <th scope="col">Region</th>
+                        <th scope="col">Action</th>
                       </tr>
                     </thead>
                     <tbody id="checkpointTableBody">
@@ -82,6 +85,20 @@
                         <td th:text="${checkpoint.city}"></td>
                         <td th:text="${checkpoint.phone}"></td>
                         <td th:text="${checkpoint.region}"></td>
+                        <td>
+                          <button class="btn btn-primary btn-sm" title="View Details"
+                            onclick="viewCheckpointDetail('${checkpoint.checkpointId}')">
+                            <i class="ft-eye"></i>
+                          </button>
+                          <button class="btn btn-warning btn-sm" title="Update Checkpoint"
+                            onclick="updateCheckpoint('${checkpoint.checkpointId}')">
+                            <i class="ft-settings"></i>
+                          </button>
+                          <button class="btn btn-danger btn-sm" title="Delete Checkpoint"
+                            onclick="deleteCheckpoint('${checkpoint.checkpointId}')">
+                            <i class="ft-trash"></i>
+                          </button>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -114,6 +131,137 @@
     </div>
   </div>
 
+  <!-- View Checkpoint Modal -->
+  <div class="modal fade" id="viewCheckpointModal" tabindex="-1" role="dialog"
+    aria-labelledby="viewCheckpointModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewCheckpointModalLabel">View Checkpoint</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Location:</strong> <span id="viewLocation"></span></p>
+          <p><strong>Address:</strong> <span id="viewAddress"></span></p>
+          <p><strong>Province:</strong> <span id="viewProvince"></span></p>
+          <p><strong>City:</strong> <span id="viewCity"></span></p>
+          <p><strong>Contact Number:</strong> <span id="viewPhone"></span></p>
+          <p><strong>Region:</strong> <span id="viewRegion"></span></p>
+          <h5>Assigned Routes</h5>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Route Code</th>
+                  <th scope="col">Route Name</th>
+                  <th scope="col">Order Position</th>
+                  <th scope="col">Type</th>
+                </tr>
+              </thead>
+              <tbody id="assignedRoutesTableBody">
+                <!-- Assigned routes will be dynamically loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Checkpoint Modal -->
+  <div class="modal fade" id="newCheckpointModal" tabindex="-1" role="dialog" aria-labelledby="newCheckpointModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newCheckpointModalLabel">New Checkpoint</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="newCheckpointForm">
+            <div class="form-group">
+              <label for="newLocation">Location</label>
+              <input type="text" class="form-control" id="newLocation" required>
+            </div>
+            <div class="form-group">
+              <label for="newAddress">Address</label>
+              <input type="text" class="form-control" id="newAddress" required>
+            </div>
+            <div class="form-group">
+              <label for="newProvince">Province</label>
+              <input type="text" class="form-control" id="newProvince" required>
+            </div>
+            <div class="form-group">
+              <label for="newCity">City</label>
+              <input type="text" class="form-control" id="newCity" required>
+            </div>
+            <div class="form-group">
+              <label for="newPhone">Contact Number</label>
+              <input type="text" class="form-control" id="newPhone" required>
+            </div>
+            <div class="form-group">
+              <label for="newRegion">Region</label>
+              <input type="text" class="form-control" id="newRegion" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Update Checkpoint Modal -->
+  <div class="modal fade" id="updateCheckpointModal" tabindex="-1" role="dialog"
+    aria-labelledby="updateCheckpointModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateCheckpointModalLabel">Update Checkpoint</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="updateCheckpointForm">
+            <input type="hidden" id="updateCheckpointId">
+            <div class="form-group">
+              <label for="updateLocation">Location</label>
+              <input type="text" class="form-control" id="updateLocation" required>
+            </div>
+            <div class="form-group">
+              <label for="updateAddress">Address</label>
+              <input type="text" class="form-control" id="updateAddress" required>
+            </div>
+            <div class="form-group">
+              <label for="updateProvince">Province</label>
+              <input type="text" class="form-control" id="updateProvince" required>
+            </div>
+            <div class="form-group">
+              <label for="updateCity">City</label>
+              <input type="text" class="form-control" id="updateCity" required>
+            </div>
+            <div class="form-group">
+              <label for="updatePhone">Contact Number</label>
+              <input type="text" class="form-control" id="updatePhone" required>
+            </div>
+            <div class="form-group">
+              <label for="updateRegion">Region</label>
+              <input type="text" class="form-control" id="updateRegion" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <div th:insert="~{dashboard-footer.html}"></div>
   </footer>
@@ -128,6 +276,8 @@
   <script th:src="@{/theme-assets/js/core/app-lite.js}" type="text/javascript"></script>
   <!-- END CHAMELEON  JS-->
   <!-- BEGIN PAGE LEVEL JS-->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <!-- END PAGE LEVEL JS-->
   <script>
     function loadCheckpoints(page) {
@@ -153,6 +303,23 @@
               '<td>' + checkpoint.city + '</td>' +
               '<td>' + checkpoint.phone + '</td>' +
               '<td>' + checkpoint.region + '</td>' +
+              "<td>" +
+              '<button class="btn btn-primary btn-sm" title="View Details" onclick="viewCheckpointDetail(\'' +
+              checkpoint.checkpointId +
+              "')\">" +
+              '<i class="ft-eye"></i>' +
+              "</button>" +
+              '<button class="btn btn-warning btn-sm" title="Update Checkpoint" onclick="updateCheckpoint(\'' +
+              checkpoint.checkpointId +
+              "')\">" +
+              '<i class="ft-settings"></i>' +
+              "</button>" +
+              '<button class="btn btn-danger btn-sm" title="Delete Checkpoint" onclick="deleteCheckpoint(\'' +
+              checkpoint.checkpointId +
+              "')\">" +
+              '<i class="ft-trash"></i>' +
+              "</button>" +
+              "</td>" +
               '</tr>'
             );
           });
@@ -209,9 +376,177 @@
       });
     }
 
-    // Load the first page of accounts when the page loads
+    function viewCheckpointDetail(checkpointId) {
+      $.ajax({
+        url: '/admin/api/checkpoint/' + checkpointId,
+        method: 'GET',
+        success: function (data) {
+          $('#viewLocation').text(data.placeName);
+          $('#viewAddress').text(data.address);
+          $('#viewProvince').text(data.province);
+          $('#viewCity').text(data.city);
+          $('#viewPhone').text(data.phone);
+          $('#viewRegion').text(data.region);
+          $('#viewCheckpointModal').modal('show');
+        },
+        error: function (error) {
+          console.error('Error fetching checkpoint details:', error);
+        }
+      });
+    }
+
+    function updateCheckpoint(checkpointId) {
+      $.ajax({
+        url: '/admin/api/checkpoint/' + checkpointId,
+        method: 'GET',
+        success: function (data) {
+          $('#updateCheckpointId').val(data.checkpointId);
+          $('#updateLocation').val(data.placeName);
+          $('#updateAddress').val(data.address);
+          $('#updateProvince').val(data.province);
+          $('#updateCity').val(data.city);
+          $('#updatePhone').val(data.phone);
+          $('#updateRegion').val(data.region);
+          $('#updateCheckpointModal').modal('show');
+        },
+        error: function (error) {
+          console.error('Error fetching checkpoint details:', error);
+        }
+      });
+    }
+
+    $('#updateCheckpointForm').on('submit', function (event) {
+      event.preventDefault();
+      var checkpointId = $('#updateCheckpointId').val();
+      var updatedCheckpoint = {
+        checkpointId: checkpointId,
+        placeName: $('#updateLocation').val(),
+        address: $('#updateAddress').val(),
+        province: $('#updateProvince').val(),
+        city: $('#updateCity').val(),
+        phone: $('#updatePhone').val(),
+        region: $('#updateRegion').val()
+      };
+
+      fetch('/admin/api/update-checkpoint', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedCheckpoint)
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.message) {
+            alert(data.message);
+            if (data.message === "Checkpoint updated successfully.") {
+              $('#updateCheckpointModal').modal('hide');
+              loadCheckpoints(0);
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error updating checkpoint:', error);
+        });
+    });
+
+    function deleteCheckpoint(checkpointId) {
+      if (confirm('Are you sure you want to delete this checkpoint?')) {
+        fetch('/admin/api/delete-checkpoint', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ checkpointId: checkpointId })
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.message) {
+              alert(data.message);
+              if (data.message === "Checkpoint deleted successfully.") {
+                loadCheckpoints(0);
+              }
+            }
+          })
+          .catch(error => {
+            console.error('Error deleting checkpoint:', error);
+          });
+      }
+    }
+
+    function viewCheckpointDetail(checkpointId) {
+      $.ajax({
+        url: '/admin/api/checkpoint/' + checkpointId,
+        method: 'GET',
+        success: function (data) {
+          $('#viewLocation').text(data.placeName);
+          $('#viewAddress').text(data.address);
+          $('#viewProvince').text(data.province);
+          $('#viewCity').text(data.city);
+          $('#viewPhone').text(data.phone);
+          $('#viewRegion').text(data.region);
+
+          // Clear the assigned routes table body
+          $('#assignedRoutesTableBody').empty();
+
+          // Populate the assigned routes table with data
+          data.assignedRoutes.forEach(function (routeCheckpoint) {
+            $('#assignedRoutesTableBody').append(
+              '<tr>' +
+              '<td>' + routeCheckpoint.routeCode + '</td>' +
+              '<td>' + routeCheckpoint.routeName + '</td>' +
+              '<td>' + routeCheckpoint.checkpointOrder + '</td>' +
+              '<td>' + routeCheckpoint.type + '</td>' +
+              '</tr>'
+            );
+          });
+
+          $('#viewCheckpointModal').modal('show');
+        },
+        error: function (error) {
+          console.error('Error fetching checkpoint details:', error);
+        }
+      });
+    }
     $(document).ready(function () {
       loadCheckpoints(0);
+    });
+
+    function showNewCheckpointModal() {
+      $('#newCheckpointModal').modal('show');
+    }
+
+    $('#newCheckpointForm').on('submit', function (event) {
+      event.preventDefault();
+      var newCheckpoint = {
+        placeName: $('#newLocation').val(),
+        address: $('#newAddress').val(),
+        province: $('#newProvince').val(),
+        city: $('#newCity').val(),
+        phone: $('#newPhone').val(),
+        region: $('#newRegion').val()
+      };
+
+      fetch('/admin/api/new-checkpoint', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newCheckpoint)
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.message) {
+            alert(data.message);
+            if (data.message === "Checkpoint created successfully.") {
+              $('#newCheckpointModal').modal('hide');
+              loadCheckpoints(0);
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error creating checkpoint:', error);
+        });
     });
   </script>
 </body>

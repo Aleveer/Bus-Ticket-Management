@@ -291,996 +291,1271 @@ INSERT INTO
         `checkpoint_id`,
         `place_name`,
         `address`,
-        `phone`,
-        `region`
+        `province`,
+        `city`,
+        `region`,
+        `phone`
     )
 VALUES
     (
         1,
         '202 LÊ HỒNG PHONG',
-        '202 - 204 Lê Hồ',
-        '19006067',
-        'Miền Nam'
+        '202 - 204 Lê Hồng Phong, Phường 4, Quận 5, TP HCM',
+        'TP Hồ Chí Minh',
+        'Quận 5',
+        'Miền Nam',
+        '19006067'
     ),
     (
         2,
         '205 PHẠM NGŨ LÃO',
-        '205 Phạm Ngũ Lã',
-        '19006067',
-        'Miền Nam'
+        '205 Phạm Ngũ Lão , phường Phạm Ngũ Lão Quận 1 TPHCM',
+        'TP Hồ Chí Minh',
+        'Quận 1',
+        'Miền Nam',
+        '19006067'
     ),
     (
         3,
         '231 LÊ HỒNG PHONG',
-        '231 - 233 Lê Hồ',
-        '19006067',
-        'Miền Nam'
+        '231 - 233 Lê Hồng Phong, Phường 4, Quận 5, TP HCM',
+        'TP Hồ Chí Minh',
+        'Quận 5',
+        'Miền Nam',
+        '19006067'
     ),
     (
         4,
         '27 NGUYỄN ĐÁNG',
-        'Số 27, đường Ng',
-        '02943 747 ',
-        'Miền Nam'
+        'Số 27, đường Nguyễn Đáng, Khóm 1, Phường 7, TP Trà Vinh, Tỉnh Trà Vinh',
+        'Trà Vinh',
+        'TP Trà Vinh',
+        'Miền Nam',
+        '02943 747 474'
     ),
     (
         5,
         '43 NGUYỄN CƯ TRINH',
-        '43 Nguyễn Cư Tr',
-        '19006067',
-        'Miền Nam'
+        '43 Nguyễn Cư Trinh , Phường Nguyễn Cư Trinh Quận 1 TPHCM',
+        'TP Hồ Chí Minh',
+        'Quận 1',
+        'Miền Nam',
+        '19006067'
     ),
     (
         6,
         'AN TRẠCH',
-        '720 QL1A, ấp An',
-        '02993 872 ',
-        'Miền Nam'
+        '720 QL1A, ấp An Trạch, xã An Hiệp, huyện Châu Thành, tỉnh Sóc Trăng',
+        'Sóc Trăng',
+        'Huyện Châu Thành',
+        'Miền Nam',
+        '02993 872 872'
     ),
     (
         7,
         'BẾN XE BÀ RỊA',
-        'Km 65, Quốc lộ ',
-        '02543 826 ',
-        'Miền Nam'
+        'Km 65, Quốc lộ 51, Khu phố 2, Phường Phước Trung, TP Bà Rịa, Tỉnh Bà Rịa-Vũng Tàu',
+        'Bà Rịa-Vũng Tàu',
+        'TP Bà Rịa',
+        'Miền Nam',
+        '02543 826 768'
     ),
     (
         8,
         'BẾN XE BẾN CÁT',
-        '213 Đường D11, ',
-        '19006915',
-        'Miền Nam'
+        '213 Đường D11, Phường Thới Hòa, Tx Bến Cát, Bình Dương',
+        'Bình Dương',
+        'Tx Bến Cát',
+        'Miền Nam',
+        '19006915'
     ),
     (
         9,
         'BẾN XE CÀ MAU',
-        'Quốc lộ 1A, Lý ',
-        '02903 651 ',
-        'Miền Nam'
+        'Quốc lộ 1A, Lý Thường Kiệt, Phường 6, TP Cà Mau, T.Cà Mau',
+        'Cà Mau',
+        'TP Cà Mau',
+        'Miền Nam',
+        '02903 651 651'
     ),
     (
         10,
         'BẾN XE CHÂU ĐỐC',
-        'QL 91,K Hòa Bìn',
-        '02963 989 ',
-        'Miền Nam'
+        'QL 91, K Hòa Bình, P.Vĩnh Mỹ,TP Châu Đốc, An Giang',
+        'An Giang',
+        'TP Châu Đốc',
+        'Miền Nam',
+        '02963 989 999'
     ),
     (
         11,
         'BẾN XE NĂM CĂN',
-        'Thị Trấn Năm Că',
-        '02903 715 ',
-        'Miền Nam'
+        'Thị Trấn Năm Căn, H. Năm Căn, Tỉnh Cà Mau',
+        'Cà Mau',
+        'Huyện Năm Căn',
+        'Miền Nam',
+        '02903 715 715'
     ),
     (
         12,
         'BẾN XE NGÃ 4 GA',
-        '720 QL1A, Khu P',
-        '19006067',
-        'Miền Nam'
+        '720 QL1A, Khu Phố 3B, Phường Thạnh Lộc, Quận 12, TP HCM',
+        'TP Hồ Chí Minh',
+        'Quận 12',
+        'Miền Nam',
+        '19006067'
     ),
     (
         13,
         'BẾN XE Ô MÔN',
-        'Khu vực 5- P.Ch',
-        '02923 667 ',
-        'Miền Nam'
+        'Khu vực 5- P.Châu Văn Liêm - Q.Ô môn - TP Cần Thơ',
+        'Cần Thơ',
+        'Quận Ô Môn',
+        'Miền Nam',
+        '02923 667 997'
     ),
     (
         14,
         'BẾN XE TRUNG TÂM TP CẦN THƠ',
-        'Đối diện nhà Ga',
-        '19006919',
-        'Miền Nam'
+        'Đối diện nhà Ga Bến xe khách trung tâm TP Cần Thơ, Khu Đô Thị Nam Cần Thơ- P.Hưng Thạnh - Q.Cái Răng',
+        'Cần Thơ',
+        'Quận Cái Răng',
+        'Miền Nam',
+        '19006919'
     ),
     (
         15,
         'BẾN XE VŨNG TÀU',
-        '192 Đường Nam K',
-        '19006917',
-        'Miền Nam'
+        '192 Đường Nam Kỳ Khởi Nghĩa Phường Thắng Tam TP Vũng Tàu, Tỉnh BRVT',
+        'Bà Rịa-Vũng Tàu',
+        'TP Vũng Tàu',
+        'Miền Nam',
+        '19006917'
     ),
     (
         16,
         'BỆNH VIỆN NHI ĐỒNG 3 (BV NHI TPHCM)',
-        '15 đường Võ Trầ',
-        '19006067',
-        'Miền Nam'
+        '15 đường Võ Trần Trí, Xã Tân Kiên, Huyện Bình Chánh, TP HCM',
+        'TP Hồ Chí Minh',
+        'Huyện Bình Chánh',
+        'Miền Nam',
+        '19006067'
     ),
     (
         17,
         'BÌNH MINH',
-        'Ấp Thuận Tiến B',
-        '02703 742 ',
-        'Miền Nam'
+        'Ấp Thuận Tiến B , Xã Thuận An , Thị Xã Bình Minh, Tỉnh Vĩnh Long',
+        'Vĩnh Long',
+        'Tx Bình Minh',
+        'Miền Nam',
+        '02703 742 999'
     ),
     (
         18,
         'BX AN SƯƠNG',
-        'QL22, Ấp Đông L',
-        '19006067',
-        'Miền Nam'
+        'QL22, Ấp Đông Lân, Xã Bà Điểm, Huyện Hóc Môn, TP HCM',
+        'TP Hồ Chí Minh',
+        'Huyện Hóc Môn',
+        'Miền Nam',
+        '19006067'
     ),
     (
         19,
         'BX BÌNH DƯƠNG',
-        'Đường 30/04, Ph',
-        '19006915',
-        'Miền Nam'
+        'Đường 30/04, Phường Chánh Nghĩa, Thủ Dầu Một, Bình Dương',
+        'Bình Dương',
+        'TP Thủ Dầu Một',
+        'Miền Nam',
+        '19006915'
     ),
     (
         20,
         'BX CAO LÃNH',
-        'QL30, Ấp An Địn',
-        '02773 636 ',
-        'Miền Nam'
+        'QL30, Ấp An Định, xã An Bình, huyện Cao Lãnh, tỉnh Đồng Tháp',
+        'Đồng Tháp',
+        'Huyện Cao Lãnh',
+        'Miền Nam',
+        '02773 636 636'
     ),
     (
         21,
-        'BX CHÂU THÀNH',
-        'Đường Hoàng Lê ',
-        '19006913',
-        'Miền Nam'
+        'BX ĐỒNG NAI',
+        'Km 11, Quốc lộ 1, Phường An Bình, TP Biên Hòa, Tỉnh Đồng Nai',
+        'Đồng Nai',
+        'TP Biên Hòa',
+        'Miền Nam',
+        '02513 823 823'
     ),
     (
         22,
-        'BX ĐỒNG TÂM',
-        '168 Quản lộ Phụ',
-        '02903 658 ',
-        'Miền Nam'
+        'BX LONG XUYÊN',
+        'Km 91, Quốc lộ 91, Phường Mỹ Thạnh, TP Long Xuyên, Tỉnh An Giang',
+        'An Giang',
+        'TP Long Xuyên',
+        'Miền Nam',
+        '02963 899 999'
     ),
     (
         23,
-        'BX HỒNG NGỰ',
-        'Tổ 3, Ấp Bình H',
-        '02773 898 ',
-        'Miền Nam'
+        'BX MỸ THO',
+        'Đường Lý Thường Kiệt, Phường 5, TP Mỹ Tho, Tỉnh Tiền Giang',
+        'Tiền Giang',
+        'TP Mỹ Tho',
+        'Miền Nam',
+        '02733 873 873'
     ),
     (
         24,
-        'BX LONG XUYÊN',
-        '392 Phạm Cự Lượ',
-        '02963 989 ',
-        'Miền Nam'
+        'BX RẠCH GIÁ',
+        'Đường Nguyễn Văn Linh, Phường Vĩnh Lạc, TP Rạch Giá, Tỉnh Kiên Giang',
+        'Kiên Giang',
+        'TP Rạch Giá',
+        'Miền Nam',
+        '02973 947 947'
     ),
     (
         25,
-        'BX MIỀN ĐÔNG CŨ',
-        '292 Đinh Bộ Lĩn',
-        '19006067',
-        'Miền Nam'
+        'BX PHÚ QUỐC',
+        'Đường Nguyễn Trung Trực, Khu phố 5, Phường Dương Đông, TP Phú Quốc, Tỉnh Kiên Giang',
+        'Kiên Giang',
+        'TP Phú Quốc',
+        'Miền Nam',
+        '02973 987 987'
     ),
     (
         26,
-        'BX MIỀN ĐÔNG MỚI',
-        '501 Hoàng Hữu N',
-        '19006067',
-        'Miền Nam'
+        'BX TÂY NINH',
+        'Số 7, Đường Trần Hưng Đạo, Phường 2, TP Tây Ninh, Tỉnh Tây Ninh',
+        'Tây Ninh',
+        'TP Tây Ninh',
+        'Miền Nam',
+        '02763 888 888'
     ),
     (
         27,
-        'BX MIỀN TÂY',
-        '395 Kinh Dương ',
-        '19006067',
-        'Miền Nam'
+        'BX CỦ CHI',
+        'Đường Quốc lộ 22, Khu phố 2, Thị trấn Củ Chi, Huyện Củ Chi, TP HCM',
+        'TP Hồ Chí Minh',
+        'Huyện Củ Chi',
+        'Miền Nam',
+        '19006067'
     ),
     (
         28,
-        'BX NGÃ 5',
-        '109 Nguyễn Trãi',
-        '02993 523 ',
-        'Miền Nam'
+        'BX TÂN AN',
+        'Số 10, Đường Nguyễn Huệ, Phường 2, TP Tân An, Tỉnh Long An',
+        'Long An',
+        'TP Tân An',
+        'Miền Nam',
+        '02723 777 777'
     ),
     (
         29,
-        'BX NGÃ 7',
-        'BX Ngã 7, P.Ngã',
-        '02933 868 ',
-        'Miền Nam'
+        'BX BẾN TRE',
+        'Đường Nguyễn Đình Chiểu, Phường 7, TP Bến Tre, Tỉnh Bến Tre',
+        'Bến Tre',
+        'TP Bến Tre',
+        'Miền Nam',
+        '02753 874 874'
     ),
     (
         30,
-        'BX SA ĐÉC',
-        '149/8 khóm Hoà ',
-        '02773 774 ',
-        'Miền Nam'
+        'BX SÓC TRĂNG',
+        'Đường Lê Hồng Phong, Phường 6, TP Sóc Trăng, Tỉnh Sóc Trăng',
+        'Sóc Trăng',
+        'TP Sóc Trăng',
+        'Miền Nam',
+        '02993 878 878'
     ),
     (
         31,
-        'BX SÓC TRĂNG',
-        '38 Lê Duẩn, P3,',
-        '02993 868 ',
-        'Miền Nam'
+        'BX HÀ TIÊN',
+        'Đường Mạc Cửu, Phường Bình San, TP Hà Tiên, Tỉnh Kiên Giang',
+        'Kiên Giang',
+        'TP Hà Tiên',
+        'Miền Nam',
+        '02973 999 999'
     ),
     (
         32,
-        'BX TÂN BIÊN',
-        'Bến xe khách Tâ',
-        '19006913',
-        'Miền Nam'
+        'BX LÂM ĐỒNG',
+        'Số 1, Đường Phạm Ngũ Lão, Phường 10, TP Đà Lạt, Tỉnh Lâm Đồng',
+        'Lâm Đồng',
+        'TP Đà Lạt',
+        'Miền Nam',
+        '02633 899 899'
     ),
     (
         33,
-        'BX TÂY NINH',
-        'Bến xe khách Tâ',
-        '19006913',
-        'Miền Nam'
+        'BX ĐẮK LẮK',
+        'Đường Nguyễn Tất Thành, Phường Tân An, TP Buôn Ma Thuột, Tỉnh Đắk Lắk',
+        'Đắk Lắk',
+        'TP Buôn Ma Thuột',
+        'Miền Nam',
+        '02623 888 888'
     ),
     (
         34,
-        'BX THANH BÌNH',
-        'QL30, Khóm Tân ',
-        '02773 833 ',
-        'Miền Nam'
+        'BX GIA LAI',
+        'Số 8, Đường Lê Lợi, TP Pleiku, Tỉnh Gia Lai',
+        'Gia Lai',
+        'TP Pleiku',
+        'Miền Nam',
+        '02693 777 777'
     ),
     (
         35,
-        'BX TRÀ VINH',
-        'Số 554, QL 54, ',
-        '02943 747 ',
-        'Miền Nam'
+        'BX NHA TRANG',
+        'Số 58, Đường 23/10, Phường Ngọc Hiệp, TP Nha Trang, Tỉnh Khánh Hòa',
+        'Khánh Hòa',
+        'TP Nha Trang',
+        'Miền Trung',
+        '02583 333 333'
     ),
     (
         36,
-        'BX VỊ THANH',
-        'Ấp 7, Xã Vị Tru',
-        '02933 583 ',
-        'Miền Nam'
+        'BX QUY NHƠN',
+        'Số 16, Đường Nguyễn Huệ, TP Quy Nhơn, Tỉnh Bình Định',
+        'Bình Định',
+        'TP Quy Nhơn',
+        'Miền Trung',
+        '02563 222 222'
     ),
     (
         37,
-        'BX VĨNH CHÂU',
-        'Đường Phan Than',
-        '02993 615 ',
-        'Miền Nam'
+        'BX PHAN THIẾT',
+        'Số 12, Đường Trần Hưng Đạo, Phường Phú Thủy, TP Phan Thiết, Tỉnh Bình Thuận',
+        'Bình Thuận',
+        'TP Phan Thiết',
+        'Miền Nam',
+        '02523 444 444'
     ),
     (
         38,
-        'BX VĨNH LONG',
-        '1E, Đinh Tiên H',
-        '02703 879 ',
-        'Miền Nam'
+        'BX BÌNH PHƯỚC',
+        'Đường Quốc lộ 14, Phường Tân Bình, TP Đồng Xoài, Tỉnh Bình Phước',
+        'Bình Phước',
+        'TP Đồng Xoài',
+        'Miền Nam',
+        '02713 555 555'
     ),
     (
         39,
-        'CÁI NƯỚC',
-        'Quốc lộ 1A, Khó',
-        '02903 748 ',
-        'Miền Nam'
+        'BX KON TUM',
+        'Đường Bà Triệu, Phường Thống Nhất, TP Kon Tum, Tỉnh Kon Tum',
+        'Kon Tum',
+        'TP Kon Tum',
+        'Miền Trung',
+        '02603 666 666'
     ),
     (
         40,
-        'CÁI TÀU HẠ',
-        'QL 80, Khóm Phú',
-        '02773 611 ',
-        'Miền Nam'
+        'BX ĐỒNG HỚI',
+        'Số 25, Đường Lý Thường Kiệt, Phường Đồng Phú, TP Đồng Hới, Tỉnh Quảng Bình',
+        'Quảng Bình',
+        'TP Đồng Hới',
+        'Miền Trung',
+        '02323 999 999'
     ),
     (
         41,
-        'CHỢ RẪY',
-        '20 Phạm Hữu Chí',
-        '19006067',
-        'Miền Nam'
+        'BX HUẾ',
+        '16 Đường Lê Lợi, Phường Vĩnh Ninh, TP Huế, Tỉnh Thừa Thiên Huế',
+        'Thừa Thiên Huế',
+        'TP Huế',
+        'Miền Trung',
+        '02343 888 888'
     ),
     (
         42,
-        'ĐẦM DƠI',
-        'Đường 30 tháng ',
-        '02903 956 ',
-        'Miền Nam'
+        'BX ĐÀ NẴNG',
+        '185 Đường Tôn Đức Thắng, Phường Hòa Minh, Quận Liên Chiểu, TP Đà Nẵng',
+        'Đà Nẵng',
+        'TP Đà Nẵng',
+        'Miền Trung',
+        '02363 777 777'
     ),
     (
         43,
-        'ĐỒNG ĐEN',
-        '288 Đồng Đen, P',
-        '19006067',
-        'Miền Nam'
+        'BX TAM KỲ',
+        'Số 1, Đường Hùng Vương, Phường An Mỹ, TP Tam Kỳ, Tỉnh Quảng Nam',
+        'Quảng Nam',
+        'TP Tam Kỳ',
+        'Miền Trung',
+        '02353 666 666'
     ),
     (
         44,
-        'LAI VUNG',
-        '137A -QL 80, Xã',
-        '02773 849 ',
-        'Miền Nam'
+        'BX QUẢNG NGÃI',
+        'Đường Nguyễn Tự Tân, Phường Nghĩa Lộ, TP Quảng Ngãi, Tỉnh Quảng Ngãi',
+        'Quảng Ngãi',
+        'TP Quảng Ngãi',
+        'Miền Trung',
+        '02553 555 555'
     ),
     (
         45,
-        'LẤP VÒ',
-        '135 Đường 3/2, ',
-        '02773 688 ',
-        'Miền Nam'
+        'BX HÀ TĨNH',
+        'Đường Nguyễn Công Trứ, Phường Bắc Hà, TP Hà Tĩnh, Tỉnh Hà Tĩnh',
+        'Hà Tĩnh',
+        'TP Hà Tĩnh',
+        'Miền Bắc',
+        '02393 444 444'
     ),
     (
         46,
-        'LỘ TẺ TRI TÔN',
-        'Bến xe Châu Thà',
-        '02963 989 ',
-        'Miền Nam'
+        'BX VINH',
+        'Đường Lê Lợi, Phường Hưng Bình, TP Vinh, Tỉnh Nghệ An',
+        'Nghệ An',
+        'TP Vinh',
+        'Miền Bắc',
+        '02383 333 333'
     ),
     (
         47,
-        'LONG PHÚ',
-        'Ấp 1, TT Long P',
-        '02993 712 ',
-        'Miền Nam'
+        'BX THANH HÓA',
+        'Đường Trường Thi, Phường Trường Thi, TP Thanh Hóa, Tỉnh Thanh Hóa',
+        'Thanh Hóa',
+        'TP Thanh Hóa',
+        'Miền Bắc',
+        '02373 222 222'
     ),
     (
         48,
-        'LŨY BÁN BÍCH',
-        '973 Lũy Bán Bíc',
-        '19006067',
-        'Miền Nam'
+        'BX NINH BÌNH',
+        'Đường Lê Đại Hành, Phường Đông Thành, TP Ninh Bình, Tỉnh Ninh Bình',
+        'Ninh Bình',
+        'TP Ninh Bình',
+        'Miền Bắc',
+        '02293 111 111'
     ),
     (
         49,
-        'MA LÂM',
-        '474 đường 8 thá',
-        '02523 733 ',
-        'Miền Nam'
+        'BX HẢI PHÒNG',
+        'Số 1 Đường Bạch Đằng, Phường Thượng Lý, Quận Hồng Bàng, TP Hải Phòng',
+        'Hải Phòng',
+        'TP Hải Phòng',
+        'Miền Bắc',
+        '02253 999 999'
     ),
     (
         50,
-        'MŨI NÉ',
-        '20 Huỳnh Thúc K',
-        '02523 743 ',
-        'Miền Nam'
+        'BX HẠ LONG',
+        'Đường Nguyễn Văn Cừ, Phường Hồng Hải, TP Hạ Long, Tỉnh Quảng Ninh',
+        'Quảng Ninh',
+        'TP Hạ Long',
+        'Miền Bắc',
+        '02033 888 888'
     ),
     (
         51,
-        'MỸ THỚI',
-        '26/32 Quốc Lộ 9',
-        '02963 989 ',
-        'Miền Nam'
+        'BX YÊN BÁI',
+        'Đường Nguyễn Tất Thành, Phường Yên Ninh, TP Yên Bái, Tỉnh Yên Bái',
+        'Yên Bái',
+        'TP Yên Bái',
+        'Miền Bắc',
+        '02163 777 777'
     ),
     (
         52,
-        'NGÃ TƯ ĐỒNG TÂM',
-        'Quốc Lộ 1A, Ấp ',
-        '02733 618 ',
-        'Miền Nam'
+        'BX LÀO CAI',
+        'Đường Trần Hưng Đạo, Phường Bắc Cường, TP Lào Cai, Tỉnh Lào Cai',
+        'Lào Cai',
+        'TP Lào Cai',
+        'Miền Bắc',
+        '02143 666 666'
     ),
     (
         53,
-        'PHÚ HÒA',
-        '455 Trần Phú, Ấ',
-        '02963 989 ',
-        'Miền Nam'
+        'BX SƠN LA',
+        'Đường Trường Chinh, Phường Quyết Tâm, TP Sơn La, Tỉnh Sơn La',
+        'Sơn La',
+        'TP Sơn La',
+        'Miền Bắc',
+        '02123 555 555'
     ),
     (
         54,
-        'PHƯỚC LONG',
-        'Ấp Long Thành, ',
-        '02913 859 ',
-        'Miền Nam'
+        'BX ĐIỆN BIÊN',
+        'Đường Võ Nguyên Giáp, Phường Tân Thanh, TP Điện Biên Phủ, Tỉnh Điện Biên',
+        'Điện Biên',
+        'TP Điện Biên Phủ',
+        'Miền Bắc',
+        '02153 444 444'
     ),
     (
         55,
-        'SATRA TRẠM DỪNG',
-        'Ấp Hòa Phúc, xã',
-        '02733 756 ',
-        'Miền Nam'
+        'BX LẠNG SƠN',
+        'Đường Quốc lộ 1A, Phường Đông Kinh, TP Lạng Sơn, Tỉnh Lạng Sơn',
+        'Lạng Sơn',
+        'TP Lạng Sơn',
+        'Miền Bắc',
+        '02053 333 333'
     ),
     (
         56,
-        'SÔNG ĐỐC',
-        'Tổ 5, Khóm 10, ',
-        '02903 890 ',
-        'Miền Nam'
+        'BX CAO BẰNG',
+        'Đường Kim Đồng, Phường Hợp Giang, TP Cao Bằng, Tỉnh Cao Bằng',
+        'Cao Bằng',
+        'TP Cao Bằng',
+        'Miền Bắc',
+        '02063 222 222'
     ),
     (
         57,
-        'SONG PHÚ',
-        'Lô 27-28-29 Khu',
-        '02703 959 ',
-        'Miền Nam'
+        'BX BẮC NINH',
+        'Đường Lý Thái Tổ, Phường Võ Cường, TP Bắc Ninh, Tỉnh Bắc Ninh',
+        'Bắc Ninh',
+        'TP Bắc Ninh',
+        'Miền Bắc',
+        '02223 111 111'
     ),
     (
         58,
-        'SUỐI LINH',
-        'D9, Xa Lộ Hà Nộ',
-        '02518 890 ',
-        'Miền Nam'
+        'BX PHÚ THỌ',
+        'Đường Hùng Vương, Phường Nông Trang, TP Việt Trì, Tỉnh Phú Thọ',
+        'Phú Thọ',
+        'TP Việt Trì',
+        'Miền Bắc',
+        '02103 999 999'
     ),
     (
         59,
-        'TÂN PHÚ',
-        '782, Quốc Lộ 20',
-        '02513 698 ',
-        'Miền Nam'
+        'BX TÀI LỢI',
+        'Đường Quốc lộ 6, Thị trấn Tài Lợi, Tỉnh Hòa Bình',
+        'Hòa Bình',
+        'Thị trấn Tài Lợi',
+        'Miền Bắc',
+        '02183 888 888'
     ),
     (
         60,
-        'TRẦN ĐỀ',
-        'Ấp Đầu Giồng, T',
-        '02993 717 ',
-        'Miền Nam'
+        'BX NAM ĐỊNH',
+        'Đường Quốc lộ 10, Phường Lộc Hạ, TP Nam Định, Tỉnh Nam Định',
+        'Nam Định',
+        'TP Nam Định',
+        'Miền Bắc',
+        '02283 777 777'
     ),
     (
         61,
-        'UNG BƯỚU 1',
-        '68 Nơ Trang Lon',
-        '19006067',
-        'Miền Nam'
+        'BX QUY NHƠN',
+        'Đường Tây Sơn, Phường Nguyễn Văn Cừ, TP Quy Nhơn, Tỉnh Bình Định',
+        'Bình Định',
+        'TP Quy Nhơn',
+        'Miền Trung',
+        '02563 999 999'
     ),
     (
         62,
-        'VĂN PHÒNG DĨ AN',
-        '269 Lê Hồng Pho',
-        '19006915',
-        'Miền Nam'
+        'BX PHAN THIẾT',
+        'Đường Lê Duẩn, Phường Phú Tài, TP Phan Thiết, Tỉnh Bình Thuận',
+        'Bình Thuận',
+        'TP Phan Thiết',
+        'Miền Nam',
+        '02523 888 888'
     ),
     (
         63,
-        'VĂN PHÒNG LÁI THIÊU',
-        '70 Đường CMT8, ',
-        '19006915',
-        'Miền Nam'
+        'BX NHA TRANG',
+        'Đường 23 Tháng 10, Phường Vĩnh Hiệp, TP Nha Trang, Tỉnh Khánh Hòa',
+        'Khánh Hòa',
+        'TP Nha Trang',
+        'Miền Trung',
+        '02583 777 777'
     ),
     (
         64,
-        'VP BẠC LIÊU',
-        'Bến xe Bạc Liêu',
-        '02913 932 ',
-        'Miền Nam'
+        'BX PLEIKU',
+        'Đường Lê Thánh Tôn, Phường Phù Đổng, TP Pleiku, Tỉnh Gia Lai',
+        'Gia Lai',
+        'TP Pleiku',
+        'Tây Nguyên',
+        '02693 666 666'
     ),
     (
         65,
-        'VP BÌNH PHÚ',
-        'Ấp Nguyệt Lãng ',
-        '02943 888 ',
-        'Miền Nam'
+        'BX BUÔN MA THUỘT',
+        'Đường Nguyễn Tất Thành, Phường Tân Lập, TP Buôn Ma Thuột, Tỉnh Đắk Lắk',
+        'Đắk Lắk',
+        'TP Buôn Ma Thuột',
+        'Tây Nguyên',
+        '02623 555 555'
     ),
     (
         66,
-        'VP CÁI DẦU',
-        'Tổ 5, Ấp Bình C',
-        '02963 989 ',
-        'Miền Nam'
+        'BX KON TUM',
+        'Đường Phan Đình Phùng, Phường Thống Nhất, TP Kon Tum, Tỉnh Kon Tum',
+        'Kon Tum',
+        'TP Kon Tum',
+        'Tây Nguyên',
+        '02603 444 444'
     ),
     (
         67,
-        'VP CÁI TẮC',
-        'Bến xe Cái Tắc,',
-        '02933 947 ',
-        'Miền Nam'
+        'BX PHÚ YÊN',
+        'Đường Hùng Vương, Phường 7, TP Tuy Hòa, Tỉnh Phú Yên',
+        'Phú Yên',
+        'TP Tuy Hòa',
+        'Miền Trung',
+        '02573 333 333'
     ),
     (
         68,
-        'VP CHỢ CHÂU ĐỐC',
-        'Đ.Nguyễn Hữu Cả',
-        '02963 989 ',
-        'Miền Nam'
+        'BX CAM RANH',
+        'Đường Quốc lộ 1A, Phường Cam Lộc, TP Cam Ranh, Tỉnh Khánh Hòa',
+        'Khánh Hòa',
+        'TP Cam Ranh',
+        'Miền Trung',
+        '02583 222 222'
     ),
     (
         69,
-        'VP HÀ TIÊN',
-        'Bến xe Hà Tiên,',
-        '02973 668 ',
-        'Miền Nam'
+        'BX LONG XUYÊN',
+        'Đường Trần Hưng Đạo, Phường Mỹ Bình, TP Long Xuyên, Tỉnh An Giang',
+        'An Giang',
+        'TP Long Xuyên',
+        'Miền Tây',
+        '02963 111 111'
     ),
     (
         70,
-        'VP HÀNG XANH',
-        '486H-486J Điện ',
-        '19006067',
-        'Miền Nam'
+        'BX CHÂU ĐỐC',
+        'Đường Nguyễn Văn Thoại, Phường Châu Phú A, TP Châu Đốc, Tỉnh An Giang',
+        'An Giang',
+        'TP Châu Đốc',
+        'Miền Tây',
+        '02963 999 999'
     ),
     (
         71,
-        'VP HỘ PHÒNG',
-        'Bến xe Hộ phòng',
-        '02913 942 ',
-        'Miền Nam'
+        'BX SÓC TRĂNG',
+        'Đường Hùng Vương, Phường 6, TP Sóc Trăng, Tỉnh Sóc Trăng',
+        'Sóc Trăng',
+        'TP Sóc Trăng',
+        'Miền Tây',
+        '02993 888 888'
     ),
     (
         72,
-        'VP HÒA BÌNH',
-        'Số 617 Quốc Lộ ',
-        '02913 897 ',
-        'Miền Nam'
+        'BX TRÀ VINH',
+        'Đường Điện Biên Phủ, Phường 7, TP Trà Vinh, Tỉnh Trà Vinh',
+        'Trà Vinh',
+        'TP Trà Vinh',
+        'Miền Tây',
+        '02943 777 777'
     ),
     (
         73,
-        'VP KINH CÙNG',
-        'Bến xe Kinh Cùn',
-        '02933 983 ',
-        'Miền Nam'
+        'BX RẠCH GIÁ',
+        'Đường Nguyễn Bỉnh Khiêm, Phường Vĩnh Lạc, TP Rạch Giá, Tỉnh Kiên Giang',
+        'Kiên Giang',
+        'TP Rạch Giá',
+        'Miền Tây',
+        '02973 666 666'
     ),
     (
         74,
-        'VP MỸ LONG',
-        'QL30, Ấp 2, xã ',
-        '02773 853 ',
-        'Miền Nam'
+        'BX CÀ MAU',
+        'Đường Lý Thường Kiệt, Phường 4, TP Cà Mau, Tỉnh Cà Mau',
+        'Cà Mau',
+        'TP Cà Mau',
+        'Miền Tây',
+        '02903 555 555'
     ),
     (
         75,
-        'VP MỸ THỌ',
-        'QL30, Khóm Mỹ T',
-        '02773 986 ',
-        'Miền Nam'
+        'BX BẠC LIÊU',
+        'Đường Trần Phú, Phường 3, TP Bạc Liêu, Tỉnh Bạc Liêu',
+        'Bạc Liêu',
+        'TP Bạc Liêu',
+        'Miền Tây',
+        '02913 444 444'
     ),
     (
         76,
-        'VP NGÃ 3 LỘ TẺ',
-        'KV Thới Hòa 1 -',
-        '02923 642 ',
-        'Miền Nam'
+        'BX ĐỒNG HỚI',
+        'Đường Hùng Vương, Phường Nam Lý, TP Đồng Hới, Tỉnh Quảng Bình',
+        'Quảng Bình',
+        'TP Đồng Hới',
+        'Miền Trung',
+        '02323 333 333'
     ),
     (
         77,
-        'VP NÚI SAM',
-        'Tân Lộ Kiều Lươ',
-        '02963 989 ',
-        'Miền Nam'
+        'BX ĐÔNG HÀ',
+        'Đường Lý Thường Kiệt, Phường 1, TP Đông Hà, Tỉnh Quảng Trị',
+        'Quảng Trị',
+        'TP Đông Hà',
+        'Miền Trung',
+        '02333 222 222'
     ),
     (
         78,
-        'VP PHONG ĐIỀN',
-        '353B Ấp Thị Tứ ',
-        '19006767',
-        'Miền Nam'
+        'BX HỒNG NGỰ',
+        'Đường Võ Văn Kiệt, Phường An Thạnh, TX Hồng Ngự, Tỉnh Đồng Tháp',
+        'Đồng Tháp',
+        'TX Hồng Ngự',
+        'Miền Tây',
+        '02773 111 111'
     ),
     (
         79,
-        'VP RẠCH GIÁ',
-        'Bến xe Rạch Giá',
-        '02973 963 ',
-        'Miền Nam'
+        'BX GÒ CÔNG',
+        'Đường Quốc lộ 50, TX Gò Công, Tỉnh Tiền Giang',
+        'Tiền Giang',
+        'TX Gò Công',
+        'Miền Tây',
+        '02733 999 999'
     ),
     (
         80,
-        'VP RẠCH SỎI',
-        'Bến xe tỉnh Kiê',
-        '19006916',
-        'Miền Nam'
+        'BX BẾN TRE',
+        'Đường Nguyễn Huệ, Phường Phú Tân, TP Bến Tre, Tỉnh Bến Tre',
+        'Bến Tre',
+        'TP Bến Tre',
+        'Miền Tây',
+        '02753 888 888'
     ),
     (
         81,
-        'VP TÂN HIỆP',
-        '81 Khu phố Đông',
-        '02973 733 ',
-        'Miền Nam'
+        'BX HÀ TIÊN',
+        'Đường Mạc Cửu, Phường Đông Hồ, TP Hà Tiên, Tỉnh Kiên Giang',
+        'Kiên Giang',
+        'TP Hà Tiên',
+        'Miền Tây',
+        '02973 123 456'
     ),
     (
         82,
-        'VP THỐT NỐT',
-        'KV Qui Thạnh 1 ',
-        '02923 851 ',
-        'Miền Nam'
+        'BX THANH HÓA',
+        'Đường Lê Hoàn, Phường Lam Sơn, TP Thanh Hóa, Tỉnh Thanh Hóa',
+        'Thanh Hóa',
+        'TP Thanh Hóa',
+        'Miền Bắc',
+        '02373 987 654'
     ),
     (
         83,
-        'VP THỨ 3',
-        'Số 14, Khu phố ',
-        '02973 822 ',
-        'Miền Nam'
+        'BX SẦM SƠN',
+        'Đường Hồ Xuân Hương, Phường Trung Sơn, TP Sầm Sơn, Tỉnh Thanh Hóa',
+        'Thanh Hóa',
+        'TP Sầm Sơn',
+        'Miền Bắc',
+        '02373 555 666'
     ),
     (
         84,
-        'VP TRÀ NÓC',
-        '19/8 Lê Hồng Ph',
-        '02923 730 ',
-        'Miền Nam'
+        'BX NINH BÌNH',
+        'Đường Trần Hưng Đạo, Phường Tân Thành, TP Ninh Bình, Tỉnh Ninh Bình',
+        'Ninh Bình',
+        'TP Ninh Bình',
+        'Miền Bắc',
+        '02293 888 999'
     ),
     (
         85,
-        'VP TRẠM DỪNG BẾN TRE',
-        'Đường Võ Nguyên',
-        '02753 646 ',
-        'Miền Nam'
+        'BX TAM ĐIỆP',
+        'Đường Đinh Tiên Hoàng, TP Tam Điệp, Tỉnh Ninh Bình',
+        'Ninh Bình',
+        'TP Tam Điệp',
+        'Miền Bắc',
+        '02293 444 555'
     ),
     (
         86,
-        'VP TRI TÔN',
-        'Đường 3 tháng 2',
-        '02963 989 ',
-        'Miền Nam'
+        'BX HƯNG YÊN',
+        'Đường Nguyễn Văn Linh, Phường Hiến Nam, TP Hưng Yên, Tỉnh Hưng Yên',
+        'Hưng Yên',
+        'TP Hưng Yên',
+        'Miền Bắc',
+        '02213 333 222'
     ),
     (
         87,
-        'VP VĨNH THUẬN',
-        'Bến xe Vĩnh Thu',
-        '02973 636 ',
-        'Miền Nam'
+        'BX BẮC GIANG',
+        'Đường Xương Giang, TP Bắc Giang, Tỉnh Bắc Giang',
+        'Bắc Giang',
+        'TP Bắc Giang',
+        'Miền Bắc',
+        '02043 111 999'
     ),
     (
         88,
-        'VP VỊNH TRE',
-        'Số 1A, Đinh Tiê',
-        '02963 989 ',
-        'Miền Nam'
+        'BX BẮC NINH',
+        'Đường Lý Thái Tổ, TP Bắc Ninh, Tỉnh Bắc Ninh',
+        'Bắc Ninh',
+        'TP Bắc Ninh',
+        'Miền Bắc',
+        '02223 222 333'
     ),
     (
         89,
-        'VP VĨNH TƯỜNG',
-        '242 QL 61A, KV ',
-        '02933 993 ',
-        'Miền Nam'
+        'BX LẠNG SƠN',
+        'Đường Quốc lộ 1A, TP Lạng Sơn, Tỉnh Lạng Sơn',
+        'Lạng Sơn',
+        'TP Lạng Sơn',
+        'Miền Bắc',
+        '02053 777 888'
     ),
     (
         90,
-        'VP VÕ THỊ SÁU',
-        '17-19, Võ Thị S',
-        '02773 876 ',
-        'Miền Nam'
+        'BX ĐIỆN BIÊN PHỦ',
+        'Đường Võ Nguyên Giáp, Phường Him Lam, TP Điện Biên Phủ, Tỉnh Điện Biên',
+        'Điện Biên',
+        'TP Điện Biên Phủ',
+        'Miền Bắc',
+        '02153 123 123'
     ),
     (
         91,
-        'VP XA LỘ HÀ NỘI',
-        '798 +798A ,KP3,',
-        '19006067',
-        'Miền Nam'
+        'BX SƠN LA',
+        'Đường Trường Chinh, TP Sơn La, Tỉnh Sơn La',
+        'Sơn La',
+        'TP Sơn La',
+        'Miền Bắc',
+        '02123 456 789'
     ),
     (
         92,
-        'VP Y DƯỢC',
-        '03 Mạc Thiên Tí',
-        '02838 555 ',
-        'Miền Nam'
+        'BX CAO BẰNG',
+        'Đường Phai Khắt Nà Ngần, TP Cao Bằng, Tỉnh Cao Bằng',
+        'Cao Bằng',
+        'TP Cao Bằng',
+        'Miền Bắc',
+        '02063 999 000'
     ),
     (
         93,
-        'VP. BẾN XE BIÊN HÒA',
-        '04, Nguyễn Ái Q',
-        '02518 890 ',
-        'Miền Nam'
+        'BX HÀ NAM',
+        'Đường Trần Hưng Đạo, TP Phủ Lý, Tỉnh Hà Nam',
+        'Hà Nam',
+        'TP Phủ Lý',
+        'Miền Bắc',
+        '02263 555 444'
     ),
     (
         94,
-        'VP 172 LÊ DUẨN',
-        'Số 172 Lê Duẩn,',
-        '02623 936 ',
-        'Miền Nam'
+        'BX QUẢNG NAM',
+        'Đường Hùng Vương, TP Tam Kỳ, Tỉnh Quảng Nam',
+        'Quảng Nam',
+        'TP Tam Kỳ',
+        'Miền Trung',
+        '02353 222 333'
     ),
     (
         95,
-        'VP BẢO LÂM',
-        '95 Trần Phú,TT ',
-        '02633 734 ',
-        'Miền Nam'
+        'BX QUẢNG NGÃI',
+        'Đường Lê Thánh Tôn, TP Quảng Ngãi, Tỉnh Quảng Ngãi',
+        'Quảng Ngãi',
+        'TP Quảng Ngãi',
+        'Miền Trung',
+        '02553 666 777'
     ),
     (
         96,
-        'VP BẢO LỘC',
-        '399 Trần Phú, P',
-        '02633 731 ',
-        'Miền Nam'
+        'BX HÀ TĨNH',
+        'Đường Nguyễn Du, TP Hà Tĩnh, Tỉnh Hà Tĩnh',
+        'Hà Tĩnh',
+        'TP Hà Tĩnh',
+        'Miền Trung',
+        '02393 888 555'
     ),
     (
         97,
-        'VP BX ĐÀ LẠT',
-        'Số 01 - Tô Hiến',
-        '19006070',
-        'Miền Nam'
+        'BX QUẢNG NINH',
+        'Đường Trần Quốc Nghiễn, TP Hạ Long, Tỉnh Quảng Ninh',
+        'Quảng Ninh',
+        'TP Hạ Long',
+        'Miền Bắc',
+        '02033 111 222'
     ),
     (
         98,
-        'VP DI LINH',
-        '735 Hùng Vương,',
-        '02633 788 ',
-        'Miền Nam'
+        'BX VŨNG TÀU',
+        'Đường 2 Tháng 9, TP Vũng Tàu, Tỉnh Bà Rịa - Vũng Tàu',
+        'Bà Rịa - Vũng Tàu',
+        'TP Vũng Tàu',
+        'Miền Nam',
+        '02543 999 111'
     ),
     (
         99,
-        'VP DRAN',
-        'TDP Đường mới,T',
-        '02633 642 ',
-        'Miền Nam'
+        'BX ĐỒNG XOÀI',
+        'Đường Phú Riềng Đỏ, TP Đồng Xoài, Tỉnh Bình Phước',
+        'Bình Phước',
+        'TP Đồng Xoài',
+        'Miền Nam',
+        '02713 333 000'
     ),
     (
         100,
-        'VP ĐỨC TRỌNG',
-        '795 Quốc lộ 20,',
-        '02633 651 ',
-        'Miền Nam'
+        'BX GIA NGHĨA',
+        'Đường Quang Trung, TP Gia Nghĩa, Tỉnh Đắk Nông',
+        'Đắk Nông',
+        'TP Gia Nghĩa',
+        'Tây Nguyên',
+        '02613 888 999'
     ),
     (
         101,
-        'VP FI NÔM',
-        '14 Tổ 13 - Ngã ',
-        '02633 658 ',
-        'Miền Nam'
+        'BX PHÚ THỌ',
+        'Đường Hùng Vương, TP Việt Trì, Tỉnh Phú Thọ',
+        'Phú Thọ',
+        'TP Việt Trì',
+        'Miền Bắc',
+        '02103 555 777'
     ),
     (
         102,
-        'VP GIA NGHĨA',
-        '226 Hai Bà Trưn',
-        '02613 676 ',
-        'Miền Nam'
+        'BX LÀO CAI',
+        'Đường Trần Hưng Đạo, TP Lào Cai, Tỉnh Lào Cai',
+        'Lào Cai',
+        'TP Lào Cai',
+        'Miền Bắc',
+        '02143 444 999'
     ),
     (
         103,
-        'VP HOÀ NINH',
-        'Ngã 3 Hoà Ninh ',
-        '02633 799 ',
-        'Miền Nam'
+        'BX YÊN BÁI',
+        'Đường Điện Biên, TP Yên Bái, Tỉnh Yên Bái',
+        'Yên Bái',
+        'TP Yên Bái',
+        'Miền Bắc',
+        '02163 123 456'
     ),
     (
         104,
-        'VP KIẾN ĐỨC',
-        'Ki-ot số 08 , N',
-        '02613 595 ',
-        'Miền Nam'
+        'BX TÂY NINH',
+        'Đường Cách Mạng Tháng 8, TP Tây Ninh, Tỉnh Tây Ninh',
+        'Tây Ninh',
+        'TP Tây Ninh',
+        'Miền Nam',
+        '02763 456 789'
     ),
     (
         105,
-        'VP LÊ QUÝ ĐÔN',
-        '11A/2 Lê Quý Đô',
-        '02633 582 ',
-        'Miền Nam'
+        'BX HÒA BÌNH',
+        'Đường Chi Lăng, TP Hòa Bình, Tỉnh Hòa Bình',
+        'Hòa Bình',
+        'TP Hòa Bình',
+        'Miền Bắc',
+        '02183 999 333'
     ),
     (
         106,
-        'VP TÀ HINE',
-        'Ngã 3 Ninh Gia-',
-        '02633 628 ',
-        'Miền Nam'
+        'BX TÂY SƠN',
+        'Đường Quốc lộ 1A, Huyện Tây Sơn, Tỉnh Bình Định',
+        'Bình Định',
+        'Huyện Tây Sơn',
+        'Miền Trung',
+        '02563 777 888'
     ),
     (
         107,
-        'VP THẠNH MỸ',
-        'Khu Phố Nghĩa Đ',
-        '02633 646 ',
-        'Miền Nam'
+        'BX GIA LAI',
+        'Đường Trần Phú, TP Pleiku, Tỉnh Gia Lai',
+        'Gia Lai',
+        'TP Pleiku',
+        'Tây Nguyên',
+        '02693 333 222'
     ),
     (
         108,
-        'VP TRẠI MÁT',
-        '07 Huỳnh Tấn Ph',
-        '02633 535 ',
-        'Miền Nam'
+        'BX KON TUM',
+        'Đường Phạm Văn Đồng, TP Kon Tum, Tỉnh Kon Tum',
+        'Kon Tum',
+        'TP Kon Tum',
+        'Tây Nguyên',
+        '02603 555 111'
     ),
     (
         109,
-        '207 TÂY SƠN',
-        '207 Tây Sơn, Ph',
-        '02563 947 ',
-        'Miền Trung'
+        'BX ĐẮK LẮK',
+        'Đường Lê Duẩn, TP Buôn Ma Thuột, Tỉnh Đắk Lắk',
+        'Đắk Lắk',
+        'TP Buôn Ma Thuột',
+        'Tây Nguyên',
+        '02623 666 444'
     ),
     (
         110,
-        '210 NGÔ GIA TỰ',
-        '210 Ngô Gia Tự,',
-        '02593 828 ',
-        'Miền Trung'
+        'BX AN GIANG',
+        'Đường Nguyễn Trãi, TP Long Xuyên, Tỉnh An Giang',
+        'An Giang',
+        'TP Long Xuyên',
+        'Miền Tây',
+        '02963 123 888'
     ),
     (
         111,
-        'AN NHƠN',
-        '02 Nguyễn Văn L',
-        '02563 789 ',
-        'Miền Trung'
+        'BX BẾN TRE',
+        'Đường Nguyễn Huệ, TP Bến Tre, Tỉnh Bến Tre',
+        'Bến Tre',
+        'TP Bến Tre',
+        'Miền Tây',
+        '02753 999 666'
     ),
     (
         112,
-        'BẾN XE PHAN RANG',
-        '52 Lê Duẩn, QL1',
-        '02593 828 ',
-        'Miền Trung'
+        'BX TIỀN GIANG',
+        'Đường Hùng Vương, TP Mỹ Tho, Tỉnh Tiền Giang',
+        'Tiền Giang',
+        'TP Mỹ Tho',
+        'Miền Tây',
+        '02773 444 777'
     ),
     (
         113,
-        'BẾN XE PHÍA BẮC HUẾ',
-        '132 Lý Thái Tổ,',
-        '02343 766 ',
-        'Miền Trung'
+        'BX HẬU GIANG',
+        'Đường Nguyễn Thái Học, TP Vị Thanh, Tỉnh Hậu Giang',
+        'Hậu Giang',
+        'TP Vị Thanh',
+        'Miền Tây',
+        '02933 555 111'
     ),
     (
         114,
-        'BẾN XE PHÍA NAM',
-        '97 An dương vươ',
-        '02343 870 ',
-        'Miền Trung'
+        'BX LONG AN',
+        'Đường Quốc lộ 1A, TP Tân An, Tỉnh Long An',
+        'Long An',
+        'TP Tân An',
+        'Miền Tây',
+        '02723 888 999'
     ),
     (
         115,
-        'BẾN XE QUẢNG NGÃI',
-        '02 Trần Khánh D',
-        '02553 839 ',
-        'Miền Trung'
+        'BX TRÀ VINH',
+        'Đường Nguyễn Đáng, TP Trà Vinh, Tỉnh Trà Vinh',
+        'Trà Vinh',
+        'TP Trà Vinh',
+        'Miền Tây',
+        '02943 222 444'
     ),
     (
         116,
-        'BẾN XE QUY NHƠN',
-        'TT Quy Nhơn, Ph',
-        '02563 946 ',
-        'Miền Trung'
+        'BX VĨNH LONG',
+        'Đường Phạm Thái Bường, TP Vĩnh Long, Tỉnh Vĩnh Long',
+        'Vĩnh Long',
+        'TP Vĩnh Long',
+        'Miền Tây',
+        '02783 333 555'
     ),
     (
         117,
-        'BÌNH SƠN',
-        'Số 01 Lê Thị Hà',
-        '02553 525 ',
-        'Miền Trung'
+        'BX QUẢNG BÌNH',
+        'Đường Lý Thường Kiệt, TP Đồng Hới, Tỉnh Quảng Bình',
+        'Quảng Bình',
+        'TP Đồng Hới',
+        'Miền Trung',
+        '02323 444 666'
     ),
     (
         118,
-        'BX BẮC PHAN THIẾT',
-        '01 Từ Văn Tư, P',
-        '02523 833 ',
-        'Miền Trung'
+        'BX QUẢNG TRỊ',
+        'Đường Hùng Vương, TP Đông Hà, Tỉnh Quảng Trị',
+        'Quảng Trị',
+        'TP Đông Hà',
+        'Miền Trung',
+        '02333 777 222'
     ),
     (
         119,
-        'BX NAM PHAN THIẾT',
-        '64 Trần Quý Cáp',
-        '02523 730 ',
-        'Miền Trung'
+        'BX HUẾ',
+        'Đường Bến Nghé, TP Huế, Tỉnh Thừa Thiên Huế',
+        'Thừa Thiên Huế',
+        'TP Huế',
+        'Miền Trung',
+        '02343 888 111'
     ),
     (
         120,
-        'PHÚ QUÝ',
-        '144 Quốc Lộ 1A,',
-        '02593 841 ',
-        'Miền Trung'
+        'BX NHA TRANG',
+        'Đường 23 Tháng 10, TP Nha Trang, Tỉnh Khánh Hòa',
+        'Khánh Hòa',
+        'TP Nha Trang',
+        'Miền Trung',
+        '02583 111 333'
     ),
     (
         121,
-        'SÔNG VỆ',
-        'QL1A ,Thôn 3, X',
-        '02553 719 ',
-        'Miền Trung'
+        'BX SƠN LA',
+        'Đường Chu Văn Thịnh, TP Sơn La, Tỉnh Sơn La',
+        'Sơn La',
+        'TP Sơn La',
+        'Miền Bắc',
+        '02123 456 789'
     ),
     (
         122,
-        'VĂN PHÒNG 176 TRẦN QUÝ CÁP',
-        '176 Trần Quý Cá',
-        '02583 560 ',
-        'Miền Trung'
+        'BX LAI CHÂU',
+        'Đường Trần Hưng Đạo, TP Lai Châu, Tỉnh Lai Châu',
+        'Lai Châu',
+        'TP Lai Châu',
+        'Miền Bắc',
+        '02113 444 555'
     ),
     (
         123,
-        'VĂN PHÒNG DIÊN KHÁNH',
-        '62 Lạc Long Quâ',
-        '02583 851 ',
-        'Miền Trung'
+        'BX ĐIỆN BIÊN',
+        'Đường Võ Nguyên Giáp, TP Điện Biên Phủ, Tỉnh Điện Biên',
+        'Điện Biên',
+        'TP Điện Biên Phủ',
+        'Miền Bắc',
+        '02153 777 888'
     ),
     (
         124,
-        'VĂN PHÒNG MỸ CA',
-        '240 Đại Lộ Hùng',
-        '02583 977 ',
-        'Miền Trung'
+        'BX CAO BẰNG',
+        'Đường Trần Phú, TP Cao Bằng, Tỉnh Cao Bằng',
+        'Cao Bằng',
+        'TP Cao Bằng',
+        'Miền Bắc',
+        '02063 999 111'
     ),
     (
         125,
-        'VĂN PHÒNG TAM KỲ',
-        '252 Nguyễn Hoàn',
-        '02353 819 ',
-        'Miền Trung'
+        'BX BẮC KẠN',
+        'Đường Nguyễn Văn Cừ, TP Bắc Kạn, Tỉnh Bắc Kạn',
+        'Bắc Kạn',
+        'TP Bắc Kạn',
+        'Miền Bắc',
+        '02093 222 333'
     ),
     (
         126,
-        'VP 77 LÊ LỢI',
-        '77 Lê Lợi, Phườ',
-        '02573 812 ',
-        'Miền Trung'
+        'BX LẠNG SƠN',
+        'Đường Lê Lợi, TP Lạng Sơn, Tỉnh Lạng Sơn',
+        'Lạng Sơn',
+        'TP Lạng Sơn',
+        'Miền Bắc',
+        '02053 333 444'
     ),
     (
         127,
-        'VP BẾN XE CAM RANH',
-        'Số 01 Lê Duẩn, ',
-        '02583 953 ',
-        'Miền Trung'
+        'BX HÀ GIANG',
+        'Đường Nguyễn Trãi, TP Hà Giang, Tỉnh Hà Giang',
+        'Hà Giang',
+        'TP Hà Giang',
+        'Miền Bắc',
+        '02193 555 666'
     ),
     (
         128,
-        'VP BẾN XE ĐÀ NẴNG',
-        'Số 97-99 Cao Sơ',
-        '02363 786 ',
-        'Miền Trung'
+        'BX BẮC GIANG',
+        'Đường Hùng Vương, TP Bắc Giang, Tỉnh Bắc Giang',
+        'Bắc Giang',
+        'TP Bắc Giang',
+        'Miền Bắc',
+        '02043 777 999'
     ),
     (
         129,
-        'VP BẾN XE ĐẠI LỘC',
-        '279 Hùng Vương,',
-        '02353 747 ',
-        'Miền Trung'
+        'BX HẢI DƯƠNG',
+        'Đường Nguyễn Lương Bằng, TP Hải Dương, Tỉnh Hải Dương',
+        'Hải Dương',
+        'TP Hải Dương',
+        'Miền Bắc',
+        '02203 444 222'
     ),
     (
         130,
-        'VP BẾN XE NAM TUY HOÀ',
-        '507 Nguyễn Văn ',
-        '02573 793 ',
-        'Miền Trung'
+        'BX NINH BÌNH',
+        'Đường Lê Hồng Phong, TP Ninh Bình, Tỉnh Ninh Bình',
+        'Ninh Bình',
+        'TP Ninh Bình',
+        'Miền Bắc',
+        '02293 888 777'
     ),
     (
         131,
-        'VP BẾN XE NINH HOÀ',
-        'QL1A, Km1421, T',
-        '02583 645 ',
-        'Miền Trung'
+        'BX NAM ĐỊNH',
+        'Đường Trần Nhân Tông, TP Nam Định, Tỉnh Nam Định',
+        'Nam Định',
+        'TP Nam Định',
+        'Miền Bắc',
+        '02283 222 111'
     ),
     (
         132,
-        'VP BẾN XE PHÍA BẮC',
-        'Số 01 đường 2/4',
-        '02583 540 ',
-        'Miền Trung'
+        'BX HƯNG YÊN',
+        'Đường Phạm Ngũ Lão, TP Hưng Yên, Tỉnh Hưng Yên',
+        'Hưng Yên',
+        'TP Hưng Yên',
+        'Miền Bắc',
+        '02213 999 666'
     ),
     (
         133,
-        'VP BẾN XE PHÍA NAM',
-        'Km6 đường 23/10',
-        '02583 891 ',
-        'Miền Trung'
+        'BX QUẢNG NAM',
+        'Đường Trần Hưng Đạo, TP Tam Kỳ, Tỉnh Quảng Nam',
+        'Quảng Nam',
+        'TP Tam Kỳ',
+        'Miền Trung',
+        '02353 333 111'
     ),
     (
         134,
-        'VP CẦU BẾN LỘI',
-        '326 đường 19 th',
-        '02523 739 ',
-        'Miền Trung'
+        'BX QUẢNG NGÃI',
+        'Đường Phan Đình Phùng, TP Quảng Ngãi, Tỉnh Quảng Ngãi',
+        'Quảng Ngãi',
+        'TP Quảng Ngãi',
+        'Miền Trung',
+        '02553 222 555'
     ),
     (
         135,
-        'VP NAM PHƯỚC',
-        '284 Điện Biên P',
-        '02353 776 ',
-        'Miền Trung'
+        'BX PHÚ YÊN',
+        'Đường Lê Duẩn, TP Tuy Hòa, Tỉnh Phú Yên',
+        'Phú Yên',
+        'TP Tuy Hòa',
+        'Miền Trung',
+        '02573 111 999'
     ),
     (
         136,
-        'VP NGUYỄN ĐỨC CẢNH',
-        '14 Nguyễn Đức C',
-        '02583 880 ',
-        'Miền Trung'
+        'BX ĐẮK NÔNG',
+        'Đường Trần Hưng Đạo, TP Gia Nghĩa, Tỉnh Đắk Nông',
+        'Đắk Nông',
+        'TP Gia Nghĩa',
+        'Tây Nguyên',
+        '02613 444 333'
     ),
     (
         137,
-        'VP NGUYỄN THỊ MINH KHAI',
-        '151 Nguyễn Thị ',
-        '02583 876 ',
-        'Miền Trung'
+        'BX BÌNH PHƯỚC',
+        'Đường Hùng Vương, TP Đồng Xoài, Tỉnh Bình Phước',
+        'Bình Phước',
+        'TP Đồng Xoài',
+        'Miền Nam',
+        '02713 666 777'
     ),
     (
         138,
-        'VP PHAN THIẾT (NỘI Ô)',
-        'B1 Võ Văn Kiệt,',
-        '2523636636',
-        'Miền Trung'
+        'BX BÌNH THUẬN',
+        'Đường Lê Lợi, TP Phan Thiết, Tỉnh Bình Thuận',
+        'Bình Thuận',
+        'TP Phan Thiết',
+        'Miền Trung',
+        '02523 555 222'
     ),
     (
         139,
-        'VP TRẦN PHÚ',
-        'Số 16, Đ. Trần ',
-        '02363 786 ',
-        'Miền Trung'
+        'BX BÀ RỊA',
+        'Đường Trần Hưng Đạo, TP Bà Rịa, Tỉnh Bà Rịa - Vũng Tàu',
+        'Bà Rịa - Vũng Tàu',
+        'TP Bà Rịa',
+        'Miền Nam',
+        '02543 888 111'
     ),
     (
         140,
-        'BẾN XE GIÁP BÁT',
-        'KM Số 6, Đường ',
-        '02438 641 ',
-        'Miền Bắc'
-    ),
-    (
-        141,
-        'BẾN XE NAM ĐỊNH',
-        'KM Số 2, Đường ',
-        '02283 863 ',
-        'Miền Bắc'
+        'BX CẦN GIỜ',
+        'Đường Rừng Sác, Huyện Cần Giờ, TP Hồ Chí Minh',
+        'TP Hồ Chí Minh',
+        'Huyện Cần Giờ',
+        'Miền Nam',
+        '02863 777 444'
     );
 
 INSERT INTO
@@ -1288,556 +1563,99 @@ INSERT INTO
         `route_code`,
         `checkpoint_id`,
         `checkpoint_order`,
-        `checkpoint_city`,
-        `checkpoint_province`,
         `type`
     )
 VALUES
-    (
-        'BLHCM',
-        26,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'BLHCM',
-        96,
-        'first',
-        'Bảo Lộc',
-        'Lâm Đồng',
-        'departure'
-    ),
-    ('BR-VTHCM', 15, 'first', '', 'BRVT', 'departure'),
-    (
-        'BR-VTHCM',
-        27,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'CDHCM',
-        10,
-        'first',
-        'Châu Đốc',
-        'An Giang',
-        'departure'
-    ),
-    (
-        'CDHCM',
-        27,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    ('CMCT', 9, 'first', '', 'Cà Mau', 'departure'),
-    ('CMCT', 14, 'last', '', 'Cần Thơ', 'drop_off'),
-    ('CTCM', 9, 'last', '', 'Cà Mau', 'drop_off'),
-    ('CTCM', 14, 'first', '', 'Cần Thơ', 'departure'),
-    ('CTHCM', 14, 'first', '', 'Cần Thơ', 'departure'),
-    (
-        'CTHCM',
-        27,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    ('CTHCM', 52, 'second', '', 'Tiền Giang', 'rest'),
-    ('CTRG', 14, 'first', '', 'Cần Thơ', 'departure'),
-    (
-        'CTRG',
-        79,
-        'last',
-        'Rạch Giá',
-        'Kiên Giang',
-        'drop_off'
-    ),
-    (
-        'DLHCM',
-        27,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    ('DLHCM', 59, 'second', '', 'Đồng Nai', 'rest'),
-    (
-        'DLHCM',
-        97,
-        'first',
-        'Đà Lạt',
-        'Lâm Đồng',
-        'departure'
-    ),
-    (
-        'DNHCM',
-        27,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'DNHCM',
-        128,
-        'first',
-        '',
-        'Đà Nẵng',
-        'departure'
-    ),
-    (
-        'DONAHCM',
-        26,
-        'last',
-        'Thủ Đức',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'DONAHCM',
-        58,
-        'first',
-        'Biên Hoà ',
-        'Đồng Nai',
-        'departure'
-    ),
-    (
-        'DTHCM',
-        27,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'DTHCM',
-        30,
-        'first',
-        'Sa Đéc',
-        'Đồng Tháp',
-        'departure'
-    ),
-    ('DTHCM', 52, 'second', '', 'Tiền Giang', 'rest'),
-    (
-        'HCMBL',
-        26,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    (
-        'HCMBL',
-        96,
-        'last',
-        'Bảo Lộc',
-        'Lâm Đồng',
-        'drop_off'
-    ),
-    ('HCMBR-VT', 15, 'last', '', 'BRVT', 'drop_off'),
-    (
-        'HCMBR-VT',
-        27,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    (
-        'HCMCD',
-        10,
-        'last',
-        'Châu Đốc',
-        'An Giang',
-        'drop_off'
-    ),
-    (
-        'HCMCD',
-        27,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    ('HCMCT', 14, 'last', '', 'Cần Thơ', 'drop_off'),
-    (
-        'HCMCT',
-        27,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    ('HCMCT', 52, 'second', '', 'Tiền Giang', 'rest'),
-    (
-        'HCMDL',
-        27,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    ('HCMDL', 59, 'second', '', 'Đồng Nai', 'rest'),
-    (
-        'HCMDL',
-        97,
-        'last',
-        'Đà Lạt',
-        'Lâm Đồng',
-        'drop_off'
-    ),
-    (
-        'HCMDN',
-        27,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    ('HCMDN', 128, 'last', '', 'Đà Nẵng', 'drop_off'),
-    (
-        'HCMDONA',
-        26,
-        'first',
-        'Thủ Đức',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    (
-        'HCMDONA',
-        58,
-        'last',
-        'Biên Hoà ',
-        'Đồng Nai',
-        'drop_off'
-    ),
-    (
-        'HCMDT',
-        27,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    (
-        'HCMDT',
-        30,
-        'last',
-        'Sa Đéc',
-        'Đồng Tháp',
-        'drop_off'
-    ),
-    ('HCMDT', 52, 'second', '', 'Tiền Giang', 'rest'),
-    (
-        'HCMLX ',
-        24,
-        'last',
-        'Long Xuyên',
-        'An Giang',
-        'drop_off'
-    ),
-    (
-        'HCMLX ',
-        27,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    (
-        'HCMNT ',
-        26,
-        'first',
-        'Thủ Đức',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    (
-        'HCMNT ',
-        137,
-        'last',
-        'Nha Trang',
-        'Khánh Hoà',
-        'drop_off'
-    ),
-    (
-        'HCMPT',
-        26,
-        'first',
-        'Thủ Đức',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    (
-        'HCMPT',
-        50,
-        'last',
-        'Phan Thiết ',
-        'Bình Thuận',
-        'drop_off'
-    ),
-    (
-        'HCMQNG',
-        27,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    (
-        'HCMQNG',
-        115,
-        'last',
-        '',
-        'Quảng Ngãi',
-        'drop_off'
-    ),
-    (
-        'HCMQNH',
-        27,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    (
-        'HCMQNH',
-        116,
-        'last',
-        'Quy Nhơn',
-        'Bình Định',
-        'drop_off'
-    ),
-    (
-        'HCMRG',
-        27,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    (
-        'HCMRG',
-        79,
-        'last',
-        'Rạch Giá',
-        'Kiên Giang',
-        'drop_off'
-    ),
-    (
-        'HCMTH',
-        18,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    (
-        'HCMTH',
-        130,
-        'last',
-        'Tuy Hoà ',
-        'Phú Yên',
-        'drop_off'
-    ),
-    (
-        'HCMTN',
-        18,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    ('HCMTN', 33, 'last', '', 'Tây Ninh', 'drop_off'),
-    (
-        'HCMTTH',
-        27,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    ('HCMTTH', 114, 'last', '', 'Huế ', 'drop_off'),
-    (
-        'HCMTV',
-        27,
-        'first',
-        '',
-        'TP.Hồ Chí Minh',
-        'departure'
-    ),
-    ('HCMTV', 35, 'last', '', 'Trà Vinh', 'drop_off'),
-    ('HCMTV', 52, 'second', '', 'Tiền Giang', 'rest'),
-    ('HCMTV', 85, 'third', '', 'Bến Tre', 'en_route'),
-    (
-        'LXHCM',
-        24,
-        'first',
-        'Long Xuyên',
-        'An Giang',
-        'departure'
-    ),
-    (
-        'LXHCM',
-        27,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'NTHCM',
-        26,
-        'last',
-        'Thủ Đức',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'NTHCM',
-        137,
-        'first',
-        'Nha Trang',
-        'Khánh Hoà',
-        'departure'
-    ),
-    (
-        'PTHCM',
-        26,
-        'last',
-        'Thủ Đức',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'PTHCM',
-        50,
-        'first',
-        'Phan Thiết ',
-        'Bình Thuận',
-        'departure'
-    ),
-    (
-        'QNGHCM',
-        27,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'QNGHCM',
-        115,
-        'first',
-        '',
-        'Quảng Ngãi',
-        'departure'
-    ),
-    (
-        'QNHHCM',
-        27,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'QNHHCM',
-        116,
-        'first',
-        'Quy Nhơn',
-        'Bình Định',
-        'departure'
-    ),
-    ('RGCT', 14, 'last', '', 'Cần Thơ', 'drop_off'),
-    (
-        'RGCT',
-        79,
-        'first',
-        'Rạch Giá',
-        'Kiên Giang',
-        'departure'
-    ),
-    (
-        'RGHCM',
-        27,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'RGHCM',
-        79,
-        'first',
-        'Rạch Giá',
-        'Kiên Giang',
-        'departure'
-    ),
-    (
-        'THHCM',
-        18,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'THHCM',
-        130,
-        'first',
-        'Tuy Hoà ',
-        'Phú Yên',
-        'departure'
-    ),
-    (
-        'TNHCM',
-        18,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'TNHCM',
-        33,
-        'first',
-        '',
-        'Tây Ninh',
-        'departure'
-    ),
-    (
-        'TTHHCM',
-        27,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    ('TTHHCM', 114, 'first', '', 'Huế ', 'departure'),
-    (
-        'TVHCM',
-        27,
-        'last',
-        '',
-        'TP.Hồ Chí Minh',
-        'drop_off'
-    ),
-    (
-        'TVHCM',
-        35,
-        'first',
-        '',
-        'Trà Vinh',
-        'departure'
-    ),
-    ('TVHCM', 52, 'third', '', 'Tiền Giang', 'rest'),
-    ('TVHCM', 85, 'second', '', 'Bến Tre', 'en_route');
+    ('BLHCM', 26, 2, 'drop_off'),
+    ('BLHCM', 96, 1, 'departure'),
+    ('BR-VTHCM', 15, 1, 'departure'),
+    ('BR-VTHCM', 27, 2, 'drop_off'),
+    ('CDHCM', 10, 1, 'departure'),
+    ('CDHCM', 27, 2, 'drop_off'),
+    ('CMCT', 9, 1, 'departure'),
+    ('CMCT', 14, 2, 'drop_off'),
+    ('CTCM', 9, 2, 'drop_off'),
+    ('CTCM', 14, 1, 'departure'),
+    ('CTHCM', 14, 1, 'departure'),
+    ('CTHCM', 27, 2, 'drop_off'),
+    ('CTHCM', 52, 2, 'rest'),
+    ('CTRG', 14, 1, 'departure'),
+    ('CTRG', 79, 2, 'drop_off'),
+    ('DLHCM', 27, 2, 'drop_off'),
+    ('DLHCM', 59, 2, 'rest'),
+    ('DLHCM', 97, 1, 'departure'),
+    ('DNHCM', 27, 2, 'drop_off'),
+    ('DNHCM', 128, 1, 'departure'),
+    ('DONAHCM', 26, 2, 'drop_off'),
+    ('DONAHCM', 58, 1, 'departure'),
+    ('DTHCM', 27, 2, 'drop_off'),
+    ('DTHCM', 30, 1, 'departure'),
+    ('DTHCM', 52, 2, 'rest'),
+    ('HCMBL', 26, 1, 'departure'),
+    ('HCMBL', 96, 2, 'drop_off'),
+    ('HCMBR-VT', 15, 2, 'drop_off'),
+    ('HCMBR-VT', 27, 1, 'departure'),
+    ('HCMCD', 10, 2, 'drop_off'),
+    ('HCMCD', 27, 1, 'departure'),
+    ('HCMCT', 14, 3, 'drop_off'),
+    ('HCMCT', 27, 1, 'departure'),
+    ('HCMCT', 52, 2, 'rest'),
+    ('HCMDL', 27, 1, 'departure'),
+    ('HCMDL', 59, 2, 'rest'),
+    ('HCMDL', 97, 2, 'drop_off'),
+    ('HCMDN', 27, 1, 'departure'),
+    ('HCMDN', 128, 2, 'drop_off'),
+    ('HCMDONA', 26, 1, 'departure'),
+    ('HCMDONA', 58, 2, 'drop_off'),
+    ('HCMDT', 27, 1, 'departure'),
+    ('HCMDT', 30, 2, 'drop_off'),
+    ('HCMDT', 52, 2, 'rest'),
+    ('HCMLX ', 24, 2, 'drop_off'),
+    ('HCMLX ', 27, 1, 'departure'),
+    ('HCMNT ', 26, 1, 'departure'),
+    ('HCMNT ', 137, 2, 'drop_off'),
+    ('HCMPT', 26, 1, 'departure'),
+    ('HCMPT', 50, 2, 'drop_off'),
+    ('HCMQNG', 27, 1, 'departure'),
+    ('HCMQNG', 115, 2, 'drop_off'),
+    ('HCMQNH', 27, 1, 'departure'),
+    ('HCMQNH', 116, 2, 'drop_off'),
+    ('HCMRG', 27, 1, 'departure'),
+    ('HCMRG', 79, 2, 'drop_off'),
+    ('HCMTH', 18, 1, 'departure'),
+    ('HCMTH', 130, 2, 'drop_off'),
+    ('HCMTN', 18, 1, 'departure'),
+    ('HCMTN', 33, 3, 'drop_off'),
+    ('HCMTTH', 27, 1, 'departure'),
+    ('HCMTTH', 114, 2, 'drop_off'),
+    ('HCMTV', 27, 1, 'departure'),
+    ('HCMTV', 35, 4, 'drop_off'),
+    ('HCMTV', 52, 2, 'rest'),
+    ('HCMTV', 85, 3, 'en_route'),
+    ('LXHCM', 24, 1, 'departure'),
+    ('LXHCM', 27, 2, 'drop_off'),
+    ('NTHCM', 26, 2, 'drop_off'),
+    ('NTHCM', 137, 1, 'departure'),
+    ('PTHCM', 26, 2, 'drop_off'),
+    ('PTHCM', 50, 1, 'departure'),
+    ('QNGHCM', 27, 2, 'drop_off'),
+    ('QNGHCM', 115, 1, 'departure'),
+    ('QNHHCM', 27, 2, 'drop_off'),
+    ('QNHHCM', 116, 1, 'departure'),
+    ('RGCT', 14, 2, 'drop_off'),
+    ('RGCT', 79, 1, 'departure'),
+    ('RGHCM', 27, 2, 'drop_off'),
+    ('RGHCM', 79, 1, 'departure'),
+    ('THHCM', 18, 2, 'drop_off'),
+    ('THHCM', 130, 1, 'departure'),
+    ('TNHCM', 18, 2, 'drop_off'),
+    ('TNHCM', 33, 1, 'departure'),
+    ('TTHHCM', 27, 2, 'drop_off'),
+    ('TTHHCM', 114, 1, 'departure'),
+    ('TVHCM', 27, 2, 'drop_off'),
+    ('TVHCM', 35, 1, 'departure'),
+    ('TVHCM', 52, 3, 'rest'),
+    ('TVHCM', 85, 2, 'en_route');
 
 INSERT INTO
     `bus` (`bus_id`, `type`, `number_of_seat`)

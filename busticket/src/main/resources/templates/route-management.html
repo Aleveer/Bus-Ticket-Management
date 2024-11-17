@@ -4,7 +4,7 @@
 <head>
     <title>Route Management</title>
     <div th:insert="~{dashboard-header.html}"></div>
-    <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}">
+    <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}" />
 </head>
 
 <body class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar" data-open="click"
@@ -25,16 +25,15 @@
                     <div class="breadcrumbs-top float-md-right">
                         <div class="breadcrumb-wrapper mr-1">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index.html">Home</a>
-                                </li>
-                                <li class="breadcrumb-item active">Tables
-                                </li>
+                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                                <li class="breadcrumb-item active">Tables</li>
                             </ol>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="content-body"><!-- Basic Tables start -->
+            <div class="content-body">
+                <!-- Basic Tables start -->
                 <!-- Basic Tables end -->
                 <!-- Striped rows start -->
                 <div class="row">
@@ -45,14 +44,16 @@
                                 <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                                 <div class="heading-elements">
                                     <ul class="list-inline mb-0">
-                                        <li><a data-action="search" title="Search"><i class="ft-search"></i></a></li>
+                                        <li>
+                                            <a data-action="search" title="Search"><i class="ft-search"></i></a>
+                                        </li>
                                         <a th:href="@{/admin/new-route}" data-action="add-route" title="Add Route">
                                             <i class="ft-plus"></i>
                                         </a>
                                     </ul>
                                 </div>
-                                <div class="search-box" id="searchBox" style="display: none;">
-                                    <input type="text" class="input-search" placeholder="Search route...">
+                                <div class="search-box" id="searchBox" style="display: none">
+                                    <input type="text" class="input-search" placeholder="Search route..." />
                                     <button class="btn-search" id="searchButton">
                                         <i class="ft-search"></i>
                                     </button>
@@ -145,7 +146,7 @@
     <script>
         function loadRoutes(page) {
             $.ajax({
-                url: '/admin/api/routes',
+                url: "/admin/api/routes",
                 data: { page: page, size: 15 },
                 success: function (data) {
                     var routes = data.routes;
@@ -153,39 +154,57 @@
                     var currentPage = data.currentPage;
 
                     // Clear the table body
-                    $('#routeTableBody').empty();
+                    $("#routeTableBody").empty();
 
                     // Populate the table with routes
                     routes.forEach(function (route) {
-                        $('#routeTableBody').append(
-                            '<tr>' +
-                            '<td>' + route.routeId + '</td>' +
-                            '<td>' + route.code + '</td>' +
-                            '<td>' + route.name + '</td>' +
-                            '<td>' + route.time + '</td>' +
-                            '<td>' + route.distance + '</td>' +
-                            '<td>' +
-                            '<button class="btn btn-primary btn-sm" title="View Details" onclick="viewRouteDetails(\'' + route.code + '\')">' +
+                        $("#routeTableBody").append(
+                            "<tr>" +
+                            "<td>" +
+                            route.routeId +
+                            "</td>" +
+                            "<td>" +
+                            route.code +
+                            "</td>" +
+                            "<td>" +
+                            route.name +
+                            "</td>" +
+                            "<td>" +
+                            route.time +
+                            "</td>" +
+                            "<td>" +
+                            route.distance +
+                            "</td>" +
+                            "<td>" +
+                            '<button class="btn btn-primary btn-sm" title="View Details" onclick="viewRouteDetails(\'' +
+                            route.code +
+                            "')\">" +
                             '<i class="ft-eye"></i>' +
-                            '</button>' +
-                            '<button class="btn btn-warning btn-sm" title="Update Route" onclick="updateRoute(\'' + route.code + '\')">' +
+                            "</button>" +
+                            '<button class="btn btn-warning btn-sm" title="Update Route" onclick="updateRoute(\'' +
+                            route.code +
+                            "')\">" +
                             '<i class="ft-settings"></i>' +
-                            '</button>' +
-                            '<button class="btn btn-danger btn-sm" title="Delete Route" onclick="deleteRoute(\'' + route.code + '\')">' +
+                            "</button>" +
+                            '<button class="btn btn-danger btn-sm" title="Delete Route" onclick="deleteRoute(\'' +
+                            route.code +
+                            "')\">" +
                             '<i class="ft-trash"></i>' +
-                            '</button>' +
-                            '</td>' +
-                            '</tr>'
+                            "</button>" +
+                            "</td>" +
+                            "</tr>"
                         );
                     });
 
                     // Clear the pagination controls
-                    $('#paginationControls').empty();
+                    $("#paginationControls").empty();
 
                     // Add Previous button
                     if (currentPage > 0) {
-                        $('#paginationControls').append(
-                            '<li><a onclick="loadRoutes(' + (currentPage - 1) + ')">&laquo;</a></li>'
+                        $("#paginationControls").append(
+                            '<li><a onclick="loadRoutes(' +
+                            (currentPage - 1) +
+                            ')">&laquo;</a></li>'
                         );
                     }
 
@@ -194,55 +213,80 @@
                     var endPage = Math.min(totalPages - 1, currentPage + 2);
 
                     if (startPage > 0) {
-                        $('#paginationControls').append(
+                        $("#paginationControls").append(
                             '<li><a onclick="loadRoutes(0)">1</a></li>'
                         );
                         if (startPage > 1) {
-                            $('#paginationControls').append(
-                                '<li><span>...</span></li>'
-                            );
+                            $("#paginationControls").append("<li><span>...</span></li>");
                         }
                     }
 
                     for (var i = startPage; i <= endPage; i++) {
-                        $('#paginationControls').append(
-                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadRoutes(' + i + ')">' + (i + 1) + '</a></li>'
+                        $("#paginationControls").append(
+                            '<li class="' +
+                            (i === currentPage ? "active" : "") +
+                            '"><a onclick="loadRoutes(' +
+                            i +
+                            ')">' +
+                            (i + 1) +
+                            "</a></li>"
                         );
                     }
 
                     if (endPage < totalPages - 1) {
                         if (endPage < totalPages - 2) {
-                            $('#paginationControls').append(
-                                '<li><span>...</span></li>'
-                            );
+                            $("#paginationControls").append("<li><span>...</span></li>");
                         }
-                        $('#paginationControls').append(
-                            '<li><a onclick="loadRoutes(' + (totalPages - 1) + ')">' + totalPages + '</a></li>'
+                        $("#paginationControls").append(
+                            '<li><a onclick="loadRoutes(' +
+                            (totalPages - 1) +
+                            ')">' +
+                            totalPages +
+                            "</a></li>"
                         );
                     }
 
                     // Add Next button
                     if (currentPage < totalPages - 1) {
-                        $('#paginationControls').append(
-                            '<li><a onclick="loadRoutes(' + (currentPage + 1) + ')">&raquo;</a></li>'
+                        $("#paginationControls").append(
+                            '<li><a onclick="loadRoutes(' +
+                            (currentPage + 1) +
+                            ')">&raquo;</a></li>'
                         );
                     }
-                }
+                },
             });
         }
 
         function viewRouteDetails(routeCode) {
-            window.location.href = '/admin/route-detail/' + routeCode;
+            window.location.href = "/admin/route-detail/" + routeCode;
         }
 
         function updateRoute(routeCode) {
-            window.location.href = '/admin/update-route/' + routeCode;
+            window.location.href = "/admin/update-route/" + routeCode;
         }
-
         function deleteRoute(routeCode) {
-            if (confirm('Are you sure you want to delete this route?')) {
-                // Implement the logic to delete the route
-                alert('Delete route: ' + routeCode);
+            if (confirm("Are you sure you want to delete this route?")) {
+                fetch("/admin/api/delete-route", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ code: routeCode }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.message) {
+                            alert(data.message);
+                            if (data.message === "Route deleted successfully.") {
+                                // Reload the routes after successful deletion
+                                loadRoutes(0);
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error deleting route:", error);
+                    });
             }
         }
 

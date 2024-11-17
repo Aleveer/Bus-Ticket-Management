@@ -486,4 +486,30 @@ public class ApiController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/admin/api/delete-route")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deleteRoute(@RequestBody Map<String, Object> routeRequest) {
+        Map<String, Object> response = new HashMap<>();
+        String code = (String) routeRequest.get("code");
+        Route existingRoute = routeService.getRouteByCode(code);
+        if (existingRoute == null) {
+            response.put("message", "Route not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (!tripService.findTripByRouteCode(existingRoute).isEmpty()) {
+            response.put("message", "Route has trips and cannot be deleted.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        List<Route_Checkpoint> routeCheckpoints = routeCheckpointService.findByRoute(existingRoute);
+        for (Route_Checkpoint routeCheckpoint : routeCheckpoints) {
+            routeCheckpointService.delete(routeCheckpoint);
+        }
+
+        routeService.deleteByCode(code);
+        response.put("message", "Route deleted successfully.");
+        return ResponseEntity.ok(response);
+    }
 }

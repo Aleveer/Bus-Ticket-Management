@@ -1,5 +1,6 @@
 package com.myproject.busticket.repositories;
 
+import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Trip;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -31,4 +32,6 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
 
     @Query()
     int findNumberOfSeatAvailableByTripId(int tripId);
+
+    List<Trip> findByRoute(Route route);
 }

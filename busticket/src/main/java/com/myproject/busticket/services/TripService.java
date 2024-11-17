@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.mapper.TripMapper;
+import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.repositories.TripRepository;
 
@@ -36,6 +37,10 @@ public class TripService {
             int numberOfTickets) {
         List<Trip> trip = tripRepository.findTrip(departure, destination, departureDate, numberOfTickets);
         return tripMapper.map(trip);
+    }
+
+    public List<Trip> findTripByRouteCode(Route routeCode) {
+        return tripRepository.findByRoute(routeCode);
     }
 
     public Page<Trip> getAll(Pageable pageable) {

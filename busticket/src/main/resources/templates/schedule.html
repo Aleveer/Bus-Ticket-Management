@@ -71,44 +71,48 @@
          <!-- Schedule table section -->
         <div class="fashion_section">
             <div class="container">
-                <h2>Lịch Trình</h2>
-                <form th:action="@{/schedule}" method="get">
-                    <div class="d-flex flex-nowrap">
-                        <div class="form-group input-group">     
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                <input type="text" id="departure" name="departure" class="form-control" onkeyup="filterTable()" placeholder="Nhập điểm đi">
+                <div class="box-card d-flex flex-wrap">
+                    <div class="full">
+                        <h2>Lịch Trình</h2>
+                        <form th:action="@{/schedule}" method="get">
+                            <div class="d-flex flex-nowrap">
+                                <div class="form-group input-group ">     
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                        <input type="text" id="departure" name="departure" class="form-control" onkeyup="filterTable()" placeholder="Nhập điểm đi">
+                                    </div>
+                                </div>
+                                <button class="swap-btn-2" onclick="swapValues()">⇆</button>
+                                <div class="form-group input-group">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                        <input type="text" id="dropoff" name="dropoff" class="form-control" onkeyup="filterTable()" placeholder="Nhập điểm đến">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <button class="swap-btn-2" onclick="swapValues()">⇆</button>
-                        <div class="form-group input-group">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                <input type="text" id="dropoff" name="dropoff" class="form-control" onkeyup="filterTable()" placeholder="Nhập điểm đến">
-                            </div>
-                        </div>
+                        </form>
                     </div>
-                </form>
-                <table id="scheduleTable" class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Mã Tuyến</th>
-                            <th>Điểm Khởi Hành</th>
-                            <th>Điểm Đến</th>
-                            <th>Thời Gian</th>
-                            <th>Khoảng Cách</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="schedule : ${schedules}">
-                            <td th:text="${schedule.code}"></td>
-                            <td th:text="${schedule.departureName}"></td>
-                            <td th:text="${schedule.dropOffName}"></td>
-                            <td th:text="${schedule.time}"></td>
-                            <td th:text="${schedule.distance}"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <table id="scheduleTable" class="table table-striped space">
+                        <thead>
+                            <tr>
+                                <th>Mã Tuyến</th>
+                                <th>Điểm Khởi Hành</th>
+                                <th>Điểm Đến</th>
+                                <th>Thời Gian</th>
+                                <th>Khoảng Cách</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="schedule : ${schedules}">
+                                <td th:text="${schedule.code}"></td>
+                                <td th:text="${schedule.departureName}"></td>
+                                <td th:text="${schedule.dropOffName}"></td>
+                                <td th:text="${schedule.time}"></td>
+                                <td th:text="${schedule.distance}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <!-- footer section start -->

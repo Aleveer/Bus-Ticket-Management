@@ -229,6 +229,9 @@ button {
 .space {
     margin-top: 20px;
 }
+.space_bottom {
+    margin-bottom: 20px;
+}
 .nospace {
     margin-top: 0px;
 }
@@ -557,7 +560,17 @@ button {
     margin-top: 32px;
     cursor: pointer;
     background-color: #ffffff;
+    color: #ff7f50;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: none;
+    border-radius: 40px;
+    transition: background-color 0.3s;
 }
+.swap-btn:hover {
+    animation: turn 0.3s linear ;
+}
+
 .swap-btn-2 {
     font-size: 24px;
     align-self: center;
@@ -1603,4 +1616,13 @@ input.mail_bt::placeholder {
 .input-group .input-group-append  {
     background: none;
     border-left: 0;
+}
+
+.table-title th{
+    cursor: pointer;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
 }

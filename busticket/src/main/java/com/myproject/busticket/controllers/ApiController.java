@@ -111,7 +111,7 @@ public class ApiController {
                 .map(trip -> new Trip(trip.getTripId(), trip.getDepartureTime(), trip.getArrivalTime(),
                         trip.getPrice(), trip.getStatus(), trip.getBus(), trip.getDriver(),
                         trip.getController(),
-                        trip.getStaff(), trip.getRoute(), trip.getNumberOfSeatAvailable()))
+                        trip.getStaff(), trip.getRoute()))
                 .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();
@@ -261,7 +261,7 @@ public class ApiController {
         // Validate route details
         if (code == null || code.isEmpty() ||
                 name == null || name.isEmpty() ||
-                time == null ||
+                time == null || time.isEmpty() ||
                 distance <= 0) {
             response.put("message", "Invalid input data.");
             return ResponseEntity.badRequest().body(response);

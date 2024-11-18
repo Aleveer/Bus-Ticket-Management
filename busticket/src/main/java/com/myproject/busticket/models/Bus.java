@@ -26,7 +26,7 @@ public class Bus {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "seat_type", nullable = false, columnDefinition = "ENUM('economy', 'limousine') DEFAULT 'economy'")
-    private SeatType seatType;;
+    private SeatType seatType;
 
     @Column(name = "number_of_seat")
     private int numberOfSeat;

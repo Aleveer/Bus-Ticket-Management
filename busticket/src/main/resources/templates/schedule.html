@@ -49,66 +49,71 @@
         <!-- header top section start -->
         <div class="container">
             <div class="header_section_top">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="custom_menu">
-                        <ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="custom_menu">
+                            <ul>
 
-                        <li><a th:href="@{index}">Trang Chủ</a></li>
-                        <li><a th:href="@{schedule}">Lịch Trình</a></li>
-                        <li><a th:href="@{search-ticket-info}">Tra Cứu Vé</a></li>
-                        <li><a th:href="@{search-billing-info}">Hóa Đơn</a></li>
-                        <li><a th:href="@{contact}">Liên Hệ</a></li>
-                        <li><a th:href="@{about-us}">Về Chúng Tôi</a></li>
-                        </ul>
+                            <li><a th:href="@{index}">Trang Chủ</a></li>
+                            <li><a th:href="@{schedule}">Lịch Trình</a></li>
+                            <li><a th:href="@{search-ticket-info}">Tra Cứu Vé</a></li>
+                            <li><a th:href="@{search-billing-info}">Hóa Đơn</a></li>
+                            <li><a th:href="@{contact}">Liên Hệ</a></li>
+                            <li><a th:href="@{about-us}">Về Chúng Tôi</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-            </div>
         </div>
-
+        
         <!-- header section start -->
          <!-- Schedule table section -->
-        <div class="fashion_section">
+        <div class="about_section">
             <div class="container">
-                <h2>Lịch Trình</h2>
-                <form th:action="@{/schedule}" method="get">
-                    <div class="d-flex flex-nowrap">
-                        <div class="form-group input-group">     
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                <input type="text" id="departure" name="departure" class="form-control" onkeyup="filterTable()" placeholder="Nhập điểm đi">
+                <hr class="space_bottom">
+                <div class="box-card d-flex flex-wrap">
+                    <div class="full">
+                        <h1>Lịch Trình</h1>
+                        <form th:action="@{/schedule}" method="get">
+                            <div class="d-flex flex-nowrap">
+                                <div class="d-flex flex-grow-1 full input-group ">     
+                                    <div class="input-group-append full">
+                                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                        <input type="text" id="departure" name="departure" class="form-control" onkeyup="filterTable()" placeholder="Nhập điểm đi">
+                                    </div>
+                                </div>
+                                <button class="swap-btn-2" onclick="swapValues()">⇆</button>
+                                <div class="full input-group">
+                                    <div class="input-group-append full">
+                                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                        <input type="text" id="dropoff" name="dropoff" class="form-control" onkeyup="filterTable()" placeholder="Nhập điểm đến">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <button class="swap-btn-2" onclick="swapValues()">⇆</button>
-                        <div class="form-group input-group">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                <input type="text" id="dropoff" name="dropoff" class="form-control" onkeyup="filterTable()" placeholder="Nhập điểm đến">
-                            </div>
-                        </div>
+                        </form>
                     </div>
-                </form>
-                <table id="scheduleTable" class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Mã Tuyến</th>
-                            <th>Điểm Khởi Hành</th>
-                            <th>Điểm Đến</th>
-                            <th>Thời Gian</th>
-                            <th>Khoảng Cách</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="schedule : ${schedules}">
-                            <td th:text="${schedule.code}"></td>
-                            <td th:text="${schedule.departureName}"></td>
-                            <td th:text="${schedule.dropOffName}"></td>
-                            <td th:text="${schedule.time}"></td>
-                            <td th:text="${schedule.distance}"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <table id="scheduleTable" class="table table-striped space">
+                        <thead>
+                            <tr class="table-title">
+                                <th onclick="sortTable(0)">Mã Tuyến</th>
+                                <th onclick="sortTable(1)">Điểm Khởi Hành</th>
+                                <th onclick="sortTable(2)">Điểm Đến</th>
+                                <th onclick="sortTable(3)">Thời Gian</th>
+                                <th onclick="sortTable(4)">Khoảng Cách</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="schedule : ${schedules}">
+                                <td th:text="${schedule.code}"></td>
+                                <td th:text="${schedule.departureName}"></td>
+                                <td th:text="${schedule.dropOffName}"></td>
+                                <td th:text="${schedule.time}"></td>
+                                <td th:text="${schedule.distance}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <!-- footer section start -->
@@ -122,7 +127,7 @@
             <div class="footer_menu">
                 <ul>
                     <li><a th:href="@{index}">Trang Chủ</a></li>
-                    <li><a href="#">Lịch Trình</a></li>
+                    <li><a th:href="@{schedule}">Lịch Trình</a></li>
                     <li><a th:href="@{search-ticket-info}">Tra Cứu Vé</a></li>
                     <li><a th:href="@{search-billing-info}">Hóa Đơn</a></li>
                     <li><a th:href="@{contact}">Liên Hệ</a></li>
@@ -186,6 +191,42 @@
             const temp = departureInput.value;
             departureInput.value = destinationInput.value;
             destinationInput.value = temp;
+        }
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("scheduleTable");
+            switching = true;
+            dir = "asc"; 
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++; 
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
         }
         </script>
     </body>

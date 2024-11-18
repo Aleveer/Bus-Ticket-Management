@@ -60,8 +60,8 @@ public class BookingController {
     public String chooseInfo(@PathVariable Integer TripId, Model model) {
         TripDTO selectedTrip = tripService.findById(TripId);
         List<SeatReservationsDTO> statusSeats = seatReservationsService.getListStatusSeat(TripId);
-        List<SeatReservationsDTO> firstFloor = statusSeats.subList(0, 18);
-        List<SeatReservationsDTO> secondFloor = statusSeats.subList(18, statusSeats.size());
+        List<SeatReservationsDTO> firstFloor = statusSeats.subList(0, statusSeats.size() / 2);
+        List<SeatReservationsDTO> secondFloor = statusSeats.subList(statusSeats.size() / 2, statusSeats.size());
         model.addAttribute("selectedTrip", selectedTrip);
         model.addAttribute("firstFloor", firstFloor);
         model.addAttribute("secondFloor", secondFloor);

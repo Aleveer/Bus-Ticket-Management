@@ -18,11 +18,13 @@ import java.util.List;
 @Controller
 public class IndexPageController {
     CheckpointService checkpointService;
+    RouteCheckpointService routeCheckpointService;
     RouteService routeService;
 
-    public IndexPageController(CheckpointService checkpointService, RouteService routeService) {
+    public IndexPageController(CheckpointService checkpointService, RouteCheckpointService routeCheckpointService, RouteService routeService) {
         this.checkpointService = checkpointService;
         this.routeService = routeService;
+        this.routeCheckpointService = routeCheckpointService;
     }
 
     @GetMapping("/index")

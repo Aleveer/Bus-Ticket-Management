@@ -190,7 +190,7 @@
                               <div class="tshirt_img"><img src="/images/tphcm.jpg"></div>
                               <div class="btn_main">
                                  <div class="buy_bt"><a onclick="setText('TP.Hồ Chí Minh')">Đặt Ngay</a></div>
-                                 <div class="seemore_bt"><a href="#">Xem Thêm</a></div>
+                                 <div class="seemore_bt"><a th:href="@{schedule}">Xem Thêm</a></div>
                               </div>
                            </div>
                         </div>
@@ -200,7 +200,7 @@
                               <div class="tshirt_img"><img src="/images/vungtau.jpg"></div>
                               <div class="btn_main">
                                  <div class="buy_bt"><a onclick="setText('Vũng Tàu')">Đặt ngay</a></div>
-                                 <div class="seemore_bt"><a href="#">Xem thêm</a></div>
+                                 <div class="seemore_bt"><a th:href="@{schedule}">Xem thêm</a></div>
                               </div>
                            </div>
                         </div>
@@ -211,7 +211,7 @@
                               <div class="tshirt_img"><img src="/images/cantho.jpg"></div>
                               <div class="btn_main">
                                  <div class="buy_bt"><a onclick="setText('Cần Thơ')">Đặt ngay</a></div>
-                                 <div class="seemore_bt"><a href="#">Xem thêm</a></div>
+                                 <div class="seemore_bt"><a th:href="@{schedule}">Xem thêm</a></div>
                               </div>
                            </div>
                         </div>
@@ -224,7 +224,7 @@
       <!-- fashion section end -->
 
       <div class="container">
-         <div class="banner_promote justify-content-center"><img src="/images/bus-ticket-banner.png"></div>
+         <div class="banner_promote justify-content-center"><img src="/images/bus-ticket-banner.png" onclick="scrollToSection()"></div>
       </div>
    </div>
    <!-- footer section start -->
@@ -238,7 +238,7 @@
          <div class="footer_menu">
             <ul>
                <li><a th:href="@{index}">Trang Chủ</a></li>
-               <li><a href="#">Lịch Trình</a></li>
+               <li><a th:href="@{schedule}">Lịch Trình</a></li>
                <li><a th:href="@{search-ticket-info}">Tra Cứu Vé</a></li>
                <li><a th:href="@{search-billing-info}">Hóa Đơn</a></li>
                <li><a th:href="@{contact}">Liên Hệ</a></li>

@@ -558,6 +558,33 @@ button {
     cursor: pointer;
     background-color: #ffffff;
 }
+.swap-btn-2 {
+    font-size: 24px;
+    align-self: center;
+    cursor: pointer;
+    color: #ff7f50;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: none;
+    border-radius: 40px;
+    background-color: #fff;
+    transition: background-color 0.3s;
+    
+}
+.swap-btn-2:hover {
+    animation: turn 0.3s linear ;
+}
+/* Define the keyframes for the turning animation */
+@keyframes turn {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(180deg);
+    }
+}
+
+
 
 .btn-container {
     width: 100%;
@@ -1562,4 +1589,18 @@ input.mail_bt::placeholder {
 }
 .payment-button:hover {
     background-color: #ff4d4d;
+}
+
+/* schedule start */
+.input-group .form-control {
+    border-left: 0;
+}
+.input-group-text{
+    background: none;
+  
+    
+}
+.input-group .input-group-append  {
+    background: none;
+    border-left: 0;
 }

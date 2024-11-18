@@ -2,6 +2,7 @@ package com.myproject.busticket.controllers;
 
 import com.myproject.busticket.dto.ScheduleDTO;
 import com.myproject.busticket.models.Route;
+import com.myproject.busticket.services.CheckpointService;
 import com.myproject.busticket.services.RouteCheckpointService;
 import com.myproject.busticket.services.RouteService;
 import org.springframework.stereotype.Controller;
@@ -16,18 +17,18 @@ import java.util.List;
 @RequestMapping("/home")
 @Controller
 public class IndexPageController {
-    RouteCheckpointService routeCheckpointService;
+    CheckpointService checkpointService;
     RouteService routeService;
 
-    public IndexPageController(RouteCheckpointService routeCheckpointService, RouteService routeService) {
-        this.routeCheckpointService = routeCheckpointService;
+    public IndexPageController(CheckpointService checkpointService, RouteService routeService) {
+        this.checkpointService = checkpointService;
         this.routeService = routeService;
     }
 
     @GetMapping("/index")
     public String indexPage(Model model) {
-        List<String> provinces = routeCheckpointService.getAllProvinces();
-        List<String> cities = routeCheckpointService.getAllCities();
+        List<String> provinces = checkpointService.getAllProvinces();
+        List<String> cities = checkpointService.getAllCities();
         model.addAttribute("tripType", "one-way");
         model.addAttribute("provinces", provinces);
         model.addAttribute("cities", cities);

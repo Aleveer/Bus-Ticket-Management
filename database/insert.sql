@@ -4970,23 +4970,23 @@ INSERT INTO
 SELECT
     NULL,
     CASE
-        WHEN RAND () < 0.5 THEN DATE_SUB (NOW (), INTERVAL FLOOR(RAND () * 30) DAY) -- Random past date within 30 days
-        ELSE DATE_ADD (NOW (), INTERVAL FLOOR(RAND () * 30) DAY) -- Random future date within 30 days
+        WHEN RAND() < 0.5 THEN DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 30) DAY)
+        ELSE DATE_ADD(NOW(), INTERVAL FLOOR(RAND() * 30) DAY)
     END AS departure_time,
     CASE
-        WHEN RAND () < 0.5 THEN DATE_SUB (NOW (), INTERVAL FLOOR(RAND () * 30 + 1) DAY) -- Random past date within 31 days
-        ELSE DATE_ADD (NOW (), INTERVAL FLOOR(RAND () * 30 + 1) DAY) -- Random future date within 31 days
+        WHEN RAND() < 0.5 THEN DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 30 + 1) DAY)
+        ELSE DATE_ADD(NOW(), INTERVAL FLOOR(RAND() * 30 + 1) DAY)
     END AS arrival_time,
-    ROUND(RAND () * 100 + 20, 2) AS price,
-    -- Random price between 20 and 120
+    ROUND(RAND() * 100 + 20, 2) AS price,
+    /* Random price between 20 and 120 */
     CASE
-        WHEN RAND () < 0.5 THEN CASE
-            WHEN RAND () < 0.5 THEN 'finished'
+        WHEN RAND() < 0.5 THEN CASE
+            WHEN RAND() < 0.5 THEN 'finished'
             ELSE 'arriving'
         END
         ELSE CASE
-            WHEN RAND () < 0.7 THEN 'waiting'
-            WHEN RAND () < 0.85 THEN 'arriving'
+            WHEN RAND() < 0.7 THEN 'waiting'
+            WHEN RAND() < 0.85 THEN 'arriving'
             ELSE 'started'
         END
     END AS status,
@@ -5010,7 +5010,7 @@ FROM
         FROM
             `bus`
         ORDER BY
-            RAND ()
+            RAND()
         LIMIT
             3
     ) AS bus ON 1 = 1
@@ -5020,7 +5020,7 @@ FROM
         FROM
             `driver`
         ORDER BY
-            RAND ()
+            RAND()
         LIMIT
             3
     ) AS driver ON 1 = 1
@@ -5030,7 +5030,7 @@ FROM
         FROM
             `controller`
         ORDER BY
-            RAND ()
+            RAND()
         LIMIT
             3
     ) AS controller ON 1 = 1
@@ -5040,7 +5040,7 @@ FROM
         FROM
             `staff`
         ORDER BY
-            RAND ()
+            RAND()
         LIMIT
             3
     ) AS staff ON 1 = 1
@@ -5050,90 +5050,7 @@ FROM
         FROM
             `route`
         ORDER BY
-            RAND ()
+            RAND()
         LIMIT
             3
     ) AS route ON 1 = 1;
-
--- Insert data into booking table
-INSERT INTO
-    `booking` (
-        `customer_id`,
-        `trip_id`,
-        `number_of_seat`,
-        `is_round_trip`,
-        `round_trip_id`,
-        `pickup_point`,
-        `dropoff_point`
-    )
-VALUES
-    (
-        1,
-        244,
-        2,
-        0,
-        NULL,
-        'Pickup Point A',
-        'Dropoff Point B'
-    );
-
--- Insert data into seat_reservations table
-INSERT INTO
-    `seat_reservations` (
-        `seat_id`,
-        `booking_id`,
-        `trip_id`,
-        `status`
-    )
-VALUES
-    (
-        2846,
-        8991,
-        244,
-        'booked'
-    );
-
--- Additional test data
-INSERT INTO
-    `booking` (
-        `customer_id`,
-        `trip_id`,
-        `number_of_seat`,
-        `is_round_trip`,
-        `round_trip_id`,
-        `pickup_point`,
-        `dropoff_point`
-    )
-VALUES
-    (
-        2,
-        -- Assuming customer_id 2 exists
-        245,
-        -- Assuming trip_id 2 exists
-        1,
-        -- Number of seats booked
-        1,
-        -- Round trip
-        'RT123',
-        -- Round trip ID
-        'Pickup Point C',
-        'Dropoff Point D'
-    );
-
-INSERT INTO
-    `seat_reservations` (
-        `seat_id`,
-        `booking_id`,
-        `trip_id`,
-        `status`
-    )
-VALUES
-    (
-        2847,
-        -- Assuming seat_id 2 exists
-        8992,
-        -- Assuming booking_id 2 exists
-        244,
-        -- Assuming trip_id 2 exists
-        'reserved' -- Status of the seat reservation
-    );

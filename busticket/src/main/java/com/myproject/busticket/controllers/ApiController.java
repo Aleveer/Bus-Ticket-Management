@@ -253,7 +253,7 @@ public class ApiController {
         // Validate route details
         if (code == null || code.isEmpty() ||
                 name == null || name.isEmpty() ||
-                time == null ||
+                time == null || time.isEmpty() ||
                 distance <= 0) {
             response.put("message", "Invalid input data.");
             return ResponseEntity.badRequest().body(response);

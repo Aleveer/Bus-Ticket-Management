@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trip Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        .seat {
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            text-align: center;
+            line-height: 40px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .booked {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .available {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .reserved {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .review {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+
+        .review:last-child {
+            border-bottom: none;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <a href="/admin/trip-management" class="btn btn-primary mb-3">Go Back to Trip Management</a>
+        <h1>Trip Details</h1>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${trip.route.name}"></h5>
+                <p class="card-text">
+                    <strong>Trip ID:</strong> <span th:text="${trip.tripId}"></span>
+                </p>
+                <p class="card-text">
+                    <strong>Departure Time:</strong> <span th:text="${trip.departureTime}"></span>
+                </p>
+                <p class="card-text">
+                    <strong>Arrival Time:</strong> <span th:text="${trip.arrivalTime}"></span>
+                </p>
+                <p class="card-text">
+                    <strong>Price:</strong> <span th:text="${trip.price}"></span>
+                </p>
+                <p class="card-text">
+                    <strong>Status:</strong> <span th:text="${trip.status}"></span>
+                </p>
+                <p class="card-text">
+                    <strong>Bus:</strong> <a th:href="@{'/admin/bus-detail/' + ${trip.bus.plate}}"
+                        th:text="${trip.bus.plate}"></a>
+                </p>
+                <p class="card-text">
+                    <strong>Driver:</strong> <a th:href="@{'/admin/driver-detail/' + ${trip.driver.driverId}}"
+                        th:text="${trip.driver.account.fullName}"></a>
+                </p>
+                <p class="card-text">
+                    <strong>Controller:</strong> <a th:href="@{'/admin/controller-detail/' + ${trip.controller.id}}"
+                        th:text="${trip.controller.account.fullName}"></a>
+                </p>
+                <p class="card-text">
+                    <strong>Staff:</strong> <a th:href="@{'/admin/staff-detail/' + ${trip.staff.staffId}}"
+                        th:text="${trip.staff.account.fullName}"></a>
+                </p>
+            </div>
+        </div>
+
+        <h2 class="mt-4">Bus Seats</h2>
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="seat-grid">
+                    <div th:each="seat : ${seatDetails}"
+                        th:class="${seat.status} ? 'seat ' + seat.status.toLowerCase() : 'seat available'"
+                        th:text="${seat.seatName}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="mt-4">Feedbacks</h2>
+        <div class="card mb-3">
+            <div class="card-body">
+                <div th:each="feedback, iterStat : ${feedbacks}">
+                    <div class="review">
+                        <p><strong th:text="${feedback.account.fullName}"></strong></p>
+                        <p th:text="${feedback.comment}"></p>
+                        <p><strong>Rating:</strong> <span th:text="${feedback.rating}"></span>/5</p>
+                    </div>
+                </div>
+                <div class="pagination">
+                    <a th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
+                        th:class-append="${pageNum == currentPage} ? ' active'"
+                        th:href="@{'/admin/trip-detail/' + ${trip.tripId} + '?page=' + ${pageNum}}"
+                        th:text="${pageNum}"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

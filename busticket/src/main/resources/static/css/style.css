@@ -229,6 +229,9 @@ button {
 .space {
     margin-top: 20px;
 }
+.space_bottom {
+    margin-bottom: 20px;
+}
 .nospace {
     margin-top: 0px;
 }
@@ -1613,4 +1616,13 @@ input.mail_bt::placeholder {
 .input-group .input-group-append  {
     background: none;
     border-left: 0;
+}
+
+.table-title th{
+    cursor: pointer;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
 }

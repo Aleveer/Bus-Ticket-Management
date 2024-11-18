@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import com.myproject.busticket.dto.SeatReservationsDTO;
+import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.services.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +42,9 @@ public class BookingController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime dateDeparture = LocalDate.parse(date, formatter).atStartOfDay();
         List<TripDTO> trips = tripService.searchTrip(departure, destination, dateDeparture, numberOfTickets);
+        for (TripDTO trip : trips){
+            System.out.println("Controller Trip bus type:" + trip.getBus().getType());
+        }
         List<String> provinces = routeCheckpointService.getAllProvinces();
         List<String> cities = routeCheckpointService.getAllCities();
         model.addAttribute("tripType", "one-way");

@@ -30,6 +30,13 @@ public class CheckpointService {
     public List<String> getAllCities() {
         return checkpointRepository.getAllCities();
     }
+    public String findDepartureName(String routeCode) {
+        return checkpointRepository.findDepartureName(routeCode);
+    }
+
+    public String findDropOffName(String routeCode) {
+        return checkpointRepository.findDropOffName(routeCode);
+    }
     public List<Checkpoint> getAll() {
         return checkpointRepository.findAll();
     }

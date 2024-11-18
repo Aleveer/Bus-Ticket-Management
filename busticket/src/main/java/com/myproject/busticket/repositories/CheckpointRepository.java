@@ -3,6 +3,7 @@ package com.myproject.busticket.repositories;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.myproject.busticket.models.Checkpoint;
@@ -16,4 +17,21 @@ public interface CheckpointRepository extends JpaRepository<Checkpoint, Integer>
 
     @Query("Select distinct c.city from Checkpoint c")
     List<String> getAllCities();
+
+
+    @Query("""
+                SELECT c.province
+                FROM Checkpoint c
+                JOIN Route_Checkpoint rc ON c.checkpointId = rc.checkpoint.checkpointId
+                WHERE rc.route.code = :route_code AND rc.type = 'departure'
+            """)
+    String findDepartureName(@Param("route_code") String routeCode);
+
+    @Query("""
+                SELECT c.province
+                FROM Checkpoint c
+                JOIN Route_Checkpoint rc ON c.checkpointId = rc.checkpoint.checkpointId
+                WHERE rc.route.code = :route_code AND rc.type = 'drop_off'
+            """)
+    String findDropOffName(@Param("route_code") String routeCode);
 }

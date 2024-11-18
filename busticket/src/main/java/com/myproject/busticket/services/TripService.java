@@ -41,6 +41,9 @@ public class TripService {
     public List<TripDTO> searchTrip(String departure, String destination, LocalDateTime departureDate,
             int numberOfTickets) {
         List<Trip> trip = tripRepository.findTrip(departure, destination, departureDate, numberOfTickets);
+        for (Trip tri : trip){
+            System.out.println("Controller Trip bus type:" + tri.getBus().getSeatType());
+        }
         return tripMapper.map(trip);
     }
 

@@ -13,6 +13,7 @@ public interface BusMapper {
 
     @Mapping(source = "plate", target = "busId")
     @Mapping(source = "numberOfSeat", target = "numberOfSeats")
+    @Mapping(source = "seatType", target = "type")
     BusDTO entityToDTO(Bus bus);
 
     @Mapping(source = "busId", target = "plate")

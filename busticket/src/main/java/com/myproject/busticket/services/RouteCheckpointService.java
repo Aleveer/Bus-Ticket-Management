@@ -31,14 +31,6 @@ public class RouteCheckpointService {
         return routeCheckpointRepository.findByRoute(route);
     }
 
-    public String findDepartureName(String routeCode) {
-        return routeCheckpointRepository.findDepartureName(routeCode);
-    }
-
-    public String findDropOffName(String routeCode) {
-        return routeCheckpointRepository.findDropOffName(routeCode);
-    }
-
     public List<Route_Checkpoint> findByCheckpoint(Checkpoint checkpoint) {
         return routeCheckpointRepository.findByCheckpoint(checkpoint);
     }

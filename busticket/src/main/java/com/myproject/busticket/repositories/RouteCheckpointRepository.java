@@ -18,27 +18,5 @@ public interface RouteCheckpointRepository extends JpaRepository<Route_Checkpoin
 
     List<Route_Checkpoint> findByRoute(Route route);
 
-    @Query("""
-                SELECT CASE
-                    WHEN rc.checkpoint.city = '' THEN rc.checkpoint.province
-                    ELSE COALESCE(rc.checkpoint.city, rc.checkpoint.province)
-                END
-                FROM Route_Checkpoint rc
-                WHERE
-                    rc.route.code = :route_code AND rc.type = 'departure'
-            """)
-    String findDepartureName(@Param("route_code") String routeCode);
-
-    @Query("""
-                SELECT CASE
-                    WHEN rc.checkpoint.city = '' THEN rc.checkpoint.province
-                    ELSE COALESCE(rc.checkpoint.city, rc.checkpoint.province)
-                END
-                FROM Route_Checkpoint rc
-                WHERE
-                    rc.route.code = :route_code AND rc.type = 'drop_off'
-            """)
-    String findDropOffName(@Param("route_code") String routeCode);
-
     List<Route_Checkpoint> findByCheckpoint(Checkpoint checkpoint);
 }

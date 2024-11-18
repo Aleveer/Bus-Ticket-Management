@@ -12,6 +12,8 @@ public interface TripMapper {
 
     TripDTO entityToDTO(Trip trip);
 
+    Trip dtoToEntity(TripDTO tripDTO);
+
     List<TripDTO> map(List<Trip> trips);
 
     DriverDTO entityToDTO(Driver driver);

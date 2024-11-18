@@ -2,6 +2,7 @@ package com.myproject.busticket.controllers;
 
 import com.myproject.busticket.dto.AccountDTO;
 import com.myproject.busticket.dto.RouteCheckpointDTO;
+import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.enums.CheckpointType;
 import com.myproject.busticket.enums.SeatType;
 import com.myproject.busticket.models.Account;
@@ -10,6 +11,7 @@ import com.myproject.busticket.models.Bus_Seats;
 import com.myproject.busticket.models.Checkpoint;
 import com.myproject.busticket.models.Customer;
 import com.myproject.busticket.models.Driver;
+import com.myproject.busticket.models.Feedback;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Route_Checkpoint;
 import com.myproject.busticket.models.SeatReservations;
@@ -20,6 +22,7 @@ import com.myproject.busticket.services.Bus_SeatsService;
 import com.myproject.busticket.services.CheckpointService;
 import com.myproject.busticket.services.CustomerService;
 import com.myproject.busticket.services.DriverService;
+import com.myproject.busticket.services.FeedbackService;
 import com.myproject.busticket.services.RoleService;
 import com.myproject.busticket.services.RouteCheckpointService;
 import com.myproject.busticket.services.RouteService;
@@ -36,7 +39,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -76,6 +81,9 @@ public class ApiController {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private FeedbackService feedbackService;
 
     public ApiController(DriverService driverService, CustomerService customerService) {
         this.driverService = driverService;
@@ -824,4 +832,39 @@ public class ApiController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/trip-detail/{tripId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getTripDetails(@PathVariable int tripId,
+            @RequestParam(defaultValue = "1") int page) {
+        TripDTO trip = tripService.findById(tripId);
+        if (trip == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("errorMessage", "Trip not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        Bus existingBus = busService.getByBusPlate(trip.getBus().getBusId());
+
+        List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(existingBus);
+        List<Map<String, Object>> seatDetails = seats.stream()
+                .map(seat -> {
+                    Map<String, Object> seatMap = new HashMap<>();
+                    seatMap.put("seatName", seat.getSeatName());
+                    seatMap.put("status", seatReservationService.getStatusBySeatAndTrip(seat, trip));
+                    return seatMap;
+                })
+                .collect(Collectors.toList());
+
+        Page<Feedback> feedbackPage = feedbackService.findByTripDTO(trip, PageRequest.of(page - 1, 3));
+        List<Feedback> feedbacks = feedbackPage.getContent();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("trip", trip);
+        response.put("seatDetails", seatDetails);
+        response.put("feedbacks", feedbacks);
+        response.put("currentPage", page);
+        response.put("totalPages", feedbackPage.getTotalPages());
+
+        return ResponseEntity.ok(response);
+    }
 }

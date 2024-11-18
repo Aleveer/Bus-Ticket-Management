@@ -1,6 +1,7 @@
 package com.myproject.busticket.services;
 
 import com.myproject.busticket.dto.SeatReservationsDTO;
+import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.mapper.SeatReservationsMapper;
 import com.myproject.busticket.models.Bus;
 import com.myproject.busticket.models.Bus_Seats;
@@ -56,5 +57,15 @@ public class SeatReservationsService {
         return busSeats.stream()
                 .flatMap(seat -> seatReservationsRepository.findBySeat(seat).stream())
                 .collect(Collectors.toList());
+    }
+
+    public Object getStatusBySeatAndTrip(Bus_Seats seat, TripDTO trip) {
+        List<SeatReservations> seatReservations = seatReservationsRepository.findBySeat(seat);
+        for (SeatReservations seatReservation : seatReservations) {
+            if (seatReservation.getTrip().getTripId() == trip.getTripId()) {
+                return seatReservation.getStatus();
+            }
+        }
+        return null;
     }
 }

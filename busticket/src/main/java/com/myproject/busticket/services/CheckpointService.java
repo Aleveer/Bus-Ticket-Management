@@ -23,6 +23,13 @@ public class CheckpointService {
         return checkpointRepository.findAll(pageable);
     }
 
+    public List<String> getAllProvinces() {
+        return checkpointRepository.getAllProvinces();
+    }
+
+    public List<String> getAllCities() {
+        return checkpointRepository.getAllCities();
+    }
     public List<Checkpoint> getAll() {
         return checkpointRepository.findAll();
     }

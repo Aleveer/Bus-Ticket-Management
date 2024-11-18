@@ -5,11 +5,15 @@ import com.myproject.busticket.models.Driver;
 import com.myproject.busticket.repositories.DriverRepository;
 
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DriverService {
-    DriverRepository driverRepository;
+    @Autowired
+    private DriverRepository driverRepository;
     DriverMapper driverMapper = Mappers.getMapper(DriverMapper.class);
 
     public DriverService(DriverRepository driverRepository) {
@@ -18,5 +22,9 @@ public class DriverService {
 
     public Driver getDriverById(int driverId) {
         return driverRepository.findById(driverId).orElse(null);
+    }
+
+    public Page<Driver> getAllDrivers(Pageable pageable) {
+        return driverRepository.findAll(pageable);
     }
 }

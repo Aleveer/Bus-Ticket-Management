@@ -1,34 +1,41 @@
 package com.myproject.busticket.controllers;
 
 import com.myproject.busticket.dto.AccountDTO;
+import com.myproject.busticket.dto.ControllerDTO;
+import com.myproject.busticket.dto.DriverDTO;
 import com.myproject.busticket.dto.RouteCheckpointDTO;
-import com.myproject.busticket.dto.TripDTO;
+import com.myproject.busticket.dto.StaffDTO;
 import com.myproject.busticket.enums.CheckpointType;
+import com.myproject.busticket.enums.SeatReservationStatus;
 import com.myproject.busticket.enums.SeatType;
+import com.myproject.busticket.enums.TripStatus;
 import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.Bus;
 import com.myproject.busticket.models.Bus_Seats;
 import com.myproject.busticket.models.Checkpoint;
+import com.myproject.busticket.models.Controller;
 import com.myproject.busticket.models.Customer;
 import com.myproject.busticket.models.Driver;
-import com.myproject.busticket.models.Feedback;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Route_Checkpoint;
 import com.myproject.busticket.models.SeatReservations;
+import com.myproject.busticket.models.Staff;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.services.AccountService;
 import com.myproject.busticket.services.BusService;
 import com.myproject.busticket.services.Bus_SeatsService;
 import com.myproject.busticket.services.CheckpointService;
+import com.myproject.busticket.services.ControllerService;
 import com.myproject.busticket.services.CustomerService;
 import com.myproject.busticket.services.DriverService;
-import com.myproject.busticket.services.FeedbackService;
 import com.myproject.busticket.services.RoleService;
 import com.myproject.busticket.services.RouteCheckpointService;
 import com.myproject.busticket.services.RouteService;
 import com.myproject.busticket.services.SeatReservationsService;
+import com.myproject.busticket.services.StaffService;
 import com.myproject.busticket.services.TripService;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +48,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,8 +58,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ApiController {
-    DriverService driverService;
-    CustomerService customerService;
+
+    @Autowired
+    private DriverService driverService;
+
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private ControllerService controllerService;
+
+    @Autowired
+    private StaffService staffService;
 
     @Autowired
     private TripService tripService;
@@ -81,9 +97,6 @@ public class ApiController {
 
     @Autowired
     private RoleService roleService;
-
-    @Autowired
-    private FeedbackService feedbackService;
 
     public ApiController(DriverService driverService, CustomerService customerService) {
         this.driverService = driverService;
@@ -215,6 +228,170 @@ public class ApiController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/admin/api/drivers")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getDrivers(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Driver> driverPages = driverService.getAllDrivers(pageable);
+
+        List<DriverDTO> driverDTOs = driverPages.getContent().stream()
+                .map(driver -> {
+                    Account account = driver.getAccount();
+                    AccountDTO accountDTO = new AccountDTO(
+                            account.getId(),
+                            account.getEmail(),
+                            account.getPassword(),
+                            account.getFullName(),
+                            account.getPhone(),
+                            roleService.getRoleById(account.getRole().getRoleId()),
+                            account.getStatus(),
+                            account.getVerificationCode(),
+                            account.getVerificationExpiration(),
+                            account.getLoginToken(),
+                            account.getPasswordResetToken(),
+                            account.getPasswordResetExpiration(),
+                            account.isEnabled());
+                    return new DriverDTO(driver.getDriverId(), accountDTO, driver.getStatus());
+                })
+                .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("drivers", driverDTOs);
+        response.put("currentPage", page);
+        response.put("totalPages", driverPages.getTotalPages());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/admin/api/controllers")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getControllers(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Controller> controllerPages = controllerService.getAll(pageable);
+
+        List<ControllerDTO> controllerDTOs = controllerPages.getContent().stream()
+                .map(controller -> {
+                    Account account = controller.getAccount();
+                    AccountDTO accountDTO = new AccountDTO(
+                            account.getId(),
+                            account.getEmail(),
+                            account.getPassword(),
+                            account.getFullName(),
+                            account.getPhone(),
+                            roleService.getRoleById(account.getRole().getRoleId()),
+                            account.getStatus(),
+                            account.getVerificationCode(),
+                            account.getVerificationExpiration(),
+                            account.getLoginToken(),
+                            account.getPasswordResetToken(),
+                            account.getPasswordResetExpiration(),
+                            account.isEnabled());
+                    return new ControllerDTO(controller.getId(), accountDTO, controller.getStatus());
+                })
+                .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("controllers", controllerDTOs);
+        response.put("currentPage", page);
+        response.put("totalPages", controllerPages.getTotalPages());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/admin/api/staffs")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getStaffs(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Staff> staffPages = staffService.getAllStaffs(pageable);
+
+        List<StaffDTO> staffDTOs = staffPages.getContent().stream()
+                .map(staff -> {
+                    Account account = staff.getAccount();
+                    AccountDTO accountDTO = new AccountDTO(
+                            account.getId(),
+                            account.getEmail(),
+                            account.getPassword(),
+                            account.getFullName(),
+                            account.getPhone(),
+                            roleService.getRoleById(account.getRole().getRoleId()),
+                            account.getStatus(),
+                            account.getVerificationCode(),
+                            account.getVerificationExpiration(),
+                            account.getLoginToken(),
+                            account.getPasswordResetToken(),
+                            account.getPasswordResetExpiration(),
+                            account.isEnabled());
+                    return new StaffDTO(staff.getStaffId(), accountDTO, staff.getStatus());
+                })
+                .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("staffs", staffDTOs);
+        response.put("currentPage", page);
+        response.put("totalPages", staffPages.getTotalPages());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/admin/api/customers")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getCustomers(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Account> accountPages = accountService.getAll(pageable);
+        // Filter by role to get only drivers:
+        List<AccountDTO> accountDTOs = accountPages.getContent().stream()
+                .filter(account -> account.getRole().getRoleId() == 4) // 4 = customer
+                .map(account -> new AccountDTO(account.getId(), account.getEmail(),
+                        account.getPassword(),
+                        account.getFullName(), account.getPhone(),
+                        roleService.getRoleById(account.getRole().getRoleId()),
+                        account.getStatus(),
+                        account.getVerificationCode(), account.getVerificationExpiration(),
+                        account.getLoginToken(),
+                        account.getPasswordResetToken(), account.getPasswordResetExpiration(),
+                        account.isEnabled()))
+                .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("accounts", accountDTOs);
+        response.put("currentPage", page);
+        response.put("totalPages", accountPages.getTotalPages());
+
+        return ResponseEntity.ok(response);
+    }
+
+    // @GetMapping("/admin/api/guests")
+    // @ResponseBody
+    // public ResponseEntity<Map<String, Object>>
+    // getGuests(@RequestParam(defaultValue = "0") int page,
+    // @RequestParam(defaultValue = "15") int size) {
+    // Pageable pageable = PageRequest.of(page, size);
+    // Page<Account> accountPages = accountService.getAll(pageable);
+    // // Filter by role to get only drivers:
+    // List<AccountDTO> accountDTOs = accountPages.getContent().stream()
+    // .filter(account -> account.getRole().getRoleId() == 1) // 1 = driver
+    // .map(account -> new AccountDTO(account.getId(), account.getEmail(),
+    // account.getPassword(),
+    // account.getFullName(), account.getPhone(),
+    // roleService.getRoleById(account.getRole().getRoleId()),
+    // account.getStatus(),
+    // account.getVerificationCode(), account.getVerificationExpiration(),
+    // account.getLoginToken(),
+    // account.getPasswordResetToken(), account.getPasswordResetExpiration(),
+    // account.isEnabled()))
+    // .collect(Collectors.toList());
+
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("accounts", accountDTOs);
+    // response.put("currentPage", page);
+    // response.put("totalPages", accountPages.getTotalPages());
+
+    // return ResponseEntity.ok(response);
+    // }
     @GetMapping("/route-detail/{routeCode}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getRouteDetails(@PathVariable String routeCode) {
@@ -755,116 +932,321 @@ public class ApiController {
         }
     }
 
-    @GetMapping("/bus-detail/{plate}")
+    // @GetMapping("/bus-detail/{plate}")
+    // @ResponseBody
+    // public ResponseEntity<Map<String, Object>> getBusDetails(@PathVariable String
+    // plate) {
+    // Bus bus = busService.getByBusPlate(plate);
+    // if (bus == null) {
+    // return ResponseEntity.badRequest().body(Map.of("message", "Bus not found."));
+    // }
+
+    // List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(bus);
+    // List<Map<String, Object>> seatDetails = seats.stream()
+    // .map(seat -> {
+    // Map<String, Object> seatMap = new HashMap<>();
+    // seatMap.put("seatName", seat.getSeatName());
+    // seatMap.put("booked", seatReservationService.isSeatBooked(seat));
+    // return seatMap;
+    // })
+    // .collect(Collectors.toList());
+
+    // List<SeatReservations> reservations = seatReservationService.findByBus(bus);
+    // List<Map<String, Object>> reservationDetails = reservations.stream()
+    // .map(reservation -> {
+    // Map<String, Object> reservationMap = new HashMap<>();
+    // reservationMap.put("seatName", reservation.getSeat().getSeatName());
+    // reservationMap.put("customerName",
+    // reservation.getBooking().getCustomer().getName());
+    // reservationMap.put("customerEmail",
+    // reservation.getBooking().getCustomer().getEmail());
+    // reservationMap.put("trip", reservation.getTrip().getTripId());
+    // reservationMap.put("status", reservation.getStatus().name());
+    // return reservationMap;
+    // })
+    // .collect(Collectors.toList());
+
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("busPlate", bus.getPlate());
+    // response.put("seatType", bus.getSeatType().name());
+    // response.put("numberOfSeats", bus.getNumberOfSeat());
+    // response.put("seats", seatDetails);
+    // response.put("reservations", reservationDetails);
+
+    // return ResponseEntity.ok(response);
+    // }
+
+    // @PostMapping("/admin/api/delete-bus")
+    // @ResponseBody
+    // public ResponseEntity<Map<String, Object>> deleteBus(@RequestBody Map<String,
+    // Object> busRequest) {
+    // Map<String, Object> response = new HashMap<>();
+    // String plate = (String) busRequest.get("plate");
+    // Bus existingBus = busService.getByBusPlate(plate);
+    // if (existingBus == null) {
+    // response.put("message", "Bus not found.");
+    // return ResponseEntity.badRequest().body(response);
+    // }
+
+    // if (!tripService.findByBus(existingBus).isEmpty()) {
+    // response.put("message", "Bus has trips and cannot be deleted.");
+    // return ResponseEntity.badRequest().body(response);
+    // }
+
+    // // Check for seat reservations
+    // List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(existingBus);
+    // for (Bus_Seats seat : seats) {
+    // if (!seatReservationService.getBySeatId(seat).isEmpty()) {
+    // response.put("message", "Bus has seat reservations and cannot be deleted.");
+    // return ResponseEntity.badRequest().body(response);
+    // }
+    // }
+
+    // // Delete seats
+    // for (Bus_Seats seat : seats) {
+    // bus_SeatsService.delete(seat);
+    // }
+
+    // // Delete bus
+    // busService.delete(existingBus);
+    // response.put("message", "Bus deleted successfully.");
+    // return ResponseEntity.ok(response);
+    // }
+
+    @GetMapping("/api/admin/trip-detail/{tripId}")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getBusDetails(@PathVariable String plate) {
-        Bus bus = busService.getByBusPlate(plate);
-        if (bus == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Bus not found."));
-        }
-
-        List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(bus);
-        List<Map<String, Object>> seatDetails = seats.stream()
-                .map(seat -> {
-                    Map<String, Object> seatMap = new HashMap<>();
-                    seatMap.put("seatName", seat.getSeatName());
-                    seatMap.put("booked", seatReservationService.isSeatBooked(seat));
-                    return seatMap;
-                })
-                .collect(Collectors.toList());
-
-        List<SeatReservations> reservations = seatReservationService.findByBus(bus);
-        List<Map<String, Object>> reservationDetails = reservations.stream()
-                .map(reservation -> {
-                    Map<String, Object> reservationMap = new HashMap<>();
-                    reservationMap.put("seatName", reservation.getSeat().getSeatName());
-                    reservationMap.put("customerName", reservation.getBooking().getCustomer().getName());
-                    reservationMap.put("customerEmail", reservation.getBooking().getCustomer().getEmail());
-                    reservationMap.put("trip", reservation.getTrip().getTripId());
-                    reservationMap.put("status", reservation.getStatus().name());
-                    return reservationMap;
-                })
-                .collect(Collectors.toList());
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("busPlate", bus.getPlate());
-        response.put("seatType", bus.getSeatType().name());
-        response.put("numberOfSeats", bus.getNumberOfSeat());
-        response.put("seats", seatDetails);
-        response.put("reservations", reservationDetails);
-
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/admin/api/delete-bus")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> deleteBus(@RequestBody Map<String, Object> busRequest) {
-        Map<String, Object> response = new HashMap<>();
-        String plate = (String) busRequest.get("plate");
-        Bus existingBus = busService.getByBusPlate(plate);
-        if (existingBus == null) {
-            response.put("message", "Bus not found.");
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        if (!tripService.findByBus(existingBus).isEmpty()) {
-            response.put("message", "Bus has trips and cannot be deleted.");
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        // Check for seat reservations
-        List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(existingBus);
-        for (Bus_Seats seat : seats) {
-            if (!seatReservationService.getBySeatId(seat).isEmpty()) {
-                response.put("message", "Bus has seat reservations and cannot be deleted.");
-                return ResponseEntity.badRequest().body(response);
-            }
-        }
-
-        // Delete seats
-        for (Bus_Seats seat : seats) {
-            bus_SeatsService.delete(seat);
-        }
-
-        // Delete bus
-        busService.delete(existingBus);
-        response.put("message", "Bus deleted successfully.");
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/trip-detail/{tripId}")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> getTripDetails(@PathVariable int tripId,
-            @RequestParam(defaultValue = "1") int page) {
-        TripDTO trip = tripService.findById(tripId);
+    public ResponseEntity<Map<String, Object>> getTripDetails(@PathVariable int tripId) {
+        Trip trip = tripService.findTripById(tripId);
         if (trip == null) {
             Map<String, Object> response = new HashMap<>();
             response.put("errorMessage", "Trip not found.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
 
-        Bus existingBus = busService.getByBusPlate(trip.getBus().getBusId());
+        Bus existingBus = busService.getByBusPlate(trip.getBus().getPlate());
+        if (existingBus == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("errorMessage", "Bus not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
 
         List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(existingBus);
+        if (seats.isEmpty()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("errorMessage", "No seats found for this bus.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
         List<Map<String, Object>> seatDetails = seats.stream()
                 .map(seat -> {
                     Map<String, Object> seatMap = new HashMap<>();
+                    SeatReservations reservation = seatReservationService.getReservationBySeatAndTrip(seat, trip);
                     seatMap.put("seatName", seat.getSeatName());
-                    seatMap.put("status", seatReservationService.getStatusBySeatAndTrip(seat, trip));
+                    seatMap.put("status", reservation.getStatus().toString().toLowerCase());
+                    if (reservation != null && reservation.getBooking() != null) {
+                        seatMap.put("customerName", reservation.getBooking().getCustomer().getName());
+                        seatMap.put("customerEmail", reservation.getBooking().getCustomer().getEmail());
+                        seatMap.put("customerPhone", reservation.getBooking().getCustomer().getPhone());
+                    } else {
+                        seatMap.put("customerName", "");
+                        seatMap.put("customerEmail", "");
+                        seatMap.put("customerPhone", "");
+                    }
                     return seatMap;
                 })
                 .collect(Collectors.toList());
 
-        Page<Feedback> feedbackPage = feedbackService.findByTripDTO(trip, PageRequest.of(page - 1, 3));
-        List<Feedback> feedbacks = feedbackPage.getContent();
-
         Map<String, Object> response = new HashMap<>();
         response.put("trip", trip);
         response.put("seatDetails", seatDetails);
-        response.put("feedbacks", feedbacks);
-        response.put("currentPage", page);
-        response.put("totalPages", feedbackPage.getTotalPages());
 
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/admin/api/upcoming-trips")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getUpcomingTrips(@RequestParam String entityType,
+            @RequestParam int entityId) {
+        LocalDateTime now = LocalDateTime.now();
+        List<Trip> trips = tripService.findUpcomingTrips(now);
+
+        if (trips.isEmpty()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("errorMessage", "No upcoming trips found.");
+            return ResponseEntity.ok(response);
+        }
+
+        List<Trip> filteredTrips = trips.stream()
+                .filter(trip -> {
+                    switch (entityType) {
+                        case "driver":
+                            return trip.getDriver().getDriverId() == entityId;
+                        case "controller":
+                            return trip.getController().getId() == entityId;
+                        default:
+                            return false;
+                    }
+                })
+                .collect(Collectors.toList());
+
+        List<Map<String, Object>> tripDetails = filteredTrips.stream()
+                .map(trip -> {
+                    Map<String, Object> tripMap = new HashMap<>();
+                    tripMap.put("tripId", trip.getTripId());
+                    tripMap.put("departureTime", trip.getDepartureTime());
+                    tripMap.put("arrivalTime", trip.getArrivalTime());
+                    tripMap.put("price", trip.getPrice());
+                    tripMap.put("status", trip.getStatus().toString().toLowerCase());
+                    tripMap.put("busPlate", trip.getBus().getPlate());
+                    tripMap.put("driverName", trip.getDriver().getAccount().getFullName());
+                    tripMap.put("controllerName", trip.getController().getAccount().getFullName());
+                    tripMap.put("staffName", trip.getStaff().getAccount().getFullName());
+                    tripMap.put("routeCode", trip.getRoute().getCode());
+                    return tripMap;
+                })
+                .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("trips", tripDetails);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/admin/api/new-trip")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> saveTrip(@RequestBody Map<String, Object> tripRequest) {
+        Map<String, Object> response = new HashMap<>();
+        String departureTimeStr = (String) tripRequest.get("departureTime");
+        if (departureTimeStr == null || departureTimeStr.isEmpty()) {
+            response.put("message", "Departure time is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        String arrivalTimeStr = (String) tripRequest.get("arrivalTime");
+        if (arrivalTimeStr == null || arrivalTimeStr.isEmpty()) {
+            response.put("message", "Arrival time is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (arrivalTimeStr.equals(departureTimeStr)) {
+            response.put("message", "Arrival time can't be the same as departure time.");
+            return ResponseEntity.badRequest().body(response);
+        } else if (LocalDateTime.parse(arrivalTimeStr).isBefore(LocalDateTime.parse(departureTimeStr))) {
+            response.put("message", "Arrival time can't be before departure time.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        float price = Float.parseFloat(tripRequest.get("price").toString());
+        if (price < 0) {
+            response.put("message", "Price can't be negative.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        String busPlate = (String) tripRequest.get("busPlate");
+        if (busPlate == null || busPlate.isEmpty()) {
+            response.put("message", "Bus plate is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        int driverId = Integer.parseInt(tripRequest.get("driverId").toString());
+        if (driverId <= 0) {
+            response.put("message", "Driver ID is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        int controllerId = Integer.parseInt(tripRequest.get("controllerId").toString());
+        if (controllerId <= 0) {
+            response.put("message", "Controller ID is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        int staffId = Integer.parseInt(tripRequest.get("staffId").toString());
+        if (staffId <= 0) {
+            response.put("message", "Staff ID is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        String routeCode = (String) tripRequest.get("routeCode");
+        if (routeCode == null || routeCode.isEmpty()) {
+            response.put("message", "Route code is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        LocalDateTime departureTime = LocalDateTime.parse(departureTimeStr);
+        LocalDateTime arrivalTime = LocalDateTime.parse(arrivalTimeStr);
+
+        List<Trip> conflictingTripsByBus = tripService.findConflictingTripsByBus(busPlate, departureTime,
+                arrivalTime);
+        if (!conflictingTripsByBus.isEmpty()) {
+            response.put("message", "Bus is already assigned to another trip at the same time.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        List<Trip> conflictingTripsByDriver = tripService.findConflictingTripsByDriver(driverId, departureTime,
+                arrivalTime);
+        if (!conflictingTripsByDriver.isEmpty()) {
+            response.put("message", "Driver is already assigned to another trip at the same time.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        List<Trip> conflictingTripsByController = tripService.findConflictingTripsByController(controllerId,
+                departureTime, arrivalTime);
+        if (!conflictingTripsByController.isEmpty()) {
+            response.put("message", "Controller is already assigned to another trip at the same time.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Bus existingBus = busService.getByBusPlate(busPlate);
+        if (existingBus == null) {
+            response.put("message", "Bus not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Driver driver = driverService.getDriverById(driverId);
+        if (driver == null) {
+            response.put("message", "Driver not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Controller controller = controllerService.getControllerById(controllerId);
+        if (controller == null) {
+            response.put("message", "Controller not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Staff staff = staffService.getStaffById(staffId);
+        if (staff == null) {
+            response.put("message", "Staff not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Route route = routeService.getRouteByCode(routeCode);
+        if (route == null) {
+            response.put("message", "Route not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Trip newTrip = new Trip();
+        newTrip.setDepartureTime(departureTime);
+        newTrip.setArrivalTime(arrivalTime);
+        newTrip.setPrice(price);
+        newTrip.setStatus(TripStatus.waiting);
+        newTrip.setBus(existingBus);
+        newTrip.setDriver(driver);
+        newTrip.setController(controller);
+        newTrip.setStaff(staff);
+        newTrip.setRoute(route);
+        tripService.save(newTrip);
+
+        // for loop to add all the seats to the trip:
+        List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(existingBus);
+        for (Bus_Seats seat : seats) {
+            SeatReservations reservation = new SeatReservations();
+            reservation.setTrip(newTrip);
+            reservation.setSeat(seat);
+            reservation.setStatus(SeatReservationStatus.open);
+            seatReservationService.save(reservation);
+        }
+        response.put("message", "Trip saved successfully.");
         return ResponseEntity.ok(response);
     }
 }

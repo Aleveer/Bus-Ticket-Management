@@ -1,18 +1,16 @@
 package com.myproject.busticket.services;
 
 import com.myproject.busticket.dto.SeatReservationsDTO;
-import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.mapper.SeatReservationsMapper;
-import com.myproject.busticket.models.Bus;
 import com.myproject.busticket.models.Bus_Seats;
 import com.myproject.busticket.models.SeatReservations;
+import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.repositories.SeatReservationsRepository;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SeatReservationsService {
@@ -33,8 +31,12 @@ public class SeatReservationsService {
         return seatReservationsMapper.map(seatReservations);
     }
 
-    public List<SeatReservations> getBySeatId(Bus_Seats bus_Seats) {
-        return seatReservationsRepository.findBySeat(bus_Seats);
+    // public List<SeatReservations> getBySeatId(Bus_Seats bus_Seats) {
+    // return seatReservationsRepository.findBy(bus_Seats);
+    // }
+
+    public SeatReservations save(SeatReservations seatReservations) {
+        return seatReservationsRepository.save(seatReservations);
     }
 
     public boolean isSeatBooked(int seatId, int tripId) {
@@ -47,24 +49,29 @@ public class SeatReservationsService {
         return false;
     }
 
-    public boolean isSeatBooked(Bus_Seats seats) {
-        List<SeatReservations> seatReservations = seatReservationsRepository.findBySeat(seats);
-        return !seatReservations.isEmpty();
-    }
+    // public boolean isSeatBooked(Bus_Seats seats) {
+    // List<SeatReservations> seatReservations =
+    // seatReservationsRepository.findBySeat(seats);
+    // for (SeatReservations seatReservation : seatReservations) {
+    // if (seatReservation.getStatus().equals(SeatReservationStatus.booked)) {
+    // return true;
+    // }
+    // }
+    // return false;
+    // }
 
-    public List<SeatReservations> findByBus(Bus bus) {
-        List<Bus_Seats> busSeats = bus_SeatsService.getByBusPlate(bus);
-        return busSeats.stream()
-                .flatMap(seat -> seatReservationsRepository.findBySeat(seat).stream())
-                .collect(Collectors.toList());
-    }
+    // public List<SeatReservations> findByBus(Bus bus) {
+    // List<Bus_Seats> busSeats = bus_SeatsService.getByBusPlate(bus);
+    // return busSeats.stream()
+    // .flatMap(seat -> seatReservationsRepository.findBySeat(seat).stream())
+    // .collect(Collectors.toList());
+    // }
 
-    public Object getStatusBySeatAndTrip(Bus_Seats seat, TripDTO trip) {
-        List<SeatReservations> seatReservations = seatReservationsRepository.findBySeat(seat);
-        for (SeatReservations seatReservation : seatReservations) {
-            if (seatReservation.getTrip().getTripId() == trip.getTripId()) {
-                return seatReservation.getStatus();
-            }
+    public SeatReservations getReservationBySeatAndTrip(Bus_Seats seat, Trip trip) {
+        List<SeatReservations> seatReservations = seatReservationsRepository.findBySeatIdAndTripId(seat.getId(),
+                trip.getTripId());
+        if (seatReservations.size() > 0) {
+            return seatReservations.get(0);
         }
         return null;
     }

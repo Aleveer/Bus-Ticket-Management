@@ -46,7 +46,9 @@
                 <div class="heading-elements">
                   <ul class="list-inline mb-0">
                     <li><a data-action="search" title="Search"><i class="ft-search"></i></a></li>
-                    <li><a data-action="add-trip" title="Add Trip"><i class="ft-plus"></i></a></li>
+                    <a th:href="@{/admin/new-trip}" data-action="add-trip" title="Add Trip">
+                      <i class="ft-plus"></i>
+                    </a>
                   </ul>
                 </div>
                 <div class="search-box" id="searchBox" style="display: none;">

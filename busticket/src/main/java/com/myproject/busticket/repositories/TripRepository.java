@@ -13,26 +13,29 @@ import java.util.List;
 @Repository
 public interface TripRepository extends JpaRepository<Trip, Integer> {
         @Query(value = "SELECT t.*\n" +
-                "FROM `trip` t\n" +
-                "LEFT JOIN bus AS bus ON t.bus_id = bus.bus_id\n" +
-                "LEFT JOIN booking AS b ON t.trip_id = b.trip_id\n" +
-                "WHERE t.route_code = (\n" +
-                "    SELECT rc1.route_code\n" +
-                "    FROM `route_checkpoint` rc1\n" +
-                "    JOIN checkpoint c1 ON rc1.checkpoint_id = c1.checkpoint_id\n" +
-                "    JOIN route_checkpoint rc2 ON rc1.route_code = rc2.route_code\n" +
-                "    JOIN checkpoint c2 ON rc2.checkpoint_id = c2.checkpoint_id\n" +
-                "    WHERE rc1.type = \"departure\" AND (c1.city =:departure OR c1.province =:departure)\n" +
-                "    AND  rc2.type = \"drop_off\" AND (c2.city =:destination OR c2.province =:destination)\n" +
-                ")\n" +
-                "AND status = \"waiting\"\n" +
-                "AND DATE(t.departure_time) =:departureDate\n" +
-                "GROUP BY t.trip_id, bus.number_of_seat\n" +
-                "HAVING (bus.number_of_seat - IFNULL(SUM(b.number_of_seat), 0)) >=:numberOfTickets", nativeQuery = true)
+                        "FROM `trip` t\n" +
+                        "LEFT JOIN bus AS bus ON t.bus_id = bus.bus_id\n" +
+                        "LEFT JOIN booking AS b ON t.trip_id = b.trip_id\n" +
+                        "WHERE t.route_code = (\n" +
+                        "    SELECT rc1.route_code\n" +
+                        "    FROM `route_checkpoint` rc1\n" +
+                        "    JOIN checkpoint c1 ON rc1.checkpoint_id = c1.checkpoint_id\n" +
+                        "    JOIN route_checkpoint rc2 ON rc1.route_code = rc2.route_code\n" +
+                        "    JOIN checkpoint c2 ON rc2.checkpoint_id = c2.checkpoint_id\n" +
+                        "    WHERE rc1.type = \"departure\" AND (c1.city =:departure OR c1.province =:departure)\n" +
+                        "    AND  rc2.type = \"drop_off\" AND (c2.city =:destination OR c2.province =:destination)\n" +
+                        ")\n" +
+                        "AND status = \"waiting\"\n" +
+                        "AND DATE(t.departure_time) =:departureDate\n" +
+                        "GROUP BY t.trip_id, bus.number_of_seat\n" +
+                        "HAVING (bus.number_of_seat - IFNULL(SUM(b.number_of_seat), 0)) >=:numberOfTickets", nativeQuery = true)
         List<Trip> findTrip(@Param("departure") String departure,
                         @Param("destination") String destination,
                         @Param("departureDate") LocalDateTime departureDate,
                         @Param("numberOfTickets") int numberOfTickets);
+
+        @Query("SELECT t FROM Trip t WHERE t.status = 'waiting'")
+        List<Trip> findAllWaitingTrips();
 
         @Query()
         int findNumberOfSeatAvailableByTripId(int tripId);
@@ -40,4 +43,7 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
         List<Trip> findByRoute(Route route);
 
         List<Trip> findByBus(Bus bus);
+
+        @Query("SELECT t FROM Trip t WHERE t.status = 'waiting' AND t.departureTime > :currentTime")
+        List<Trip> findUpcomingTrips(@Param("currentTime") LocalDateTime currentTime);
 }

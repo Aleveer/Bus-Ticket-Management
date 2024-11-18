@@ -120,29 +120,34 @@
             <div class="card-body">
                 <div class="seat-grid">
                     <div th:each="seat : ${seatDetails}"
-                        th:class="${seat.status} ? 'seat ' + seat.status.toLowerCase() : 'seat available'"
+                        th:class-append="'seat ' + (seat.status == 'booked' ? 'booked' : (seat.status == 'reserved' ? 'reserved' : 'available'))"
                         th:text="${seat.seatName}">
                     </div>
                 </div>
             </div>
         </div>
 
-        <h2 class="mt-4">Feedbacks</h2>
+        <h2 class="mt-4">Booking Details</h2>
         <div class="card mb-3">
             <div class="card-body">
-                <div th:each="feedback, iterStat : ${feedbacks}">
-                    <div class="review">
-                        <p><strong th:text="${feedback.account.fullName}"></strong></p>
-                        <p th:text="${feedback.comment}"></p>
-                        <p><strong>Rating:</strong> <span th:text="${feedback.rating}"></span>/5</p>
-                    </div>
-                </div>
-                <div class="pagination">
-                    <a th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
-                        th:class-append="${pageNum == currentPage} ? ' active'"
-                        th:href="@{'/admin/trip-detail/' + ${trip.tripId} + '?page=' + ${pageNum}}"
-                        th:text="${pageNum}"></a>
-                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Seat Name</th>
+                            <th scope="col">Customer Name</th>
+                            <th scope="col">Customer Email</th>
+                            <th scope="col">Customer Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="seat : ${seatDetails}">
+                            <td th:text="${seat.seatName}"></td>
+                            <td th:text="${seat.customerName}"></td>
+                            <td th:text="${seat.customerEmail}"></td>
+                            <td th:text="${seat.customerPhone}"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

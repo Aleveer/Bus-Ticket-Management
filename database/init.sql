@@ -171,18 +171,6 @@ CREATE TABLE `driver` (
 
 -- --------------------------------------------------------
 --
--- Table structure for table `feedback`
---
-CREATE TABLE `feedback` (
-  `feedback_id` int(11) NOT NULL,
-  `trip_id` int(11) NOT NULL,
-  `account_id` int(11) NOT NULL,
-  `comment` varchar(255) NOT NULL,
-  `rating` smallint(5) NOT NULL
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
-
--- --------------------------------------------------------
---
 -- Table structure for table `notification`
 --
 CREATE TABLE `notification` (
@@ -299,7 +287,7 @@ CREATE TABLE `trip` (
   `departure_time` datetime NOT NULL,
   `arrival_time` datetime NOT NULL,
   `price` float NOT NULL,
-  `status` enum('finished', 'arriving', 'waiting', 'started') NOT NULL DEFAULT 'waiting',
+  `status` enum('finished', 'arriving', 'waiting') NOT NULL DEFAULT 'waiting',
   `bus_id` varchar(12) NOT NULL,
   `driver_id` int(11) NOT NULL,
   `controller_id` int(11) NOT NULL,
@@ -445,20 +433,6 @@ ADD
   KEY `driver_id` (`driver_id`),
 ADD
   KEY `account_id` (`account_id`);
-
---
--- Indexes for table `feedback`
---
-ALTER TABLE
-  `feedback`
-ADD
-  PRIMARY KEY (`feedback_id`),
-ADD
-  KEY `feedback_id` (`feedback_id`, `trip_id`, `account_id`),
-ADD
-  KEY `account_id` (`account_id`),
-ADD
-  KEY `trip_id` (`trip_id`);
 
 --
 -- Indexes for table `notification`
@@ -679,14 +653,6 @@ MODIFY
   AUTO_INCREMENT = 5;
 
 --
--- AUTO_INCREMENT for table `feedback`
---
-ALTER TABLE
-  `feedback`
-MODIFY
-  `feedback_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `notification`
 --
 ALTER TABLE
@@ -838,16 +804,6 @@ ALTER TABLE
   `driver`
 ADD
   CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `feedback`
---
-ALTER TABLE
-  `feedback`
-ADD
-  CONSTRAINT `feedback_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-ADD
-  CONSTRAINT `feedback_ibfk_2` FOREIGN KEY (`trip_id`) REFERENCES `trip` (`trip_id`);
 
 --
 -- Constraints for table `role_notification`

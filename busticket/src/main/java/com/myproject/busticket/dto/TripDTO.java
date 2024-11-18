@@ -24,7 +24,4 @@ public class TripDTO {
     private ControllerDTO controller;
     private StaffDTO staff;
     private RouteDTO route;
-
-    private int numberOfSeatAvailable;
-
 }

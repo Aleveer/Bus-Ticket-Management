@@ -15,6 +15,6 @@ public class RouteDTO {
     private int routeId;
     private String code;
     private String name;
-    private LocalDateTime time;
+    private String time;
     private double distance;
 }

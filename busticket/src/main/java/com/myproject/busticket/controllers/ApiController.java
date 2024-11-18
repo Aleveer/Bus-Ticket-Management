@@ -103,7 +103,7 @@ public class ApiController {
                 .map(trip -> new Trip(trip.getTripId(), trip.getDepartureTime(), trip.getArrivalTime(),
                         trip.getPrice(), trip.getStatus(), trip.getBus(), trip.getDriver(),
                         trip.getController(),
-                        trip.getStaff(), trip.getRoute(), trip.getNumberOfSeatAvailable()))
+                        trip.getStaff(), trip.getRoute()))
                 .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();

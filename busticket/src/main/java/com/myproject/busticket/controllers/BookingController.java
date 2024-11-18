@@ -4,14 +4,24 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import com.myproject.busticket.dto.SeatReservationsDTO;
-import com.myproject.busticket.services.*;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.myproject.busticket.dto.SeatReservationsDTO;
 import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.models.Booking;
+import com.myproject.busticket.services.BookingService;
+import com.myproject.busticket.services.CustomerService;
+import com.myproject.busticket.services.RouteCheckpointService;
+import com.myproject.busticket.services.SeatReservationsService;
+import com.myproject.busticket.services.TripService;
 
 @RequestMapping("/home/index")
 @Controller
@@ -41,6 +51,7 @@ public class BookingController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime dateDeparture = LocalDate.parse(date, formatter).atStartOfDay();
         List<TripDTO> trips = tripService.searchTrip(departure, destination, dateDeparture, numberOfTickets);
+        
         List<String> provinces = routeCheckpointService.getAllProvinces();
         List<String> cities = routeCheckpointService.getAllCities();
         model.addAttribute("tripType", "one-way");

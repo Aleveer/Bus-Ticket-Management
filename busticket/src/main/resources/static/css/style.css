@@ -1462,7 +1462,7 @@ input.mail_bt::placeholder {
 }
 .floor-container .floor_1{
     margin-right: 35px;
-    margin-left: -10px;
+    
     margin-top: 10px;
 }
 .floor-container .floor_2{
@@ -1550,7 +1550,12 @@ input.mail_bt::placeholder {
   .showcase li small {
     margin-left: 2px;
   }
-  
+  .first_floor{
+    margin-right: 25px;
+  }
+    .second_floor{
+        margin-left: 25px;
+    }
   .row_2 {
     display: flex;
   }

@@ -11,12 +11,14 @@ import com.myproject.busticket.models.Bus;
 @Mapper(componentModel = "spring")
 public interface BusMapper {
 
-    @Mapping(source = "plate", target = "busId")
-    @Mapping(source = "numberOfSeat", target = "numberOfSeats")
+    @Mapping(source = "plate", target = "plate")
+    @Mapping(source = "numberOfSeat", target = "numberOfSeat")
+    @Mapping(source = "seatType", target = "seatType")
     BusDTO entityToDTO(Bus bus);
 
-    @Mapping(source = "busId", target = "plate")
-    @Mapping(source = "numberOfSeats", target = "numberOfSeat")
+    @Mapping(source = "plate", target = "plate")
+    @Mapping(source = "numberOfSeat", target = "numberOfSeat")
+    @Mapping(source = "seatType", target = "seatType")
     Bus dtoToEntity(BusDTO busDTO);
 
     List<BusDTO> map(List<Bus> buses);

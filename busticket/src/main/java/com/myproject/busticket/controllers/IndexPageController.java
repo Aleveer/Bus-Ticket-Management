@@ -44,8 +44,8 @@ public class IndexPageController {
         for (Route route : routes) {
             ScheduleDTO schedule = new ScheduleDTO();
             schedule.setCode(route.getCode());
-            schedule.setDepartureName(routeCheckpointService.findDepartureName(route.getCode()));
-            schedule.setDropOffName(routeCheckpointService.findDropOffName(route.getCode()));
+            schedule.setDepartureName(checkpointService.findDepartureName(route.getCode()));
+            schedule.setDropOffName(checkpointService.findDropOffName(route.getCode()));
             schedule.setTime(route.getTime());
             schedule.setDistance(route.getDistance());
             schedules.add(schedule);

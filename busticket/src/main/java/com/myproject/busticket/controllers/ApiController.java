@@ -981,6 +981,7 @@ public class ApiController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         Bus_Seats seat = bus_SeatsService.getById(seatId);
+
         List<Map<String, Object>> reservationList = seatReservationService.getBySeat(seat).stream()
                 .filter(reservation -> reservation.getStatus() != SeatReservationStatus.open)
                 .map(reservation -> {

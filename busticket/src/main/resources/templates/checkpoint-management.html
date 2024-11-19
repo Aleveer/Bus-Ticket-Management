@@ -6,6 +6,12 @@
   <div th:insert="~{dashboard-header.html}"></div>
   <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <style>
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
 </head>
 
 <body class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar" data-open="click"
@@ -165,6 +171,9 @@
               </tbody>
             </table>
           </div>
+          <nav aria-label="Page navigation">
+            <ul class="pagination pagination-container" id="assignedRoutesPagination"></ul>
+          </nav>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -473,8 +482,9 @@
           });
       }
     }
+    const pageSize = 5;
 
-    function viewCheckpointDetail(checkpointId) {
+    function viewCheckpointDetail(checkpointId, page = 0) {
       $.ajax({
         url: '/admin/api/checkpoint/' + checkpointId,
         method: 'GET',
@@ -489,8 +499,15 @@
           // Clear the assigned routes table body
           $('#assignedRoutesTableBody').empty();
 
+          // Calculate pagination
+          const totalRoutes = data.assignedRoutes.length;
+          const totalPages = Math.ceil(totalRoutes / pageSize);
+          const start = page * pageSize;
+          const end = Math.min(start + pageSize, totalRoutes);
+
           // Populate the assigned routes table with data
-          data.assignedRoutes.forEach(function (routeCheckpoint) {
+          for (let i = start; i < end; i++) {
+            const routeCheckpoint = data.assignedRoutes[i];
             $('#assignedRoutesTableBody').append(
               '<tr>' +
               '<td>' + routeCheckpoint.routeCode + '</td>' +
@@ -499,7 +516,31 @@
               '<td>' + routeCheckpoint.type + '</td>' +
               '</tr>'
             );
-          });
+          }
+
+          // Clear the pagination controls
+          $('#assignedRoutesPagination').empty();
+
+          // Add Previous button
+          if (page > 0) {
+            $('#assignedRoutesPagination').append(
+              '<li class="page-item"><a class="page-link" onclick="viewCheckpointDetail(\'' + checkpointId + '\', ' + (page - 1) + ')">&laquo;</a></li>'
+            );
+          }
+
+          // Add page numbers
+          for (let i = 0; i < totalPages; i++) {
+            $('#assignedRoutesPagination').append(
+              '<li class="page-item ' + (i === page ? 'active' : '') + '"><a class="page-link" onclick="viewCheckpointDetail(\'' + checkpointId + '\', ' + i + ')">' + (i + 1) + '</a></li>'
+            );
+          }
+
+          // Add Next button
+          if (page < totalPages - 1) {
+            $('#assignedRoutesPagination').append(
+              '<li class="page-item"><a class="page-link" onclick="viewCheckpointDetail(\'' + checkpointId + '\', ' + (page + 1) + ')">&raquo;</a></li>'
+            );
+          }
 
           $('#viewCheckpointModal').modal('show');
         },

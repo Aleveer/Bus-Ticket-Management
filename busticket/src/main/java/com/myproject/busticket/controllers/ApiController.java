@@ -942,42 +942,69 @@ public class ApiController {
             return ResponseEntity.badRequest().body(Map.of("message", "Bus not found."));
         }
 
-        List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(bus);
-        List<Map<String, Object>> seatDetails = new ArrayList<>();
-
-        for (Bus_Seats seat : seats) {
+        List<Map<String, Object>> seatDetails = bus_SeatsService.getByBusPlate(bus).stream().map(seat -> {
             Map<String, Object> seatMap = new HashMap<>();
             seatMap.put("seatName", seat.getSeatName());
-
-            List<SeatReservations> reservations = seatReservationService.getBySeat(seat);
-            List<Map<String, Object>> reservationList = new ArrayList<>();
-            for (SeatReservations reservation : reservations) {
-                Map<String, Object> reservationMap = new HashMap<>();
-                reservationMap.put("customerName",
-                        reservation.getBooking() != null ? reservation.getBooking().getCustomer().getName() : "");
-                reservationMap.put("customerEmail",
-                        reservation.getBooking() != null ? reservation.getBooking().getCustomer().getEmail() : "");
-                reservationMap.put("trip", reservation.getTrip().getTripId());
-                reservationMap.put("status", reservation.getStatus().name());
-                reservationList.add(reservationMap);
-            }
-
+            List<Map<String, Object>> reservationList = seatReservationService.getBySeat(seat).stream()
+                    .map(reservation -> {
+                        Map<String, Object> reservationMap = new HashMap<>();
+                        reservationMap.put("customerName",
+                                reservation.getBooking() != null ? reservation.getBooking().getCustomer().getName()
+                                        : "");
+                        reservationMap.put("customerEmail",
+                                reservation.getBooking() != null ? reservation.getBooking().getCustomer().getEmail()
+                                        : "");
+                        reservationMap.put("trip", reservation.getTrip().getTripId());
+                        reservationMap.put("status", reservation.getStatus().name());
+                        return reservationMap;
+                    }).collect(Collectors.toList());
             seatMap.put("reservations", reservationList);
             seatMap.put("status",
-                    reservations.stream().anyMatch(r -> r.getStatus() == SeatReservationStatus.booked) ? "booked"
+                    reservationList.stream().anyMatch(r -> r.get("status").equals(SeatReservationStatus.booked.name()))
+                            ? "booked"
                             : "available");
-            seatDetails.add(seatMap);
-        }
+            return seatMap;
+        }).collect(Collectors.toList());
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("busPlate", bus.getPlate());
-        response.put("seatType", bus.getSeatType().name());
-        response.put("numberOfSeats", bus.getNumberOfSeat());
-        response.put("seats", seatDetails);
+        Map<String, Object> response = Map.of(
+                "busPlate", bus.getPlate(),
+                "seatType", bus.getSeatType().name(),
+                "numberOfSeats", bus.getNumberOfSeat(),
+                "seats", seatDetails);
 
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/api/seats/{seatId}/reservations")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getSeatReservations(@PathVariable Integer seatId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        Bus_Seats seat = bus_SeatsService.getById(seatId);
+        List<Map<String, Object>> reservationList = seatReservationService.getBySeat(seat).stream()
+                .filter(reservation -> reservation.getStatus() != SeatReservationStatus.open)
+                .map(reservation -> {
+                    Map<String, Object> reservationMap = new HashMap<>();
+                    reservationMap.put("customerName",
+                            reservation.getBooking() != null ? reservation.getBooking().getCustomer().getName() : "");
+                    reservationMap.put("customerEmail",
+                            reservation.getBooking() != null ? reservation.getBooking().getCustomer().getEmail() : "");
+                    reservationMap.put("trip", reservation.getTrip().getTripId());
+                    reservationMap.put("status", reservation.getStatus().name());
+                    return reservationMap;
+                }).collect(Collectors.toList());
+
+        int start = Math.min(page * size, reservationList.size());
+        int end = Math.min((page + 1) * size, reservationList.size());
+        List<Map<String, Object>> paginatedList = reservationList.subList(start, end);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("reservations", paginatedList);
+        response.put("totalPages", (int) Math.ceil((double) reservationList.size() / size));
+        response.put("currentPage", page);
+
+        return ResponseEntity.ok(response);
+    }
     // @PostMapping("/admin/api/delete-bus")
     // @ResponseBody
     // public ResponseEntity<Map<String, Object>> deleteBus(@RequestBody Map<String,

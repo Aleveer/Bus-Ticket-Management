@@ -25,4 +25,9 @@ public class Bus_SeatsService {
     public List<Bus_Seats> getByBusPlate(Bus bus) {
         return bus_SeatsRepository.findByBus(bus);
     }
+
+    public Bus_Seats getById(int id) {
+        return bus_SeatsRepository.findById(id).orElse(null);
+    }
+
 }

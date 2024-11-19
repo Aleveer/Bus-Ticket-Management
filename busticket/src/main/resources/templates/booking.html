@@ -49,7 +49,6 @@
     <div class="logo_2 d-flex justify-content-center">
         <a th:href="@{index}"><img th:src="@{/images/EasyBus_processed.png}" /></a>
     </div>
-  
     <!-- header top section end -->
 
     <!-- booking section start -->
@@ -169,11 +168,11 @@
     <div class="about_section">
       <div class="container  d-flex flex-nowrap">
         <div class="choose_seat box-card d-flex  flex-wrap justify-content-start col-sm-8">
-            <div class="full d-flex justify-content-between ">
-              <h3 class="full d-flex text-dark ">Thông tin khách hàng</h3>
-              <h3 class="full d-flex justify-content-center text-danger">Điều khoản lưu ý</h3>
-            </div>
-            
+              <div class="full d-flex justify-content-between ">
+                <h3 class="full d-flex text-dark ">Thông tin khách hàng</h3>
+                <h3 class="full d-flex justify-content-center text-danger">Điều khoản lưu ý</h3>
+              </div>
+              
             <div class="full d-flex flex-nowrap user-info-container ">
               <div class="d-flex flex-column col-sm-6 user-info">
                 <div class="form-group">
@@ -199,27 +198,29 @@
               </div>
             </div>
           </div>
-            <div class="box-card d-flex visa flex-wrap justify-content-center col-sm-4"  id="visaCardSection" >
-                <div class="visa-card">
-                  <div class="card-header">     
-                      <div class="visa-logo">VISA</div>
-                  </div>
+               
+                  <div class="box-card d-flex visa flex-wrap justify-content-center col-sm-4 hidden" id="visaCardSection"  >
+                    <div class="visa-card">
+                      <div class="card-header">     
+                          <div class="visa-logo">VISA</div>
+                      </div>
 
-                  <input class="card-number btn-container" id="cardNumber" placeholder='**** **** **** ****'>
-                  </input>
-                  <div class="card-details ">
-                      <div class="card-holder col-9">
-                          <span>Card Holder</span>
-                          <input id="cardHolderName" ></input>
+                      <input class="card-number btn-container" id="cardNumber" placeholder='**** **** **** ****'>
+                      </input>
+                      <div class="card-details ">
+                          <div class="card-holder col-9">
+                              <span>Card Holder</span>
+                              <input id="cardHolderName" ></input>
+                          
+                           </div>
+                          <div class="expiry-date">
+                              <span>Expires</span>
+                              <input id="expiryDate" placeholder='MM/YY'></input>
+                          </div>
                       </div>
-                      <div class="expiry-date">
-                          <span>Expires</span>
-                          <input id="expiryDate" placeholder='MM/YY'></input>
-                      </div>
+                    </div>
                   </div>
-                </div>
-            </div>
-         
+         </div>
       </div>
         <div class="container d-flex ">
           <div class="choose_seat box-card d-flex  flex-wrap justify-content-between col-sm-8">
@@ -326,8 +327,10 @@
     });
     
     function showVisaCard() {
-        document.getElementById("visaCardSection").style.display = "flex";
-    }
+      const visaCardSection = document.getElementById("visaCardSection");
+      visaCardSection.classList.remove("hidden");
+      visaCardSection.classList.add("visible");
+  }
         const container = document.querySelector(".seat_container");
         const seats = document.querySelectorAll(".row_2 .seat:not(.booked)");
         const count = document.getElementById("count");

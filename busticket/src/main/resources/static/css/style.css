@@ -1461,11 +1461,19 @@ input.mail_bt::placeholder {
     padding-bottom: 0px;
 }
 .floor-container .floor_1{
-    margin-right: 35px;
-    
+    margin-right: 60px;
     margin-top: 10px;
 }
 .floor-container .floor_2{
+    margin-left: 50px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+.floor-container .left_side{
+    margin-right: 35px;
+    margin-top: 10px;
+}
+.floor-container .right_side{
     margin-left: 35px;
     margin-top: 10px;
 }
@@ -1550,11 +1558,23 @@ input.mail_bt::placeholder {
   .showcase li small {
     margin-left: 2px;
   }
-  .first_floor{
+  .left-side{
     margin-right: 25px;
   }
+    .right-side{
+        margin-left: 25px;
+    }
+  .first_floor{
+    margin-right: 25px;
+    }
+    .first_floor .row_2:nth-of-type(1) .seat:nth-of-type(1){
+        margin-right: 50px;
+    }
     .second_floor{
         margin-left: 25px;
+    }
+    .second_floor .row_2:nth-of-type(1) .seat:nth-of-type(1){
+        margin-right: 50px;
     }
   .row_2 {
     display: flex;

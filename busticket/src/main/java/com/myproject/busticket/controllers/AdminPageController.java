@@ -125,6 +125,28 @@ public class AdminPageController {
 		return "route-management";
 	}
 
+	@GetMapping("/route-management/search")
+	public String adminSearchByCodeAndName(@RequestParam String searchValue, @RequestParam(defaultValue = "0") int page,
+										   @RequestParam(defaultValue = "15") int size, Model model) {
+		System.out.println("searchValue: " + searchValue);
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Route> routesSearchPage = routeService.searchRouteByCodeAndName(pageable, searchValue);
+
+		int totalPages = routesSearchPage.getTotalPages();
+		int startPage = Math.max(0, page - 2);
+		int endPage = Math.min(totalPages - 1, page + 2);
+
+		List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
+				.boxed()
+				.collect(Collectors.toList());
+
+		model.addAttribute("routesSearch", routesSearchPage.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalSearchPages", routesSearchPage.getTotalPages());
+		model.addAttribute("pageNumbers", pageNumbers);
+		return "search-route";
+	}
+
 	@GetMapping("/checkpoint-management")
 	public String adminCheckpointPage(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "15") int size, Model model) {

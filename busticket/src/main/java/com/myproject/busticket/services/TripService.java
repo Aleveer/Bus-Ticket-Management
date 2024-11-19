@@ -44,7 +44,6 @@ public class TripService {
     public List<TripDTO> searchTrip(String departure, String destination, LocalDateTime departureDate,
             int numberOfTickets) {
         List<Trip> trip = tripRepository.findTrip(departure, destination, departureDate, numberOfTickets);
-
         return tripMapper.map(trip);
     }
 

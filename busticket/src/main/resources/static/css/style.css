@@ -1461,11 +1461,19 @@ input.mail_bt::placeholder {
     padding-bottom: 0px;
 }
 .floor-container .floor_1{
-    margin-right: 35px;
-    
+    margin-right: 60px;
     margin-top: 10px;
 }
 .floor-container .floor_2{
+    margin-left: 50px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+.floor-container .left_side{
+    margin-right: 35px;
+    margin-top: 10px;
+}
+.floor-container .right_side{
     margin-left: 35px;
     margin-top: 10px;
 }
@@ -1550,11 +1558,23 @@ input.mail_bt::placeholder {
   .showcase li small {
     margin-left: 2px;
   }
-  .first_floor{
+  .left-side{
     margin-right: 25px;
   }
+    .right-side{
+        margin-left: 25px;
+    }
+  .first_floor{
+    margin-right: 25px;
+    }
+    .first_floor .row_2:nth-of-type(1) .seat:nth-of-type(1){
+        margin-right: 50px;
+    }
     .second_floor{
         margin-left: 25px;
+    }
+    .second_floor .row_2:nth-of-type(1) .seat:nth-of-type(1){
+        margin-right: 50px;
     }
   .row_2 {
     display: flex;
@@ -1608,7 +1628,116 @@ input.mail_bt::placeholder {
 .payment-button:hover {
     background-color: #ff4d4d;
 }
+.hidden {
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+    transition: visibility 0s, height 0.5s ease-out;
+}
+.visible {
+    visibility: visible;
+    height: auto;
+    transition: height 0.5s ease-in;
+}
+.visa{
+    margin-left: 20px;
+    display: flex;
+    
+}
+.visa-card {
+    background: url(../images/visacard.jpg) center;
+    width: 340px;
+    height: 200px;
+    border-radius: 12px;
+    color: white;
+    padding: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    margin-top: 20px;
+}
 
+.card-header {
+    display: flex;
+    justify-content: end;
+}
+
+.chip {
+    width: 40px;
+    height: 30px;
+    background: gold;
+    border-radius: 4px;
+}
+
+.visa-logo {
+    font-size: 24px;
+    font-weight: bold;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+}
+
+.card-number {
+    font-size: 20px;
+    margin-top: 30px ;
+    display: flex;
+    justify-content: center;
+    letter-spacing: 8px;
+    outline: none;
+    cursor: text;
+    background-color: transparent;
+    color: white;
+    border: none;
+    margin-bottom: 5px;
+}
+
+.card-details {
+    display: flex;
+      
+}
+.card-details input{
+    background-color: transparent;
+    color: white;
+    border: none;
+}
+.card-number::placeholder,
+.expiry-date input::placeholder {
+    color: rgb(255, 255, 255); /* Change this color as needed */
+}
+.expiry-date input{
+    background-color: transparent;
+    color: white;
+    border: none;
+}
+.card-holder, .expiry-date {
+    font-size: 12px;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+}
+
+.card-holder input, .expiry-date input, .card-number {
+    font-size: 14px;
+    outline: none;
+    cursor: text;
+    
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+ .expiry-date input{
+    width: 80%;
+    margin: -5px;
+}
+.card-holder input{
+    width: 90%;
+    margin: -5px;
+}
+.card-holder input:focus, .expiry-date input:focus, .card-number:focus {
+    border-bottom: 1px solid white;
+}
+/* user info end */
 /* schedule start */
 .input-group .form-control {
     border-left: 0;
@@ -1631,3 +1760,5 @@ input.mail_bt::placeholder {
     -ms-user-select: none;
     -o-user-select: none;
 }
+
+/* schedule end */

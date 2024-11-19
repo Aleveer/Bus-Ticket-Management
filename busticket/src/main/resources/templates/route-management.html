@@ -52,12 +52,14 @@
                                         </a>
                                     </ul>
                                 </div>
-                                <div class="search-box" id="searchBox" style="display: none">
-                                    <input type="text" class="input-search" placeholder="Search route..." />
-                                    <button class="btn-search" id="searchButton">
-                                        <i class="ft-search"></i>
-                                    </button>
-                                </div>
+                                <form action="/admin/route-management/search" method="get">
+                                    <div class="search-box" id="searchBox" style="display: none">
+                                        <input type="text" id="searchField" name="searchValue" class="input-search" placeholder="Search route..." />
+                                        <button class="btn-search" id="searchButton" type="submit">
+                                            <i class="ft-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                             <div class="card-content collapse show">
                                 <div class="table-responsive">
@@ -255,6 +257,18 @@
             });
         }
 
+        // const searchButton = document.getElementById("searchButton");
+        // searchButton.addEventListener("click", () => {
+        //     const searchField = document.getElementById("searchField").value;
+        //     console.log(searchField)
+        //     fetch(`/admin/route-management/search?query=${searchField}`, {
+        //         method: 'GET',
+        //         headers: { 'Content-Type': 'application/json' },
+        //     })
+        //         .then(response => response.json())
+        //         .then(data => console.log(data))
+        //         .catch(error => console.error(error));
+        // })
         function viewRouteDetails(routeCode) {
             window.location.href = "/admin/route-detail/" + routeCode;
         }

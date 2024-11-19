@@ -31,23 +31,24 @@ public class SeatReservationsService {
         return seatReservationsMapper.map(seatReservations);
     }
 
-    // public List<SeatReservations> getBySeatId(Bus_Seats bus_Seats) {
-    // return seatReservationsRepository.findBy(bus_Seats);
-    // }
+    public List<SeatReservations> getBySeat(Bus_Seats bus_Seats) {
+        return seatReservationsRepository.findBySeat(bus_Seats);
+    }
 
     public SeatReservations save(SeatReservations seatReservations) {
         return seatReservationsRepository.save(seatReservations);
     }
 
-    public boolean isSeatBooked(int seatId, int tripId) {
-        List<SeatReservations> seatReservations = seatReservationsRepository.findByTrip_TripId(tripId);
-        for (SeatReservations seatReservation : seatReservations) {
-            if (seatReservation.getSeat().getId() == seatId) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // public boolean isSeatBooked(int seatId, int tripId) {
+    // List<SeatReservations> seatReservations =
+    // seatReservationsRepository.findByTrip_TripId(tripId);
+    // for (SeatReservations seatReservation : seatReservations) {
+    // if (seatReservation.getSeat().getId() == seatId) {
+    // return true;
+    // }
+    // }
+    // return false;
+    // }
 
     // public boolean isSeatBooked(Bus_Seats seats) {
     // List<SeatReservations> seatReservations =

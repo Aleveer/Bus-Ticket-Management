@@ -64,43 +64,83 @@
             </div>
             <div class="card-body">
                 <div class="seat-grid">
-                    <div th:each="seat : ${seatDetails}" th:class="${seat.booked} ? 'seat booked' : 'seat available'"
-                        th:text="${seat.seatName}">
+                    <div th:each="seat : ${seatDetails}"
+                        th:class="${seat.status == 'booked'} ? 'seat booked' : 'seat available'"
+                        th:text="${seat.seatName}" th:data-toggle="modal" th:data-target="'#seatModal'"
+                        th:data-seatname="${seat.seatName}" th:data-reservations="${seat.reservations}">
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="card mb-3">
-            <div class="card-header">
-                <h4>Reservations</h4>
-            </div>
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Seat Name</th>
-                            <th scope="col">Customer Name</th>
-                            <th scope="col">Customer Email</th>
-                            <th scope="col">Trip</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="reservation : ${reservationDetails}">
-                            <td th:text="${reservation.seatName}"></td>
-                            <td th:text="${reservation.customerName}"></td>
-                            <td th:text="${reservation.customerEmail}"></td>
-                            <td th:text="${reservation.trip}"></td>
-                            <td th:text="${reservation.status}"></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="modal fade" id="seatModal" tabindex="-1" role="dialog" aria-labelledby="seatModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="seatModalLabel">Seat Reservations</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>Seat: <span id="modalSeatName"></span></h6>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Customer Name</th>
+                                    <th scope="col">Customer Email</th>
+                                    <th scope="col">Trip</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modalReservations">
+                                <!-- Reservations will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 
         <a href="/admin/bus-management" class="btn btn-secondary">Back to Bus Management</a>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $('#seatModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var seatName = button.data('seatname');
+            var reservations = button.data('reservations');
+
+            // Parse reservations if it's a string
+            if (typeof reservations === 'string') {
+                try {
+                    reservations = JSON.parse(reservations.replace(/'/g, '"'));
+                } catch (e) {
+                    console.error("Error parsing reservations JSON:", e);
+                    reservations = [];
+                }
+            }
+
+            var modal = $(this);
+            modal.find('#modalSeatName').text(seatName);
+
+            var reservationsTable = modal.find('#modalReservations');
+            reservationsTable.empty();
+
+            reservations.forEach(function (reservation) {
+                var row = '<tr>' +
+                    '<td>' + reservation.customerName + '</td>' +
+                    '<td>' + reservation.customerEmail + '</td>' +
+                    '<td>' + reservation.trip + '</td>' +
+                    '<td>' + reservation.status + '</td>' +
+                    '</tr>';
+                reservationsTable.append(row);
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -1,5 +1,6 @@
 package com.myproject.busticket.repositories;
 
+import com.myproject.busticket.models.Bus_Seats;
 import com.myproject.busticket.models.SeatReservations;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,9 @@ import java.util.List;
 
 @Repository
 public interface SeatReservationsRepository extends JpaRepository<SeatReservations, Integer> {
+
+    List<SeatReservations> findBySeat(Bus_Seats seat);
+
     List<SeatReservations> findByTrip_TripId(int tripId);
 
     @Query("SELECT s FROM SeatReservations s WHERE s.seat.id = :seatId AND s.trip.id = :tripId")

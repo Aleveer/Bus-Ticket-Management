@@ -934,49 +934,49 @@ public class ApiController {
         }
     }
 
-    // @GetMapping("/bus-detail/{plate}")
-    // @ResponseBody
-    // public ResponseEntity<Map<String, Object>> getBusDetails(@PathVariable String
-    // plate) {
-    // Bus bus = busService.getByBusPlate(plate);
-    // if (bus == null) {
-    // return ResponseEntity.badRequest().body(Map.of("message", "Bus not found."));
-    // }
+    @GetMapping("/bus-detail/{plate}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getBusDetails(@PathVariable String plate) {
+        Bus bus = busService.getByBusPlate(plate);
+        if (bus == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Bus not found."));
+        }
 
-    // List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(bus);
-    // List<Map<String, Object>> seatDetails = seats.stream()
-    // .map(seat -> {
-    // Map<String, Object> seatMap = new HashMap<>();
-    // seatMap.put("seatName", seat.getSeatName());
-    // seatMap.put("booked", seatReservationService.isSeatBooked(seat));
-    // return seatMap;
-    // })
-    // .collect(Collectors.toList());
+        List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(bus);
+        List<Map<String, Object>> seatDetails = new ArrayList<>();
 
-    // List<SeatReservations> reservations = seatReservationService.findByBus(bus);
-    // List<Map<String, Object>> reservationDetails = reservations.stream()
-    // .map(reservation -> {
-    // Map<String, Object> reservationMap = new HashMap<>();
-    // reservationMap.put("seatName", reservation.getSeat().getSeatName());
-    // reservationMap.put("customerName",
-    // reservation.getBooking().getCustomer().getName());
-    // reservationMap.put("customerEmail",
-    // reservation.getBooking().getCustomer().getEmail());
-    // reservationMap.put("trip", reservation.getTrip().getTripId());
-    // reservationMap.put("status", reservation.getStatus().name());
-    // return reservationMap;
-    // })
-    // .collect(Collectors.toList());
+        for (Bus_Seats seat : seats) {
+            Map<String, Object> seatMap = new HashMap<>();
+            seatMap.put("seatName", seat.getSeatName());
 
-    // Map<String, Object> response = new HashMap<>();
-    // response.put("busPlate", bus.getPlate());
-    // response.put("seatType", bus.getSeatType().name());
-    // response.put("numberOfSeats", bus.getNumberOfSeat());
-    // response.put("seats", seatDetails);
-    // response.put("reservations", reservationDetails);
+            List<SeatReservations> reservations = seatReservationService.getBySeat(seat);
+            List<Map<String, Object>> reservationList = new ArrayList<>();
+            for (SeatReservations reservation : reservations) {
+                Map<String, Object> reservationMap = new HashMap<>();
+                reservationMap.put("customerName",
+                        reservation.getBooking() != null ? reservation.getBooking().getCustomer().getName() : "");
+                reservationMap.put("customerEmail",
+                        reservation.getBooking() != null ? reservation.getBooking().getCustomer().getEmail() : "");
+                reservationMap.put("trip", reservation.getTrip().getTripId());
+                reservationMap.put("status", reservation.getStatus().name());
+                reservationList.add(reservationMap);
+            }
 
-    // return ResponseEntity.ok(response);
-    // }
+            seatMap.put("reservations", reservationList);
+            seatMap.put("status",
+                    reservations.stream().anyMatch(r -> r.getStatus() == SeatReservationStatus.booked) ? "booked"
+                            : "available");
+            seatDetails.add(seatMap);
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("busPlate", bus.getPlate());
+        response.put("seatType", bus.getSeatType().name());
+        response.put("numberOfSeats", bus.getNumberOfSeat());
+        response.put("seats", seatDetails);
+
+        return ResponseEntity.ok(response);
+    }
 
     // @PostMapping("/admin/api/delete-bus")
     // @ResponseBody
@@ -1013,7 +1013,6 @@ public class ApiController {
     // busService.delete(existingBus);
     // response.put("message", "Bus deleted successfully.");
     // return ResponseEntity.ok(response);
-    // }
 
     @GetMapping("/api/admin/trip-detail/{tripId}")
     @ResponseBody

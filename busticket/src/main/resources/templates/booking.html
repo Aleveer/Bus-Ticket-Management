@@ -57,6 +57,9 @@
       <div class="all-container container d-flex flex-nowrap ">
         <div class="choose_seat trip-card d-flex flex-column justify-content-center col-sm-8">
             <h3 class="full">Chọn ghế</h3>
+              <div>
+                <strong>Seat Type:</strong> <span th:text="${selectedTrip.getBus().getSeatType()}"></span>
+              </div>
                 <ul class="showcase">
                     <li>
                       <div class="seat"></div>
@@ -75,29 +78,42 @@
                     <div class="floor_1">Tầng dưới</div>
                     <div class="floor_2">Tầng trên</div>
                   </div>
-                  <div class="seat_container" th:if="${selectedTrip.bus.seatType != 'limousine'}">
-                    <div class="first_floor">
-                      <div th:each="i: ${#numbers.sequence(0, (firstFloor.size() / 2) - 1)}" class="row_2">
-                          <span th:each="seatReservation: ${firstFloor.subList(i * 2, i * 2 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
-                      </div>
-                    </div>
-                      <div class="second_floor">
-                          <div th:each="i: ${#numbers.sequence(0, (secondFloor.size() / 2) - 1)}" class="row_2">
-                              <span th:each="seatReservation: ${secondFloor.subList(i * 2, i * 2 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                  <div th:switch="${seatType}">
+                    <!-- Seat container for economy -->
+                    <div  th:case="'economy'">
+                      <div class="seat_container ">
+                        <div class="first_floor">
+                          <div th:each="i: ${#numbers.sequence(0, (firstFloor.size() / 2) - 1)}" class="row_2">
+                              <span th:each="seatReservation: ${firstFloor.subList(i * 2, i * 2 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                          </div>
+                        </div>
+                          <div class="second_floor">
+                              <div th:each="i: ${#numbers.sequence(0, (secondFloor.size() / 2) - 1)}" class="row_2">
+                                  <span th:each="seatReservation: ${secondFloor.subList(i * 2, i * 2 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                              </div>
                           </div>
                       </div>
-                  </div>
-                  <div class="seat_container" th:if="${selectedTrip.bus.seatType == 'limousine'}">
-                    <div class="first_floor">
-                      <div th:each="i: ${#numbers.sequence(0, (firstFloor.size() / 3) - 1)}" class="row_2">
-                          <span th:each="seatReservation: ${firstFloor.subList(i * 3, i * 3 + 3)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                    </div>
+                    <!-- Seat container for limousine -->
+                    <div th:case="'limousine'">
+                      <div class="seat_container">
+                        <div class="first_floor">
+                          <div th:each="i: ${#numbers.sequence(0, (firstFloor.size() / 3) - 1)}" class="row_2">
+                              <span th:each="seatReservation: ${firstFloor.subList(i * 3, i * 3 + 3)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                          </div>
+                        </div>
+                        <div class="second_floor">
+                            <div th:each="i: ${#numbers.sequence(0, (secondFloor.size() / 3) - 1)}" class="row_2">
+                                <span th:each="seatReservation: ${secondFloor.subList(i * 3, i * 3 + 3)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                            </div>
+                        </div>
                       </div>
                     </div>
-                    <div class="second_floor">
-                        <div th:each="i: ${#numbers.sequence(0, (secondFloor.size() / 3) - 1)}" class="row_2">
-                            <span th:each="seatReservation: ${secondFloor.subList(i * 3, i * 3 + 3)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
-                        </div>
+                    <!-- Add a default case to help debug -->
+                    <div th:case="*">
+                      <p>No matching seat type found. Current type: <span th:text="${seatType}"></span></p>
                     </div>
+
                   </div>
                 </div>
          

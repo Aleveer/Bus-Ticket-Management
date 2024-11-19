@@ -70,12 +70,14 @@ public class BookingController {
     @GetMapping("/booking/{TripId}")
     public String chooseInfo(@PathVariable Integer TripId, Model model) {
         TripDTO selectedTrip = tripService.findById(TripId);
+        System.out.println(selectedTrip.getBus().getSeatType());
         List<SeatReservationsDTO> statusSeats = seatReservationsService.getListStatusSeat(TripId);
         List<SeatReservationsDTO> firstFloor = statusSeats.subList(0, statusSeats.size() / 2);
         List<SeatReservationsDTO> secondFloor = statusSeats.subList(statusSeats.size() / 2, statusSeats.size());
         model.addAttribute("selectedTrip", selectedTrip);
         model.addAttribute("firstFloor", firstFloor);
         model.addAttribute("secondFloor", secondFloor);
+        model.addAttribute("seatType", selectedTrip.getBus().getSeatType().toString().trim());
         return "booking";
     }
 

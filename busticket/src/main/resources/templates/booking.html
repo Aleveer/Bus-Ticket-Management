@@ -49,7 +49,6 @@
     <div class="logo_2 d-flex justify-content-center">
         <a th:href="@{index}"><img th:src="@{/images/EasyBus_processed.png}" /></a>
     </div>
-  
     <!-- header top section end -->
 
     <!-- booking section start -->
@@ -169,10 +168,11 @@
     <div class="about_section">
       <div class="container  d-flex flex-nowrap">
         <div class="choose_seat box-card d-flex  flex-wrap justify-content-start col-sm-8">
-            <div class="full d-flex justify-content-between ">
-              <h3 class="full d-flex text-dark ">Thông tin khách hàng</h3>
-              <h3 class="full d-flex justify-content-center text-danger">Điều khoản lưu ý</h3>
-            </div>
+              <div class="full d-flex justify-content-between ">
+                <h3 class="full d-flex text-dark ">Thông tin khách hàng</h3>
+                <h3 class="full d-flex justify-content-center text-danger">Điều khoản lưu ý</h3>
+              </div>
+              
             <div class="full d-flex flex-nowrap user-info-container ">
               <div class="d-flex flex-column col-sm-6 user-info">
                 <div class="form-group">
@@ -198,7 +198,30 @@
               </div>
             </div>
           </div>
-        </div>
+               
+                  <div class="box-card d-flex visa flex-wrap justify-content-center col-sm-4 hidden" id="visaCardSection"  >
+                    <div class="visa-card">
+                      <div class="card-header">     
+                          <div class="visa-logo">VISA</div>
+                      </div>
+
+                      <input class="card-number btn-container" id="cardNumber" placeholder='**** **** **** ****'>
+                      </input>
+                      <div class="card-details ">
+                          <div class="card-holder col-9">
+                              <span>Card Holder</span>
+                              <input id="cardHolderName" ></input>
+                          
+                           </div>
+                          <div class="expiry-date">
+                              <span>Expires</span>
+                              <input id="expiryDate" placeholder='MM/YY'></input>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+         </div>
+      </div>
         <div class="container d-flex ">
           <div class="choose_seat box-card d-flex  flex-wrap justify-content-between col-sm-8">
             <h4 class="text d-flex flex-nowrap">
@@ -206,7 +229,9 @@
             </h4>
             <div>
               <button type="button" class="payment-button" onclick="history.back()">Hủy</button>
-              <button type="button" class="payment-button">Thanh Toán</button>
+                <input type="hidden" name="seat_id"  id="seat_ids" />
+                <input type="hidden" name="total_price" id="total_price" />
+                <button type="button" class="payment-button" onclick="showVisaCard()" >Thanh Toán</button>
             </div>
           </div>
         </div>
@@ -223,7 +248,7 @@
         <div class="footer_menu">
             <ul>
               <li><a th:href="@{index}">Trang Chủ</a></li>
-              <li><a href="#">Lịch Trình</a></li>
+              <li><a th:href="@{schedule}">Lịch Trình</a></li>
               <li><a th:href="@{search-ticket-info}">Tra Cứu Vé</a></li>
               <li><a th:href="@{search-billing-info}">Hóa Đơn</a></li>
               <li><a th:href="@{contact}">Liên Hệ</a></li>
@@ -248,6 +273,64 @@
    <script th:src="@{/js/jquery-3.0.0.min.js}"></script>
    <script th:src="@{/js/plugin.js}"></script>
     <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const cardNumberInput = document.getElementById("cardNumber");
+        const expiryDateInput = document.getElementById("expiryDate");
+    
+        let cardNumberPlaceholderCleared = false;
+        let expiryDatePlaceholderCleared = false;
+    
+        cardNumberInput.addEventListener("input", function() {
+            if (!cardNumberPlaceholderCleared) {
+                cardNumberInput.value = '';
+                cardNumberPlaceholderCleared = true;
+            }
+            let value = cardNumberInput.value.replace(/\D/g, ''); // Remove all non-digit characters
+            if (value.length > 16) {
+                value = value.slice(0, 16); // Limit to 16 digits
+            }
+            let formattedValue = value.replace(/(\d{4})(?=\d)/g, "$1 "); // Add space every 4 digits
+            cardNumberInput.value = formattedValue; // No padding with asterisks
+        });
+    
+        expiryDateInput.addEventListener("input", function() {
+            if (!expiryDatePlaceholderCleared) {
+                expiryDateInput.value = '';
+                expiryDatePlaceholderCleared = true;
+            }
+            let value = expiryDateInput.value.replace(/\D/g, ''); // Remove all non-digit characters
+            if (value.length > 4) {
+                value = value.slice(0, 4); // Limit to 4 digits
+            }
+            let formattedValue = value.replace(/(\d{2})(?=\d)/g, "$1/"); // Add slash after 2 digits
+            expiryDateInput.value = formattedValue;
+        });
+    
+        // Prevent default behavior of contenteditable divs
+        cardNumberInput.addEventListener("keydown", function(e) {
+            if (e.key === "Backspace" || e.key === "Delete") {
+                return;
+            }
+            if (cardNumberInput.value.length >= 19 && !e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+            }
+        });
+    
+        expiryDateInput.addEventListener("keydown", function(e) {
+            if (e.key === "Backspace" || e.key === "Delete") {
+                return;
+            }
+            if (expiryDateInput.value.length >= 5 && !e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+            }
+        });
+    });
+    
+    function showVisaCard() {
+      const visaCardSection = document.getElementById("visaCardSection");
+      visaCardSection.classList.remove("hidden");
+      visaCardSection.classList.add("visible");
+  }
         const container = document.querySelector(".seat_container");
         const seats = document.querySelectorAll(".row_2 .seat:not(.booked)");
         const count = document.getElementById("count");
@@ -255,6 +338,8 @@
         const price = document.getElementById("price");
         const seatNumber = document.getElementById("seat_number");
         const ticketPrice = document.getElementById("ticketPrice").value;
+        //const seatIdsInput = document.getElementById("seat_ids");
+        //const totalPriceInput = document.getElementById("total_price");
         populateUI();
 
         const updateSelectedCount = () => {
@@ -272,11 +357,18 @@
           total.innerText = (selectedSeatsCount * ticketPrice).toFixed(2);
           price.innerText = (selectedSeatsCount * ticketPrice).toFixed(2);
           
+          
           // Update seat numbers
          const selectedSeatNumbers = [...selectedSeats].map(seat => seat.dataset.name).join(', ');
           seatNumber.innerText = selectedSeatNumbers;
-        };
 
+          const selectedSeatID = [...selectedSeats].map(seat => seat.id).join(', ');
+          
+           // Update hidden inputs
+          //seatIdsInput.value = selectedSeatID;
+          //totalPriceInput.value = (selectedSeatsCount * ticketPrice).toFixed(2);; 
+        };
+         
         function populateUI() {
           const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats"));
 

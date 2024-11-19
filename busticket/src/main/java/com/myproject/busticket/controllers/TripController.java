@@ -106,4 +106,29 @@ public class TripController {
         tripService.save(trip);
         return "redirect:/admin/trip-management";
     }
+
+    @GetMapping("/admin/update-trip/{tripId}")
+    public String updateTrip(@PathVariable int tripId, Model model) {
+        Trip trip = tripService.findTripById(tripId);
+        if (trip == null) {
+            model.addAttribute("errorMessage", "Trip not found.");
+            return "redirect:/admin/trip-management";
+        }
+        model.addAttribute("trip", trip);
+        return "update-trip";
+    }
+
+    @PostMapping("/admin/update-trip/{tripId}")
+    public String updateTrip(@PathVariable int tripId, Trip trip) {
+        Trip existingTrip = tripService.findTripById(tripId);
+        if (existingTrip == null) {
+            return "redirect:/admin/trip-management";
+        }
+        existingTrip.setDepartureTime(trip.getDepartureTime());
+        existingTrip.setArrivalTime(trip.getArrivalTime());
+        existingTrip.setPrice(trip.getPrice());
+        existingTrip.setBus(trip.getBus());
+        tripService.save(existingTrip);
+        return "redirect:/admin/trip-management";
+    }
 }

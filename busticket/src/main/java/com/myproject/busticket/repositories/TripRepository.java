@@ -46,4 +46,7 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
 
         @Query("SELECT t FROM Trip t WHERE t.status = 'waiting' AND t.departureTime > :currentTime")
         List<Trip> findUpcomingTrips(@Param("currentTime") LocalDateTime currentTime);
+
+        @Query("SELECT t FROM Trip t WHERE t.status = 'arriving' OR t.status = 'waiting' AND t.departureTime <= :currentTime AND t.arrivalTime >= :currentTime")
+        List<Trip> findOnGoingTrips(@Param("currentTime") LocalDateTime currentTime);
 }

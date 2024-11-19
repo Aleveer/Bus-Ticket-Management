@@ -36,6 +36,8 @@ import com.myproject.busticket.services.StaffService;
 import com.myproject.busticket.services.TripService;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -1066,23 +1068,31 @@ public class ApiController {
     @GetMapping("/admin/api/upcoming-trips")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getUpcomingTrips(@RequestParam String entityType,
-            @RequestParam int entityId) {
+            @RequestParam String entityId) {
         LocalDateTime now = LocalDateTime.now();
-        List<Trip> trips = tripService.findUpcomingTrips(now);
+        List<Trip> upcomingTrips = tripService.findUpcomingTrips(now);
+        List<Trip> ongoingTrips = tripService.findOnGoingTrips(now);
 
-        if (trips.isEmpty()) {
+        // Combine upcoming and ongoing trips
+        List<Trip> allTrips = new ArrayList<>();
+        allTrips.addAll(upcomingTrips);
+        allTrips.addAll(ongoingTrips);
+
+        if (allTrips.isEmpty()) {
             Map<String, Object> response = new HashMap<>();
-            response.put("errorMessage", "No upcoming trips found.");
+            response.put("errorMessage", "No upcoming or ongoing trips found.");
             return ResponseEntity.ok(response);
         }
 
-        List<Trip> filteredTrips = trips.stream()
+        List<Trip> filteredTrips = allTrips.stream()
                 .filter(trip -> {
                     switch (entityType) {
+                        case "bus":
+                            return trip.getBus().getPlate().equals(entityId);
                         case "driver":
-                            return trip.getDriver().getDriverId() == entityId;
+                            return trip.getDriver().getDriverId() == Integer.parseInt(entityId);
                         case "controller":
-                            return trip.getController().getId() == entityId;
+                            return trip.getController().getId() == Integer.parseInt(entityId);
                         default:
                             return false;
                     }
@@ -1248,5 +1258,225 @@ public class ApiController {
         }
         response.put("message", "Trip saved successfully.");
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/admin/api/update-trip/{tripId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateTrip(@PathVariable int tripId,
+            @RequestBody Map<String, Object> tripRequest) {
+        Map<String, Object> response = new HashMap<>();
+        Trip existingTrip = tripService.findTripById(tripId);
+        if (existingTrip == null) {
+            response.put("message", "Trip not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        String departureTimeStr = (String) tripRequest.get("departureTime");
+        if (departureTimeStr == null || departureTimeStr.isEmpty()) {
+            response.put("message", "Departure time is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        String arrivalTimeStr = (String) tripRequest.get("arrivalTime");
+        if (arrivalTimeStr == null || arrivalTimeStr.isEmpty()) {
+            response.put("message", "Arrival time is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (arrivalTimeStr.equals(departureTimeStr)) {
+            response.put("message", "Arrival time can't be the same as departure time.");
+            return ResponseEntity.badRequest().body(response);
+        } else if (LocalDateTime.parse(arrivalTimeStr).isBefore(LocalDateTime.parse(departureTimeStr))) {
+            response.put("message", "Arrival time can't be before departure time.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        float price = Float.parseFloat(tripRequest.get("price").toString());
+        if (price < 0) {
+            response.put("message", "Price can't be negative.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        String busPlate = (String) tripRequest.get("busPlate");
+        if (busPlate == null || busPlate.isEmpty()) {
+            response.put("message", "Bus plate is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        int driverId = Integer.parseInt(tripRequest.get("driverId").toString());
+        if (driverId <= 0) {
+            response.put("message", "Driver ID is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        int controllerId = Integer.parseInt(tripRequest.get("controllerId").toString());
+        if (controllerId <= 0) {
+            response.put("message", "Controller ID is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        int staffId = Integer.parseInt(tripRequest.get("staffId").toString());
+        if (staffId <= 0) {
+            response.put("message", "Staff ID is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        String routeCode = (String) tripRequest.get("routeCode");
+        if (routeCode == null || routeCode.isEmpty()) {
+            response.put("message", "Route code is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        String statusStr = (String) tripRequest.get("status");
+        if (statusStr == null || statusStr.isEmpty()) {
+            response.put("message", "Status is required.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        LocalDateTime departureTime = LocalDateTime.parse(departureTimeStr);
+        LocalDateTime arrivalTime = LocalDateTime.parse(arrivalTimeStr);
+
+        Bus existingBus = busService.getByBusPlate(busPlate);
+        if (existingBus == null) {
+            response.put("message", "Bus not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Driver driver = driverService.getDriverById(driverId);
+        if (driver == null) {
+            response.put("message", "Driver not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Controller controller = controllerService.getControllerById(controllerId);
+        if (controller == null) {
+            response.put("message", "Controller not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Staff staff = staffService.getStaffById(staffId);
+        if (staff == null) {
+            response.put("message", "Staff not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Route route = routeService.getRouteByCode(routeCode);
+        if (route == null) {
+            response.put("message", "Route not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        TripStatus status = TripStatus.valueOf(statusStr.toLowerCase());
+
+        // Check if any changes have been made
+        boolean isStatusChanged = !existingTrip.getStatus().equals(status);
+        boolean isOtherDetailsChanged = !existingTrip.getDepartureTime().equals(departureTime) ||
+                !existingTrip.getArrivalTime().equals(arrivalTime) ||
+                existingTrip.getPrice() != price ||
+                !existingTrip.getBus().equals(existingBus) ||
+                !existingTrip.getDriver().equals(driver) ||
+                !existingTrip.getController().equals(controller) ||
+                !existingTrip.getStaff().equals(staff) ||
+                !existingTrip.getRoute().equals(route);
+
+        if (!isStatusChanged && !isOtherDetailsChanged) {
+            response.put("message", "Nothing has been changed.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // Only check for conflicts if other details (not status) have changed
+        if (isOtherDetailsChanged) {
+            List<Trip> conflictingTripsByBus = tripService.findConflictingTripsByBus(busPlate, departureTime,
+                    arrivalTime);
+            if (!conflictingTripsByBus.isEmpty()) {
+                response.put("message", "Bus is already assigned to another trip at the same time.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            List<Trip> conflictingTripsByDriver = tripService.findConflictingTripsByDriver(driverId, departureTime,
+                    arrivalTime);
+            if (!conflictingTripsByDriver.isEmpty()) {
+                response.put("message", "Driver is already assigned to another trip at the same time.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            List<Trip> conflictingTripsByController = tripService.findConflictingTripsByController(controllerId,
+                    departureTime, arrivalTime);
+            if (!conflictingTripsByController.isEmpty()) {
+                response.put("message", "Controller is already assigned to another trip at the same time.");
+                return ResponseEntity.badRequest().body(response);
+            }
+        }
+
+        existingTrip.setDepartureTime(departureTime);
+        existingTrip.setArrivalTime(arrivalTime);
+        existingTrip.setPrice(price);
+        existingTrip.setStatus(status);
+        existingTrip.setBus(existingBus);
+        existingTrip.setDriver(driver);
+        existingTrip.setController(controller);
+        existingTrip.setStaff(staff);
+        existingTrip.setRoute(route);
+
+        tripService.save(existingTrip);
+
+        response.put("message", "Trip updated successfully.");
+        return ResponseEntity.ok(response);
+    }
+
+    // Load selected items into update-trip form
+    @GetMapping("/admin/api/selected-trip/{tripId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getSelectedTrip(@PathVariable int tripId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Trip trip = tripService.findTripById(tripId);
+            if (trip == null) {
+                response.put("errorMessage", "Trip not found.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+            Bus existingBus = busService.getByBusPlate(trip.getBus().getPlate());
+            if (existingBus == null) {
+                response.put("errorMessage", "Bus not found.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+            Driver driver = driverService.getDriverById(trip.getDriver().getDriverId());
+            if (driver == null) {
+                response.put("errorMessage", "Driver not found.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+            Controller controller = controllerService.getControllerById(trip.getController().getId());
+            if (controller == null) {
+                response.put("errorMessage", "Controller not found.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+            Staff staff = staffService.getStaffById(trip.getStaff().getStaffId());
+            if (staff == null) {
+                response.put("errorMessage", "Staff not found.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+            Route route = routeService.getRouteByCode(trip.getRoute().getCode());
+            if (route == null) {
+                response.put("errorMessage", "Route not found.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+            Map<String, Object> tripData = new HashMap<>();
+            tripData.put("tripId", trip.getTripId());
+            tripData.put("price", trip.getPrice());
+            tripData.put("status", trip.getStatus().name());
+            tripData.put("departureTime", trip.getDepartureTime());
+            tripData.put("arrivalTime", trip.getArrivalTime());
+            tripData.put("busPlate", trip.getBus().getPlate());
+            tripData.put("driverId", trip.getDriver().getDriverId());
+            tripData.put("controllerId", trip.getController().getId());
+            tripData.put("staffId", trip.getStaff().getStaffId());
+            tripData.put("routeCode", trip.getRoute().getCode());
+            response.put("trip", tripData);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "An error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 }

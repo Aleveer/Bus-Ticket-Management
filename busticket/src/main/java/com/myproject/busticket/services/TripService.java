@@ -44,9 +44,7 @@ public class TripService {
     public List<TripDTO> searchTrip(String departure, String destination, LocalDateTime departureDate,
             int numberOfTickets) {
         List<Trip> trip = tripRepository.findTrip(departure, destination, departureDate, numberOfTickets);
-        for (Trip tri : trip){
-            System.out.println("Controller Trip bus type:" + tri.getBus().getSeatType());
-        }
+
         return tripMapper.map(trip);
     }
 
@@ -70,46 +68,53 @@ public class TripService {
     public List<Trip> findConflictingTripsByBus(String busPlate, LocalDateTime departureTime,
             LocalDateTime arrivalTime) {
         List<Trip> waitingTrips = tripRepository.findAllWaitingTrips();
-        return waitingTrips.stream()
+
+        List<Trip> conflictingTrips = waitingTrips.stream()
                 .filter(trip -> trip.getBus().getPlate().equals(busPlate))
-                .filter(trip -> (trip.getDepartureTime().isBefore(arrivalTime)
-                        && trip.getArrivalTime().isAfter(departureTime)) ||
-                        (trip.getDepartureTime().isBefore(departureTime)
-                                && trip.getArrivalTime().isAfter(departureTime))
-                        ||
-                        (trip.getDepartureTime().isAfter(departureTime) && trip.getArrivalTime().isBefore(arrivalTime)))
+                .filter(trip -> !(departureTime.isBefore(trip.getDepartureTime())
+                        && arrivalTime.isBefore(trip.getDepartureTime())) &&
+                        !(departureTime.isAfter(trip.getArrivalTime()) && arrivalTime.isAfter(trip.getArrivalTime())))
                 .collect(Collectors.toList());
+
+        return conflictingTrips;
     }
 
     public List<Trip> findConflictingTripsByController(int controllerId, LocalDateTime departureTime,
             LocalDateTime arrivalTime) {
         List<Trip> waitingTrips = tripRepository.findAllWaitingTrips();
-        return waitingTrips.stream()
+
+        List<Trip> conflictingTrips = waitingTrips.stream()
                 .filter(trip -> trip.getController().getId() == controllerId)
-                .filter(trip -> (trip.getDepartureTime().isBefore(arrivalTime)
-                        && trip.getArrivalTime().isAfter(departureTime)) ||
-                        (trip.getDepartureTime().isBefore(departureTime)
-                                && trip.getArrivalTime().isAfter(departureTime))
-                        ||
-                        (trip.getDepartureTime().isAfter(departureTime) && trip.getArrivalTime().isBefore(arrivalTime)))
+                .filter(trip -> !(departureTime.isBefore(trip.getDepartureTime())
+                        && arrivalTime.isBefore(trip.getDepartureTime())) &&
+                        !(departureTime.isAfter(trip.getArrivalTime()) && arrivalTime.isAfter(trip.getArrivalTime())))
                 .collect(Collectors.toList());
+
+        return conflictingTrips;
     }
 
     public List<Trip> findConflictingTripsByDriver(int driverId, LocalDateTime departureTime,
             LocalDateTime arrivalTime) {
         List<Trip> waitingTrips = tripRepository.findAllWaitingTrips();
-        return waitingTrips.stream()
+
+        List<Trip> conflictingTrips = waitingTrips.stream()
                 .filter(trip -> trip.getDriver().getDriverId() == driverId)
-                .filter(trip -> (trip.getDepartureTime().isBefore(arrivalTime)
-                        && trip.getArrivalTime().isAfter(departureTime)) ||
-                        (trip.getDepartureTime().isBefore(departureTime)
-                                && trip.getArrivalTime().isAfter(departureTime))
-                        ||
-                        (trip.getDepartureTime().isAfter(departureTime) && trip.getArrivalTime().isBefore(arrivalTime)))
+                .filter(trip -> !(departureTime.isBefore(trip.getDepartureTime())
+                        && arrivalTime.isBefore(trip.getDepartureTime())) &&
+                        !(departureTime.isAfter(trip.getArrivalTime()) && arrivalTime.isAfter(trip.getArrivalTime())))
                 .collect(Collectors.toList());
+
+        return conflictingTrips;
     }
 
     public List<Trip> findUpcomingTrips(LocalDateTime currentTime) {
         return tripRepository.findUpcomingTrips(currentTime);
+    }
+
+    public List<Trip> findOnGoingTrips(LocalDateTime currentTime) {
+        for (Trip trip : tripRepository.findOnGoingTrips(currentTime)) {
+            System.out.println("TripService findOnGoingTrips tripId:" + trip.getTripId());
+        }
+        return tripRepository.findOnGoingTrips(currentTime);
     }
 }

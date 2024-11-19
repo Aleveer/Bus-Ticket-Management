@@ -4,12 +4,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>New Trip</title>
+    <title>Edit Trip</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script>
-    <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}" />
     <style>
         .schedule-table {
             width: 100%;
@@ -33,11 +32,6 @@
         #controllerSchedule {
             margin-top: 20px;
         }
-
-        #controllerCalendar {
-            max-width: 900px;
-            margin: 0 auto;
-        }
     </style>
 </head>
 
@@ -46,11 +40,14 @@
         <div class="d-flex justify-content-start mb-3">
             <a href="/admin/trip-management" class="btn btn-secondary">Back to Trips</a>
         </div>
-        <h1>Create New Trip</h1>
-        <form id="tripForm">
+        <h1>Edit Trip</h1>
+        <form id="tripForm" th:object="${trip}">
             <div class="form-group">
                 <label for="departureTime">Departure Time</label>
-                <input type="datetime-local" class="form-control" id="departureTime" name="departureTime" required />
+                <div class="form-group">
+                    <input type="datetime-local" class="form-control" id="departureTime" name="departureTime"
+                        required />
+                </div>
             </div>
             <div class="form-group">
                 <label for="arrivalTime">Arrival Time</label>
@@ -58,7 +55,16 @@
             </div>
             <div class="form-group">
                 <label for="price">Price</label>
-                <input type="number" step="0.1" class="form-control" id="price" name="price" min="0" required />
+                <input type="number" step="0.1" class="form-control" id="price" name="price" th:field="*{price}" min="0"
+                    required />
+            </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select class="form-control" id="status" name="status" th:field="*{status}" required>
+                    <option value="waiting">Waiting</option>
+                    <option value="arriving">Arriving</option>
+                    <option value="finished">Finished</option>
+                </select>
             </div>
             <h2 class="mt-4">Select Bus</h2>
             <div class="form-group">
@@ -78,11 +84,6 @@
                         <!-- Buses will be dynamically loaded here -->
                     </tbody>
                 </table>
-                <div class="pagination">
-                    <ul class="pagination-list" id="busPaginationControls">
-                        <!-- Pagination controls will be dynamically generated here -->
-                    </ul>
-                </div>
                 <div id="selectedBusDetails" class="mt-3"></div>
             </div>
             <div id="busSchedule" class="mt-4">
@@ -108,15 +109,11 @@
                         <!-- Drivers will be dynamically loaded here -->
                     </tbody>
                 </table>
-                <div class="pagination">
-                    <ul class="pagination-list" id="driverPaginationControls">
-                        <!-- Pagination controls will be dynamically generated here -->
-                    </ul>
-                </div>
                 <div id="selectedDriverDetails" class="mt-3"></div>
             </div>
 
-            <div id="drierSchedule" class="mt-4">
+
+            <div id="driverSchedule" class="mt-4">
                 <h3>Upcoming Trips for Selected Driver</h3>
                 <div id="driverCalendar"></div>
             </div>
@@ -140,14 +137,8 @@
                         <!-- Controllers will be dynamically loaded here -->
                     </tbody>
                 </table>
-                <div class="pagination">
-                    <ul class="pagination-list" id="controllerPaginationControls">
-                        <!-- Pagination controls will be dynamically generated here -->
-                    </ul>
-                </div>
                 <div id="selectedControllerDetails" class="mt-3"></div>
             </div>
-
             <div id="controllerSchedule" class="mt-4">
                 <h3>Upcoming Trips for Selected Controller</h3>
                 <div id="controllerCalendar"></div>
@@ -172,14 +163,8 @@
                         <!-- Staff will be dynamically loaded here -->
                     </tbody>
                 </table>
-                <div class="pagination">
-                    <ul class="pagination-list" id="staffPaginationControls">
-                        <!-- Pagination controls will be dynamically generated here -->
-                    </ul>
-                </div>
                 <div id="selectedStaffDetails" class="mt-3"></div>
             </div>
-
             <h2 class="mt-4">Select Route</h2>
             <div class="form-group">
                 <input type="text" class="form-control" id="routeSearchBox" placeholder="Search route..." />
@@ -199,11 +184,6 @@
                         <!-- Routes will be dynamically loaded here -->
                     </tbody>
                 </table>
-                <div class="pagination">
-                    <ul class="pagination-list" id="routePaginationControls">
-                        <!-- Pagination controls will be dynamically generated here -->
-                    </ul>
-                </div>
                 <div id="selectedRouteDetails" class="mt-3"></div>
             </div>
 
@@ -213,11 +193,12 @@
         </form>
     </div>
     <script>
-        let selectedBus = null;
-        let selectedDriver = null;
-        let selectedController = null;
-        let selectedStaff = null;
-        let selectedRoute = null;
+        let selectedBus = [];
+        let selectedDriver = [];
+        let selectedController = [];
+        let selectedStaff = [];
+        let selectedRoute = [];
+        let initialFormData = {};
 
         function loadBuses(page, searchTerm = "") {
             $.ajax({
@@ -291,7 +272,6 @@
                 },
             });
         }
-
         function loadDrivers(page, searchTerm = "") {
             $.ajax({
                 url: "/admin/api/drivers",
@@ -365,7 +345,6 @@
                 },
             });
         }
-
         function loadControllers(page, searchTerm = "") {
             $.ajax({
                 url: "/admin/api/controllers",
@@ -439,7 +418,6 @@
                 },
             });
         }
-
         function loadStaff(page, searchTerm = "") {
             $.ajax({
                 url: "/admin/api/staffs",
@@ -452,7 +430,6 @@
 
                     // Clear the table body
                     $("#staffTableBody").empty();
-
                     // Populate the table with staff
                     staffs.forEach(function (staff) {
                         $("#staffTableBody").append(
@@ -586,16 +563,87 @@
                 },
             });
         }
+
+        function getSelectedItems(tripId) {
+            fetch(`/admin/api/selected-trip/${tripId}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Error fetching trip details: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    document.getElementById("departureTime").value = data.trip.departureTime;
+                    document.getElementById("arrivalTime").value = data.trip.arrivalTime;
+                    document.getElementById("price").value = data.trip.price;
+                    document.getElementById("status").value = data.trip.status;
+
+                    // Pre-select and trigger change for bus
+                    const busRadio = document.querySelector(`input[name='bus'][data-plate="${data.trip.busPlate}"]`);
+                    if (busRadio) {
+                        busRadio.checked = true;
+                        $(busRadio).trigger("change"); // Trigger change
+                    }
+
+                    // Pre-select and trigger change for driver
+                    const driverRadio = document.querySelector(`input[name='driver'][data-id="${data.trip.driverId}"]`);
+                    if (driverRadio) {
+                        driverRadio.checked = true;
+                        $(driverRadio).trigger("change"); // Trigger change
+                    }
+
+                    // Pre-select and trigger change for controller
+                    const controllerRadio = document.querySelector(`input[name='controller'][data-id="${data.trip.controllerId}"]`);
+                    if (controllerRadio) {
+                        controllerRadio.checked = true;
+                        $(controllerRadio).trigger("change"); // Trigger change
+                    }
+
+                    // Pre-select and trigger change for staff
+                    const staffRadio = document.querySelector(`input[name='staff'][data-id="${data.trip.staffId}"]`);
+                    if (staffRadio) {
+                        staffRadio.checked = true;
+                        $(staffRadio).trigger("change"); // Trigger change
+                    }
+
+                    // Pre-select and trigger change for route
+                    const routeRadio = document.querySelector(`input[name='route'][data-code="${data.trip.routeCode}"]`);
+                    if (routeRadio) {
+                        routeRadio.checked = true;
+                        $(routeRadio).trigger("change"); // Trigger change
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error fetching default selected entities:", error);
+                });
+        }
+
+
+        function getFormData(form) {
+            const formData = new FormData(form);
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+
+            jsonData["busPlate"] = $("input[name='bus']:checked").data("plate");
+            jsonData["driverId"] = $("input[name='driver']:checked").data("id");
+            jsonData["controllerId"] = $("input[name='controller']:checked").data("id");
+            jsonData["staffId"] = $("input[name='staff']:checked").data("id");
+            jsonData["routeCode"] = $("input[name='route']:checked").data("code");
+            return jsonData;
+        }
+
         function loadUpcomingTrips(entityType, entityId) {
-            console.log("Loading upcoming trips for", entityType, entityId);
+            console.log("Loading upcoming trips for", entityType, entityId); // Debug log
             $.ajax({
                 url: "/admin/api/upcoming-trips",
                 data: { entityType: entityType, entityId: entityId },
                 method: "GET",
                 success: function (data) {
-                    console.log("Received data:", data);
+                    console.log("Received data:", data); // Debug log
                     if (!data || !data.trips || data.trips.length === 0) {
-                        console.log("No upcoming trips found.");
+                        console.log("No upcoming trips found."); // Debug log
                         var message = "No upcoming trips found.";
                         if (entityType === 'controller') {
                             document.getElementById('controllerCalendar').innerHTML = message;
@@ -606,7 +654,6 @@
                         }
                         return;
                     }
-
                     var trips = data.trips;
                     var events = trips.map(function (trip) {
                         return {
@@ -660,37 +707,45 @@
                     }
                 },
                 error: function (error) {
-                    console.error("Error loading upcoming trips:", error);
+                    console.error("Error loading upcoming trips:", error); // Debug log
                 }
             });
         }
 
         $(document).ready(function () {
-            // Load initial data
+            var tripId = window.location.pathname.split("/").pop();
+            console.log("Trip ID:", tripId);
+
             loadBuses(0);
             loadDrivers(0);
             loadControllers(0);
             loadStaff(0);
             loadRoutes(0);
 
+            getSelectedItems(tripId);
             // Handle search input
             $("#busSearchBox").on("input", function () {
+                console.log("Bus search term:", $(this).val());
                 loadBuses(0, $(this).val());
             });
 
             $("#driverSearchBox").on("input", function () {
+                console.log("Driver search term:", $(this).val());
                 loadDrivers(0, $(this).val());
             });
 
             $("#controllerSearchBox").on("input", function () {
+                console.log("Controller search term:", $(this).val());
                 loadControllers(0, $(this).val());
             });
 
             $("#staffSearchBox").on("input", function () {
+                console.log("Staff search term:", $(this).val());
                 loadStaff(0, $(this).val());
             });
 
             $("#routeSearchBox").on("input", function () {
+                console.log("Route search term:", $(this).val());
                 loadRoutes(0, $(this).val());
             });
 
@@ -710,17 +765,21 @@
                     routeCode: $("input[name='route']:checked").data("code")
                 };
 
+                console.log("Submitting trip data:", tripData);
+
                 $.ajax({
-                    url: "/admin/api/new-trip",
+                    url: "/admin/api/update-trip/" + tripId,
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(tripData),
                     success: function (response) {
-                        alert("Trip created successfully!");
+                        console.log("Trip updated successfully:", response);
+                        alert("Trip updated successfully!");
                         window.location.href = "/admin/trip-management";
                     },
                     error: function (error) {
-                        alert("Error creating trip: " + error.responseJSON.message);
+                        console.error("Error updating trip:", error);
+                        alert("Error updating trip: " + error.responseJSON.message);
                     }
                 });
             });
@@ -731,6 +790,7 @@
                 var selectedBus = $(this).closest("tr").addClass("selected-row").find("td").map(function () {
                     return $(this).text();
                 }).get();
+                console.log("Selected bus:", selectedBus);
                 $("#selectedBusDetails").html(
                     "<tr><td>" + selectedBus[1] + "</td><td>" + selectedBus[2] + "</td><td>" + selectedBus[3] + "</td></tr>"
                 );
@@ -742,6 +802,7 @@
                 var selectedDriver = $(this).closest("tr").addClass("selected-row").find("td").map(function () {
                     return $(this).text();
                 }).get();
+                console.log("Selected driver:", selectedDriver);
                 $("#selectedDriverDetails").html(
                     "<tr><td>" + selectedDriver[1] + "</td><td>" + selectedDriver[2] + "</td><td>" + selectedDriver[3] + "</td><td>" + selectedDriver[4] + "</td></tr>"
                 );
@@ -753,6 +814,7 @@
                 var selectedController = $(this).closest("tr").addClass("selected-row").find("td").map(function () {
                     return $(this).text();
                 }).get();
+                console.log("Selected controller:", selectedController);
                 $("#selectedControllerDetails").html(
                     "<tr><td>" + selectedController[1] + "</td><td>" + selectedController[2] + "</td><td>" + selectedController[3] + "</td><td>" + selectedController[4] + "</td></tr>"
                 );
@@ -764,6 +826,7 @@
                 var selectedStaff = $(this).closest("tr").addClass("selected-row").find("td").map(function () {
                     return $(this).text();
                 }).get();
+                console.log("Selected staff:", selectedStaff);
                 $("#selectedStaffDetails").html(
                     "<tr><td>" + selectedStaff[1] + "</td><td>" + selectedStaff[2] + "</td><td>" + selectedStaff[3] + "</td><td>" + selectedStaff[4] + "</td></tr>"
                 );
@@ -774,10 +837,13 @@
                 var selectedRoute = $(this).closest("tr").addClass("selected-row").find("td").map(function () {
                     return $(this).text();
                 }).get();
+                console.log("Selected route:", selectedRoute);
                 $("#selectedRouteDetails").html(
                     "<tr><td>" + selectedRoute[1] + "</td><td>" + selectedRoute[2] + "</td><td>" + selectedRoute[3] + "</td><td>" + selectedRoute[4] + "</td></tr>"
                 );
             });
+
+            initialFormData = getFormData(document.getElementById("tripForm"));
         });
     </script>
 </body>

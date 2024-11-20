@@ -10,6 +10,9 @@ import com.myproject.busticket.enums.SeatReservationStatus;
 import com.myproject.busticket.enums.SeatType;
 import com.myproject.busticket.enums.TripStatus;
 import com.myproject.busticket.models.Account;
+import com.myproject.busticket.models.Bill;
+import com.myproject.busticket.models.Bill_Detail;
+import com.myproject.busticket.models.Booking;
 import com.myproject.busticket.models.Bus;
 import com.myproject.busticket.models.Bus_Seats;
 import com.myproject.busticket.models.Checkpoint;
@@ -22,6 +25,9 @@ import com.myproject.busticket.models.SeatReservations;
 import com.myproject.busticket.models.Staff;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.services.AccountService;
+import com.myproject.busticket.services.BillDetailService;
+import com.myproject.busticket.services.BillService;
+import com.myproject.busticket.services.BookingService;
 import com.myproject.busticket.services.BusService;
 import com.myproject.busticket.services.Bus_SeatsService;
 import com.myproject.busticket.services.CheckpointService;
@@ -36,12 +42,12 @@ import com.myproject.busticket.services.StaffService;
 import com.myproject.busticket.services.TripService;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +105,15 @@ public class ApiController {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private BookingService bookingService;
+
+    @Autowired
+    private BillService billService;
+
+    @Autowired
+    private BillDetailService billDetailService;
 
     public ApiController(DriverService driverService, CustomerService customerService) {
         this.driverService = driverService;
@@ -1597,5 +1612,75 @@ public class ApiController {
             response.put("message", "An error occurred: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+
+    @PostMapping("/admin/api/delete-trip/{tripId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deleteTrip(@PathVariable int tripId) {
+        Map<String, Object> response = new HashMap<>();
+        Trip existingTrip = tripService.findTripById(tripId);
+        if (existingTrip == null) {
+            response.put("message", "Trip not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        // Check for booking :
+        List<Booking> bookings = bookingService.findByTrip(existingTrip);
+        if (!bookings.isEmpty()) {
+            response.put("message", "Trip has bookings and cannot be deleted.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // Check for bill :
+        List<Bill_Detail> bills = billDetailService.findByTrip(existingTrip);
+        if (!bills.isEmpty()) {
+            response.put("message", "Trip has billing and cannot be deleted.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // if booking and bill is empty, proceed delete trip:
+        List<SeatReservations> reservations = seatReservationService.getByTrip(existingTrip);
+        for (SeatReservations reservation : reservations) {
+            seatReservationService.delete(reservation);
+        }
+
+        tripService.deleteTripById(tripId);
+        response.put("message", "Trip deleted successfully.");
+        response.put("success", true);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/admin/api/force-delete-trip/{tripId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> forceDeleteTrip(@PathVariable int tripId) {
+        Map<String, Object> response = new HashMap<>();
+        Trip existingTrip = tripService.findTripById(tripId);
+        if (existingTrip == null) {
+            response.put("message", "Trip not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        List<Booking> bookings = bookingService.findByTrip(existingTrip);
+        if (!bookings.isEmpty()) {
+            bookingService.deleteAll(bookings);
+        }
+
+        List<Bill_Detail> billDetails = billDetailService.findByTrip(existingTrip);
+        for (Bill_Detail billDetail : billDetails) {
+            Optional<Bill> bill = billService.findByBillId(billDetail.getBill());
+            if (bill.isPresent()) {
+                billService.delete(bill.get());
+            }
+        }
+
+        // Delete all seat reservations associated with the trip
+        List<SeatReservations> reservations = seatReservationService.getByTrip(existingTrip);
+        if (!reservations.isEmpty()) {
+            seatReservationService.deleteAll(reservations);
+        }
+
+        tripService.deleteTripById(tripId);
+        response.put("message", "Trip deleted successfully.");
+        response.put("success", true);
+        return ResponseEntity.ok(response);
     }
 }

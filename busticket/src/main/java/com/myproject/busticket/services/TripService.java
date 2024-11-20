@@ -116,4 +116,8 @@ public class TripService {
         }
         return tripRepository.findOnGoingTrips(currentTime);
     }
+
+    public void deleteTripById(int tripId) {
+        tripRepository.deleteById(tripId);
+    }
 }

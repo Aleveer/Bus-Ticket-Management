@@ -40,6 +40,10 @@ public class SeatReservationsService {
         seatReservationsRepository.delete(seatReservations);
     }
 
+    public List<SeatReservations> getByTrip(Trip trip) {
+        return seatReservationsRepository.findByTrip(trip);
+    }
+
     public SeatReservations getReservationBySeatAndTrip(Bus_Seats seat, Trip trip) {
         List<SeatReservations> seatReservations = seatReservationsRepository.findBySeatIdAndTripId(seat.getId(),
                 trip.getTripId());
@@ -47,5 +51,9 @@ public class SeatReservationsService {
             return seatReservations.get(0);
         }
         return null;
+    }
+
+    public void deleteAll(List<SeatReservations> reservations) {
+        seatReservationsRepository.deleteAll(reservations);
     }
 }

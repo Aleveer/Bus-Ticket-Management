@@ -1,6 +1,5 @@
 package com.myproject.busticket.controllers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +17,6 @@ import com.myproject.busticket.services.Bus_SeatsService;
 import com.myproject.busticket.services.SeatReservationsService;
 import com.myproject.busticket.enums.SeatReservationStatus;
 import com.myproject.busticket.models.Bus;
-import com.myproject.busticket.models.Bus_Seats;
-import com.myproject.busticket.models.SeatReservations;
 
 @Controller
 @RequestMapping("/admin")

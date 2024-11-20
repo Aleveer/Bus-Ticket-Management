@@ -1443,7 +1443,6 @@ public class ApiController {
 
         TripStatus status = TripStatus.valueOf(statusStr.toLowerCase());
 
-        // Check if any changes have been made
         boolean isStatusChanged = !existingTrip.getStatus().equals(status);
         boolean isBusChanged = !existingTrip.getBus().equals(existingBus);
         boolean isDriverChanged = !existingTrip.getDriver().equals(driver);
@@ -1457,7 +1456,6 @@ public class ApiController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        // Check for conflicts if the bus has changed
         if (isBusChanged) {
             List<Trip> conflictingTripsByBus = tripService.findConflictingTripsByBus(busPlate,
                     existingTrip.getDepartureTime(),
@@ -1468,7 +1466,6 @@ public class ApiController {
             }
         }
 
-        // Check for conflicts if the driver has changed
         if (isDriverChanged) {
             List<Trip> conflictingTripsByDriver = tripService.findConflictingTripsByDriver(driverId,
                     existingTrip.getDepartureTime(),
@@ -1479,7 +1476,6 @@ public class ApiController {
             }
         }
 
-        // Check for conflicts if the controller has changed
         if (isControllerChanged) {
             List<Trip> conflictingTripsByController = tripService.findConflictingTripsByController(controllerId,
                     existingTrip.getDepartureTime(), existingTrip.getArrivalTime());
@@ -1489,7 +1485,6 @@ public class ApiController {
             }
         }
 
-        // Check for conflicts if the departure time or arrival time has changed
         if (isDepartureTimeChanged || isArrivalTimeChanged) {
             List<Trip> conflictingTripsByBus = tripService.findConflictingTripsByBus(busPlate, departureTime,
                     arrivalTime);
@@ -1513,23 +1508,11 @@ public class ApiController {
             }
         }
 
-        // Handle seat reservations if the bus is changed
         if (isBusChanged) {
             List<Bus_Seats> oldSeats = bus_SeatsService.getByBusPlate(existingTrip.getBus());
             for (Bus_Seats oldSeat : oldSeats) {
                 SeatReservations reservations = seatReservationService.getReservationBySeatAndTrip(oldSeat,
                         existingTrip);
-                // for (SeatReservations reservation : reservations) {
-                // // if (reservation.getBooking() == null) {
-                // // seatReservationService.delete(reservation);
-                // // } else {
-                // // // Handle the case where the reservation has a booking
-                // // // For example, you can log a message or throw an exception
-                // // System.out.println(
-                // // "Cannot delete reservation with booking ID: " +
-                // reservation.getBooking().getId());
-                // // }
-                // }
                 seatReservationService.delete(reservations);
             }
 

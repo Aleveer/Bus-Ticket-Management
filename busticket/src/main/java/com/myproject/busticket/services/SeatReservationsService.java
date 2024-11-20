@@ -17,9 +17,6 @@ public class SeatReservationsService {
     @Autowired
     private SeatReservationsRepository seatReservationsRepository;
 
-    @Autowired
-    private Bus_SeatsService bus_SeatsService;
-
     SeatReservationsMapper seatReservationsMapper = Mappers.getMapper(SeatReservationsMapper.class);
 
     public SeatReservationsService(SeatReservationsRepository seatReservationsRepository) {
@@ -39,36 +36,6 @@ public class SeatReservationsService {
         return seatReservationsRepository.save(seatReservations);
     }
 
-    // public boolean isSeatBooked(int seatId, int tripId) {
-    // List<SeatReservations> seatReservations =
-    // seatReservationsRepository.findByTrip_TripId(tripId);
-    // for (SeatReservations seatReservation : seatReservations) {
-    // if (seatReservation.getSeat().getId() == seatId) {
-    // return true;
-    // }
-    // }
-    // return false;
-    // }
-
-    // public boolean isSeatBooked(Bus_Seats seats) {
-    // List<SeatReservations> seatReservations =
-    // seatReservationsRepository.findBySeat(seats);
-    // for (SeatReservations seatReservation : seatReservations) {
-    // if (seatReservation.getStatus().equals(SeatReservationStatus.booked)) {
-    // return true;
-    // }
-    // }
-    // return false;
-    // }
-
-    // public List<SeatReservations> findByBus(Bus bus) {
-    // List<Bus_Seats> busSeats = bus_SeatsService.getByBusPlate(bus);
-    // return busSeats.stream()
-    // .flatMap(seat -> seatReservationsRepository.findBySeat(seat).stream())
-    // .collect(Collectors.toList());
-    // }
-
-    // delete function:
     public void delete(SeatReservations seatReservations) {
         seatReservationsRepository.delete(seatReservations);
     }

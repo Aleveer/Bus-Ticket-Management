@@ -1006,6 +1006,54 @@ public class ApiController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/api/bus/assigned-trips/{plate}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getBusTrips(
+            @PathVariable String plate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        Bus bus = busService.getByBusPlate(plate);
+        if (bus == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Bus not found."));
+        }
+
+        List<Trip> trips = tripService.findByBus(bus);
+        if (trips == null || trips.isEmpty()) {
+            return ResponseEntity.ok(Map.of("message", "No trips found for this bus.", "trips", List.of()));
+        }
+
+        int totalElements = trips.size();
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+        int start = Math.min(page * size, totalElements);
+        int end = Math.min((page + 1) * size, totalElements);
+
+        List<Map<String, Object>> tripDetails = trips.subList(start, end).stream()
+                .map(trip -> {
+                    Map<String, Object> tripMap = new HashMap<>();
+                    tripMap.put("tripId", trip.getTripId());
+                    tripMap.put("departureTime", trip.getDepartureTime());
+                    tripMap.put("arrivalTime", trip.getArrivalTime());
+                    tripMap.put("price", trip.getPrice());
+                    tripMap.put("status", trip.getStatus() != null ? trip.getStatus().name() : "Unknown");
+                    tripMap.put("routeCode", trip.getRoute() != null ? trip.getRoute().getCode() : "Unknown");
+                    tripMap.put("driverName", trip.getDriver() != null && trip.getDriver().getAccount() != null
+                            ? trip.getDriver().getAccount().getFullName()
+                            : "Unknown");
+                    tripMap.put("controllerName",
+                            trip.getController() != null && trip.getController().getAccount() != null
+                                    ? trip.getController().getAccount().getFullName()
+                                    : "Unknown");
+                    return tripMap;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(Map.of(
+                "trips", tripDetails,
+                "totalPages", totalPages,
+                "totalElements", totalElements));
+    }
     // @PostMapping("/admin/api/delete-bus")
     // @ResponseBody
     // public ResponseEntity<Map<String, Object>> deleteBus(@RequestBody Map<String,

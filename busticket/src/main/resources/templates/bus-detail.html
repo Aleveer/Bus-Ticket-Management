@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bus Details</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
     <style>
         .seat {
             width: 40px;
@@ -23,16 +24,12 @@
 
         .booked {
             background-color: #f8d7da;
-            /* Light red for booked seats */
             color: #721c24;
-            /* Dark red text */
         }
 
         .available {
             background-color: #d4edda;
-            /* Light green for available seats */
             color: #155724;
-            /* Dark green text */
         }
 
         .seat-grid {
@@ -46,25 +43,27 @@
             display: flex;
             justify-content: center;
         }
+
+        /* 
+        .calendar-container {
+            margin-top: 20px;
+        } */
     </style>
 </head>
 
 <body>
+
     <div class="container mt-5">
+        <a href="/admin/bus-management" style="color: blue; text-decoration: underline;">Back to Bus Management</a>
         <h2>Bus Details</h2>
         <div class="card mb-3">
             <div class="card-header">
                 <h4>Bus Information</h4>
             </div>
             <div class="card-body">
-                <p><strong>Plate:</strong> <span th:text="${bus.plate}"></span></p>
-                <p>
-                    <strong>Seat Type:</strong> <span th:text="${bus.seatType}"></span>
-                </p>
-                <p>
-                    <strong>Number of Seats:</strong>
-                    <span th:text="${bus.numberOfSeat}"></span>
-                </p>
+                <p><strong>Plate:</strong> <span id="busPlate" th:text="${bus.plate}"></span></p>
+                <p><strong>Seat Type:</strong> <span th:text="${bus.seatType}"></span></p>
+                <p><strong>Number of Seats:</strong> <span th:text="${bus.numberOfSeat}"></span></p>
             </div>
         </div>
 
@@ -80,6 +79,32 @@
                         th:data-seatname="${seat.seatName}" th:data-seatid="${seat.seatId}"
                         th:data-reservations="${seat.reservations}"></div>
                 </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>Assigned Trips</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Trip ID</th>
+                            <th scope="col">Departure Time</th>
+                            <th scope="col">Arrival Time</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assignedTripsTableBody">
+                        <!-- Assigned trips will be populated here -->
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-container" id="assignedTripsPagination"></ul>
+                </nav>
             </div>
         </div>
 
@@ -114,15 +139,14 @@
             </div>
         </div>
 
-        <a href="/admin/bus-management" class="btn btn-secondary">Back to Bus Management</a>
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script> -->
     <script>
-        let currentPage = 0;
-        const pageSize = 5;
-
         function fetchReservations(seatId, page) {
             fetch(`/api/seats/${seatId}/reservations?page=${page}&size=${pageSize}`)
                 .then((response) => response.json())
@@ -159,16 +183,87 @@
                 })
                 .catch((error) => console.error("Error fetching reservations:", error));
         }
+        let currentTripsPage = 0;
+        const tripsPageSize = 5;
+        let currentPage = 0; // for reservations
+        let pageSize = 5; // for reservations
+        function fetchAssignedTrips(plate, page = 0) {
+            //console.log(`Fetching assigned trips for plate: ${plate}, page: ${page}, size: ${tripsPageSize}`);
+            fetch(`/api/bus/assigned-trips/${plate}?page=${page}&size=${tripsPageSize}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    if (!data.trips) {
+                        throw new Error("No trips data found.");
+                    }
 
-        $("#seatModal").on("show.bs.modal", function (event) {
-            var button = $(event.relatedTarget);
-            var seatName = button.data("seatname");
-            var seatId = button.data("seatid");
+                    const trips = data.trips;
+                    const totalPages = data.totalPages;
+                    const tripsTableBody = $("#assignedTripsTableBody");
+                    tripsTableBody.empty();
 
-            var modal = $(this);
-            modal.find("#modalSeatName").text(seatName);
+                    trips.forEach(function (trip) {
+                        var row =
+                            "<tr>" +
+                            "<td>" + trip.tripId + "</td>" +
+                            "<td>" + trip.departureTime + "</td>" +
+                            "<td>" + trip.arrivalTime + "</td>" +
+                            "<td>" + trip.price + "</td>" +
+                            "<td>" + trip.status + "</td>" +
+                            "<td><button class='btn btn-primary btn-sm' onclick='viewTripDetails(" + trip.tripId + ")'>View</button></td>" +
+                            "</tr>";
+                        tripsTableBody.append(row);
+                    });
 
-            fetchReservations(seatId, currentPage);
+                    $("#assignedTripsPagination").empty();
+                    for (let i = 0; i < totalPages; i++) {
+                        const pageButton = $('<button class="page-link"></button>')
+                            .text(i + 1)
+                            .on('click', function () {
+                                fetchAssignedTrips(plate, i);
+                            });
+                        const pageItem = $('<li class="page-item"></li>').append(pageButton);
+                        if (i === page) {
+                            pageItem.addClass('active');
+                        }
+                        $("#assignedTripsPagination").append(pageItem);
+                    }
+                })
+                .catch((error) => console.error("Error fetching assigned trips:", error));
+        }
+
+        $(document).ready(function () {
+            const busPlate = $("#busPlate").text();
+            fetchAssignedTrips(busPlate, currentTripsPage);
+        });
+
+        $(document).ready(function () {
+            const busPlate = $("#busPlate").text();
+            fetchAssignedTrips(busPlate, currentTripsPage);
+        });
+
+        function viewTripDetails(tripId) {
+            window.location.href = '/admin/trip-detail/' + tripId;
+        }
+
+        $(document).ready(function () {
+            const busPlate = $("#busPlate").text();
+            fetchAssignedTrips(busPlate, currentTripsPage);
+
+            $("#seatModal").on("show.bs.modal", function (event) {
+                var button = $(event.relatedTarget);
+                var seatName = button.data("seatname");
+                var seatId = button.data("seatid");
+
+                var modal = $(this);
+                modal.find("#modalSeatName").text(seatName);
+
+                fetchReservations(seatId, currentPage);
+            });
         });
     </script>
 </body>

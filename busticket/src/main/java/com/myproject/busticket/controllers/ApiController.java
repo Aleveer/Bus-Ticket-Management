@@ -1445,22 +1445,52 @@ public class ApiController {
 
         // Check if any changes have been made
         boolean isStatusChanged = !existingTrip.getStatus().equals(status);
-        boolean isOtherDetailsChanged = !existingTrip.getDepartureTime().equals(departureTime) ||
-                !existingTrip.getArrivalTime().equals(arrivalTime) ||
-                existingTrip.getPrice() != price ||
-                !existingTrip.getBus().equals(existingBus) ||
-                !existingTrip.getDriver().equals(driver) ||
-                !existingTrip.getController().equals(controller) ||
-                !existingTrip.getStaff().equals(staff) ||
-                !existingTrip.getRoute().equals(route);
+        boolean isBusChanged = !existingTrip.getBus().equals(existingBus);
+        boolean isDriverChanged = !existingTrip.getDriver().equals(driver);
+        boolean isControllerChanged = !existingTrip.getController().equals(controller);
+        boolean isDepartureTimeChanged = !existingTrip.getDepartureTime().equals(departureTime);
+        boolean isArrivalTimeChanged = !existingTrip.getArrivalTime().equals(arrivalTime);
 
-        if (!isStatusChanged && !isOtherDetailsChanged) {
+        if (!isStatusChanged && !isBusChanged && !isDriverChanged && !isControllerChanged && !isDepartureTimeChanged &&
+                !isArrivalTimeChanged && existingTrip.getPrice() == price && existingTrip.getRoute().equals(route)) {
             response.put("message", "Nothing has been changed.");
             return ResponseEntity.badRequest().body(response);
         }
 
-        // Only check for conflicts if other details (not status) have changed
-        if (isOtherDetailsChanged) {
+        // Check for conflicts if the bus has changed
+        if (isBusChanged) {
+            List<Trip> conflictingTripsByBus = tripService.findConflictingTripsByBus(busPlate,
+                    existingTrip.getDepartureTime(),
+                    existingTrip.getArrivalTime());
+            if (!conflictingTripsByBus.isEmpty()) {
+                response.put("message", "New bus is already assigned to another trip at the same time.");
+                return ResponseEntity.badRequest().body(response);
+            }
+        }
+
+        // Check for conflicts if the driver has changed
+        if (isDriverChanged) {
+            List<Trip> conflictingTripsByDriver = tripService.findConflictingTripsByDriver(driverId,
+                    existingTrip.getDepartureTime(),
+                    existingTrip.getArrivalTime());
+            if (!conflictingTripsByDriver.isEmpty()) {
+                response.put("message", "Driver is already assigned to another trip at the same time.");
+                return ResponseEntity.badRequest().body(response);
+            }
+        }
+
+        // Check for conflicts if the controller has changed
+        if (isControllerChanged) {
+            List<Trip> conflictingTripsByController = tripService.findConflictingTripsByController(controllerId,
+                    existingTrip.getDepartureTime(), existingTrip.getArrivalTime());
+            if (!conflictingTripsByController.isEmpty()) {
+                response.put("message", "Controller is already assigned to another trip at the same time.");
+                return ResponseEntity.badRequest().body(response);
+            }
+        }
+
+        // Check for conflicts if the departure time or arrival time has changed
+        if (isDepartureTimeChanged || isArrivalTimeChanged) {
             List<Trip> conflictingTripsByBus = tripService.findConflictingTripsByBus(busPlate, departureTime,
                     arrivalTime);
             if (!conflictingTripsByBus.isEmpty()) {
@@ -1480,6 +1510,37 @@ public class ApiController {
             if (!conflictingTripsByController.isEmpty()) {
                 response.put("message", "Controller is already assigned to another trip at the same time.");
                 return ResponseEntity.badRequest().body(response);
+            }
+        }
+
+        // Handle seat reservations if the bus is changed
+        if (isBusChanged) {
+            List<Bus_Seats> oldSeats = bus_SeatsService.getByBusPlate(existingTrip.getBus());
+            for (Bus_Seats oldSeat : oldSeats) {
+                SeatReservations reservations = seatReservationService.getReservationBySeatAndTrip(oldSeat,
+                        existingTrip);
+                // for (SeatReservations reservation : reservations) {
+                // // if (reservation.getBooking() == null) {
+                // // seatReservationService.delete(reservation);
+                // // } else {
+                // // // Handle the case where the reservation has a booking
+                // // // For example, you can log a message or throw an exception
+                // // System.out.println(
+                // // "Cannot delete reservation with booking ID: " +
+                // reservation.getBooking().getId());
+                // // }
+                // }
+                seatReservationService.delete(reservations);
+            }
+
+            Bus existingBus1 = busService.getByBusPlate(busPlate);
+            List<Bus_Seats> newSeats = bus_SeatsService.getByBusPlate(existingBus1);
+            for (Bus_Seats newSeat : newSeats) {
+                SeatReservations reservation = new SeatReservations();
+                reservation.setTrip(existingTrip);
+                reservation.setSeat(newSeat);
+                reservation.setStatus(SeatReservationStatus.open);
+                seatReservationService.save(reservation);
             }
         }
 

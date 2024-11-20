@@ -68,6 +68,11 @@ public class SeatReservationsService {
     // .collect(Collectors.toList());
     // }
 
+    // delete function:
+    public void delete(SeatReservations seatReservations) {
+        seatReservationsRepository.delete(seatReservations);
+    }
+
     public SeatReservations getReservationBySeatAndTrip(Bus_Seats seat, Trip trip) {
         List<SeatReservations> seatReservations = seatReservationsRepository.findBySeatIdAndTripId(seat.getId(),
                 trip.getTripId());

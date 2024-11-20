@@ -1069,41 +1069,34 @@ public class ApiController {
                 "totalPages", totalPages,
                 "totalElements", totalElements));
     }
-    // @PostMapping("/admin/api/delete-bus")
-    // @ResponseBody
-    // public ResponseEntity<Map<String, Object>> deleteBus(@RequestBody Map<String,
-    // Object> busRequest) {
-    // Map<String, Object> response = new HashMap<>();
-    // String plate = (String) busRequest.get("plate");
-    // Bus existingBus = busService.getByBusPlate(plate);
-    // if (existingBus == null) {
-    // response.put("message", "Bus not found.");
-    // return ResponseEntity.badRequest().body(response);
-    // }
 
-    // if (!tripService.findByBus(existingBus).isEmpty()) {
-    // response.put("message", "Bus has trips and cannot be deleted.");
-    // return ResponseEntity.badRequest().body(response);
-    // }
+    @PostMapping("/admin/api/delete-bus")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deleteBus(@RequestBody Map<String, Object> busRequest) {
+        Map<String, Object> response = new HashMap<>();
+        String plate = (String) busRequest.get("plate");
+        Bus existingBus = busService.getByBusPlate(plate);
+        if (existingBus == null) {
+            response.put("message", "Bus not found.");
+            return ResponseEntity.badRequest().body(response);
+        }
 
-    // // Check for seat reservations
-    // List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(existingBus);
-    // for (Bus_Seats seat : seats) {
-    // if (!seatReservationService.getBySeatId(seat).isEmpty()) {
-    // response.put("message", "Bus has seat reservations and cannot be deleted.");
-    // return ResponseEntity.badRequest().body(response);
-    // }
-    // }
+        if (!tripService.findByBus(existingBus).isEmpty()) {
+            response.put("message", "Bus has been assigned to a trip(s) and cannot be deleted.");
+            return ResponseEntity.badRequest().body(response);
+        }
 
-    // // Delete seats
-    // for (Bus_Seats seat : seats) {
-    // bus_SeatsService.delete(seat);
-    // }
+        // proceed deleting if no trips are assigned
+        List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(existingBus);
+        if (!seats.isEmpty()) {
+            bus_SeatsService.deleteAll(seats);
+        }
 
-    // // Delete bus
-    // busService.delete(existingBus);
-    // response.put("message", "Bus deleted successfully.");
-    // return ResponseEntity.ok(response);
+        // Delete bus
+        busService.delete(existingBus);
+        response.put("message", "Bus deleted successfully.");
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/api/admin/trip-detail/{tripId}")
     @ResponseBody

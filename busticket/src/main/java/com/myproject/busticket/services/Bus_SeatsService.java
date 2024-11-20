@@ -30,4 +30,8 @@ public class Bus_SeatsService {
         return bus_SeatsRepository.findById(id).orElse(null);
     }
 
+    public void deleteAll(List<Bus_Seats> seats) {
+        bus_SeatsRepository.deleteAll(seats);
+    }
+
 }

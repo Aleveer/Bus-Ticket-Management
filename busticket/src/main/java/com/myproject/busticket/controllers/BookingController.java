@@ -80,7 +80,21 @@ public class BookingController {
         model.addAttribute("seatType", selectedTrip.getBus().getSeatType().toString().trim());
         return "booking";
     }
-
+    // @GetMapping("/booking/payment/{TripId}")
+    // public String payment(@RequestParam("seat_ids") String seatIds,
+    //         @RequestParam("total_price") String totalPrice,
+    //         @RequestParam("name") String name,
+    //         @RequestParam("phone") String phone,
+    //         @RequestParam("email") String email,
+    //         @PathVariable Integer TripId, Model model) {
+        // model.addAttribute("seatIds", seatIds);
+        // model.addAttribute("totalPrice", totalPrice);
+        // model.addAttribute("name", name);
+        // model.addAttribute("phone", phone);
+        // model.addAttribute("email", email);
+        // model.addAttribute("tripId", tripId);     
+    //     return "payment";
+    // }
     @PostMapping("/booking/oneway")
     public String booking(@ModelAttribute Booking booking) {
 
@@ -101,4 +115,5 @@ public class BookingController {
         bookingService.createTicket(returnTicket);
         return "redirect:/";
     }
+
 }

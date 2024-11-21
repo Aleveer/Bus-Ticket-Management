@@ -1,18 +1,19 @@
 package com.myproject.busticket.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.myproject.busticket.dto.ScheduleDTO;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.services.CheckpointService;
 import com.myproject.busticket.services.RouteCheckpointService;
 import com.myproject.busticket.services.RouteService;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import org.springframework.ui.Model;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RequestMapping("/home")
 @Controller
@@ -73,5 +74,14 @@ public class IndexPageController {
     public String searchBillingInfoPage() {
         return "search-billing-info";
     }
+    
+    @GetMapping("/403")
+    public String error403PageTest() {
+        return "403";
+    }
 
+    @GetMapping("/404")
+    public String error404PageTest() {
+        return "404";
+    }
 }

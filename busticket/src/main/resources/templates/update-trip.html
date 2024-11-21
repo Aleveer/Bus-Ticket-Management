@@ -36,10 +36,16 @@
 </head>
 
 <body>
+    <div class="container mt-4 mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/admin/trip-management">Trip Management</a></li>
+                <li class="breadcrumb-item active">Update Trip</li>
+            </ol>
+        </nav>
+    </div>
     <div class="container mt-5">
-        <div class="d-flex justify-content-start mb-3">
-            <a href="/admin/trip-management" class="btn btn-secondary">Back to Trips</a>
-        </div>
+
         <h1>Edit Trip</h1>
         <form id="tripForm" th:object="${trip}">
             <div class="form-group">

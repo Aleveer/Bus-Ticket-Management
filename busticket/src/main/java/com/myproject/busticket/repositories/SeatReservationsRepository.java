@@ -1,5 +1,6 @@
 package com.myproject.busticket.repositories;
 
+import com.myproject.busticket.models.Booking;
 import com.myproject.busticket.models.Bus_Seats;
 import com.myproject.busticket.models.SeatReservations;
 import com.myproject.busticket.models.Trip;
@@ -15,6 +16,8 @@ import java.util.List;
 public interface SeatReservationsRepository extends JpaRepository<SeatReservations, Integer> {
 
     List<SeatReservations> findBySeat(Bus_Seats seat);
+
+    List<SeatReservations> findByBooking(Booking booking);
 
     List<SeatReservations> findByTrip_TripId(int tripId);
 

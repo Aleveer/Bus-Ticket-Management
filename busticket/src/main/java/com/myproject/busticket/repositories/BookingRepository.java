@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
     List<Booking> findByTrip(Trip trip);
+
+    List<Booking> findByRoundTripId(String roundTripId);
 }

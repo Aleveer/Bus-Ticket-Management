@@ -1,10 +1,16 @@
 package com.myproject.busticket.controllers;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.myproject.busticket.dto.AccountDTO;
+import com.myproject.busticket.dto.BookingDTO;
+import com.myproject.busticket.dto.BusDTO;
 import com.myproject.busticket.dto.ControllerDTO;
+import com.myproject.busticket.dto.CustomerDTO;
 import com.myproject.busticket.dto.DriverDTO;
 import com.myproject.busticket.dto.RouteCheckpointDTO;
+import com.myproject.busticket.dto.RouteDTO;
 import com.myproject.busticket.dto.StaffDTO;
+import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.enums.CheckpointType;
 import com.myproject.busticket.enums.SeatReservationStatus;
 import com.myproject.busticket.enums.SeatType;
@@ -43,6 +49,7 @@ import com.myproject.busticket.services.TripService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -1614,12 +1621,14 @@ public class ApiController {
         Trip existingTrip = tripService.findTripById(tripId);
         if (existingTrip == null) {
             response.put("message", "Trip not found.");
+            response.put("success", false);
             return ResponseEntity.badRequest().body(response);
         }
         // Check for booking :
         List<Booking> bookings = bookingService.findByTrip(existingTrip);
         if (!bookings.isEmpty()) {
             response.put("message", "Trip has bookings and cannot be deleted.");
+            response.put("success", false);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -1627,6 +1636,7 @@ public class ApiController {
         List<Bill_Detail> bills = billDetailService.findByTrip(existingTrip);
         if (!bills.isEmpty()) {
             response.put("message", "Trip has billing and cannot be deleted.");
+            response.put("success", false);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -1649,7 +1659,14 @@ public class ApiController {
         Trip existingTrip = tripService.findTripById(tripId);
         if (existingTrip == null) {
             response.put("message", "Trip not found.");
+            response.put("success", false);
             return ResponseEntity.badRequest().body(response);
+        }
+
+        // Delete all seat reservations associated with the trip
+        List<SeatReservations> reservations = seatReservationService.getByTrip(existingTrip);
+        if (!reservations.isEmpty()) {
+            seatReservationService.deleteAll(reservations);
         }
 
         List<Booking> bookings = bookingService.findByTrip(existingTrip);
@@ -1665,15 +1682,108 @@ public class ApiController {
             }
         }
 
-        // Delete all seat reservations associated with the trip
-        List<SeatReservations> reservations = seatReservationService.getByTrip(existingTrip);
-        if (!reservations.isEmpty()) {
-            seatReservationService.deleteAll(reservations);
-        }
-
         tripService.deleteTripById(tripId);
         response.put("message", "Trip deleted successfully.");
         response.put("success", true);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/admin/api/bookings")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getBookings(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Booking> bookingPages = bookingService.getAll(pageable);
+
+        List<BookingDTO> bookings = bookingPages.getContent().stream()
+                .map(this::convertToBookingDTO)
+                .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("bookings", bookings);
+        response.put("totalPages", bookingPages.getTotalPages());
+        response.put("currentPage", page);
+
+        return ResponseEntity.ok(response);
+    }
+
+    private BookingDTO convertToBookingDTO(Booking booking) {
+        return new BookingDTO(
+                booking.getBookingId(),
+                new CustomerDTO(
+                        booking.getCustomer().getCustomerId(),
+                        booking.getCustomer().getEmail(),
+                        booking.getCustomer().getName(),
+                        booking.getCustomer().getPhone()),
+                new TripDTO(
+                        booking.getTrip().getTripId(),
+                        booking.getTrip().getDepartureTime(),
+                        booking.getTrip().getArrivalTime(),
+                        booking.getTrip().getPrice(),
+                        booking.getTrip().getStatus(),
+                        new BusDTO(
+                                booking.getTrip().getBus().getPlate(),
+                                booking.getTrip().getBus().getNumberOfSeat(),
+                                booking.getTrip().getBus().getSeatType()),
+                        new DriverDTO(
+                                booking.getTrip().getDriver().getDriverId(),
+                                new AccountDTO(
+                                        booking.getTrip().getDriver().getAccount().getId(),
+                                        booking.getTrip().getDriver().getAccount().getEmail(),
+                                        booking.getTrip().getDriver().getAccount().getPassword(),
+                                        booking.getTrip().getDriver().getAccount().getFullName(),
+                                        booking.getTrip().getDriver().getAccount().getPhone(),
+                                        booking.getTrip().getDriver().getAccount().getRole(),
+                                        booking.getTrip().getDriver().getAccount().getStatus(),
+                                        booking.getTrip().getDriver().getAccount().getVerificationCode(),
+                                        booking.getTrip().getDriver().getAccount().getVerificationExpiration(),
+                                        booking.getTrip().getDriver().getAccount().getLoginToken(),
+                                        booking.getTrip().getDriver().getAccount().getPasswordResetToken(),
+                                        booking.getTrip().getDriver().getAccount().getPasswordResetExpiration(),
+                                        booking.getTrip().getDriver().getAccount().isEnabled()),
+                                booking.getTrip().getDriver().getStatus()),
+                        new ControllerDTO(
+                                booking.getTrip().getController().getId(),
+                                new AccountDTO(
+                                        booking.getTrip().getController().getAccount().getId(),
+                                        booking.getTrip().getController().getAccount().getEmail(),
+                                        booking.getTrip().getController().getAccount().getPassword(),
+                                        booking.getTrip().getController().getAccount().getFullName(),
+                                        booking.getTrip().getController().getAccount().getPhone(),
+                                        booking.getTrip().getController().getAccount().getRole(),
+                                        booking.getTrip().getController().getAccount().getStatus(),
+                                        booking.getTrip().getController().getAccount().getVerificationCode(),
+                                        booking.getTrip().getController().getAccount().getVerificationExpiration(),
+                                        booking.getTrip().getController().getAccount().getLoginToken(),
+                                        booking.getTrip().getController().getAccount().getPasswordResetToken(),
+                                        booking.getTrip().getController().getAccount().getPasswordResetExpiration(),
+                                        booking.getTrip().getController().getAccount().isEnabled()),
+                                booking.getTrip().getController().getStatus()),
+                        new StaffDTO(
+                                booking.getTrip().getStaff().getStaffId(),
+                                new AccountDTO(
+                                        booking.getTrip().getStaff().getAccount().getId(),
+                                        booking.getTrip().getStaff().getAccount().getEmail(),
+                                        booking.getTrip().getStaff().getAccount().getPassword(),
+                                        booking.getTrip().getStaff().getAccount().getFullName(),
+                                        booking.getTrip().getStaff().getAccount().getPhone(),
+                                        booking.getTrip().getStaff().getAccount().getRole(),
+                                        booking.getTrip().getStaff().getAccount().getStatus(),
+                                        booking.getTrip().getStaff().getAccount().getVerificationCode(),
+                                        booking.getTrip().getStaff().getAccount().getVerificationExpiration(),
+                                        booking.getTrip().getStaff().getAccount().getLoginToken(),
+                                        booking.getTrip().getStaff().getAccount().getPasswordResetToken(),
+                                        booking.getTrip().getStaff().getAccount().getPasswordResetExpiration(),
+                                        booking.getTrip().getStaff().getAccount().isEnabled()),
+                                booking.getTrip().getStaff().getStatus()),
+                        new RouteDTO(
+                                booking.getTrip().getRoute().getRouteId(),
+                                booking.getTrip().getRoute().getCode(),
+                                booking.getTrip().getRoute().getName(),
+                                booking.getTrip().getRoute().getTime(),
+                                booking.getTrip().getRoute().getDistance())),
+                booking.getNumberOfSeat(),
+                booking.isRoundTrip(),
+                booking.getRoundTripId());
     }
 }

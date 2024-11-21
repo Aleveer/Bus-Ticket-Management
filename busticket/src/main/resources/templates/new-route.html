@@ -11,10 +11,15 @@
 </head>
 
 <body>
+  <div class="container mt-4 mb-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/admin/route-management">Route Management</a></li>
+        <li class="breadcrumb-item active">New Route</li>
+      </ol>
+    </nav>
+  </div>
   <div class="container mt-5">
-    <div class="d-flex justify-content-start mb-3">
-      <a href="/admin/route-management" class="btn btn-secondary">Back to Routes</a>
-    </div>
     <h1>Create New Route</h1>
     <form id="routeForm" th:object="${route}">
       <div class="form-group">

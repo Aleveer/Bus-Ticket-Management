@@ -2,6 +2,7 @@ package com.myproject.busticket.services;
 
 import com.myproject.busticket.dto.SeatReservationsDTO;
 import com.myproject.busticket.mapper.SeatReservationsMapper;
+import com.myproject.busticket.models.Booking;
 import com.myproject.busticket.models.Bus_Seats;
 import com.myproject.busticket.models.SeatReservations;
 import com.myproject.busticket.models.Trip;
@@ -55,5 +56,9 @@ public class SeatReservationsService {
 
     public void deleteAll(List<SeatReservations> reservations) {
         seatReservationsRepository.deleteAll(reservations);
+    }
+
+    public List<SeatReservations> findByBooking(Booking booking) {
+        return seatReservationsRepository.findByBooking(booking);
     }
 }

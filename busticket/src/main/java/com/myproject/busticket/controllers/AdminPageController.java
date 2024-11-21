@@ -1,12 +1,22 @@
 package com.myproject.busticket.controllers;
 
 import com.myproject.busticket.dto.AccountDTO;
+import com.myproject.busticket.dto.BookingDTO;
+import com.myproject.busticket.dto.BusDTO;
+import com.myproject.busticket.dto.ControllerDTO;
+import com.myproject.busticket.dto.CustomerDTO;
+import com.myproject.busticket.dto.DriverDTO;
+import com.myproject.busticket.dto.RouteDTO;
+import com.myproject.busticket.dto.StaffDTO;
+import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.models.Account;
+import com.myproject.busticket.models.Booking;
 import com.myproject.busticket.models.Bus;
 import com.myproject.busticket.models.Checkpoint;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.services.AccountService;
+import com.myproject.busticket.services.BookingService;
 import com.myproject.busticket.services.BusService;
 import com.myproject.busticket.services.CheckpointService;
 import com.myproject.busticket.services.ControllerService;
@@ -41,10 +51,11 @@ public class AdminPageController {
 	AccountService accountService;
 	RoleService roleService;
 	RouteCheckpointService routeCheckpointService;
+	BookingService bookingService;
 
 	public AdminPageController(TripService tripService, BusService busService, RouteService routeService,
 			CheckpointService checkpointService, AccountService accountService, RoleService roleService,
-			RouteCheckpointService routeCheckpointService) {
+			RouteCheckpointService routeCheckpointService, BookingService bookingService) {
 		this.busService = busService;
 		this.tripService = tripService;
 		this.routeService = routeService;
@@ -52,6 +63,7 @@ public class AdminPageController {
 		this.accountService = accountService;
 		this.roleService = roleService;
 		this.routeCheckpointService = routeCheckpointService;
+		this.bookingService = bookingService;
 	}
 
 	@GetMapping("/dashboard")
@@ -127,7 +139,7 @@ public class AdminPageController {
 
 	@GetMapping("/route-management/search")
 	public String adminSearchByCodeAndName(@RequestParam String searchValue, @RequestParam(defaultValue = "0") int page,
-										   @RequestParam(defaultValue = "15") int size, Model model) {
+			@RequestParam(defaultValue = "15") int size, Model model) {
 		System.out.println("searchValue: " + searchValue);
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Route> routesSearchPage = routeService.searchRouteByCodeAndName(pageable, searchValue);
@@ -203,4 +215,107 @@ public class AdminPageController {
 		return "account-management";
 	}
 
+	@GetMapping("/booking-management")
+	public String bookingPage(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "15") int size, Model model) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Booking> bookingPages = bookingService.getAll(pageable);
+
+		int totalPages = bookingPages.getTotalPages();
+		int startPage = Math.max(0, page - 2);
+		int endPage = Math.min(totalPages - 1, page + 2);
+
+		List<BookingDTO> bookings = bookingPages.getContent().stream()
+				.map(booking -> new BookingDTO(
+						booking.getBookingId(),
+						new CustomerDTO(
+								booking.getCustomer().getCustomerId(),
+								booking.getCustomer().getEmail(),
+								booking.getCustomer().getName(),
+								booking.getCustomer().getPhone()),
+						new TripDTO(
+								booking.getTrip().getTripId(),
+								booking.getTrip().getDepartureTime(),
+								booking.getTrip().getArrivalTime(),
+								booking.getTrip().getPrice(),
+								booking.getTrip().getStatus(),
+								new BusDTO(
+										booking.getTrip().getBus().getPlate(),
+										booking.getTrip().getBus().getNumberOfSeat(),
+										booking.getTrip().getBus().getSeatType()),
+								new DriverDTO(
+										booking.getTrip().getDriver().getDriverId(),
+										new AccountDTO(
+												booking.getTrip().getDriver().getAccount().getId(),
+												booking.getTrip().getDriver().getAccount().getEmail(),
+												booking.getTrip().getDriver().getAccount().getPassword(),
+												booking.getTrip().getDriver().getAccount().getFullName(),
+												booking.getTrip().getDriver().getAccount().getPhone(),
+												booking.getTrip().getDriver().getAccount().getRole(),
+												booking.getTrip().getDriver().getAccount().getStatus(),
+												booking.getTrip().getDriver().getAccount().getVerificationCode(),
+												booking.getTrip().getDriver().getAccount().getVerificationExpiration(),
+												booking.getTrip().getDriver().getAccount().getLoginToken(),
+												booking.getTrip().getDriver().getAccount().getPasswordResetToken(),
+												booking.getTrip().getDriver().getAccount().getPasswordResetExpiration(),
+												booking.getTrip().getDriver().getAccount().isEnabled()),
+										booking.getTrip().getDriver().getStatus()),
+								new ControllerDTO(
+										booking.getTrip().getController().getId(),
+										new AccountDTO(
+												booking.getTrip().getController().getAccount().getId(),
+												booking.getTrip().getController().getAccount().getEmail(),
+												booking.getTrip().getController().getAccount().getPassword(),
+												booking.getTrip().getController().getAccount().getFullName(),
+												booking.getTrip().getController().getAccount().getPhone(),
+												booking.getTrip().getController().getAccount().getRole(),
+												booking.getTrip().getController().getAccount().getStatus(),
+												booking.getTrip().getController().getAccount().getVerificationCode(),
+												booking.getTrip().getController().getAccount()
+														.getVerificationExpiration(),
+												booking.getTrip().getController().getAccount().getLoginToken(),
+												booking.getTrip().getController().getAccount().getPasswordResetToken(),
+												booking.getTrip().getController().getAccount()
+														.getPasswordResetExpiration(),
+												booking.getTrip().getController().getAccount().isEnabled()),
+										booking.getTrip().getController().getStatus()),
+								new StaffDTO(
+										booking.getTrip().getStaff().getStaffId(),
+										new AccountDTO(
+												booking.getTrip().getStaff().getAccount().getId(),
+												booking.getTrip().getStaff().getAccount().getEmail(),
+												booking.getTrip().getStaff().getAccount().getPassword(),
+												booking.getTrip().getStaff().getAccount().getFullName(),
+												booking.getTrip().getStaff().getAccount().getPhone(),
+												booking.getTrip().getStaff().getAccount().getRole(),
+												booking.getTrip().getStaff().getAccount().getStatus(),
+												booking.getTrip().getStaff().getAccount().getVerificationCode(),
+												booking.getTrip().getStaff().getAccount().getVerificationExpiration(),
+												booking.getTrip().getStaff().getAccount().getLoginToken(),
+												booking.getTrip().getStaff().getAccount().getPasswordResetToken(),
+												booking.getTrip().getStaff().getAccount().getPasswordResetExpiration(),
+												booking.getTrip().getStaff().getAccount().isEnabled()),
+										booking.getTrip().getStaff().getStatus()),
+								new RouteDTO(
+										booking.getTrip().getRoute().getRouteId(),
+										booking.getTrip().getRoute().getCode(),
+										booking.getTrip().getRoute().getName(),
+										booking.getTrip().getRoute().getTime(),
+										booking.getTrip().getRoute().getDistance())),
+						booking.getNumberOfSeat(),
+						booking.isRoundTrip(),
+						booking.getRoundTripId()))
+				.collect(Collectors.toList());
+
+		List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
+				.boxed()
+				.collect(Collectors.toList());
+
+		model.addAttribute("bookings", bookings);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("pageNumbers", pageNumbers);
+
+		return "booking-management";
+	}
 }

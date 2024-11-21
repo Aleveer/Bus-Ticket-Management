@@ -1,7 +1,5 @@
 package com.myproject.busticket.dto;
 
-import com.myproject.busticket.models.Customer;
-import com.myproject.busticket.models.Trip;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BookingDTO {
     private int bookingId;
-    private Customer customer;
-    private Trip trip;
+    private CustomerDTO customer;
+    private TripDTO trip;
     private byte numberOfSeat;
     private boolean isRoundTrip;
     private String roundTripId;

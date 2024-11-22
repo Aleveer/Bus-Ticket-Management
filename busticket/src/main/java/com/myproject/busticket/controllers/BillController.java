@@ -14,10 +14,12 @@ import com.myproject.busticket.mapper.BillMapper;
 import com.myproject.busticket.mapper.TripMapper;
 import com.myproject.busticket.models.Bill;
 import com.myproject.busticket.models.Bill_Detail;
+import com.myproject.busticket.models.Booking;
 import com.myproject.busticket.models.Customer;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.services.BillDetailService;
 import com.myproject.busticket.services.BillService;
+import com.myproject.busticket.services.BookingService;
 import com.myproject.busticket.services.CustomerService;
 import com.myproject.busticket.services.TripService;
 
@@ -34,6 +36,9 @@ public class BillController {
 
     @Autowired
     private BillDetailService billDetailService;
+
+    @Autowired
+    private BookingService bookingService;
 
     @Autowired
     private BillMapper billMapper;
@@ -58,7 +63,7 @@ public class BillController {
         List<Bill_Detail> billDetails = billDetailService.findByBillId(bill);
         if (billDetails == null || billDetails.isEmpty()) {
             model.addAttribute("errorMessage", "Bill details not found.");
-            return "redirect/easy-bus/bill-management";
+            return "redirect:/easy-bus/bill-management";
         }
 
         Trip trip = tripService.findTripById(billDetails.get(0).getTrip().getTripId());
@@ -77,10 +82,34 @@ public class BillController {
                         billDetail.getTicketType()))
                 .collect(Collectors.toList());
 
+        // Retrieve bookings for the customer and trip
+        List<Booking> bookings = bookingService.findByCustomer(customer);
+        Booking booking = null;
+        Trip roundTrip = null;
+
+        bookings = bookings.stream().filter(b -> b.getTrip().getTripId() == trip.getTripId())
+                .collect(Collectors.toList());
+
+        // check bookings for round trip
+        if (bookings.size() == 1) {
+            booking = bookings.get(0);
+            if (booking.isRoundTrip() && booking.getRoundTripId() != null) {
+                List<Booking> roundTripBookings = bookingService.findByRoundTripId(booking.getRoundTripId());
+                if (!roundTripBookings.isEmpty()) {
+                    roundTrip = roundTripBookings.get(0).getTrip();
+                }
+            }
+        } else if (!bookings.isEmpty()) {
+            roundTrip = bookings.get(bookings.size() - 1).getTrip();
+        }
+
         model.addAttribute("bill", bill);
         model.addAttribute("customer", customer);
         model.addAttribute("trip", trip);
+        model.addAttribute("roundTrip", roundTrip);
         model.addAttribute("billDetails", billDetailsDTO);
+        // model.addAttribute("bookings", bookings);
+        model.addAttribute("booking", booking);
 
         return "bill-detail";
     }

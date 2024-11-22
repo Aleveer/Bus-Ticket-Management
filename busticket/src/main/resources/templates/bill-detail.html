@@ -5,10 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bill Detail</title>
-    <link rel="stylesheet" href="/path/to/bootstrap.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 </head>
 
 <body>
+    <div class="container mt-4 mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/easy-bus/bill-management">Bill Management</a></li>
+                <li class="breadcrumb-item active">Bill Details</li>
+            </ol>
+        </nav>
+    </div>
     <div class="container mt-4">
         <h2>Bill Detail</h2>
         <div class="card mb-4">
@@ -16,6 +24,7 @@
                 <h5 class="mb-0">Customer Information</h5>
             </div>
             <div class="card-body">
+                <p><strong>Customer ID:</strong> <span th:text="${customer.customerId}"></span></p>
                 <p><strong>Name:</strong> <span th:text="${customer.name}"></span></p>
                 <p><strong>Email:</strong> <span th:text="${customer.email}"></span></p>
                 <p><strong>Phone:</strong> <span th:text="${customer.phone}"></span></p>
@@ -39,60 +48,25 @@
                 <h5 class="mb-0">Trip Information</h5>
             </div>
             <div class="card-body">
-                <p><strong>Trip ID:</strong> <a th:href="@{'/admin/trip-detail/' + ${trip.tripId}}"
+                <p><strong>Trip ID:</strong> <a th:href="@{'/easy-bus/trip-detail/' + ${trip.tripId}}"
                         class="btn btn-sm btn-outline-primary" th:text="${trip.tripId}"></a></p>
                 <p><strong>Departure Time:</strong> <span th:text="${trip.departureTime}"></span></p>
                 <p><strong>Arrival Time:</strong> <span th:text="${trip.arrivalTime}"></span></p>
                 <p><strong>Price:</strong> <span th:text="${trip.price}"></span></p>
                 <p><strong>Status:</strong> <span th:text="${trip.status}"></span></p>
-                <p><strong>Bus:</strong> <a th:href="@{'/admin/bus-detail/' + ${trip.bus.plate}}"
+                <p><strong>Bus:</strong> <a th:href="@{'/easy-bus/bus-detail/' + ${trip.bus.plate}}"
                         class="btn btn-sm btn-outline-primary" th:text="${trip.bus.plate}"></a></p>
-                <p><strong>Driver:</strong> <a th:href="@{'/admin/driver-detail/' + ${trip.driver.driverId}}"
+                <p><strong>Driver:</strong> <a th:href="@{'/easy-bus/driver-detail/' + ${trip.driver.driverId}}"
                         class="btn btn-sm btn-outline-primary" th:text="${trip.driver.account.fullName}"></a></p>
-                <p><strong>Controller:</strong> <a th:href="@{'/admin/controller-detail/' + ${trip.controller.id}}"
+                <p><strong>Controller:</strong> <a th:href="@{'/easy-bus/controller-detail/' + ${trip.controller.id}}"
                         class="btn btn-sm btn-outline-primary" th:text="${trip.controller.account.fullName}"></a></p>
-                <p><strong>Staff:</strong> <a th:href="@{'/admin/staff-detail/' + ${trip.staff.staffId}}"
+                <p><strong>Staff:</strong> <a th:href="@{'/easy-bus/staff-detail/' + ${trip.staff.staffId}}"
                         class="btn btn-sm btn-outline-primary" th:text="${trip.staff.account.fullName}"></a></p>
-                <p><strong>Route:</strong> <a th:href="@{'/admin/route-detail/' + ${trip.route.code}}"
+                <p><strong>Route:</strong> <a th:href="@{'/easy-bus/route-detail/' + ${trip.route.code}}"
                         class="btn btn-sm btn-outline-primary" th:text="${trip.route.code}"></a></p>
-            </div>
-        </div>
-
-        <div class="card mb-4" th:if="${trip.roundTripId != null}">
-            <div class="card-header">
-                <h5 class="mb-0">Round Trip Information</h5>
-            </div>
-            <div class="card-body">
-                <p><strong>Round Trip ID:</strong> <a th:href="@{'/admin/trip-detail/' + ${trip.roundTripId}}"
-                        class="btn btn-sm btn-outline-primary" th:text="${trip.roundTripId}"></a></p>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0">Bill Details</h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Booking ID</th>
-                            <th>Number of Tickets</th>
-                            <th>Fee</th>
-                            <th>Ticket Type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="detail : ${billDetails}">
-                            <td><a th:href="@{'/admin/booking-detail/' + ${detail.booking.bookingId}}"
-                                    class="btn btn-sm btn-outline-primary" th:text="${detail.booking.bookingId}"></a>
-                            </td>
-                            <td th:text="${detail.numberOfTicket}"></td>
-                            <td th:text="${detail.fee}"></td>
-                            <td th:text="${detail.ticketType}"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!--Round trip id-->
+                <p th:if="${booking.roundTripId != null}"><strong>Round Trip ID:</strong> <a
+                        th:text="${booking.roundTripId}"></a></p>
             </div>
         </div>
     </div>

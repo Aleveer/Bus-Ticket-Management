@@ -1,6 +1,7 @@
 package com.myproject.busticket.services;
 
 import com.myproject.busticket.models.Booking;
+import com.myproject.busticket.models.Customer;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.repositories.BookingRepository;
 
@@ -14,10 +15,6 @@ import org.springframework.stereotype.Service;
 public class BookingService {
     @Autowired
     private BookingRepository bookingRepository;
-
-    public BookingService(BookingRepository bookingRepository) {
-        this.bookingRepository = bookingRepository;
-    }
 
     public Booking getBookingById(int bookingId) {
         return bookingRepository.findById(bookingId).orElse(null);
@@ -49,5 +46,13 @@ public class BookingService {
 
     public List<Booking> findByRoundTripId(String roundTripId) {
         return bookingRepository.findByRoundTripId(roundTripId);
+    }
+
+    public List<Booking> findBookingDetailsByCustomerId(int customerId) {
+        return bookingRepository.findBookingDetailsByCustomerId(customerId);
+    }
+
+    public List<Booking> findByCustomer(Customer customer) {
+        return bookingRepository.findByCustomer(customer);
     }
 }

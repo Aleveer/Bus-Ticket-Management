@@ -3,7 +3,7 @@ package com.myproject.busticket.controllers;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.myproject.busticket.dto.SeatReservationsDTO;
@@ -129,6 +128,17 @@ public class BookingController {
             return "error";
         }
 
+        // For round trips, get the first booking in sequence
+        if (booking.isRoundTrip() && booking.getRoundTripId() != null) {
+            List<Booking> roundTripBookings = bookingService.findByRoundTripId(booking.getRoundTripId());
+            if (!roundTripBookings.isEmpty()) {
+                // Get first booking by booking ID (earliest created)
+                booking = roundTripBookings.stream()
+                        .min(Comparator.comparing(Booking::getBookingId))
+                        .orElse(booking);
+            }
+        }
+
         model.addAttribute("booking", booking);
 
         if (booking.getCustomer() == null) {
@@ -170,14 +180,12 @@ public class BookingController {
         model.addAttribute("roundTrip", booking.isRoundTrip());
         model.addAttribute("roundTripId", booking.getRoundTripId());
 
-        // Retrieve seat reservation
         List<SeatReservations> seatReservations = seatReservationsService.getByTrip(booking.getTrip());
         if (seatReservations.isEmpty()) {
             model.addAttribute("message", "Seat reservation not found.");
             return "error";
         }
 
-        // Check for seat reservation if it has booking Id:
         List<SeatReservations> seatReservationsWithBookingId = seatReservations.stream()
                 .filter(seatReservation -> seatReservation.getBooking() != null).collect(Collectors.toList());
 
@@ -205,15 +213,20 @@ public class BookingController {
                 model.addAttribute("message", "Round trip booking not found.");
                 return "error";
             }
-            Booking roundTripBooking = roundTripBookings.get(roundTripBookings.size() - 1);
+            final Booking finalBooking = booking;
+            // Get the return trip (second booking in sequence)
+            Booking roundTripBooking = roundTripBookings.stream()
+                    .filter(b -> b.getBookingId() != finalBooking.getBookingId())
+                    .min(Comparator.comparing(Booking::getBookingId))
+                    .orElse(null);
+
             if (roundTripBooking == null) {
-                model.addAttribute("message", "Round trip booking not found.");
+                model.addAttribute("message", "Return trip booking not found.");
                 return "error";
             }
 
             model.addAttribute("roundTrip", roundTripBooking);
 
-            // Retrieve seat reservation for round trip
             List<SeatReservations> roundTripSeatReservations = seatReservationsService
                     .getByTrip(roundTripBooking.getTrip());
             if (roundTripSeatReservations.isEmpty()) {
@@ -221,7 +234,6 @@ public class BookingController {
                 return "error";
             }
 
-            // Check for seat reservation if it has booking Id::
             List<SeatReservations> roundTripSeatReservationsWithBookingId = roundTripSeatReservations.stream()
                     .filter(seatReservation -> seatReservation.getBooking() != null).collect(Collectors.toList());
 
@@ -248,5 +260,17 @@ public class BookingController {
         }
 
         return "booking-detail";
+    }
+
+    @GetMapping("/admin/new-booking")
+    public String newBooking(Model model) {
+        model.addAttribute("booking", new Booking());
+        return "new-booking";
+    }
+
+    @PostMapping("/admin/new-booking")
+    public String saveBooking(Booking booking) {
+        bookingService.createTicket(booking);
+        return "redirect:/admin/booking-management";
     }
 }

@@ -1,6 +1,5 @@
 package com.myproject.busticket.controllers;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.myproject.busticket.dto.AccountDTO;
 import com.myproject.busticket.dto.BookingDTO;
 import com.myproject.busticket.dto.BusDTO;
@@ -14,6 +13,7 @@ import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.enums.CheckpointType;
 import com.myproject.busticket.enums.SeatReservationStatus;
 import com.myproject.busticket.enums.SeatType;
+import com.myproject.busticket.enums.TicketType;
 import com.myproject.busticket.enums.TripStatus;
 import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.Bill;
@@ -49,11 +49,11 @@ import com.myproject.busticket.services.TripService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -360,15 +360,15 @@ public class ApiController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/admin/api/customers")
+    @GetMapping("/admin/api/customers-account")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getCustomers(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Account> accountPages = accountService.getAll(pageable);
-        // Filter by role to get only drivers:
+
         List<AccountDTO> accountDTOs = accountPages.getContent().stream()
-                .filter(account -> account.getRole().getRoleId() == 4) // 4 = customer
+                .filter(account -> account.getRole().getRoleId() == 4)
                 .map(account -> new AccountDTO(account.getId(), account.getEmail(),
                         account.getPassword(),
                         account.getFullName(), account.getPhone(),
@@ -388,34 +388,29 @@ public class ApiController {
         return ResponseEntity.ok(response);
     }
 
-    // @GetMapping("/admin/api/guests")
-    // @ResponseBody
-    // public ResponseEntity<Map<String, Object>>
-    // getGuests(@RequestParam(defaultValue = "0") int page,
-    // @RequestParam(defaultValue = "15") int size) {
-    // Pageable pageable = PageRequest.of(page, size);
-    // Page<Account> accountPages = accountService.getAll(pageable);
-    // // Filter by role to get only drivers:
-    // List<AccountDTO> accountDTOs = accountPages.getContent().stream()
-    // .filter(account -> account.getRole().getRoleId() == 1) // 1 = driver
-    // .map(account -> new AccountDTO(account.getId(), account.getEmail(),
-    // account.getPassword(),
-    // account.getFullName(), account.getPhone(),
-    // roleService.getRoleById(account.getRole().getRoleId()),
-    // account.getStatus(),
-    // account.getVerificationCode(), account.getVerificationExpiration(),
-    // account.getLoginToken(),
-    // account.getPasswordResetToken(), account.getPasswordResetExpiration(),
-    // account.isEnabled()))
-    // .collect(Collectors.toList());
+    @GetMapping("/admin/api/guests")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getGuests(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Customer> customerPages = customerService.getAll(pageable);
 
-    // Map<String, Object> response = new HashMap<>();
-    // response.put("accounts", accountDTOs);
-    // response.put("currentPage", page);
-    // response.put("totalPages", accountPages.getTotalPages());
+        List<CustomerDTO> customerDTOs = customerPages.getContent().stream()
+                .map(customer -> new CustomerDTO(
+                        customer.getCustomerId(),
+                        customer.getEmail(),
+                        customer.getName(),
+                        customer.getPhone()))
+                .collect(Collectors.toList());
 
-    // return ResponseEntity.ok(response);
-    // }
+        Map<String, Object> response = new HashMap<>();
+        response.put("guests", customerDTOs);
+        response.put("currentPage", page);
+        response.put("totalPages", customerPages.getTotalPages());
+
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/route-detail/{routeCode}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getRouteDetails(@PathVariable String routeCode) {
@@ -651,7 +646,6 @@ public class ApiController {
                 throw new IllegalArgumentException("Checkpoint type is missing.");
             }
 
-            // TODO: Check if type is valid
             routeCheckpoint.setType(parseCheckpointType(type));
             routeCheckpoint.setCheckpointOrder(checkpointData.get("checkpointOrder") == null ? i++
                     : (int) checkpointData.get("checkpointOrder"));
@@ -1695,8 +1689,17 @@ public class ApiController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Booking> bookingPages = bookingService.getAll(pageable);
 
+        // Group bookings by round_trip_id and get only the first booking of each group
         List<BookingDTO> bookings = bookingPages.getContent().stream()
-                .map(this::convertToBookingDTO)
+                .collect(Collectors.groupingBy(
+                        booking -> booking.getRoundTripId() != null ? booking.getRoundTripId()
+                                : booking.getBookingId()))
+                .values().stream()
+                .map(groupedBookings -> groupedBookings.stream()
+                        .min(Comparator.comparing(Booking::getBookingId))
+                        .map(this::convertToBookingDTO)
+                        .orElse(null))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();
@@ -1785,5 +1788,115 @@ public class ApiController {
                 booking.getNumberOfSeat(),
                 booking.isRoundTrip(),
                 booking.getRoundTripId());
+    }
+
+    @PostMapping("/admin/api/new-booking")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> saveBooking(@RequestBody Map<String, Object> bookingRequest) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Customer customer = null;
+            // Get customer information if customer type = Guest:
+            String customerType = (String) bookingRequest.get("customerType");
+            if (customerType.equals("guest")) {
+                // Retrieve customer information:
+                String customerName = (String) bookingRequest.get("customerName");
+                String customerEmail = (String) bookingRequest.get("customerEmail");
+                String customerPhone = (String) bookingRequest.get("customerPhone");
+
+                // Create new customer
+                customer = new Customer();
+                customer.setName(customerName);
+                customer.setEmail(customerEmail);
+                customer.setPhone(customerPhone);
+            } else {
+                // Retrieve account ID if customer type = Account:
+                int accountId = (int) bookingRequest.get("accountId");
+                Account account = accountService.getById(accountId);
+                if (account == null) {
+                    response.put("message", "Account not found.");
+                    return ResponseEntity.badRequest().body(response);
+                }
+
+                // create new customer:
+                customer = new Customer();
+                if (account.getEmail() == null || account.getFullName() == null || account.getPhone() == null) {
+                    response.put("message", "Account information is incomplete.");
+                    return ResponseEntity.badRequest().body(response);
+                }
+                customer.setName(account.getFullName());
+                customer.setEmail(account.getEmail());
+                customer.setPhone(account.getPhone());
+            }
+
+            // Handle selection trip:
+            int tripId = Integer.parseInt(bookingRequest.get("tripId").toString());
+            Trip trip = tripService.findTripById(tripId);
+            if (trip == null) {
+                response.put("message", "Trip not found.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // Handle number of seats:
+            byte numberOfSeats = (bookingRequest.get("numberOfSeats").toString()).isEmpty()
+                    ? 0
+                    : Byte.parseByte(bookingRequest.get("numberOfSeats").toString());
+            if (numberOfSeats < 1) {
+                response.put("message", "At least one seat must be selected.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // Handle selected seats:
+            List<Integer> selectedSeats = (List<Integer>) bookingRequest.get("selectedSeats");
+            if (selectedSeats.size() != numberOfSeats) {
+                response.put("message", "Number of selected seats does not match the number of seats.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // Get seat reservations by trip and seat:
+            List<SeatReservations> seatReservations = new ArrayList<>();
+            for (int seatId : selectedSeats) {
+                // Get bus seat by seat ID:
+                Bus_Seats seat = bus_SeatsService.getById(seatId);
+                // Get seat reservation by seat and trip:
+                SeatReservations seatReservation = seatReservationService.getReservationBySeatAndTrip(seat, trip);
+                if (seatReservation == null || !seatReservation.getStatus().equals(SeatReservationStatus.open)) {
+                    response.put("message", "Selected seat is not available.");
+                    return ResponseEntity.badRequest().body(response);
+                }
+                seatReservations.add(seatReservation);
+            }
+
+            // Get ticket type:
+            String ticketType = (String) bookingRequest.get("ticketType");
+            if (ticketType == null || ticketType.isEmpty()) {
+                response.put("message", "Ticket type is required.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            if (ticketType.equals("One-way")) {
+                // Create booking
+                Booking booking = new Booking();
+                booking.setCustomer(customer);
+                booking.setTrip(trip);
+                booking.setNumberOfSeat(numberOfSeats);
+                booking.setRoundTrip(false);
+                booking.setRoundTripId(null);
+
+                // Retrieve selected seats and update seat_reservations to reserved:
+                for (SeatReservations seatReservation : seatReservations) {
+                    seatReservation.setStatus(SeatReservationStatus.reserved);
+                    seatReservationService.save(seatReservation);
+                }
+                customerService.create(customer);
+                bookingService.createTicket(booking);
+                response.put("message", "Booking created successfully.");
+            }
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("message", "Error creating booking: " + e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 }

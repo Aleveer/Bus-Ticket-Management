@@ -73,7 +73,7 @@
       <div class="col-sm-12 ">
          <div class="login_menu">
             <ul>
-               <li><a href="#">
+               <li><a th:href="@{login}">
                      <i class="bi bi-person-circle"></i>
                   </a>
                </li>
@@ -140,7 +140,7 @@
                         <datalist id="departureList" >
                            <option th:each="province : ${provinces}" th:value="${province}"></option>
                            <option th:each="city : ${cities}" th:value="${city}"></option>
-                        </datalist>    
+                        </datalist>
                   </div>
                   <button class="swap-btn" onclick="swapValues()">⇆</button>
                   <div class="form-group">
@@ -273,7 +273,7 @@
       function closeNav() {
          document.getElementById("mySidenav").style.width = "0";
       }
-   
+
       // Function to set the default date to today's date
       function setDefaultDate() {
         const today = new Date();
@@ -306,8 +306,8 @@
       }
       // Set the default date when the page loads
       window.onload = setDefaultDate;
-  
-      
+
+
     </script>
 </body>
 

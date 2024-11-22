@@ -13,6 +13,8 @@ public class CheckpointDTO {
     private int checkpointId;
     private String placeName;
     private String address;
-    private String phone;
+    private String province;
+    private String city;
     private String region;
+    private String phone;
 }

@@ -14,7 +14,7 @@
   <div class="container mt-4 mb-4">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/admin/route-management">Route Management</a></li>
+        <li class="breadcrumb-item"><a href="/easy-bus/route-management">Route Management</a></li>
         <li class="breadcrumb-item active">New Route</li>
       </ol>
     </nav>
@@ -95,7 +95,7 @@
 
     function loadCheckpoints(page, searchTerm = "") {
       $.ajax({
-        url: "/admin/api/checkpoints",
+        url: "/api/checkpoint/checkpoints",
         data: { page: page, size: 10, search: searchTerm },
         method: "GET",
         success: function (data) {
@@ -300,7 +300,7 @@
           checkpointRegion: cp.region,
         }));
 
-        fetch("/admin/api/new-route", {
+        fetch("/api/route/new-route", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -310,7 +310,7 @@
           .then((response) => response.json())
           .then((data) => {
             alert("Route created successfully!");
-            window.location.href = "/admin/route-management";
+            window.location.href = "/easy-bus/route-management";
           })
           .catch((error) => {
             alert("Error: " + error.message);

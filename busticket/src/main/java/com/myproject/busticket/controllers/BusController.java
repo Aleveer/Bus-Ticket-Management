@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import com.myproject.busticket.services.BusService;
 import com.myproject.busticket.services.Bus_SeatsService;
 import com.myproject.busticket.services.SeatReservationsService;
@@ -19,7 +18,6 @@ import com.myproject.busticket.enums.SeatReservationStatus;
 import com.myproject.busticket.models.Bus;
 
 @Controller
-@RequestMapping("/admin")
 public class BusController {
     @Autowired
     private BusService busService;
@@ -30,24 +28,24 @@ public class BusController {
     @Autowired
     private SeatReservationsService seatReservationService;
 
-    @GetMapping("/new-bus")
+    @GetMapping("/easy-bus/new-bus")
     public String newBus(Model model) {
         model.addAttribute("bus", new Bus());
         return "new-bus";
     }
 
-    @PostMapping("/new-bus")
+    @PostMapping("/easy-bus/new-bus")
     public String saveBus(Bus bus) {
         busService.save(bus);
-        return "redirect:/admin/bus-management";
+        return "redirect:/easy-bus/bus-management";
     }
 
-    @GetMapping("/bus-detail/{plate}")
+    @GetMapping("/easy-bus/bus-detail/{plate}")
     public String getBusDetails(@PathVariable String plate, Model model) {
         Bus bus = busService.getByBusPlate(plate);
         if (bus == null) {
             model.addAttribute("errorMessage", "Bus not found.");
-            return "redirect:/admin/bus-management";
+            return "redirect:/easy-bus/bus-management";
         }
 
         List<Map<String, Object>> seatDetails = bus_SeatsService.getByBusPlate(bus).stream().map(seat -> {

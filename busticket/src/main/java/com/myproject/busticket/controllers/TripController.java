@@ -51,24 +51,24 @@ public class TripController {
         return tripService.findAll();
     }
 
-    @GetMapping("admin/trip-detail/{tripId}")
+    @GetMapping("/easy-bus/trip-detail/{tripId}")
     public String getTripDetails(@PathVariable int tripId, Model model) {
         Trip trip = tripService.findTripById(tripId);
         if (trip == null) {
             model.addAttribute("errorMessage", "Trip not found.");
-            return "redirect:/admin/trip-management";
+            return "redirect:/easy-bus/trip-management";
         }
 
         Bus existingBus = busService.getByBusPlate(trip.getBus().getPlate());
         if (existingBus == null) {
             model.addAttribute("errorMessage", "Bus not found.");
-            return "redirect:/admin/trip-management";
+            return "redirect:/easy-bus/trip-management";
         }
 
         List<Bus_Seats> seats = bus_SeatsService.getByBusPlate(existingBus);
         if (seats.isEmpty()) {
             model.addAttribute("errorMessage", "No seats found for this bus.");
-            return "redirect:/admin/trip-management";
+            return "redirect:/easy-bus/trip-management";
         }
 
         List<Map<String, Object>> seatDetails = seats.stream()
@@ -95,40 +95,40 @@ public class TripController {
         return "trip-detail";
     }
 
-    @GetMapping("/admin/new-trip")
+    @GetMapping("/easy-bus/new-trip")
     public String newTrip(Model model) {
         model.addAttribute("trip", new Trip());
         return "new-trip";
     }
 
-    @PostMapping("/admin/new-trip")
+    @PostMapping("/easy-bus/new-trip")
     public String saveTrip(Trip trip) {
         tripService.save(trip);
-        return "redirect:/admin/trip-management";
+        return "redirect:/easy-bus/trip-management";
     }
 
-    @GetMapping("/admin/update-trip/{tripId}")
+    @GetMapping("/easy-bus/update-trip/{tripId}")
     public String updateTrip(@PathVariable int tripId, Model model) {
         Trip trip = tripService.findTripById(tripId);
         if (trip == null) {
             model.addAttribute("errorMessage", "Trip not found.");
-            return "redirect:/admin/trip-management";
+            return "redirect:/easy-bus/trip-management";
         }
         model.addAttribute("trip", trip);
         return "update-trip";
     }
 
-    @PostMapping("/admin/update-trip/{tripId}")
+    @PostMapping("/easy-bus/update-trip/{tripId}")
     public String updateTrip(@PathVariable int tripId, Trip trip) {
         Trip existingTrip = tripService.findTripById(tripId);
         if (existingTrip == null) {
-            return "redirect:/admin/trip-management";
+            return "redirect:/easy-bus/trip-management";
         }
         existingTrip.setDepartureTime(trip.getDepartureTime());
         existingTrip.setArrivalTime(trip.getArrivalTime());
         existingTrip.setPrice(trip.getPrice());
         existingTrip.setBus(trip.getBus());
         tripService.save(existingTrip);
-        return "redirect:/admin/trip-management";
+        return "redirect:/easy-bus/trip-management";
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.myproject.busticket.models.Bill;
 import com.myproject.busticket.models.Bill_Detail;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.repositories.BillDetailRepository;
@@ -24,5 +25,13 @@ public class BillDetailService {
 
     public void deleteAll(List<Bill_Detail> billDetails) {
         billDetailRepository.deleteAll(billDetails);
+    }
+
+    public List<Bill_Detail> findByBillId(Bill bill) {
+        return billDetailRepository.findByBill(bill);
+    }
+
+    public Bill findByBill(Bill bill) {
+        return billDetailRepository.findByBill(bill).get(0).getBill();
     }
 }

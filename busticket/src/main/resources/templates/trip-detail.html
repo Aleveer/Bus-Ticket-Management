@@ -78,7 +78,7 @@
     <div class="container mt-4 mb-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/admin/trip-management">Trip Management</a></li>
+                <li class="breadcrumb-item"><a href="/easy-bus/trip-management">Trip Management</a></li>
                 <li class="breadcrumb-item active">Trip Details</li>
             </ol>
         </nav>
@@ -104,19 +104,19 @@
                     <strong>Status:</strong> <span th:text="${trip.status}"></span>
                 </p>
                 <p class="card-text">
-                    <strong>Bus:</strong> <a th:href="@{'/admin/bus-detail/' + ${trip.bus.plate}}"
+                    <strong>Bus:</strong> <a th:href="@{'/easy-bus/bus-detail/' + ${trip.bus.plate}}"
                         th:text="${trip.bus.plate}"></a>
                 </p>
                 <p class="card-text">
-                    <strong>Driver:</strong> <a th:href="@{'/admin/driver-detail/' + ${trip.driver.driverId}}"
+                    <strong>Driver:</strong> <a th:href="@{'/easy-bus/driver-detail/' + ${trip.driver.driverId}}"
                         th:text="${trip.driver.account.fullName}"></a>
                 </p>
                 <p class="card-text">
-                    <strong>Controller:</strong> <a th:href="@{'/admin/controller-detail/' + ${trip.controller.id}}"
+                    <strong>Controller:</strong> <a th:href="@{'/easy-bus/controller-detail/' + ${trip.controller.id}}"
                         th:text="${trip.controller.account.fullName}"></a>
                 </p>
                 <p class="card-text">
-                    <strong>Staff:</strong> <a th:href="@{'/admin/staff-detail/' + ${trip.staff.staffId}}"
+                    <strong>Staff:</strong> <a th:href="@{'/easy-bus/staff-detail/' + ${trip.staff.staffId}}"
                         th:text="${trip.staff.account.fullName}"></a>
                 </p>
             </div>

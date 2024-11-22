@@ -74,7 +74,7 @@
     <div class="container mt-4 mb-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/admin/booking-management">Booking Management</a></li>
+                <li class="breadcrumb-item"><a href="/easy-bus/booking-management">Booking Management</a></li>
                 <li class="breadcrumb-item active">Booking Details</li>
             </ol>
         </nav>
@@ -121,16 +121,16 @@
                         </p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>Bus:</strong> <a th:href="@{'/admin/bus-detail/' + ${booking.trip.bus.plate}}"
+                        <p><strong>Bus:</strong> <a th:href="@{'/easy-bus/bus-detail/' + ${booking.trip.bus.plate}}"
                                 class="btn btn-sm btn-outline-primary" th:text="${booking.trip.bus.plate}"></a></p>
                         <p><strong>Driver:</strong> <a
-                                th:href="@{'/admin/driver-detail/' + ${booking.trip.driver.driverId}}"
+                                th:href="@{'/easy-bus/driver-detail/' + ${booking.trip.driver.driverId}}"
                                 th:text="${booking.trip.driver.account.fullName}"></a></p>
                         <p><strong>Controller:</strong> <a
-                                th:href="@{'/admin/controller-detail/' + ${booking.trip.controller.id}}"
+                                th:href="@{'/easy-bus/controller-detail/' + ${booking.trip.controller.id}}"
                                 th:text="${booking.trip.controller.account.fullName}"></a></p>
                         <p><strong>Staff:</strong> <a
-                                th:href="@{'/admin/staff-detail/' + ${booking.trip.staff.staffId}}"
+                                th:href="@{'/easy-bus/staff-detail/' + ${booking.trip.staff.staffId}}"
                                 th:text="${booking.trip.staff.account.fullName}"></a></p>
                     </div>
                 </div>
@@ -177,16 +177,16 @@
                         </p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>Bus:</strong> <a th:href="@{'/admin/bus-detail/' + ${roundTrip.trip.bus.plate}}"
+                        <p><strong>Bus:</strong> <a th:href="@{'/easy-bus/bus-detail/' + ${roundTrip.trip.bus.plate}}"
                                 class="btn btn-sm btn-outline-primary" th:text="${roundTrip.trip.bus.plate}"></a></p>
                         <p><strong>Driver:</strong> <a
-                                th:href="@{'/admin/driver-detail/' + ${roundTrip.trip.driver.driverId}}"
+                                th:href="@{'/easy-bus/driver-detail/' + ${roundTrip.trip.driver.driverId}}"
                                 th:text="${roundTrip.trip.driver.account.fullName}"></a></p>
                         <p><strong>Controller:</strong> <a
-                                th:href="@{'/admin/controller-detail/' + ${roundTrip.trip.controller.id}}"
+                                th:href="@{'/easy-bus/controller-detail/' + ${roundTrip.trip.controller.id}}"
                                 th:text="${roundTrip.trip.controller.account.fullName}"></a></p>
                         <p><strong>Staff:</strong> <a
-                                th:href="@{'/admin/staff-detail/' + ${roundTrip.trip.staff.staffId}}"
+                                th:href="@{'/easy-bus/staff-detail/' + ${roundTrip.trip.staff.staffId}}"
                                 th:text="${roundTrip.trip.staff.account.fullName}"></a></p>
                     </div>
                 </div>

@@ -57,7 +57,7 @@
 <body>
     <div class="container mt-5">
         <h2>Update Bus</h2>
-        <form id="updateBusForm" method="POST" action="/admin/api/update-bus">
+        <form id="updateBusForm" method="POST" action="/api/bus/update-bus">
             <div class="form-group">
                 <label for="plate">Bus Plate</label>
                 <input type="text" class="form-control" id="plate" name="plate" th:value="${bus.plate}" maxlength="12"
@@ -84,7 +84,7 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Update Bus</button>
-            <a href="/admin/bus-management" class="btn btn-secondary">Back to Bus Management</a>
+            <a href="/easy-bus/bus-management" class="btn btn-secondary">Back to Bus Management</a>
         </form>
     </div>
 
@@ -123,7 +123,7 @@
                     seatNames: seatNames
                 };
 
-                fetch("/admin/api/update-bus", {
+                fetch("/api/bus/update-bus", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -135,7 +135,7 @@
                         if (data.message) {
                             alert(data.message);
                             if (data.message === "Bus updated successfully.") {
-                                window.location.href = "/admin/bus-management";
+                                window.location.href = "/easy-bus/bus-management";
                             }
                         }
                     })

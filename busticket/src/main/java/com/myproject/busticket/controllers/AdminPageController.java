@@ -10,22 +10,22 @@ import com.myproject.busticket.dto.RouteDTO;
 import com.myproject.busticket.dto.StaffDTO;
 import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.models.Account;
+import com.myproject.busticket.models.Bill;
 import com.myproject.busticket.models.Booking;
 import com.myproject.busticket.models.Bus;
 import com.myproject.busticket.models.Checkpoint;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.services.AccountService;
+import com.myproject.busticket.services.BillService;
 import com.myproject.busticket.services.BookingService;
 import com.myproject.busticket.services.BusService;
 import com.myproject.busticket.services.CheckpointService;
-import com.myproject.busticket.services.ControllerService;
-import com.myproject.busticket.services.DriverService;
 import com.myproject.busticket.services.RoleService;
-import com.myproject.busticket.services.RouteCheckpointService;
 import com.myproject.busticket.services.RouteService;
-import com.myproject.busticket.services.StaffService;
 import com.myproject.busticket.services.TripService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,33 +38,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@RequestMapping("/admin")
+@RequestMapping("/easy-bus")
 @Controller
 public class AdminPageController {
-	TripService tripService;
-	BusService busService;
-	DriverService driverService;
-	ControllerService controllerService;
-	StaffService staffService;
-	RouteService routeService;
-	CheckpointService checkpointService;
-	AccountService accountService;
-	RoleService roleService;
-	RouteCheckpointService routeCheckpointService;
-	BookingService bookingService;
+	@Autowired
+	private TripService tripService;
 
-	public AdminPageController(TripService tripService, BusService busService, RouteService routeService,
-			CheckpointService checkpointService, AccountService accountService, RoleService roleService,
-			RouteCheckpointService routeCheckpointService, BookingService bookingService) {
-		this.busService = busService;
-		this.tripService = tripService;
-		this.routeService = routeService;
-		this.checkpointService = checkpointService;
-		this.accountService = accountService;
-		this.roleService = roleService;
-		this.routeCheckpointService = routeCheckpointService;
-		this.bookingService = bookingService;
-	}
+	@Autowired
+	private BusService busService;
+
+	@Autowired
+	private RouteService routeService;
+
+	@Autowired
+	private CheckpointService checkpointService;
+
+	@Autowired
+	private AccountService accountService;
+
+	@Autowired
+	private RoleService roleService;
+
+	@Autowired
+	private BookingService bookingService;
+
+	@Autowired
+	private BillService billService;
 
 	@GetMapping("/dashboard")
 	public String dashBoardPage() {
@@ -318,4 +317,27 @@ public class AdminPageController {
 
 		return "booking-management";
 	}
+
+	@GetMapping("/bill-management")
+	public String billPage(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "15") int size, Model model) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Bill> billPages = billService.getAll(pageable);
+
+		int totalPages = billPages.getTotalPages();
+		int startPage = Math.max(0, page - 2);
+		int endPage = Math.min(totalPages - 1, page + 2);
+
+		List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
+				.boxed()
+				.collect(Collectors.toList());
+
+		model.addAttribute("bills", billPages.getContent());
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", billPages.getTotalPages());
+		model.addAttribute("pageNumbers", pageNumbers);
+
+		return "bill-management";
+	}
+
 }

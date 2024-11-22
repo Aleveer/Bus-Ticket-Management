@@ -55,7 +55,7 @@
     <div class="container mt-4 mb-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/admin/bus-management">Bus Management</a></li>
+                <li class="breadcrumb-item"><a href="/easy-bus/bus-management">Bus Management</a></li>
                 <li class="breadcrumb-item active">Bus Details</li>
             </ol>
         </nav>
@@ -154,7 +154,7 @@
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script> -->
     <script>
         function fetchReservations(seatId, page) {
-            fetch(`/api/seats/${seatId}/reservations?page=${page}&size=${pageSize}`)
+            fetch(`/api/seat-reservation/${seatId}/reservations?page=${page}&size=${pageSize}`)
                 .then((response) => response.json())
                 .then((data) => {
                     const reservations = data.reservations;
@@ -195,7 +195,7 @@
         let pageSize = 5; // for reservations
         function fetchAssignedTrips(plate, page = 0) {
             //console.log(`Fetching assigned trips for plate: ${plate}, page: ${page}, size: ${tripsPageSize}`);
-            fetch(`/api/bus/assigned-trips/${plate}?page=${page}&size=${tripsPageSize}`)
+            fetch(`/api/trip/assigned-trips/${plate}?page=${page}&size=${tripsPageSize}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
@@ -253,7 +253,7 @@
         });
 
         function viewTripDetails(tripId) {
-            window.location.href = '/admin/trip-detail/' + tripId;
+            window.location.href = '/easy-bus/trip-detail/' + tripId;
         }
 
         $(document).ready(function () {

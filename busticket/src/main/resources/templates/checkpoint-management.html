@@ -291,7 +291,7 @@
   <script>
     function loadCheckpoints(page) {
       $.ajax({
-        url: '/admin/api/checkpoints',
+        url: '/api/checkpoint/checkpoints',
         data: { page: page, size: 15 },
         success: function (data) {
           var checkpoints = data.checkpoints;
@@ -387,7 +387,7 @@
 
     function viewCheckpointDetail(checkpointId) {
       $.ajax({
-        url: '/admin/api/checkpoint/' + checkpointId,
+        url: '/api/checkpoint/' + checkpointId,
         method: 'GET',
         success: function (data) {
           $('#viewLocation').text(data.placeName);
@@ -406,7 +406,7 @@
 
     function updateCheckpoint(checkpointId) {
       $.ajax({
-        url: '/admin/api/checkpoint/' + checkpointId,
+        url: '/api/checkpoint/' + checkpointId,
         method: 'GET',
         success: function (data) {
           $('#updateCheckpointId').val(data.checkpointId);
@@ -437,7 +437,7 @@
         region: $('#updateRegion').val()
       };
 
-      fetch('/admin/api/update-checkpoint', {
+      fetch('/api/checkpoint/update-checkpoint', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -461,7 +461,7 @@
 
     function deleteCheckpoint(checkpointId) {
       if (confirm('Are you sure you want to delete this checkpoint?')) {
-        fetch('/admin/api/delete-checkpoint', {
+        fetch('/api/checkpoint/delete-checkpoint', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -486,7 +486,7 @@
 
     function viewCheckpointDetail(checkpointId, page = 0) {
       $.ajax({
-        url: '/admin/api/checkpoint/' + checkpointId,
+        url: '/api/checkpoint/' + checkpointId,
         method: 'GET',
         success: function (data) {
           $('#viewLocation').text(data.placeName);
@@ -568,7 +568,7 @@
         region: $('#newRegion').val()
       };
 
-      fetch('/admin/api/new-checkpoint', {
+      fetch('/api/checkpoint/new-checkpoint', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

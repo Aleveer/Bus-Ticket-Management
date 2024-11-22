@@ -631,6 +631,25 @@
             });
         });
 
+        // Handle seat selection
+        $(document).on("click", ".seat.open", function () {
+            $(this).toggleClass("chosen");
+
+            const seatGrid = $(this).closest(".seat-grid");
+            const isReturnGrid = seatGrid.attr("id") === "returnSeatGrid";
+            const selectedSeats = seatGrid.find(".seat.chosen").length;
+            const maxSeats = parseInt(isReturnGrid ? $("#numberOfReturnSeats").val() : $("#numberOfSeats").val());
+
+            // Get selected seat ID
+            const selectedSeat = $(this).attr("data-seatid");
+            console.log("Selected seat:", selectedSeat);
+
+            if (selectedSeats > maxSeats) {
+                alert('You cannot select more than ' + maxSeats + ' seats.');
+                $(this).removeClass('chosen');
+            }
+        });
+
         $(document).ready(function () {
             // Load all data by default
             console.log("Loading all data by default");
@@ -682,32 +701,6 @@
                 loadSeats($(this).val(), "#returnSeatGrid");
             });
 
-            // Handle seat selection
-            $(document).on("click", ".seat.open", function () {
-                const seatGrid = $(this).closest(".seat-grid");
-                const isReturnGrid = seatGrid.attr("id") === "returnSeatGrid";
-                const selectedSeats = seatGrid.find(".seat.chosen").length;
-                const maxSeats = parseInt(isReturnGrid ? $("#numberOfReturnSeats").val() : $("#numberOfSeats").val());
-
-                console.log($("#seatGrid .seat"));
-                $(".seat.open").on("click", function () {
-                    $(this).toggleClass("chosen");
-                    console.log($(this).hasClass("chosen")); // Should log true or false based on the toggle
-                });
-
-                console.log($("#seatGrid .seat.chosen").map(function () {
-                    return $(this).data("seatid");
-                }).get());
-
-
-                if (selectedSeats < maxSeats) {
-                    $(this).toggleClass("chosen");
-                } else if ($(this).hasClass("chosen")) {
-                    $(this).removeClass("chosen");
-                } else {
-                    alert(`You can select up to ${maxSeats} seats for this trip.`);
-                }
-            });
 
 
             // Handle customer selection from modal

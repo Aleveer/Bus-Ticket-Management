@@ -45,7 +45,7 @@
   <div class="container mt-4 mb-4">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/admin/route-management">Route Management</a></li>
+        <li class="breadcrumb-item"><a href="/easy-bus/route-management">Route Management</a></li>
         <li class="breadcrumb-item active">Update Route</li>
       </ol>
     </nav>
@@ -124,7 +124,7 @@
         searchTerm
       );
       $.ajax({
-        url: "/admin/api/checkpoints",
+        url: "/api/checkpoint/checkpoints",
         data: { page: page, size: 10, search: searchTerm },
         method: "GET",
         success: function (data) {
@@ -275,7 +275,7 @@
     }
     function getSelectedCheckpoints(routeCode) {
       console.log("Fetching selected checkpoints for route:", routeCode);
-      fetch(`/admin/api/selected-checkpoints/${routeCode}`)
+      fetch(`/api/route-checkpoint/selected-checkpoints/${routeCode}`)
         .then((response) => response.json())
         .then((data) => {
           console.log("Selected checkpoints data received:", data);
@@ -412,7 +412,7 @@
         const routeCode = window.location.pathname.split("/").pop();
         console.log("Submitting form with data:", currentFormData);
 
-        fetch(`/admin/api/update-route/${routeCode}`, {
+        fetch(`/api/route/update-route/${routeCode}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

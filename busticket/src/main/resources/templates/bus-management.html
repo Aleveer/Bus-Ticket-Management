@@ -48,7 +48,7 @@
                                             <a data-action="search" title="Search"><i class="ft-search"></i></a>
                                         </li>
                                         <li>
-                                            <a th:href="@{/admin/new-bus}" data-action="add-bus" title="Add Bus">
+                                            <a th:href="@{/easy-bus/new-bus}" data-action="add-bus" title="Add Bus">
                                                 <i class="ft-plus"></i>
                                             </a>
                                         </li>
@@ -146,7 +146,7 @@
     <script>
         function loadBuses(page) {
             $.ajax({
-                url: "/admin/api/buses",
+                url: "/api/bus/buses",
                 data: { page: page, size: 15 },
                 success: function (data) {
                     var buses = data.buses;
@@ -244,7 +244,7 @@
         }
 
         function viewBusDetail(busPlate) {
-            window.location.href = "/admin/bus-detail/" + busPlate;
+            window.location.href = "/easy-bus/bus-detail/" + busPlate;
         }
 
         function updateBus(busPlate) {
@@ -253,7 +253,7 @@
 
         function deleteBus(busPlate) {
             if (confirm("Are you sure you want to delete this bus?")) {
-                fetch("/admin/api/delete-bus", {
+                fetch("/api/bus/delete-bus", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

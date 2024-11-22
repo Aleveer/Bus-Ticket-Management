@@ -133,7 +133,7 @@
     <script>
         function loadAccounts(page) {
             $.ajax({
-                url: '/admin/api/accounts',
+                url: '/api/account/accounts',
                 data: { page: page, size: 15 },
                 success: function (data) {
                     var accounts = data.accounts;

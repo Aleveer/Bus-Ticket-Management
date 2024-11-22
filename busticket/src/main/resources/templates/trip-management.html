@@ -54,7 +54,7 @@
                 <div class="heading-elements">
                   <ul class="list-inline mb-0">
                     <li><a data-action="search" title="Search"><i class="ft-search"></i></a></li>
-                    <a th:href="@{/admin/new-trip}" data-action="add-trip" title="Add Trip">
+                    <a th:href="@{/easy-bus/new-trip}" data-action="add-trip" title="Add Trip">
                       <i class="ft-plus"></i>
                     </a>
                   </ul>
@@ -167,7 +167,7 @@
   <script>
     function loadTrips(page) {
       $.ajax({
-        url: '/admin/api/trips',
+        url: '/api/trip/trips',
         data: { page: page, size: 15 },
         success: function (data) {
           var trips = data.trips;
@@ -265,15 +265,15 @@
     }
 
     function viewTripDetails(tripId) {
-      window.location.href = '/admin/trip-detail/' + tripId;
+      window.location.href = '/easy-bus/trip-detail/' + tripId;
     }
 
     function updateTrip(tripId) {
-      window.location.href = '/admin/update-trip/' + tripId;
+      window.location.href = '/easy-bus/update-trip/' + tripId;
     }
 
     function deleteTrip(tripId, forceDelete = false) {
-      const apiEndpoint = forceDelete ? '/admin/api/force-delete-trip/' : '/admin/api/delete-trip/';
+      const apiEndpoint = forceDelete ? '/api/trip/force-delete-trip/' : '/api/trip/delete-trip/';
       const confirmationMessage = forceDelete
         ? 'Are you sure you want to force delete this trip? This will remove all associated bookings and bills.'
         : 'Are you sure you want to delete this trip?';

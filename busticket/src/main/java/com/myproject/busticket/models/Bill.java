@@ -6,8 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
+import java.time.LocalDateTime;
 import com.myproject.busticket.enums.PaymentMethod;
 
 @Entity
@@ -22,7 +21,7 @@ public class Bill {
     @Column(name = "bill_id")
     private int billId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
@@ -31,7 +30,5 @@ public class Bill {
     private PaymentMethod paymentMethod;
 
     @Column(name = "payment_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date paymentDate;
-
+    private LocalDateTime paymentDate;
 }

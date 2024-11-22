@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,21 +30,20 @@ import com.myproject.busticket.services.TripService;
 
 @Controller
 public class BookingController {
-    BookingService bookingService;
-    CustomerService customerService;
-    TripService tripService;
-    RouteCheckpointService routeCheckpointService;
+    @Autowired
+    private BookingService bookingService;
 
-    SeatReservationsService seatReservationsService;
+    @Autowired
+    private CustomerService customerService;
 
-    public BookingController(BookingService bookingService, TripService tripService, CustomerService customerService,
-            SeatReservationsService seatReservationsService, RouteCheckpointService routeCheckpointService) {
-        this.bookingService = bookingService;
-        this.tripService = tripService;
-        this.customerService = customerService;
-        this.seatReservationsService = seatReservationsService;
-        this.routeCheckpointService = routeCheckpointService;
-    }
+    @Autowired
+    private TripService tripService;
+
+    @Autowired
+    private RouteCheckpointService routeCheckpointService;
+
+    @Autowired
+    private SeatReservationsService seatReservationsService;
 
     @GetMapping("/home/index/search")
     public String searchForm(@RequestParam String tripType, @RequestParam String departure,
@@ -120,7 +120,7 @@ public class BookingController {
         return "redirect:/";
     }
 
-    @GetMapping("/admin/booking-detail/{bookingId}")
+    @GetMapping("/easy-bus/booking-detail/{bookingId}")
     public String getBookingDetail(@PathVariable int bookingId, Model model) {
         Booking booking = bookingService.getBookingById(bookingId);
         if (booking == null) {
@@ -262,15 +262,15 @@ public class BookingController {
         return "booking-detail";
     }
 
-    @GetMapping("/admin/new-booking")
+    @GetMapping("/easy-bus/new-booking")
     public String newBooking(Model model) {
         model.addAttribute("booking", new Booking());
         return "new-booking";
     }
 
-    @PostMapping("/admin/new-booking")
+    @PostMapping("/easy-bus/new-booking")
     public String saveBooking(Booking booking) {
         bookingService.createTicket(booking);
-        return "redirect:/admin/booking-management";
+        return "redirect:/easy-bus/booking-management";
     }
 }

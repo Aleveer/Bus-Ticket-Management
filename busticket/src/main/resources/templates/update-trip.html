@@ -39,7 +39,7 @@
     <div class="container mt-4 mb-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/admin/trip-management">Trip Management</a></li>
+                <li class="breadcrumb-item"><a href="/easy-bus/trip-management">Trip Management</a></li>
                 <li class="breadcrumb-item active">Update Trip</li>
             </ol>
         </nav>
@@ -208,7 +208,7 @@
 
         function loadBuses(page, searchTerm = "") {
             $.ajax({
-                url: "/admin/api/buses",
+                url: "/api/bus/buses",
                 data: { page: page, size: 10, search: searchTerm },
                 method: "GET",
                 success: function (data) {
@@ -280,7 +280,7 @@
         }
         function loadDrivers(page, searchTerm = "") {
             $.ajax({
-                url: "/admin/api/drivers",
+                url: "/api/driver/drivers",
                 data: { page: page, size: 10, search: searchTerm },
                 method: "GET",
                 success: function (data) {
@@ -353,7 +353,7 @@
         }
         function loadControllers(page, searchTerm = "") {
             $.ajax({
-                url: "/admin/api/controllers",
+                url: "/api/controller/controllers",
                 data: { page: page, size: 10, search: searchTerm },
                 method: "GET",
                 success: function (data) {
@@ -426,7 +426,7 @@
         }
         function loadStaff(page, searchTerm = "") {
             $.ajax({
-                url: "/admin/api/staffs",
+                url: "/api/staff/staffs",
                 data: { page: page, size: 10, search: searchTerm },
                 method: "GET",
                 success: function (data) {
@@ -498,7 +498,7 @@
         }
         function loadRoutes(page, searchTerm = "") {
             $.ajax({
-                url: "/admin/api/routes",
+                url: "/api/route/routes",
                 data: { page: page, size: 10, search: searchTerm },
                 method: "GET",
                 success: function (data) {
@@ -571,7 +571,7 @@
         }
 
         function getSelectedItems(tripId) {
-            fetch(`/admin/api/selected-trip/${tripId}`)
+            fetch(`/api/trip/selected-trip/${tripId}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error(`Error fetching trip details: ${response.statusText}`);
@@ -643,7 +643,7 @@
         function loadUpcomingTrips(entityType, entityId) {
             console.log("Loading upcoming trips for", entityType, entityId); // Debug log
             $.ajax({
-                url: "/admin/api/upcoming-trips",
+                url: "/api/trip/upcoming-trips",
                 data: { entityType: entityType, entityId: entityId },
                 method: "GET",
                 success: function (data) {
@@ -774,14 +774,14 @@
                 console.log("Submitting trip data:", tripData);
 
                 $.ajax({
-                    url: "/admin/api/update-trip/" + tripId,
+                    url: "/api/trip/update-trip/" + tripId,
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(tripData),
                     success: function (response) {
                         console.log("Trip updated successfully:", response);
                         alert("Trip updated successfully!");
-                        window.location.href = "/admin/trip-management";
+                        window.location.href = "/easy-bus/trip-management";
                     },
                     error: function (error) {
                         console.error("Error updating trip:", error);

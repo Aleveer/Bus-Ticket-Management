@@ -11,7 +11,7 @@
 <body>
     <div class="container mt-5">
         <h2>Add New Bus</h2>
-        <form id="newBusForm" method="POST" action="/admin/api/new-bus">
+        <form id="newBusForm" method="POST" action="/api/bus/new-bus">
             <div class="form-group">
                 <label for="plate">Bus Plate</label>
                 <input type="text" class="form-control" id="plate" name="plate" maxlength="12" required />
@@ -31,7 +31,7 @@
                 <!-- Dynamic seat name input fields will be added here -->
             </div>
             <button type="submit" class="btn btn-primary">Add Bus</button>
-            <a href="/admin/bus-management" class="btn btn-secondary">Back to Bus Management</a>
+            <a href="/easy-bus/bus-management" class="btn btn-secondary">Back to Bus Management</a>
         </form>
     </div>
 
@@ -70,7 +70,7 @@
                     seatNames: generateSeatNames($("#numberOfSeat").val())
                 };
 
-                fetch("/admin/api/new-bus", {
+                fetch("/api/bus/new-bus", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -82,7 +82,7 @@
                         if (data.message) {
                             alert(data.message);
                             if (data.message === "Bus added successfully.") {
-                                window.location.href = "/admin/bus-management";
+                                window.location.href = "/easy-bus/bus-management";
                             }
                         }
                     })

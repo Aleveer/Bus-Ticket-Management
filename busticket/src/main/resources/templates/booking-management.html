@@ -46,7 +46,7 @@
                                 <div class="heading-elements">
                                     <ul class="list-inline mb-0">
                                         <li><a data-action="search" title="Search"><i class="ft-search"></i></a></li>
-                                        <a th:href="@{/admin/new-booking}" data-action="add-booking"
+                                        <a th:href="@{/easy-bus/new-booking}" data-action="add-booking"
                                             title="Add Booking">
                                             <i class="ft-plus"></i>
                                         </a>
@@ -146,7 +146,7 @@
     <script>
         function loadBookings(page) {
             $.ajax({
-                url: '/admin/api/bookings',
+                url: '/api/booking/bookings',
                 data: { page: page, size: 15 },
                 success: function (data) {
                     var bookings = data.bookings;
@@ -239,16 +239,16 @@
         }
 
         function viewBookingDetails(bookingId) {
-            window.location.href = '/admin/booking-detail/' + bookingId;
+            window.location.href = '/easy-bus/booking-detail/' + bookingId;
         }
 
         function updateBooking(bookingId) {
-            window.location.href = '/admin/update-booking/' + bookingId;
+            window.location.href = '/easy-bus/update-booking/' + bookingId;
         }
 
         function deleteBooking(bookingId) {
             if (confirm('Are you sure you want to delete this booking?')) {
-                fetch('/admin/api/delete-booking/' + bookingId, {
+                fetch('/api/booking/delete-booking/' + bookingId, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

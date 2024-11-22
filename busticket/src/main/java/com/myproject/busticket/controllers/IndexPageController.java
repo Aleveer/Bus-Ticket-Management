@@ -74,7 +74,7 @@ public class IndexPageController {
     public String searchBillingInfoPage() {
         return "search-billing-info";
     }
-    
+
     @GetMapping("/403")
     public String error403PageTest() {
         return "403";
@@ -83,5 +83,10 @@ public class IndexPageController {
     @GetMapping("/404")
     public String error404PageTest() {
         return "404";
+    }
+
+    @GetMapping("/login")
+    public String login(){
+        return "login";
     }
 }

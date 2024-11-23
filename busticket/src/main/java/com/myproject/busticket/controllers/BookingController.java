@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.myproject.busticket.dto.BookingInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -100,7 +101,7 @@ public class BookingController {
     // return "payment";
     // }
     @PostMapping("/home/index/booking/oneway")
-    public String booking(@ModelAttribute Booking booking) {
+    public String booking(@ModelAttribute BookingInfoDTO bookingInfoDTO) {
 
         return "redirect:/";
     }

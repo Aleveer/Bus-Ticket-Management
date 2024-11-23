@@ -84,4 +84,27 @@ public class AccountAPI {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/account-detail/{accountId}")
+    public ResponseEntity<Map<String, Object>> getAccountDetails(@RequestParam int accountId) {
+        Account account = accountService.getById(accountId);
+        if (account == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        AccountDTO accountDTO = new AccountDTO(account.getId(), account.getEmail(),
+                account.getPassword(),
+                account.getFullName(), account.getPhone(),
+                roleService.getRoleById(account.getRole().getRoleId()),
+                account.getStatus(),
+                account.getVerificationCode(), account.getVerificationExpiration(),
+                account.getLoginToken(),
+                account.getPasswordResetToken(), account.getPasswordResetExpiration(),
+                account.isEnabled());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("account", accountDTO);
+
+        return ResponseEntity.ok(response);
+    }
 }

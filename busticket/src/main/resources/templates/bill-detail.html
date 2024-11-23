@@ -64,9 +64,50 @@
                         class="btn btn-sm btn-outline-primary" th:text="${trip.staff.account.fullName}"></a></p>
                 <p><strong>Route:</strong> <a th:href="@{'/easy-bus/route-detail/' + ${trip.route.code}}"
                         class="btn btn-sm btn-outline-primary" th:text="${trip.route.code}"></a></p>
-                <!--Round trip id-->
-                <p th:if="${booking.roundTripId != null}"><strong>Round Trip ID:</strong> <a
+                <!-- Round trip id -->
+                <p th:if="${booking != null and booking.roundTripId != null}"><strong>Round Trip ID:</strong> <a
                         th:text="${booking.roundTripId}"></a></p>
+            </div>
+        </div>
+
+        <!-- Round Trip Section -->
+        <div class="card mb-4" th:if="${roundTrip != null}">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Round Trip</h5>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="roundTripSwitch" th:checked="true" disabled>
+                    <label class="custom-control-label" for="roundTripSwitch"></label>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Trip ID:</strong> <span th:text="${roundTrip.tripId}"></span></p>
+                        <p><strong>Departure:</strong> <span th:text="${roundTrip.departureTime}"></span></p>
+                        <p><strong>Arrival:</strong> <span th:text="${roundTrip.arrivalTime}"></span></p>
+                        <p><strong>Price:</strong> <span th:text="${roundTrip.price}"></span></p>
+                        <p><strong>Status:</strong>
+                            <span th:class="'badge ' + 
+                                (${roundTrip.status == 'waiting'} ? 'badge-warning' : 
+                                (${roundTrip.status == 'arriving'} ? 'badge-info' : 
+                                (${roundTrip.status == 'finished'} ? 'badge-success' : 'badge-secondary')))"
+                                th:text="${roundTrip.status}"></span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Bus:</strong> <a th:href="@{'/easy-bus/bus-detail/' + ${roundTrip.bus.plate}}"
+                                class="btn btn-sm btn-outline-primary" th:text="${roundTrip.bus.plate}"></a></p>
+                        <p><strong>Driver:</strong> <a
+                                th:href="@{'/easy-bus/driver-detail/' + ${roundTrip.driver.driverId}}"
+                                th:text="${roundTrip.driver.account.fullName}"></a></p>
+                        <p><strong>Controller:</strong> <a
+                                th:href="@{'/easy-bus/controller-detail/' + ${roundTrip.controller.id}}"
+                                th:text="${roundTrip.controller.account.fullName}"></a></p>
+                        <p><strong>Staff:</strong> <a
+                                th:href="@{'/easy-bus/staff-detail/' + ${roundTrip.staff.staffId}}"
+                                th:text="${roundTrip.staff.account.fullName}"></a></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

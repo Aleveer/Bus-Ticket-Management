@@ -9,9 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.myproject.busticket.dto.BillDetailDTO;
-import com.myproject.busticket.mapper.BillMapper;
-import com.myproject.busticket.mapper.TripMapper;
 import com.myproject.busticket.models.Bill;
 import com.myproject.busticket.models.Bill_Detail;
 import com.myproject.busticket.models.Booking;
@@ -40,12 +37,6 @@ public class BillController {
     @Autowired
     private BookingService bookingService;
 
-    @Autowired
-    private BillMapper billMapper;
-
-    @Autowired
-    private TripMapper tripMapper;
-
     @GetMapping("/easy-bus/bill-detail/{billId}")
     public String getBillDetails(@PathVariable int billId, Model model) {
         Bill bill = billService.findById(billId);
@@ -72,16 +63,6 @@ public class BillController {
             return "redirect:/easy-bus/bill-management";
         }
 
-        List<BillDetailDTO> billDetailsDTO = billDetails.stream()
-                .map(billDetail -> new BillDetailDTO(
-                        billDetail.getId(),
-                        billMapper.entityToDTO(billDetail.getBill()),
-                        tripMapper.entityToDTO(billDetail.getTrip()),
-                        billDetail.getNumberOfTicket(),
-                        billDetail.getFee(),
-                        billDetail.getTicketType()))
-                .collect(Collectors.toList());
-
         // Retrieve bookings for the customer and trip
         List<Booking> bookings = bookingService.findByCustomer(customer);
         Booking booking = null;
@@ -107,8 +88,7 @@ public class BillController {
         model.addAttribute("customer", customer);
         model.addAttribute("trip", trip);
         model.addAttribute("roundTrip", roundTrip);
-        model.addAttribute("billDetails", billDetailsDTO);
-        // model.addAttribute("bookings", bookings);
+        model.addAttribute("roundTripId", roundTrip != null ? roundTrip.getTripId() : null);
         model.addAttribute("booking", booking);
 
         return "bill-detail";

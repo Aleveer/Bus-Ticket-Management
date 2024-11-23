@@ -34,4 +34,8 @@ public class BillDetailService {
     public Bill findByBill(Bill bill) {
         return billDetailRepository.findByBill(bill).get(0).getBill();
     }
+
+    public void save(Bill_Detail roundTripBillDetail) {
+        billDetailRepository.save(roundTripBillDetail);
+    }
 }

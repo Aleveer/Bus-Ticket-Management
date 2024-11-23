@@ -13,36 +13,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myproject.busticket.dto.CustomerDTO;
-import com.myproject.busticket.models.Customer;
-import com.myproject.busticket.services.CustomerService;
+import com.myproject.busticket.models.Role;
+import com.myproject.busticket.services.RoleService;
 
 @RestController
-@RequestMapping("/api/customer")
-public class CustomerAPI {
+@RequestMapping("/api/role")
+public class RoleAPI {
     @Autowired
-    private CustomerService customerService;
+    private RoleService roleService;
 
-    @GetMapping("/customers")
-    public ResponseEntity<Map<String, Object>> getGuests(@RequestParam(defaultValue = "0") int page,
+    @GetMapping("/roles")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getRoles(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Customer> customerPages = customerService.getAll(pageable);
+        Page<Role> rolePage = roleService.getAll(pageable);
 
-        List<CustomerDTO> customerDTOs = customerPages.getContent().stream()
-                .map(customer -> new CustomerDTO(
-                        customer.getCustomerId(),
-                        customer.getEmail(),
-                        customer.getName(),
-                        customer.getPhone()))
+        List<Role> roles = rolePage.getContent().stream()
+                .map(role -> new Role(role.getRoleId(), role.getRoleName()))
                 .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();
-        response.put("customers", customerDTOs);
+        response.put("roles", roles);
         response.put("currentPage", page);
-        response.put("totalPages", customerPages.getTotalPages());
+        response.put("totalPages", rolePage.getTotalPages());
 
         return ResponseEntity.ok(response);
     }

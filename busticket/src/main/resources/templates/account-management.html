@@ -70,6 +70,7 @@
                                                 <th scope="col">Name</th>
                                                 <th scope="col">Phone</th>
                                                 <th scope="col">Status</th>
+                                                <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="accountTableBody">
@@ -80,6 +81,20 @@
                                                 <td th:text="${account.fullName}"></td>
                                                 <td th:text="${account.phone}"></td>
                                                 <td th:text="${account.status}"></td>
+                                                <td>
+                                                    <button class="btn btn-primary btn-sm" title="View Details"
+                                                            onclick="viewAccountDetails('${account.id}')">
+                                                        <i class="ft-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-warning btn-sm" title="Update Account"
+                                                            onclick="updateAccount('${account.id}')">
+                                                        <i class="ft-settings"></i>
+                                                    </button>
+                                                    <button class="btn btn-danger btn-sm" title="Delete Account"
+                                                            onclick="deleteAccount('${account.id}')">
+                                                        <i class="ft-trash"></i>
+                                                    </button>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -153,6 +168,28 @@
                             '<td>' + account.fullName + '</td>' +
                             '<td>' + account.phone + '</td>' +
                             '<td>' + account.status + '</td>' +
+                            "<td>" +
+                            '<button class="btn btn-primary btn-sm" title="View Details" onclick="viewAccountDetails(\'' +
+                            account.id +
+                            "')\">" +
+                            '<i class="ft-eye"></i>' +
+                            "</button>" +
+                            '<button class="btn btn-warning btn-sm" title="Update Account" onclick="updateAccount(\'' +
+                            account.id +
+                            "')\">" +
+                            '<i class="ft-settings"></i>' +
+                            "</button>" +
+                            '<button class="btn btn-danger btn-sm" title="Delete Account" onclick="deleteAccount(\'' +
+                            account.id +
+                            "')\">" +
+                            '<i class="ft-trash"></i>' +
+                            "</button>" +
+                            // '<button class="btn btn-danger btn-sm" title="Force Delete Trip" onclick="deleteTrip(\'' +
+                            // trip.tripId +
+                            // "', true)\">" +
+                            // '<i class="ft-trash"></i>' +
+                            // "</button>" +
+                            "</td>" +
                             '</tr>'
                         );
                     });
@@ -207,6 +244,14 @@
                     }
                 }
             });
+        }
+
+        function viewAccountDetails(id) {
+            window.location.href = '/easy-bus/account-detail/' + id;
+        }
+
+        function updateAccount(id) {
+            window.location.href = '/easy-bus/update-account/' + id;
         }
 
         // Load the first page of accounts when the page loads

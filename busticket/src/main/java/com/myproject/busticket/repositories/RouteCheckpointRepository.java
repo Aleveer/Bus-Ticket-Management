@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import com.myproject.busticket.models.Checkpoint;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Route_Checkpoint;
-import org.springframework.data.repository.query.Param;
 
 public interface RouteCheckpointRepository extends JpaRepository<Route_Checkpoint, Integer> {
     @Query("select distinct rc.checkpoint.province from Route_Checkpoint rc")

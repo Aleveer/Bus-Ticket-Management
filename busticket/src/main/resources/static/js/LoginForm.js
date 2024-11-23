@@ -1,4 +1,20 @@
+// Function to get query parameters
+function getQueryParam(param) {
+    let urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
 
+// Display success message
+let successMessage = getQueryParam('message');
+if (successMessage) {
+    alert(successMessage);
+}
+
+// Display error message
+let errorMessage = getQueryParam('error');
+if (errorMessage) {
+    alert(errorMessage);
+}
 document.getElementById("loginForm").addEventListener("submit", async function (event) {
     event.preventDefault();
     const email = document.getElementById("email").value;

@@ -160,6 +160,7 @@
                   </h4>
               </div>
               <input type="hidden" id="ticketPrice" th:value="${selectedTrip.price}">
+              
             </div>
         </div>    
     </div>
@@ -237,7 +238,7 @@
             <div>
               <button type="button" class="payment-button" onclick="history.back()">Hủy</button>
               <form id="form-test" >
-                <input type="hidden" name="trip_id" th:value="${selectedTrip.tripId}" />
+                <input type="hidden" id="trip_id" th:value="${selectedTrip.tripId}" />
                 <button type="submit" class="payment-button" onclick="showVisaCard()" >Xác Nhận</button>
               </form>
             </div>
@@ -409,25 +410,31 @@
           }
        });
        
+       const selectedSeats = document.querySelectorAll(".row_2 .seat.selected");
        const listselectedSeatID = [...selectedSeats].map(seat => seat.id);
         const submitForm = document.getElementById('form-test');
         submitForm.addEventListener('submit', function (event) {
             event.preventDefault();
             const formData = new FormData(submitForm);
+            console.log(document.getElementById('trip_id').value);
+            console.log(document.getElementById('count').innerText);
+            console.log(listselectedSeatID);
+            console.log(document.getElementById('total').innerText);
             const ticket = {
+                cusDetail: {
+                  name: document.getElementById('name').value,
+                  phone: document.getElementById('phone').value,
+                  email: document.getElementById('email').value,
+                  
+                },
                 tripDetail: {
                     trip_id: document.getElementById('trip_id').innerText,
                     number_of_seat: document.getElementById('count').innerText,
                     list_of_seat: listselectedSeatID,
                     total_price: document.getElementById('total').innerText,
 
-                },
-                cusDetail: {
-                    name: document.getElementById('name').value,
-                    phone: document.getElementById('phone').value,
-                    email: document.getElementById('email').value,
-                    
                 }
+                
             };
             fetch('/home/index/booking/oneway', {
                 method: 'POST',

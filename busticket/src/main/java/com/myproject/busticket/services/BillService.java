@@ -37,4 +37,8 @@ public class BillService {
         return billRepository.findAll(pageable);
     }
 
+    public void save(Bill bill) {
+        billRepository.save(bill);
+    }
+
 }

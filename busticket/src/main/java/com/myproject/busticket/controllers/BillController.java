@@ -1,22 +1,18 @@
 package com.myproject.busticket.controllers;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
+import org.springframework.web.bind.annotation.PostMapping;
 import com.myproject.busticket.models.Bill;
 import com.myproject.busticket.models.Bill_Detail;
-import com.myproject.busticket.models.Booking;
 import com.myproject.busticket.models.Customer;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.services.BillDetailService;
 import com.myproject.busticket.services.BillService;
-import com.myproject.busticket.services.BookingService;
 import com.myproject.busticket.services.CustomerService;
 import com.myproject.busticket.services.TripService;
 
@@ -63,27 +59,6 @@ public class BillController {
             roundTrip = tripService.findTripById(billDetails.get(1).getTrip().getTripId());
         }
 
-        // // Retrieve bookings for the customer and trip
-        // List<Booking> bookings = bookingService.findByCustomer(customer);
-        // Booking booking = null;
-
-        // bookings = bookings.stream().filter(b -> b.getTrip().getTripId() ==
-        // trip.getTripId())
-        // .collect(Collectors.toList());
-
-        // // check bookings for round trip
-        // if (bookings.size() == 1) {
-        // booking = bookings.get(0);
-        // if (booking.isRoundTrip() && booking.getRoundTripId() != null) {
-        // List<Booking> roundTripBookings =
-        // bookingService.findByRoundTripId(booking.getRoundTripId());
-        // if (!roundTripBookings.isEmpty()) {
-        // roundTrip = roundTripBookings.get(0).getTrip();
-        // }
-        // }
-        // } else if (!bookings.isEmpty()) {
-        // roundTrip = bookings.get(bookings.size() - 1).getTrip();
-        // }
         float totalPrice = 0;
         for (Bill_Detail bill_Detail : billDetails) {
             totalPrice += bill_Detail.getFee();
@@ -98,5 +73,17 @@ public class BillController {
         // model.addAttribute("booking", booking);
         model.addAttribute("billDetails", billDetails);
         return "bill-detail";
+    }
+
+    @GetMapping("/easy-bus/new-bill")
+    public String newBill(Model model) {
+        model.addAttribute("bill", new Bill());
+        return "new-bill";
+    }
+
+    @PostMapping("/easy-bus/new-bill")
+    public String saveBill(Bill bill) {
+        billService.save(bill);
+        return "redirect:/easy-bus/bill-management";
     }
 }

@@ -182,7 +182,8 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>Trip ID:</strong> <span th:text="${roundTrip.tripId}"></span></p>
+                        <p><strong>Trip ID:</strong> <a th:href="@{'/easy-bus/trip-detail/' + ${roundTrip.tripId}}"
+                                class="btn btn-sm btn-outline-primary" th:text="${roundTrip.tripId}"></a></p>
                         <p><strong>Departure:</strong> <span th:text="${roundTrip.departureTime}"></span></p>
                         <p><strong>Arrival:</strong> <span th:text="${roundTrip.arrivalTime}"></span></p>
                         <p><strong>Price:</strong> <span th:text="${roundTrip.price}"></span></p>

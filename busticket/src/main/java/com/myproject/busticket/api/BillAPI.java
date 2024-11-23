@@ -67,48 +67,51 @@ public class BillAPI {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/bill-detail/{billId}")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> getBillDetails(@PathVariable int billId) {
-        Map<String, Object> response = new HashMap<>();
+    // @GetMapping("/bill-detail/{billId}")
+    // @ResponseBody
+    // public ResponseEntity<Map<String, Object>> getBillDetails(@PathVariable int
+    // billId) {
+    // Map<String, Object> response = new HashMap<>();
 
-        Bill bill = billService.findById(billId);
-        if (bill == null) {
-            response.put("errorMessage", "Bill not found.");
-            return ResponseEntity.badRequest().body(response);
-        }
+    // Bill bill = billService.findById(billId);
+    // if (bill == null) {
+    // response.put("errorMessage", "Bill not found.");
+    // return ResponseEntity.badRequest().body(response);
+    // }
 
-        Customer customer = customerService.getCustomerById(bill.getCustomer().getCustomerId());
-        if (customer == null) {
-            response.put("errorMessage", "Customer not found.");
-            return ResponseEntity.badRequest().body(response);
-        }
+    // Customer customer =
+    // customerService.getCustomerById(bill.getCustomer().getCustomerId());
+    // if (customer == null) {
+    // response.put("errorMessage", "Customer not found.");
+    // return ResponseEntity.badRequest().body(response);
+    // }
 
-        List<Bill_Detail> billDetails = billDetailService.findByBillId(bill);
-        if (billDetails == null || billDetails.isEmpty()) {
-            response.put("errorMessage", "Bill details not found.");
-            return ResponseEntity.badRequest().body(response);
-        }
+    // List<Bill_Detail> billDetails = billDetailService.findByBillId(bill);
+    // if (billDetails == null || billDetails.isEmpty()) {
+    // response.put("errorMessage", "Bill details not found.");
+    // return ResponseEntity.badRequest().body(response);
+    // }
 
-        Trip trip = tripService.findTripById(billDetails.get(0).getTrip().getTripId());
-        if (trip == null) {
-            response.put("errorMessage", "Trip not found.");
-            return ResponseEntity.badRequest().body(response);
-        }
+    // Trip trip =
+    // tripService.findTripById(billDetails.get(0).getTrip().getTripId());
+    // if (trip == null) {
+    // response.put("errorMessage", "Trip not found.");
+    // return ResponseEntity.badRequest().body(response);
+    // }
 
-        List<BillDetailDTO> billDetailsDTO = billDetails.stream()
-                .map(billDetail -> new BillDetailDTO(
-                        billDetail.getId(),
-                        billMapper.entityToDTO(billDetail.getBill()),
-                        tripMapper.entityToDTO(billDetail.getTrip()),
-                        billDetail.getNumberOfTicket(),
-                        billDetail.getFee(),
-                        billDetail.getTicketType()))
-                .collect(Collectors.toList());
+    // List<BillDetailDTO> billDetailsDTO = billDetails.stream()
+    // .map(billDetail -> new BillDetailDTO(
+    // billDetail.getId(),
+    // billMapper.entityToDTO(billDetail.getBill()),
+    // tripMapper.entityToDTO(billDetail.getTrip()),
+    // billDetail.getNumberOfTicket(),
+    // billDetail.getFee(),
+    // billDetail.getTicketType()))
+    // .collect(Collectors.toList());
 
-        response.put("bill", billDetailsDTO);
-        response.put("customer", customer);
+    // response.put("bill", billDetailsDTO);
+    // response.put("customer", customer);
 
-        return ResponseEntity.ok(response);
-    }
+    // return ResponseEntity.ok(response);
+    // }
 }

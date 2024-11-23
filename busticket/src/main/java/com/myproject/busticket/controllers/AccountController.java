@@ -53,4 +53,15 @@ public class AccountController {
         model.addAttribute("account", account);
         return "account-detail";
     }
+
+    @GetMapping("/easy-bus/update-account/{accountId}")
+    public String updateAccount(@PathVariable int accountId,Model model){
+        Account account = accountService.getById(accountId);
+        if(account == null){
+            model.addAttribute("errorMessage", "Account not found.");
+            return "redirect:/easy-bus/account-management";
+        }
+        model.addAttribute("account",account);
+        return "update-account";
+    }
 }

@@ -5,4 +5,6 @@ import com.myproject.busticket.models.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     Customer findByEmail(String email);
+
+    Boolean existsByEmail(String email);
 }

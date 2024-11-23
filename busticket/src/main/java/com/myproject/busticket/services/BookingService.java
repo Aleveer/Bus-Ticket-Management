@@ -1,27 +1,91 @@
 package com.myproject.busticket.services;
 
+import com.myproject.busticket.dto.BookingInfoDTO;
+import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.Booking;
 import com.myproject.busticket.models.Customer;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.repositories.BookingRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BookingService {
-    @Autowired
     private BookingRepository bookingRepository;
+    private TripService tripService;
+    private AccountService accountService;
+    private CustomerService customerService;
+    private SeatReservationsService seatReservationsService;
+
+    public BookingService(BookingRepository bookingRepository, TripService tripService, AccountService accountService, CustomerService customerService, SeatReservationsService seatReservationsService) {
+        this.bookingRepository = bookingRepository;
+        this.tripService = tripService;
+        this.accountService = accountService;
+        this.customerService = customerService;
+        this.seatReservationsService = seatReservationsService;
+    }
 
     public Booking getBookingById(int bookingId) {
         return bookingRepository.findById(bookingId).orElse(null);
     }
 
-    public void createTicket(Booking booking) {
-        bookingRepository.saveAndFlush(booking);
+
+    public boolean checkLogin(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account currentAccount = (Account) authentication.getPrincipal();
+        return currentAccount != null;
+    }
+    public void createTicketOneWay(BookingInfoDTO booking) {
+        Booking newBooking = new Booking();
+
+        String email = booking.getCustomer().getEmail();
+//        if (checkLogin()) {
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            Account currentAccount = (Account) authentication.getPrincipal();
+//            newBooking.setCustomer(customerService.getCustomerByEmail(currentAccount.getEmail()));
+//        } else {
+//            if (accountService.existsByEmail(email)){
+//                newBooking.setCustomer(customerService.getCustomerByEmail(email));
+//            } else if (customerService.existsByEmail(email)) {
+//                newBooking.setCustomer(customerService.getCustomerByEmail(email));
+//            } else {
+//                Customer newCustomer = new Customer();
+//                newCustomer.setEmail(email);
+//                newCustomer.setName(booking.getCustomer().getName());
+//                newCustomer.setPhone(booking.getCustomer().getPhone());
+//                customerService.create(newCustomer);
+//                newBooking.setCustomer(newCustomer);
+//            }
+//        }
+        Customer newCustomer = new Customer();
+        newCustomer.setEmail(email);
+        newCustomer.setName(booking.getCustomer().getName());
+        newCustomer.setPhone(booking.getCustomer().getPhone());
+        customerService.create(newCustomer);
+        newBooking.setCustomer(newCustomer);
+
+        int tripId = booking.getTicketInfoDTO().getTripId();
+        newBooking.setTrip(tripService.findTripById(tripId));
+
+        byte numberOfSeat = booking.getTicketInfoDTO().getNumberOfSeat();
+        newBooking.setNumberOfSeat(numberOfSeat);
+        newBooking.setRoundTrip(false);
+        newBooking.setRoundTripId(null);
+        bookingRepository.save(newBooking);
+
+        List<Integer> listSeatId = booking.getTicketInfoDTO().getSeatNumbers().stream()
+                .map(Integer::valueOf)
+                .toList();
+        int bookingID = newBooking.getBookingId();
+        seatReservationsService.updateStatusWithBooking(listSeatId, bookingID);
     }
 
     public List<Booking> findByTrip(Trip trip) {
@@ -55,4 +119,5 @@ public class BookingService {
     public List<Booking> findByCustomer(Customer customer) {
         return bookingRepository.findByCustomer(customer);
     }
+
 }

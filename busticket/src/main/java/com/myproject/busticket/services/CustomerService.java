@@ -29,6 +29,13 @@ public class CustomerService {
         return customerRepository.findById(customerId).orElse(null);
     }
 
+    public Customer getCustomerByEmail(String email) {
+        return customerRepository.findByEmail(email);
+    }
+
+    public boolean existsByEmail(String email) {
+        return customerRepository.existsByEmail(email);
+    }
     public Customer create(Customer customer) {
         return customerRepository.saveAndFlush(customer);
     }

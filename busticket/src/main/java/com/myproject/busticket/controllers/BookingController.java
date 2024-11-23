@@ -98,7 +98,7 @@ public class BookingController {
     // }
     @PostMapping("/home/index/booking/oneway")
     public String booking(@RequestBody BookingInfoDTO bookingInfoDTO) {
-        System.out.println(bookingInfoDTO);
+        bookingService.createTicketOneWay(bookingInfoDTO);
         return "redirect:/";
     }
 
@@ -112,8 +112,8 @@ public class BookingController {
 
         // set isRoundTrip to true
         // set roundTripID
-        bookingService.createTicket(outboundTicket);
-        bookingService.createTicket(returnTicket);
+//        bookingService.createTicket(outboundTicket);
+//        bookingService.createTicket(returnTicket);
         return "redirect:/";
     }
 
@@ -267,7 +267,7 @@ public class BookingController {
 
     @PostMapping("/easy-bus/new-booking")
     public String saveBooking(Booking booking) {
-        bookingService.createTicket(booking);
+        //bookingService.createTicket(booking);
         return "redirect:/easy-bus/booking-management";
     }
 }

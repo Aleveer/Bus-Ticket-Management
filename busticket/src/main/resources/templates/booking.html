@@ -425,17 +425,16 @@
                   name: document.getElementById('name').value,
                   phone: document.getElementById('phone').value,
                   email: document.getElementById('email').value,
-                  
                 },
                 tripDetail: {
-                    trip_id: document.getElementById('trip_id').innerText,
-                    number_of_seat: document.getElementById('count').innerText,
-                    list_of_seat: listselectedSeatID,
-                    total_price: document.getElementById('total').innerText,
-
+                    tripId: parseInt(document.getElementById('trip_id').value),
+                    numberOfSeat: parseInt(document.getElementById('count').innerText),
+                    seatNumbers: listselectedSeatID,
+                    price: parseFloat(document.getElementById('total').innerText),
                 }
                 
             };
+
             fetch('/home/index/booking/oneway', {
                 method: 'POST',
                 headers: {
@@ -443,8 +442,8 @@
                 },
                 body: JSON.stringify(ticket)
             })
-                .then(response => response.json())
-                .then(data => console.log(data))
+
+                .then(data => console.log("data here" + data))
                 .catch(error => console.error(error));
         });
 

@@ -61,4 +61,8 @@ public class SeatReservationsService {
     public List<SeatReservations> findByBooking(Booking booking) {
         return seatReservationsRepository.findByBooking(booking);
     }
+
+    public void updateStatusWithBooking(List<Integer> seatId, int bookingId) {
+        seatReservationsRepository.updateStatusWithBooking(seatId, bookingId);
+    }
 }

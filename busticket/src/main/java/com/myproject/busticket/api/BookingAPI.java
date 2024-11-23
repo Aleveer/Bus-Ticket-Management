@@ -272,7 +272,7 @@ public class BookingAPI {
                     seatReservationService.save(seatReservation);
                 }
                 customerService.create(customer);
-                bookingService.createTicket(booking);
+                //bookingService.createTicket(booking);
                 response.put("message", "Booking created successfully.");
             }
 

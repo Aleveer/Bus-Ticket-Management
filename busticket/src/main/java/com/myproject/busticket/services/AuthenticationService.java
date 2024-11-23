@@ -1,8 +1,10 @@
 package com.myproject.busticket.services;
 
-import jakarta.mail.MessagingException;
-
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,23 +12,21 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.myproject.busticket.enums.AccountStatus;
+import com.myproject.busticket.exceptions.AccountStatusException;
+import com.myproject.busticket.exceptions.ModelNotFoundException;
+import com.myproject.busticket.exceptions.TimeOutException;
+import com.myproject.busticket.exceptions.ValidationException;
 import com.myproject.busticket.models.Account;
-import com.myproject.busticket.models.VerifyAccountModel;
 import com.myproject.busticket.models.LoginUserModel;
 import com.myproject.busticket.models.RegisterUserModel;
 import com.myproject.busticket.models.Role;
-import com.myproject.busticket.enums.AccountStatus;
-import com.myproject.busticket.exceptions.ModelNotFoundException;
-import com.myproject.busticket.exceptions.TimeOutException;
-import com.myproject.busticket.exceptions.AccountStatusException;
-import com.myproject.busticket.exceptions.ValidationException;
-import com.myproject.busticket.repositories.RoleRepository;
+import com.myproject.busticket.models.VerifyAccountModel;
 import com.myproject.busticket.repositories.AccountRepository;
+import com.myproject.busticket.repositories.RoleRepository;
 import com.myproject.busticket.validations.AccountValidation;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.Random;
+import jakarta.mail.MessagingException;
 
 @Service
 public class AuthenticationService {
@@ -172,7 +172,8 @@ public class AuthenticationService {
             throw new ValidationException(
                     "New password does not meet security requirements. Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 special character, 1 number.");
         }
-
+        
+        account.setPassword(passwordEncoder.encode(newPassword));
         account.setPasswordResetToken(null);
         account.setPasswordResetExpiration(null);
         accountRepository.save(account);

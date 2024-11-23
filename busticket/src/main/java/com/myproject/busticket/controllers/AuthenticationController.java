@@ -4,23 +4,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.myproject.busticket.exceptions.AccountStatusException;
 import com.myproject.busticket.exceptions.ModelNotFoundException;
 import com.myproject.busticket.exceptions.TimeOutException;
-import com.myproject.busticket.exceptions.AccountStatusException;
 import com.myproject.busticket.exceptions.ValidationException;
+import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.LoginUserModel;
 import com.myproject.busticket.models.RegisterUserModel;
-import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.VerifyAccountModel;
+import com.myproject.busticket.services.AccountService;
 import com.myproject.busticket.services.AuthenticationService;
 import com.myproject.busticket.services.JwtService;
-import com.myproject.busticket.services.AccountService;
 
 @RequestMapping("/auth")
 @Controller
@@ -60,7 +66,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/reset-password")
-    public String resetPasswordPage(@RequestParam String token, Model model) {
+    public String resetPasswordPage(@RequestParam("token") String token, Model model) {
         model.addAttribute("token", token);
         return "reset-password";
     }
@@ -162,20 +168,20 @@ public class AuthenticationController {
     }
 
     @ResponseBody
-    @PostMapping("/reset-password")
-    public Map<String, Object> resetPassword(@RequestBody Map<String, String> request) {
+    @PostMapping(value = "/reset-password", consumes = "application/x-www-form-urlencoded")
+    public ResponseEntity<Map<String, Object>> resetPassword(@RequestParam("token") String token, @RequestParam("newPassword") String newPassword) {
         Map<String, Object> response = new HashMap<>();
         try {
-            String token = request.get("token");
-            String password = request.get("password");
-            authenticationService.resetPassword(token, password);
-            response.put("success", true);
-            response.put("message", "Password reset successfully");
-            return response;
+            authenticationService.resetPassword(token, newPassword);
+            String message = "Password reset successfully";
+            return ResponseEntity.status(HttpStatus.FOUND)
+                             .header(HttpHeaders.LOCATION, "/home/login?message=" + message)
+                             .body(response);
         } catch (ModelNotFoundException | ValidationException | AccountStatusException e) {
-            response.put("success", false);
-            response.put("message", e.getMessage());
-            return response;
+            String message = e.getMessage();
+            return ResponseEntity.status(HttpStatus.FOUND)
+                             .header(HttpHeaders.LOCATION, "/home/login?error=" + message)
+                             .body(response);
         }
     }
 

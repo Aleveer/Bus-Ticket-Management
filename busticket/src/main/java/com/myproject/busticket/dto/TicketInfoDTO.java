@@ -10,7 +10,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookingInfoDTO {
-    private CustomerTicketDTO customer;
-    private TicketInfoDTO ticketInfoDTO;
+public class TicketInfoDTO {
+    private int tripId;
+    private byte numberOfSeat;
+    private List<String> seatNumbers;
+    private double price;
 }

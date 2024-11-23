@@ -14,4 +14,5 @@ public interface BillDetailRepository extends JpaRepository<Bill_Detail, Integer
     List<Bill_Detail> findByTrip(Trip trip);
 
     List<Bill_Detail> findByBill(Bill bill);
+
 }

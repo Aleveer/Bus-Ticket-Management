@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Bill</title>
+    <title>Update Bill</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
@@ -93,18 +93,18 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/easy-bus/bill-management">Bill Management</a></li>
-                <li class="breadcrumb-item active">Create New Bill</li>
+                <li class="breadcrumb-item active">Update Bill</li>
             </ol>
         </nav>
     </div>
     <div class="container mt-4">
-        <h2>Create New Bill</h2>
+        <h2>Update Bill</h2>
         <div class="card mb-4">
             <div class="card-header">
                 <h5 class="mb-0">Bill Information</h5>
             </div>
             <div class="card-body">
-                <form id="newBillForm" action="/easy-bus/new-bill" method="post">
+                <form id="updateBillForm" action="/easy-bus/update-bill" method="post">
                     <div class="form-group">
                         <label for="customer">Customer</label>
                         <input type="text" class="form-control" id="customerSearchBox"
@@ -214,14 +214,91 @@
                                 name="numberOfTicketsRoundTrip" min="1" max="5" value="1" required>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Create Bill</button>
+                    <button type="submit" class="btn btn-primary">Update Bill</button>
                 </form>
             </div>
         </div>
     </div>
 
     <script>
-        function loadTrips(page, searchTerm = "") {
+        function getBillIdFromUrl() {
+            const pathArray = window.location.pathname.split('/');
+            return pathArray[pathArray.length - 1];
+        }
+        function loadBillDetails(billId) {
+            $.ajax({
+                url: `/api/bill/${billId}`,
+                method: "GET",
+                success: function (data) {
+                    console.log("Bill details loaded successfully:", data);
+                    if (!data.success) {
+                        console.error("Error in response:", data.errorMessage);
+                        return;
+                    }
+                    const bill = data.bill;
+                    const customer = data.customer;
+                    const trip = data.trip;
+                    const roundTrip = data.roundTrip;
+                    const billDetails = data.billDetails;
+
+                    // Set customer details
+                    waitForElement(`#customerTableBody input[data-id="${customer.customerId}"]`, function (customerElement) {
+                        if (customerElement.length) {
+                            customerElement.prop('checked', true);
+                        } else {
+                            console.error("Customer element not found for ID:", customer.customerId);
+                        }
+                    });
+
+                    // Set trip details
+                    if (trip) {
+                        waitForElement(`#tripTableBody input[data-id="${trip.tripId}"]`, function (tripElement) {
+                            if (tripElement.length) {
+                                tripElement.prop('checked', true);
+                            } else {
+                                console.error("Trip element not found for ID:", trip.tripId);
+                            }
+                        });
+                    }
+
+                    // Set other bill details
+                    $('#fee').val(bill.fee);
+                    $('#paymentMethod').val(bill.paymentMethod);
+
+                    // Handle bill details array
+                    let totalFee = 0;
+                    billDetails.forEach(function (billDetail) {
+                        totalFee += billDetail.fee;
+                        const tripDetail = billDetail.trip;
+                        const numberOfTickets = billDetail.numberOfTicket;
+                        const ticketType = billDetail.ticketType;
+
+                        // Set number of tickets
+                        $('#numberOfTickets').val(numberOfTickets);
+                        $('#ticketType').val(ticketType);
+
+                        // Set round trip details if applicable
+                        if (ticketType === 'round_trip_ticket' && roundTrip) {
+                            $('#roundTripSelection').show();
+                            waitForElement(`#roundTripTableBody input[data-id="${roundTrip.tripId}"]`, function (roundTripElement) {
+                                if (roundTripElement.length) {
+                                    roundTripElement.prop('checked', true);
+                                } else {
+                                    console.error("Round trip element not found for ID:", roundTrip.tripId);
+                                }
+                            });
+                        }
+
+                    });
+                    $('#fee').val(totalFee);
+                },
+                error: function (error) {
+                    console.error("Error loading bill details:", error);
+                }
+            });
+        }
+
+        function loadTrips(page, searchTerm = "", callback) {
             $.ajax({
                 url: "/api/trip/trips",
                 data: { page: page, size: 7, search: searchTerm },
@@ -291,11 +368,13 @@
                             '<li><a onclick="loadTrips(' + (currentPage + 1) + ", '" + searchTerm + "')\">&raquo;</a></li>"
                         );
                     }
+
+                    if (callback) callback();
                 },
             });
         }
 
-        function loadRoundTrips(page, searchTerm = "") {
+        function loadRoundTrips(page, searchTerm = "", callback) {
             $.ajax({
                 url: "/api/trip/trips",
                 data: { page: page, size: 7, search: searchTerm },
@@ -365,11 +444,13 @@
                             '<li><a onclick="loadRoundTrips(' + (currentPage + 1) + ", '" + searchTerm + "')\">&raquo;</a></li>"
                         );
                     }
+
+                    if (callback) callback();
                 },
             });
         }
 
-        function loadCustomers(page, searchTerm = "") {
+        function loadCustomers(page, searchTerm = "", callback) {
             $.ajax({
                 url: "/api/customer/customers",
                 data: { page: page, size: 7, search: searchTerm },
@@ -431,31 +512,41 @@
                             '<li><a onclick="loadCustomers(' + (totalPages - 1) + ", '" + searchTerm + "')\">" + totalPages + "</a></li>"
                         );
                     }
-
                     // Add Next button
                     if (currentPage < totalPages - 1) {
                         $("#customerPaginationControls").append(
                             '<li><a onclick="loadCustomers(' + (currentPage + 1) + ", '" + searchTerm + "')\">&raquo;</a></li>"
                         );
                     }
+
+                    if (callback) callback();
                 },
             });
         }
 
-        // Calculate total price
         function calculateTotalPrice() {
             var numberOfTickets = $('#numberOfTickets').val();
+            var numberOfTicketsRoundTrip = $('#numberOfTicketsRoundTrip').val();
             var tripPrice = parseFloat($('input[name="trip"]:checked').closest('tr').find('td').eq(5).text()) || 0;
             var roundTripPrice = parseFloat($('input[name="roundTrip"]:checked').closest('tr').find('td').eq(5).text()) || 0;
-            var roundTripNumberOfTickets = $('#numberOfTicketsRoundTrip').val();
             var totalPrice = 0;
             if ($('#ticketType').val() === 'one_way_ticket') {
                 totalPrice = numberOfTickets * tripPrice;
             } else {
-                totalPrice = numberOfTickets * tripPrice + roundTripNumberOfTickets * roundTripPrice;
+                totalPrice = numberOfTickets * tripPrice + numberOfTicketsRoundTrip * roundTripPrice;
             }
             $('#fee').val(totalPrice);
             console.log("Total Price: " + totalPrice);
+        }
+
+        function waitForElement(selector, callback) {
+            const interval = setInterval(function () {
+                const element = $(selector);
+                if (element.length) {
+                    clearInterval(interval);
+                    callback(element);
+                }
+            }, 100);
         }
 
         function sendForm() {
@@ -469,10 +560,11 @@
             var ticketType = $('#ticketType').val();
 
             $.ajax({
-                url: "/api/bill/new-bill",
+                url: "/api/bill/update-bill/${getBillIdFromUrl()}",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({
+                    billId: getBillIdFromUrl(),
                     customerId: customerId,
                     tripId: tripId,
                     roundTripId: roundTripId,
@@ -483,8 +575,8 @@
                     ticketType: ticketType
                 }),
                 success: function (data) {
-                    console.log("Bill created successfully");
-                    alert("Bill created successfully");
+                    console.log("Bill updated successfully");
+                    alert("Bill updated successfully");
                     window.location.href = "/easy-bus/bill-management";
                 },
                 error: function (xhr, status, error) {
@@ -495,8 +587,16 @@
             });
         }
 
+        function getBillIdFromUrl() {
+            const pathArray = window.location.pathname.split('/');
+            return pathArray[pathArray.length - 1];
+        }
+
         $(document).ready(function () {
-            $('#newBillForm').on('submit', function (event) {
+            const billId = getBillIdFromUrl();
+            loadBillDetails(billId);
+
+            $('#updateBillForm').on('submit', function (event) {
                 event.preventDefault();
                 sendForm();
             });
@@ -536,6 +636,7 @@
 
                 calculateTotalPrice();
             });
+
             $('#customerSearchBox').on('input', function () {
                 loadCustomers(0, $(this).val());
             });

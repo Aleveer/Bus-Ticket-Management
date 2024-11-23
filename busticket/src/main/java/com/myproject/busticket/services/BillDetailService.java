@@ -38,4 +38,9 @@ public class BillDetailService {
     public void save(Bill_Detail roundTripBillDetail) {
         billDetailRepository.save(roundTripBillDetail);
     }
+
+    public void deleteByBillId(Bill bill) {
+        List<Bill_Detail> billDetails = findByBillId(bill);
+        deleteAll(billDetails);
+    }
 }

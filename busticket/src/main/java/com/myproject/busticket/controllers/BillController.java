@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
 import com.myproject.busticket.models.Bill;
 import com.myproject.busticket.models.Bill_Detail;
 import com.myproject.busticket.models.Customer;
@@ -83,6 +84,50 @@ public class BillController {
 
     @PostMapping("/easy-bus/new-bill")
     public String saveBill(Bill bill) {
+        billService.save(bill);
+        return "redirect:/easy-bus/bill-management";
+    }
+
+    @GetMapping("/easy-bus/update-bill/{billId}")
+    public String updateBill(@PathVariable int billId, Model model) {
+        Bill bill = billService.findById(billId);
+        if (bill == null) {
+            model.addAttribute("errorMessage", "Bill not found.");
+            return "redirect:/easy-bus/bill-management";
+        }
+
+        Customer customer = customerService.getCustomerById(bill.getCustomer().getCustomerId());
+        if (customer == null) {
+            model.addAttribute("errorMessage", "Customer not found.");
+            return "redirect:/easy-bus/bill-management";
+        }
+
+        List<Bill_Detail> billDetails = billDetailService.findByBillId(bill);
+        if (billDetails == null || billDetails.isEmpty()) {
+            model.addAttribute("errorMessage", "Bill details not found.");
+            return "redirect:/easy-bus/bill-management";
+        }
+
+        Trip trip = null;
+        Trip roundTrip = null;
+        if (billDetails.size() == 1) {
+            trip = tripService.findTripById(billDetails.get(0).getTrip().getTripId());
+        } else {
+            trip = tripService.findTripById(billDetails.get(0).getTrip().getTripId());
+            roundTrip = tripService.findTripById(billDetails.get(1).getTrip().getTripId());
+        }
+
+        model.addAttribute("bill", bill);
+        model.addAttribute("customer", customer);
+        model.addAttribute("trip", trip);
+        model.addAttribute("roundTrip", roundTrip);
+        model.addAttribute("billDetails", billDetails);
+
+        return "update-bill";
+    }
+
+    @PostMapping("/easy-bus/update-bill/{billId}")
+    public String updateBill(@PathVariable int billId, Bill bill) {
         billService.save(bill);
         return "redirect:/easy-bus/bill-management";
     }

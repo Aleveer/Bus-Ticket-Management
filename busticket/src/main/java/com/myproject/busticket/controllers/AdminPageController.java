@@ -24,6 +24,7 @@ import com.myproject.busticket.services.CheckpointService;
 import com.myproject.busticket.services.RoleService;
 import com.myproject.busticket.services.RouteService;
 import com.myproject.busticket.services.TripService;
+import com.myproject.busticket.utilities.SecurityUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -67,6 +68,14 @@ public class AdminPageController {
 
 	@GetMapping("/dashboard")
 	public String dashBoardPage() {
+		Account account = SecurityUtil.getCurrentAccount();
+		if (account == null) {
+			return "redirect:/auth/login";
+		}
+
+		if (account.getRole().getRoleId() != 5) {
+			return "redirect:/auth/login";
+		}
 		return "admin";
 	}
 

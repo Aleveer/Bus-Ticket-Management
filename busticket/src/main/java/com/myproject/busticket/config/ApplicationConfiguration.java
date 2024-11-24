@@ -7,23 +7,15 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.myproject.busticket.repositories.AccountRepository;
+import com.myproject.busticket.services.CustomerUserDetailsService;
 
 @Configuration
 public class ApplicationConfiguration {
-    private final AccountRepository accountRepository;
-
-    public ApplicationConfiguration(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
-    }
-
     @Bean
     UserDetailsService userDetailsService() {
-        return username -> accountRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("An account is not found."));
+        return new CustomerUserDetailsService();
     }
 
     @Bean

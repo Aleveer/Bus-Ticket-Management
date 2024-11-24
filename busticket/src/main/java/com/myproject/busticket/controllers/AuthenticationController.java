@@ -28,6 +28,9 @@ import com.myproject.busticket.services.AccountService;
 import com.myproject.busticket.services.AuthenticationService;
 import com.myproject.busticket.services.JwtService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
 @RequestMapping("/auth")
 @Controller
 public class AuthenticationController {
@@ -88,31 +91,35 @@ public class AuthenticationController {
         }
     }
 
-    @ResponseBody
     @PostMapping("/login")
-    public Map<String, Object> signIn(@RequestBody LoginUserModel loginUserDto) {
-        Map<String, Object> response = new HashMap<>();
-
+    public ResponseEntity<Map<String, Object>> signIn(@RequestBody LoginUserModel loginUserDto,
+            HttpServletResponse response) {
+        Map<String, Object> responseBody = new HashMap<>();
         try {
             Account authenticatedAccount = authenticationService.signIn(loginUserDto);
             String jwtToken = jwtService.generateToken(authenticatedAccount);
             authenticatedAccount.setLoginToken(jwtToken);
             accountService.save(authenticatedAccount);
 
-            // LoginResponse loginResponse = new LoginResponse(jwtToken,
-            // jwtService.getExpirationTime());
-            response.put("success", true);
-            response.put("message", "Login successful");
-            // response.put("token", jwtToken);
-            return response;
+            Cookie cookie = new Cookie("jwtToken", jwtToken);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(24 * 60 * 60);
+            response.addCookie(cookie);
+
+            responseBody.put("success", true);
+            responseBody.put("message", "Login successful");
+            responseBody.put("data", authenticatedAccount);
+            return ResponseEntity.ok(responseBody);
         } catch (AccountStatusException e) {
-            response.put("success", false);
-            response.put("message", "Authentication failed: " + e.getMessage());
-            return response;
+            responseBody.put("success", false);
+            responseBody.put("message", "Authentication failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseBody);
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "An error occurred: " + e.getMessage());
-            return response;
+            responseBody.put("success", false);
+            responseBody.put("message", "An error occurred: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
     }
 
@@ -169,19 +176,20 @@ public class AuthenticationController {
 
     @ResponseBody
     @PostMapping(value = "/reset-password", consumes = "application/x-www-form-urlencoded")
-    public ResponseEntity<Map<String, Object>> resetPassword(@RequestParam("token") String token, @RequestParam("newPassword") String newPassword) {
+    public ResponseEntity<Map<String, Object>> resetPassword(@RequestParam("token") String token,
+            @RequestParam("newPassword") String newPassword) {
         Map<String, Object> response = new HashMap<>();
         try {
             authenticationService.resetPassword(token, newPassword);
             String message = "Password reset successfully";
             return ResponseEntity.status(HttpStatus.FOUND)
-                             .header(HttpHeaders.LOCATION, "/home/login?message=" + message)
-                             .body(response);
+                    .header(HttpHeaders.LOCATION, "/home/login?message=" + message)
+                    .body(response);
         } catch (ModelNotFoundException | ValidationException | AccountStatusException e) {
             String message = e.getMessage();
             return ResponseEntity.status(HttpStatus.FOUND)
-                             .header(HttpHeaders.LOCATION, "/home/login?error=" + message)
-                             .body(response);
+                    .header(HttpHeaders.LOCATION, "/home/login?error=" + message)
+                    .body(response);
         }
     }
 

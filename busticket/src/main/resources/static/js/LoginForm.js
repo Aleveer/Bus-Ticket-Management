@@ -33,12 +33,12 @@ document.getElementById("loginForm").addEventListener("submit", async function (
             throw new Error(`Network response was not ok: ${response.statusText}`);
         }
 
-        const text = await response.text();
-        const data = JSON.parse(text);
+        const data = await response.json();
 
         if (data.success) {
             alert("Login successful");
-            window.location.href = "/home/index";
+            //localStorage.setItem("jwtToken", data.data.loginToken);
+            window.location.href = "/home/index"; // Redirect to index.html
         } else {
             alert(`Failed to login: ${data.message}`);
         }

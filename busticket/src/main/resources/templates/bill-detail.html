@@ -212,10 +212,32 @@
             </div>
         </div>
     </div>
-
     <script>
-        function sendMail(email) {
-            window.location.href = `mailto:${email}`;
+        function sendMail() {
+            // Extract billId from URL
+            const urlPath = window.location.pathname;
+            const billId = urlPath.substring(urlPath.lastIndexOf('/') + 1);
+
+            fetch("/api/bill/send-email", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    billId: billId
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        alert("Email sent successfully.");
+                    } else {
+                        alert("Failed to send email: " + data.errorMessage);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
         }
     </script>
 </body>

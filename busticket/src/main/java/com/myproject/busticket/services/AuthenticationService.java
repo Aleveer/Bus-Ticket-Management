@@ -18,6 +18,7 @@ import com.myproject.busticket.exceptions.ModelNotFoundException;
 import com.myproject.busticket.exceptions.TimeOutException;
 import com.myproject.busticket.exceptions.ValidationException;
 import com.myproject.busticket.models.Account;
+import com.myproject.busticket.models.Customer;
 import com.myproject.busticket.models.LoginUserModel;
 import com.myproject.busticket.models.RegisterUserModel;
 import com.myproject.busticket.models.Role;
@@ -45,6 +46,9 @@ public class AuthenticationService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private CustomerService customerService;
 
     public AuthenticationService(
             AccountRepository accountRepository,
@@ -172,7 +176,7 @@ public class AuthenticationService {
             throw new ValidationException(
                     "New password does not meet security requirements. Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 special character, 1 number.");
         }
-        
+
         account.setPassword(passwordEncoder.encode(newPassword));
         account.setPasswordResetToken(null);
         account.setPasswordResetExpiration(null);
@@ -216,6 +220,84 @@ public class AuthenticationService {
             accountRepository.save(account);
         } else {
             throw new ModelNotFoundException("Account is not found");
+        }
+    }
+
+    public void sendBillingDetail(String email) {
+        Optional<Account> optionalAccount = accountRepository.findByEmail(email);
+        Customer customer = customerService.getCustomerByEmail(email);
+
+        if (optionalAccount.isPresent()) {
+            Account account = optionalAccount.get();
+            if (!account.isEnabled()) {
+                throw new AccountStatusException("Account is not verified");
+            }
+            if (account.getStatus() == AccountStatus.banned) {
+                throw new AccountStatusException("Account is banned. Please contact customer support.");
+            }
+            sendBillingEmail(account, null, "Billing Information");
+        } else if (customer != null && optionalAccount.isEmpty()) {
+            sendBillingEmail(null, customer, "Billing Information");
+        } else {
+            throw new ModelNotFoundException("No account or customer found with the provided email.");
+        }
+    }
+
+    private void sendBillingEmail(Account account, Customer customer, String subject) {
+        StringBuilder message = new StringBuilder();
+        message.append("<html>")
+                .append("<head>")
+                .append("<style>")
+                .append("body { font-family: Arial, sans-serif; background-color: #f8f9fa; }")
+                .append(".container { margin: 20px; }")
+                .append(".card { box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border: none; border-radius: 0.5rem; margin-bottom: 20px; }")
+                .append(".card-header { background-color: #007bff; color: white; padding: 10px; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem; }")
+                .append(".card-body { background-color: white; padding: 20px; border-bottom-left-radius: 0.5rem; border-bottom-right-radius: 0.5rem; }")
+                .append(".table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }")
+                .append(".table th, .table td { border: 1px solid #ddd; padding: 8px; text-align: left; }")
+                .append(".table th { background-color: #f2f2f2; }")
+                .append("</style>")
+                .append("</head>")
+                .append("<body>")
+                .append("<div class='container'>")
+                .append("<h2>Billing Information</h2>");
+
+        if (account != null) {
+            message.append("<div class='card'>")
+                    .append("<div class='card-header'><h5>Customer Information</h5></div>")
+                    .append("<div class='card-body'>")
+                    .append("<p><strong>Customer ID:</strong> ").append(account.getId()).append("</p>")
+                    .append("<p><strong>Name:</strong> ").append(account.getFullName()).append("</p>")
+                    .append("<p><strong>Email:</strong> ").append(account.getEmail()).append("</p>")
+                    .append("<p><strong>Phone:</strong> ").append(account.getPhone()).append("</p>")
+                    .append("</div>")
+                    .append("</div>");
+        }
+
+        if (customer != null) {
+            message.append("<div class='card'>")
+                    .append("<div class='card-header'><h5>Customer Information</h5></div>")
+                    .append("<div class='card-body'>")
+                    .append("<p><strong>Customer ID:</strong> ").append(customer.getCustomerId()).append("</p>")
+                    .append("<p><strong>Name:</strong> ").append(customer.getName()).append("</p>")
+                    .append("<p><strong>Email:</strong> ").append(customer.getEmail()).append("</p>")
+                    .append("<p><strong>Phone:</strong> ").append(customer.getPhone()).append("</p>")
+                    .append("</div>")
+                    .append("</div>");
+        }
+
+        // Add more billing details as needed
+        message.append("</div>")
+                .append("</body>")
+                .append("</html>");
+
+        String emailContent = message.toString();
+
+        try {
+            String recipientEmail = account != null ? account.getEmail() : customer.getEmail();
+            emailService.sendBillingEmail(recipientEmail, subject, emailContent);
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
     }
 

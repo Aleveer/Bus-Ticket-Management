@@ -3,38 +3,38 @@
 <body>
   <div class="main-menu-content">
     <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-      <li class="nav-item">
+      <li class="nav-item" sec:authorize="hasAuthority('ADMIN') or hasAuthority('STAFF')">
         <a th:href="@{dashboard}"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" sec:authorize="hasAuthority('ADMIN') or hasAuthority('STAFF')">
         <a th:href="@{trip-management}"><i class="ft-credit-card"></i><span class="menu-title"
             data-i18n="">Trip</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" sec:authorize="hasAuthority('ADMIN') or hasAuthority('STAFF')">
         <a th:href="@{route-management}"><i class="ft-credit-card"></i><span class="menu-title"
             data-i18n="">Route</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" sec:authorize="hasAuthority('ADMIN') or hasAuthority('STAFF')">
         <a th:href="@{checkpoint-management}"><i class="ft-credit-card"></i><span class="menu-title"
             data-i18n="">Checkpoint</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
         <a th:href="@{bus-management}"><i class="ft-credit-card"></i><span class="menu-title"
             data-i18n="">Bus</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
         <a th:href="@{booking-management}"><i class="ft-credit-card"></i><span class="menu-title"
             data-i18n="">Booking</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
         <a th:href="@{bill-management}"><i class="ft-credit-card"></i><span class="menu-title"
             data-i18n="">Bill</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
         <a th:href="@{account-management}"><i class="ft-credit-card"></i><span class="menu-title"
             data-i18n="">Account</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
         <a th:href="@{permission-management}"><i class="ft-credit-card"></i><span class="menu-title"
             data-i18n="">Permission</span></a>
       </li>

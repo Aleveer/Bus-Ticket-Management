@@ -36,6 +36,7 @@ import com.myproject.busticket.models.Bill;
 import com.myproject.busticket.models.Bill_Detail;
 import com.myproject.busticket.models.Customer;
 import com.myproject.busticket.models.Trip;
+import com.myproject.busticket.services.AuthenticationService;
 import com.myproject.busticket.services.BillDetailService;
 import com.myproject.busticket.services.BillService;
 import com.myproject.busticket.services.CustomerService;
@@ -49,6 +50,9 @@ public class BillAPI {
 
     @Autowired
     private BillMapper billMapper;
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
     @Autowired
     private CustomerService customerService;
@@ -497,6 +501,38 @@ public class BillAPI {
             roundTripBillDetail.setFee(fee);
             roundTripBillDetail.setTicketType(TicketType.round_trip_ticket);
             billDetailService.save(roundTripBillDetail);
+        }
+    }
+
+    @PostMapping("/send-email")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> sendEmail(@RequestBody Map<String, Object> billRequest) {
+        Map<String, Object> response = new HashMap<>();
+        int billId;
+
+        try {
+            billId = Integer.parseInt(billRequest.get("billId").toString());
+        } catch (NumberFormatException e) {
+            response.put("errorMessage", "Invalid bill ID.");
+            response.put("success", false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            response.put("errorMessage", "Bill ID must be provided.");
+            response.put("success", false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+        try {
+            Bill bill = billService.findById(billId);
+            Customer customer = bill.getCustomer();
+            String email = customer.getEmail();
+            authenticationService.sendBillingDetail(email);
+            response.put("message", "Email sent successfully.");
+            response.put("success", true);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("errorMessage", "Failed to send email: " + e.getMessage());
+            response.put("success", false);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 }

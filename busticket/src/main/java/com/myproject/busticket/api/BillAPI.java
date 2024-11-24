@@ -224,7 +224,7 @@ public class BillAPI {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
-        int roundTripId = billRequest.containsKey("roundTripId")
+        Integer roundTripId = billRequest.containsKey("roundTripId")
                 ? Integer.parseInt(billRequest.get("roundTripId").toString())
                 : null;
 
@@ -357,6 +357,36 @@ public class BillAPI {
         createBillDetails(bill, tripId, roundTripId, numberOfTickets, fee, ticketType);
 
         response.put("message", "Bill updated successfully.");
+        response.put("success", true);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/delete-bill/")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deleteBill(@RequestBody Map<String, Object> billRequest) {
+        Map<String, Object> response = new HashMap<>();
+        int billId;
+        try {
+            billId = Integer.parseInt(billRequest.get("billId").toString());
+        } catch (NumberFormatException e) {
+            response.put("errorMessage", "Invalid bill ID.");
+            response.put("success", false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            response.put("errorMessage", "Bill ID must be provided.");
+            response.put("success", false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        Bill bill = billService.findById(billId);
+        if (bill == null) {
+            response.put("errorMessage", "Bill not found.");
+            response.put("success", false);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+        billDetailService.deleteByBillId(bill);
+        billService.delete(bill);
+        response.put("message", "Bill deleted successfully.");
         response.put("success", true);
         return ResponseEntity.ok(response);
     }

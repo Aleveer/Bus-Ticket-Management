@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +32,7 @@ import com.myproject.busticket.services.AuthenticationService;
 import com.myproject.busticket.services.JwtService;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RequestMapping("/auth")
@@ -38,14 +42,11 @@ public class AuthenticationController {
     @Autowired
     private AccountService accountService;
 
-    private final JwtService jwtService;
+    @Autowired
+    private JwtService jwtService;
 
-    private final AuthenticationService authenticationService;
-
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
-        this.jwtService = jwtService;
-        this.authenticationService = authenticationService;
-    }
+    @Autowired
+    private AuthenticationService authenticationService;
 
     @GetMapping("/login")
     public String loginPage() {
@@ -124,12 +125,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public Map<String, Object> signOut(@RequestBody Map<String, String> request) {
+    public Map<String, Object> signOut(@RequestBody Map<String, String> request, HttpServletRequest httpRequest,
+            HttpServletResponse httpResponse) {
         Map<String, Object> response = new HashMap<>();
-
         try {
             String email = request.get("email");
             authenticationService.signOut(email);
+            clearCurrentSession(httpRequest, httpResponse);
             response.put("success", true);
             response.put("message", "User signed out successfully");
         } catch (ModelNotFoundException e) {
@@ -138,7 +140,6 @@ public class AuthenticationController {
             response.put("success", false);
             response.put("message", "An error occurred during signing out");
         }
-
         return response;
     }
 
@@ -207,6 +208,13 @@ public class AuthenticationController {
             response.put("success", false);
             response.put("message", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    private void clearCurrentSession(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
         }
     }
 }

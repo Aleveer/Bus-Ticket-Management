@@ -72,16 +72,16 @@ public class AdminPageController {
 		if (account == null) {
 			return "redirect:/auth/login";
 		}
-
-		if (account.getRole().getRoleId() != 5) {
-			return "redirect:/auth/login";
+		if (SecurityUtil.hasRole("ADMIN") || SecurityUtil.hasRole("STAFF")) {
+			return "admin";
 		}
-		return "admin";
+		return "redirect:/auth/login";
 	}
 
 	@GetMapping("/trip-management")
 	public String adminTripPage(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "15") int size, Model model) {
+
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Trip> tripsPage = tripService.getAll(pageable);
 

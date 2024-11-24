@@ -454,7 +454,7 @@ public class TripAPI {
             return ResponseEntity.badRequest().body(response);
         }
 
-        int staffId = Integer.parseInt(tripRequest.get("staffId").toString());
+        int staffId = Integer.parseInt(tripRequest.get("staff_id").toString());
         if (staffId <= 0) {
             response.put("message", "Staff ID is required.");
             return ResponseEntity.badRequest().body(response);
@@ -651,7 +651,7 @@ public class TripAPI {
             tripData.put("busPlate", trip.getBus().getPlate());
             tripData.put("driverId", trip.getDriver().getDriverId());
             tripData.put("controllerId", trip.getController().getId());
-            tripData.put("staffId", trip.getStaff().getStaffId());
+            tripData.put("staff_id", trip.getStaff().getStaffId());
             tripData.put("routeCode", trip.getRoute().getCode());
             response.put("trip", tripData);
             return ResponseEntity.ok(response);

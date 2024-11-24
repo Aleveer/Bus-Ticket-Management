@@ -256,12 +256,12 @@
 
         function deleteBill(billId) {
             if (confirm("Are you sure you want to delete this bill?")) {
-                fetch("/api/bill/delete-bill", {
+                fetch("/api/bill/delete-bill/", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ code: routeCode }),
+                    body: JSON.stringify({ billId: billId }),
                 })
                     .then((response) => response.json())
                     .then((data) => {

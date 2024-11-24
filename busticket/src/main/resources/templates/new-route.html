@@ -36,7 +36,7 @@
       </div>
       <div class="form-group">
         <label for="distance">Distance</label>
-        <input type="number" step="0.01" class="form-control" id="distance" name="distance" th:field="*{distance}"
+        <input type="number" step="0.1" class="form-control" id="distance" name="distance" th:field="*{distance}"
           required />
       </div>
       <h2 class="mt-4">Checkpoints</h2>
@@ -284,6 +284,20 @@
       .addEventListener("submit", function (event) {
         event.preventDefault();
 
+        const code = document.getElementById("code").value.trim();
+        const distance = document.getElementById("distance").value;
+
+        if (distance <= 0) {
+          alert("Distance must be greater than 0.");
+          return;
+        }
+
+        if (selectedCheckpoints.length < 2) {
+          alert("Please select at least two checkpoints.");
+          return;
+        }
+
+
         const formData = new FormData(event.target);
         const jsonData = {};
         formData.forEach((value, key) => {
@@ -309,7 +323,7 @@
         })
           .then((response) => response.json())
           .then((data) => {
-            alert("Route created successfully!");
+            alert(data.message);
             window.location.href = "/easy-bus/route-management";
           })
           .catch((error) => {

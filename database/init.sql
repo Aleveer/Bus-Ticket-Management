@@ -57,16 +57,6 @@ CREATE TABLE `account` (
 
 -- --------------------------------------------------------
 --
--- Table structure for table `account_notification`
---
-CREATE TABLE `account_notification` (
-  `id` int(11) NOT NULL,
-  `account_id` int(11) NOT NULL,
-  `notification_id` int(11) NOT NULL
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
-
--- --------------------------------------------------------
---
 -- Table structure for table `bill`
 --
 CREATE TABLE `bill` (
@@ -171,17 +161,6 @@ CREATE TABLE `driver` (
 
 -- --------------------------------------------------------
 --
--- Table structure for table `notification`
---
-CREATE TABLE `notification` (
-  `notification_id` int(11) NOT NULL,
-  `type` enum('group', 'account') NOT NULL DEFAULT 'group',
-  `subject` varchar(50) NOT NULL,
-  `message` varchar(255) NOT NULL
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
-
--- --------------------------------------------------------
---
 -- Table structure for table `permission`
 --
 CREATE TABLE `permission` (
@@ -196,16 +175,6 @@ CREATE TABLE `permission` (
 CREATE TABLE `role` (
   `role_id` int(11) NOT NULL,
   `role_name` varchar(50) NOT NULL
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
-
--- --------------------------------------------------------
---
--- Table structure for table `role_notification`
---
-CREATE TABLE `role_notification` (
-  `id` int(11) NOT NULL,
-  `role_id` int(11) NOT NULL,
-  `notification_id` int(11) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -315,20 +284,6 @@ ADD
   KEY `role_id` (`role_id`);
 
 --
--- Indexes for table `account_notification`
---
-ALTER TABLE
-  `account_notification`
-ADD
-  PRIMARY KEY (`id`),
-ADD
-  KEY `id` (`id`, `account_id`, `notification_id`),
-ADD
-  KEY `account_id` (`account_id`),
-ADD
-  KEY `notification_id` (`notification_id`);
-
---
 -- Indexes for table `bill`
 --
 ALTER TABLE
@@ -435,16 +390,6 @@ ADD
   KEY `account_id` (`account_id`);
 
 --
--- Indexes for table `notification`
---
-ALTER TABLE
-  `notification`
-ADD
-  PRIMARY KEY (`notification_id`),
-ADD
-  KEY `notification_id` (`notification_id`);
-
---
 -- Indexes for table `permission`
 --
 ALTER TABLE
@@ -463,18 +408,6 @@ ADD
   PRIMARY KEY (`role_id`),
 ADD
   KEY `role_id` (`role_id`);
-
---
--- Indexes for table `role_notification`
---
-ALTER TABLE
-  `role_notification`
-ADD
-  PRIMARY KEY (`id`),
-ADD
-  KEY `role_id` (`role_id`, `notification_id`),
-ADD
-  KEY `notification_id` (`notification_id`);
 
 --
 -- Indexes for table `role_permission`
@@ -653,14 +586,6 @@ MODIFY
   AUTO_INCREMENT = 5;
 
 --
--- AUTO_INCREMENT for table `notification`
---
-ALTER TABLE
-  `notification`
-MODIFY
-  `notification_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `permission`
 --
 ALTER TABLE
@@ -744,16 +669,6 @@ ADD
   CONSTRAINT `account_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`);
 
 --
--- Constraints for table `account_notification`
---
-ALTER TABLE
-  `account_notification`
-ADD
-  CONSTRAINT `account_notification_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-ADD
-  CONSTRAINT `account_notification_ibfk_2` FOREIGN KEY (`notification_id`) REFERENCES `notification` (`notification_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `bill`
 --
 ALTER TABLE
@@ -804,16 +719,6 @@ ALTER TABLE
   `driver`
 ADD
   CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `role_notification`
---
-ALTER TABLE
-  `role_notification`
-ADD
-  CONSTRAINT `role_notification_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-ADD
-  CONSTRAINT `role_notification_ibfk_2` FOREIGN KEY (`notification_id`) REFERENCES `notification` (`notification_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `role_permission`

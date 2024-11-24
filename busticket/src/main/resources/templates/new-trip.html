@@ -703,6 +703,36 @@
             $("#tripForm").on("submit", function (event) {
                 event.preventDefault();
 
+                //check for bus if it's selected
+                if (!$("input[name='bus']:checked").length) {
+                    alert("Please select a bus.");
+                    return;
+                }
+
+                //check for driver if it's selected
+                if (!$("input[name='driver']:checked").length) {
+                    alert("Please select a driver.");
+                    return;
+                }
+
+                //check for controller if it's selected
+                if (!$("input[name='controller']:checked").length) {
+                    alert("Please select a controller.");
+                    return;
+                }
+
+                //check for staff if it's selected
+                if (!$("input[name='staff']:checked").length) {
+                    alert("Please select a staff.");
+                    return;
+                }
+
+                //check for route if it's selected
+                if (!$("input[name='route']:checked").length) {
+                    alert("Please select a route.");
+                    return;
+                }
+
                 var tripData = {
                     departureTime: $("#departureTime").val(),
                     arrivalTime: $("#arrivalTime").val(),

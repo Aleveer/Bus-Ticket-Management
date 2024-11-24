@@ -409,6 +409,11 @@
           return;
         }
 
+        if (selectedCheckpoints.length < 2) {
+          alert("Please select at least two checkpoints.");
+          return;
+        }
+
         const routeCode = window.location.pathname.split("/").pop();
         console.log("Submitting form with data:", currentFormData);
 

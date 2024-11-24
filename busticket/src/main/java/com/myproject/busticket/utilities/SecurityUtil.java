@@ -42,12 +42,20 @@ public class SecurityUtil {
     }
 
     public static Collection<? extends GrantedAuthority> getCurrentUserRoles() {
-        Account account = getCurrentAccount();
-        return account != null ? account.getAuthorities() : null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+            return customUserDetails.getAuthorities();
+        } else {
+            logger.warning("Authentication object is null or principal is not an instance of CustomUserDetails");
+            return null;
+        }
     }
 
     public static boolean hasRole(String role) {
         Collection<? extends GrantedAuthority> authorities = getCurrentUserRoles();
+        logger.info("Checking role " + role);
+        logger.info("Authorities: " + authorities);
         if (authorities != null) {
             for (GrantedAuthority authority : authorities) {
                 if (authority.getAuthority().equals(role)) {
@@ -61,4 +69,5 @@ public class SecurityUtil {
         logger.info("Role " + role + " not found");
         return false;
     }
+
 }

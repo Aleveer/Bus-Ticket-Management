@@ -22,4 +22,15 @@ public class EmailService {
 
         emailSender.send(message);
     }
+
+    public void sendBillingEmail(String email, String subject, String message) throws MessagingException {
+        MimeMessage mimeMessage = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+
+        helper.setTo(email);
+        helper.setSubject(subject);
+        helper.setText(message, true);
+
+        emailSender.send(mimeMessage);
+    }
 }

@@ -41,4 +41,7 @@ public class BillService {
         billRepository.save(bill);
     }
 
+    public Bill findByBillIdAndCustomer(int billId, int customerId) {
+        return billRepository.findByBillIdAndCustomer(billId, customerId);
+    }
 }

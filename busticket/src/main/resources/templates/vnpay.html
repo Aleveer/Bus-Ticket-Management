@@ -8,7 +8,108 @@
 </head>
 
 <body>
+<div class="confirm_info trip-card d-flex align-self-start flex-column col-sm-4">
+    <h3 class="full text-dark">Thông tin khách hàng</h3>
+    <div class="d-flex justify-content-between full">
+        <h4 class="full">Họ và tên</h4>
+        <h4 class="text d-flex flex-nowrap">
+            <span class="space_right" id="name" th:text="${bookingInfoDTO.getCustomer().getName()}"> </span> ghế
+        </h4>
+    </div>
+    <div class="d-flex justify-content-between full" th:if="${bookingInfoDTO.getTicketInfoDTO().getSeatNumbers() != null}">
+        <h4 class="full">Số điện thoại</h4>
+        <span id="phone" class="full d-flex justify-content-end"
+              th:text="${bookingInfoDTO.getCustomer().getPhone()}">
+    </span>
+    </div>
 
+    <div class="d-flex justify-content-between full">
+        <h4 class="full">Email</h4>
+        <h4 class="text d-flex flex-nowrap">
+            <span class="space_right" id="email" th:text="${bookingInfoDTO.getCustomer().getEmail()}"> </span> đ
+        </h4>
+    </div>
+</div>
+<div class="confirm_info trip-card d-flex align-self-start flex-column col-sm-4">
+    <h3 class="full text-dark">Thông tin lượt đi</h3>
+    <div class="full d-flex justify-content-between">
+        <h4 class="full d-flex   ">Tuyến xe</h4>
+        <span th:text="${selectedTrip.route.name}" class="full d-flex justify-content-end text_right "></span>
+    </div>
+    <div class="d-flex justify-content-between full">
+        <h4 class="full">Thời gian xuất bến</h4>
+        <span th:text="${#temporals.format(selectedTrip.departureTime,'yyyy-MM-dd HH:mm')}" class="full d-flex justify-content-end"></span>
+    </div>
+    <div class="d-flex justify-content-between full">
+        <h4 class="full">Số lượng ghế</h4>
+        <h4 class="text d-flex flex-nowrap">
+            <span class="space_right" id="count" th:text="${bookingInfoDTO.getTicketInfoDTO().getNumberOfSeat()}"> </span> ghế
+        </h4>
+    </div>
+    <div class="d-flex justify-content-between full" th:if="${bookingInfoDTO.getTicketInfoDTO().getSeatNumbers() != null}">
+        <h4 class="full">Số ghế</h4>
+        <span id="seat_number" class="full d-flex justify-content-end"
+              th:text="${#strings.arrayJoin(bookingInfoDTO.getTicketInfoDTO().getSeatNumbers(), ', ')}">
+    </span>
+    </div>
+
+    <div class="d-flex justify-content-between full">
+        <h4 class="full">Tổng tiền lượt đi</h4>
+        <h4 class="text d-flex flex-nowrap">
+            <span class="space_right" id="total" th:text="${bookingInfoDTO.getTicketInfoDTO().getPrice()}"> </span> đ
+        </h4>
+    </div>
+    <input type="hidden" id="ticketPrice" th:value="${selectedTrip.price}">
+</div>
+
+<form id="form-test" action="/home/index/booking/oneway-payment" method="post">
+    <input type="hidden" id="trip_id" th:value="${selectedTrip.tripId}" />
+    <button id="payButton">Thanh toán</button>
+</form>
 </body>
+
+
+<script>
+    // const submitForm = document.getElementById('form-test');
+    // submitForm.addEventListener('submit', function (event) {
+    //     event.preventDefault();
+    //     fetch('/home/index/booking-oneway', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //     })
+    //         .then(data => console.log("data here" + data))
+    //         .catch(error => console.error(error));
+    // });
+
+    // document.getElementById("payButton").addEventListener("click", () => {
+    //     // Lấy dữ liệu từ Thymeleaf
+    //     const bookingInfoDTO = /*[[${bookingInfoDTO}]]*/ {};
+    //
+    //     // Gửi request đến server
+    //     fetch('/payment', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(bookingInfoDTO)
+    //     })
+    //         .then(response => {
+    //             if (response.ok) {
+    //                 return response.json();
+    //             } else {
+    //                 throw new Error('Có lỗi xảy ra khi thanh toán');
+    //             }
+    //         })
+    //         .then(data => {
+    //             console.log('Phản hồi từ server:', data);
+    //             alert('Thanh toán thành công!');
+    //         })
+    //         .catch(error => console.error('Error:', error));
+    // });
+
+
+</script>
 
 </html>

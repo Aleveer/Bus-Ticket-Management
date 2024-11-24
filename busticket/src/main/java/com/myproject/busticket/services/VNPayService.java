@@ -44,7 +44,7 @@ public class VNPayService {
     // return new VNPayResponse("ok", "success", paymentUrl);
     // }
 
-    public VNPayResponse createVNPayPayment(long amount, String bankCode, String orderID, HttpServletRequest request) {
+    public VNPayResponse createVNPayPayment(long amount, String bankCode, HttpServletRequest request) {
         long vnpAmount = amount * 100L;
 
         Map<String, String> vnpParamsMap = vnPayConfiguration.getVNPayConfig();
@@ -54,7 +54,7 @@ public class VNPayService {
             vnpParamsMap.put("vnp_BankCode", bankCode);
         }
 
-        vnpParamsMap.put("vnp_TxnRef", orderID);
+        //vnpParamsMap.put("vnp_TxnRef", orderID);
         vnpParamsMap.put("vnp_IpAddr", VNPayUtil.getIpAddress(request));
         vnpParamsMap.put("vnp_OrderInfo",
                 "Thanh toan don hang thoi gian: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
@@ -73,7 +73,7 @@ public class VNPayService {
         return new VNPayResponse("ok", "success", paymentUrl);
     }
 
-    public boolean verifyVNPayPayment(Map<String, String> params, String orderId, String secureHash) {
+    public boolean verifyVNPayPayment(Map<String, String> params, String secureHash) {
         Map<String, String> filteredParams = params.entrySet().stream()
                 .filter(entry -> !entry.getKey().equals("vnp_SecureHash"))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));

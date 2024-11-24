@@ -239,7 +239,7 @@
               <button type="button" class="payment-button" onclick="history.back()">Hủy</button>
               <form id="form-test" >
                 <input type="hidden" id="trip_id" th:value="${selectedTrip.tripId}" />
-                <button type="submit" class="payment-button" onclick="showVisaCard()" >Xác Nhận</button>
+                <button type="submit" class="payment-button" >Xác Nhận</button>
               </form>
             </div>
           </div>
@@ -435,15 +435,23 @@
                 
             };
 
-            fetch('/home/index/booking/oneway', {
+            fetch('/home/index/booking/oneway-payment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(ticket)
             })
-
-                .then(data => console.log("data here" + data))
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Có lỗi xảy ra khi tạo link thanh toán.");
+                    }
+                    return response.text(); // Lấy link thanh toán từ response
+                })
+                .then(paymentLink => {
+                    // Redirect người dùng tới link thanh toán
+                    window.location.href = paymentLink;
+                })
                 .catch(error => console.error(error));
         });
 

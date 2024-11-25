@@ -89,4 +89,8 @@ public class IndexPageController {
     public String login(){
         return "login";
     }
+    @GetMapping("/vnpay")
+    public String finnishBookingTest() {
+        return "vnpay";
+    }
 }

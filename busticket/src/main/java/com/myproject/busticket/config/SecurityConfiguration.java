@@ -37,11 +37,13 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/accounts/**").authenticated()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/booking/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/vnpay/**").permitAll()
+                        .requestMatchers("/vnpay-return").permitAll()
                         .requestMatchers("/schedules/**").permitAll()
                         .requestMatchers("/roles/**").permitAll()
                         .requestMatchers("/permissions/**").permitAll()

@@ -1443,6 +1443,27 @@ input.mail_bt::placeholder {
 .choose-trip-button:hover {
     background-color: #ff4d4d;
 }
+.trip-go{
+    cursor: pointer;
+    padding-top: 10px;
+}
+.trip-go .about_text_4{
+    padding-bottom: 5px;
+}
+.trip-go:hover{
+    border-bottom: 3px solid #ff4d4d;
+}
+
+.trip-return{
+    cursor: pointer;
+    padding-top: 10px;
+}
+.trip-return .about_text_4{
+    padding-bottom: 5px;
+}
+.trip-return:hover{
+    border-bottom: 3px solid #ff4d4d;
+}
 
 /* Additional layout styling for alignment */
 .trip-card-container {
@@ -1661,6 +1682,9 @@ input.mail_bt::placeholder {
     height: 0;
     overflow: hidden;
     transition: visibility 0s, height 0.5s ease-out;
+}
+.hide{
+    display: none;
 }
 .visible {
     visibility: visible;

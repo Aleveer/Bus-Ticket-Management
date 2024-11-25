@@ -93,10 +93,10 @@
                   <div class="col-10">
                      <div class="form-header">
                         <label>
-                           <input type="radio" name="tripType" value="one-way" th:checked="${tripType == 'one-way'}" checked> Một chiều
+                           <input type="radio" name="tripType" value="one-way" th:checked="${tripType == 'one-way'}" checked onclick="toggleReturnDate()"> Một chiều
                         </label>
                         <label>
-                           <input type="radio" name="tripType" value="round-trip" th:checked="${tripType == 'round-trip'}"> Khứ hồi
+                           <input type="radio" name="tripType" value="round-trip" th:checked="${tripType == 'round-trip'}" onclick="toggleReturnDate()"> Khứ hồi
                         </label>
                      </div>
                   </div>
@@ -127,6 +127,10 @@
                      <label for="date">Ngày đi</label>
                      <input type="date" id="date" name="date" th:value="${date}">
                   </div>
+                  <div class="form-group hide" id="return-date">
+                     <label for="returnDate">Ngày về</label>
+                     <input type="date" id="returnDate" name="returnDate" th:value="${returnDate}">
+                  </div>
                   <div class="form-group">
                      <label for="ticketNum">Số vé</label>
                      <select id="ticketNum" name="ticketNum" th:value="${ticketNum}">
@@ -154,6 +158,15 @@
             <div th:if="${#lists.isEmpty(trips)}" class="d-flex flex-column justify-content-center space">
                <i class="bi bi-list-stars d-flex flex-grow justify-content-center  h1"></i>
                <p class="d-flex flex-grow justify-content-center nospace about_text_4 ">Không tìm thấy chuyến xe nào.</p> 
+            </div>
+            <div th:if="${tripType == 'round-trip' && !#lists.isEmpty(trips)}" class="box-card d-flex flex-row justify-content-between full">
+               <div class="trip-go d-flex justify-content-center full">
+                     <p class="about_text_4">CHUYẾN ĐI - <span th:text="${date}" ></span> </p> 
+               </div>
+               <div class="trip-return d-flex justify-content-center full">
+                   <p class="about_text_4">CHUYẾN VỀ - <span th:text="${returnDate}"></span></p> 
+               </div>
+               
             </div>
             <div th:if="${!#lists.isEmpty(trips)}">
                <div class="route-info h3">
@@ -254,6 +267,58 @@
          departureInput.value = destinationInput.value;
          destinationInput.value = temp;
       }
+      function setMinDate() {
+         const today = new Date().toISOString().split('T')[0];
+         document.getElementById('date').setAttribute('min', today);
+         document.getElementById('returnDate').setAttribute('min', today);
+      }
+      window.onload = function() {
+         setMinDate();
+         toggleReturnDate();
+      };
+      function toggleReturnDate() {
+         const tripType = document.querySelector('input[name="tripType"]:checked').value;
+         const returnDateElement = document.getElementById('return-date');
+            if (tripType === 'round-trip') {
+               returnDateElement.classList.remove('hide');
+         } else {
+               returnDateElement.classList.add('hide');
+         }
+         }
+
+         document.addEventListener('DOMContentLoaded', function () {
+            const daysInVietnamese = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
+        
+            // Function to format date
+            function formatDate(date) {
+                const dayOfWeek = daysInVietnamese[date.getDay()];
+                const day = date.getDate();
+                const month = date.getMonth() + 1; // Months are zero-based
+                return `${dayOfWeek},${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}`;
+            }
+            
+        
+            // Handle the trip go date
+            const dateElement = document.querySelector('#date');
+            const tripGoElement = document.querySelector('.trip-go span');
+        
+            if (dateElement && tripGoElement) {
+                const tripGoDate = new Date(dateElement.value); // Get date from the input field
+                if (!isNaN(tripGoDate)) {
+                    tripGoElement.textContent = formatDate(tripGoDate); // Set formatted date
+                }
+            }
+        
+            // Handle the return date (if visible)
+            const returnDateElement = document.querySelector('#returnDate');
+            const tripReturnElement = document.querySelector('.trip-return span');
+            if (returnDateElement && tripReturnElement) {
+                const tripReturnDate = new Date(returnDateElement.value);
+                if (!isNaN(tripReturnDate)) {
+                  tripReturnElement.textContent = formatDate(tripReturnDate);
+                }
+            }
+        });
    </script>
 </body>
 

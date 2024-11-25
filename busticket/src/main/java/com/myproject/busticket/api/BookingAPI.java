@@ -126,8 +126,7 @@ public class BookingAPI {
                                         booking.getTrip().getDriver().getAccount().getLoginToken(),
                                         booking.getTrip().getDriver().getAccount().getPasswordResetToken(),
                                         booking.getTrip().getDriver().getAccount().getPasswordResetExpiration(),
-                                        booking.getTrip().getDriver().getAccount().isEnabled()),
-                                booking.getTrip().getDriver().getStatus()),
+                                        booking.getTrip().getDriver().getAccount().isEnabled())),
                         new ControllerDTO(
                                 booking.getTrip().getController().getId(),
                                 new AccountDTO(
@@ -139,14 +138,15 @@ public class BookingAPI {
                                         booking.getTrip().getController().getAccount().getRole(),
                                         booking.getTrip().getController().getAccount().getStatus(),
                                         booking.getTrip().getController().getAccount().getVerificationCode(),
-                                        booking.getTrip().getController().getAccount().getVerificationExpiration(),
+                                        booking.getTrip().getController().getAccount()
+                                                .getVerificationExpiration(),
                                         booking.getTrip().getController().getAccount().getLoginToken(),
                                         booking.getTrip().getController().getAccount().getPasswordResetToken(),
-                                        booking.getTrip().getController().getAccount().getPasswordResetExpiration(),
-                                        booking.getTrip().getController().getAccount().isEnabled()),
-                                booking.getTrip().getController().getStatus()),
+                                        booking.getTrip().getController().getAccount()
+                                                .getPasswordResetExpiration(),
+                                        booking.getTrip().getController().getAccount().isEnabled())),
                         new StaffDTO(
-                                booking.getTrip().getStaff().getStaffId(),
+                                booking.getTrip().getStaff().getStaff_id(),
                                 new AccountDTO(
                                         booking.getTrip().getStaff().getAccount().getId(),
                                         booking.getTrip().getStaff().getAccount().getEmail(),
@@ -160,8 +160,7 @@ public class BookingAPI {
                                         booking.getTrip().getStaff().getAccount().getLoginToken(),
                                         booking.getTrip().getStaff().getAccount().getPasswordResetToken(),
                                         booking.getTrip().getStaff().getAccount().getPasswordResetExpiration(),
-                                        booking.getTrip().getStaff().getAccount().isEnabled()),
-                                booking.getTrip().getStaff().getStatus()),
+                                        booking.getTrip().getStaff().getAccount().isEnabled())),
                         new RouteDTO(
                                 booking.getTrip().getRoute().getRouteId(),
                                 booking.getTrip().getRoute().getCode(),
@@ -272,7 +271,7 @@ public class BookingAPI {
                     seatReservationService.save(seatReservation);
                 }
                 customerService.create(customer);
-                //bookingService.createTicket(booking);
+                // bookingService.createTicket(booking);
                 response.put("message", "Booking created successfully.");
             }
 

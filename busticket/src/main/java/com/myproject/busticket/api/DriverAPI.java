@@ -56,7 +56,7 @@ public class DriverAPI {
                             account.getPasswordResetToken(),
                             account.getPasswordResetExpiration(),
                             account.isEnabled());
-                    return new DriverDTO(driver.getDriverId(), accountDTO, driver.getStatus());
+                    return new DriverDTO(driver.getDriverId(), accountDTO);
                 })
                 .collect(Collectors.toList());
 

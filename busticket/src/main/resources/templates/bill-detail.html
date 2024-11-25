@@ -163,7 +163,7 @@
                         <p><strong>Controller:</strong> <a
                                 th:href="@{'/easy-bus/controller-detail/' + ${trip.controller.id}}"
                                 th:text="${trip.controller.account.fullName}"></a></p>
-                        <p><strong>Staff:</strong> <a th:href="@{'/easy-bus/staff-detail/' + ${trip.staff.staffId}}"
+                        <p><strong>Staff:</strong> <a th:href="@{'/easy-bus/staff-detail/' + ${trip.staff.staff_id}}"
                                 th:text="${trip.staff.account.fullName}"></a></p>
                     </div>
                 </div>
@@ -205,7 +205,7 @@
                                 th:href="@{'/easy-bus/controller-detail/' + ${roundTrip.controller.id}}"
                                 th:text="${roundTrip.controller.account.fullName}"></a></p>
                         <p><strong>Staff:</strong> <a
-                                th:href="@{'/easy-bus/staff-detail/' + ${roundTrip.staff.staffId}}"
+                                th:href="@{'/easy-bus/staff-detail/' + ${roundTrip.staff.staff_id}}"
                                 th:text="${roundTrip.staff.account.fullName}"></a></p>
                     </div>
                 </div>

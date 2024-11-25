@@ -10,7 +10,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface TripMapper {
-    @Mapping(source = "staff.staffId", target = "staff.staff_id")
+    @Mapping(source = "staff.staff_id", target = "staff.staff_id")
     TripDTO entityToDTO(Trip trip);
 
     Trip dtoToEntity(TripDTO tripDTO);

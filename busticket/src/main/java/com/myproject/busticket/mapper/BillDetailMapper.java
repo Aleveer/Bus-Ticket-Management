@@ -14,7 +14,7 @@ public interface BillDetailMapper {
     @Mapping(source = "numberOfTicket", target = "numberOfTicket")
     @Mapping(source = "fee", target = "fee")
     @Mapping(source = "ticketType", target = "ticketType")
-    @Mapping(source = "trip.staff.staffId", target = "trip.staff.staff_id")
+    @Mapping(source = "trip.staff.staff_id", target = "trip.staff.staff_id")
     @Mapping(source = "trip.controller.account.phone", target = "trip.controller.account.phone")
     @Mapping(source = "trip.driver.account.phone", target = "trip.driver.account.phone")
     @Mapping(source = "trip.staff.account.phone", target = "trip.staff.account.phone")

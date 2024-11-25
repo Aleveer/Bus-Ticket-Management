@@ -25,7 +25,6 @@ import com.myproject.busticket.dto.SeatReservationsDTO;
 import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.models.Booking;
 import com.myproject.busticket.models.SeatReservations;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class BookingController {
@@ -101,23 +100,27 @@ public class BookingController {
     // model.addAttribute("tripId", tripId);
     // return "payment";
     // }
-//    @PostMapping("/home/index/booking/oneway")
-//    public String booking(@RequestBody BookingInfoDTO bookingInfoDTO, Model model) {
-//        //bookingService.createTicketOneWay(bookingInfoDTO);
-//        TripDTO selectedTrip = tripService.findById(bookingInfoDTO.getTicketInfoDTO().getTripId());
-//        model.addAttribute("selectedTrip", selectedTrip);
-//        model.addAttribute("bookingInfoDTO", bookingInfoDTO);
-//        return "redirect:/home/index/booking/oneway-payment";
-//    }
+    // @PostMapping("/home/index/booking/oneway")
+    // public String booking(@RequestBody BookingInfoDTO bookingInfoDTO, Model
+    // model) {
+    // //bookingService.createTicketOneWay(bookingInfoDTO);
+    // TripDTO selectedTrip =
+    // tripService.findById(bookingInfoDTO.getTicketInfoDTO().getTripId());
+    // model.addAttribute("selectedTrip", selectedTrip);
+    // model.addAttribute("bookingInfoDTO", bookingInfoDTO);
+    // return "redirect:/home/index/booking/oneway-payment";
+    // }
     @PostMapping("/home/index/booking/oneway-payment")
-    public ResponseEntity<String> payment(@RequestBody BookingInfoDTO bookingInfoDTO, Model model, HttpServletRequest request) {
-        //bookingService.createTicketOneWay(bookingInfoDTO);
-        //TripDTO selectedTrip = tripService.findById(bookingInfoDTO.getTicketInfoDTO().getTripId());
+    public ResponseEntity<String> payment(@RequestBody BookingInfoDTO bookingInfoDTO, Model model,
+            HttpServletRequest request) {
+        // bookingService.createTicketOneWay(bookingInfoDTO);
+        // TripDTO selectedTrip =
+        // tripService.findById(bookingInfoDTO.getTicketInfoDTO().getTripId());
         // Lưu BookingInfoDTO vào session
-        //session.setAttribute("bookingInfoDTO", bookingInfoDTO);
+        // session.setAttribute("bookingInfoDTO", bookingInfoDTO);
 
         try {
-            //session.setAttribute("bookingInfoDTO", bookingInfoDTO);
+            // session.setAttribute("bookingInfoDTO", bookingInfoDTO);
 
             long amount = (long) (bookingInfoDTO.getTicketInfoDTO().getPrice() * 25000);
             VNPayResponse vnPayResponse = vnPayService.createVNPayPayment(amount, "NCB", request);
@@ -137,6 +140,7 @@ public class BookingController {
         }
 
     }
+
     @PostMapping("/home/index/booking/oneway-payment/save")
     public String saveBooking(HttpSession session) {
         BookingInfoDTO bookingInfoDTO = (BookingInfoDTO) session.getAttribute("bookingInfoDTO");
@@ -154,8 +158,8 @@ public class BookingController {
 
         // set isRoundTrip to true
         // set roundTripID
-//        bookingService.createTicket(outboundTicket);
-//        bookingService.createTicket(returnTicket);
+        // bookingService.createTicket(outboundTicket);
+        // bookingService.createTicket(returnTicket);
         return "redirect:/";
     }
 
@@ -309,7 +313,7 @@ public class BookingController {
 
     @PostMapping("/easy-bus/new-booking")
     public String saveBooking(Booking booking) {
-        //bookingService.createTicket(booking);
+        // bookingService.createTicket(booking);
         return "redirect:/easy-bus/booking-management";
     }
 }

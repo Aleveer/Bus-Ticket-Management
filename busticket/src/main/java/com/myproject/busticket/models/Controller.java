@@ -1,7 +1,5 @@
 package com.myproject.busticket.models;
 
-import com.myproject.busticket.enums.ControllerStatus;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,8 +21,4 @@ public class Controller {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", columnDefinition = "enum('active', 'inactive') default 'active'")
-    private ControllerStatus status;
 }

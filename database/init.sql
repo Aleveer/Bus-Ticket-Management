@@ -134,8 +134,7 @@ CREATE TABLE `checkpoint` (
 --
 CREATE TABLE `controller` (
   `controller_id` int(11) NOT NULL,
-  `account_id` int(11) NOT NULL,
-  `status` enum('active', 'inactive') NOT NULL DEFAULT 'active'
+  `account_id` int(11) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -155,8 +154,7 @@ CREATE TABLE `customer` (
 --
 CREATE TABLE `driver` (
   `driver_id` int(11) NOT NULL,
-  `account_id` int(11) NOT NULL,
-  `status` enum('active', 'inactive') NOT NULL DEFAULT 'active'
+  `account_id` int(11) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -243,8 +241,7 @@ CREATE TABLE `spring_session` (
 --
 CREATE TABLE `staff` (
   `staff_id` int(11) NOT NULL,
-  `account_id` int(11) NOT NULL,
-  `status` enum('active', 'inactive') NOT NULL DEFAULT 'active'
+  `account_id` int(11) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------

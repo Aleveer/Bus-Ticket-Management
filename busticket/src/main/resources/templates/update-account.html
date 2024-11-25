@@ -705,7 +705,7 @@
           }
 
           // Pre-select and trigger change for staff
-          const staffRadio = document.querySelector(`input[name='staff'][data-id="${data.trip.staffId}"]`);
+          const staffRadio = document.querySelector(`input[name='staff'][data-id="${data.trip.staff_id}"]`);
           if (staffRadio) {
             staffRadio.checked = true;
             $(staffRadio).trigger("change"); // Trigger change
@@ -734,7 +734,7 @@
       jsonData["busPlate"] = $("input[name='bus']:checked").data("plate");
       jsonData["driverId"] = $("input[name='driver']:checked").data("id");
       jsonData["controllerId"] = $("input[name='controller']:checked").data("id");
-      jsonData["staffId"] = $("input[name='staff']:checked").data("id");
+      jsonData["staff_id"] = $("input[name='staff']:checked").data("id");
       jsonData["routeCode"] = $("input[name='route']:checked").data("code");
       return jsonData;
     }
@@ -871,7 +871,7 @@
           busPlate: $("input[name='bus']:checked").data("plate"),
           driverId: $("input[name='driver']:checked").data("id"),
           controllerId: $("input[name='controller']:checked").data("id"),
-          staffId: $("input[name='staff']:checked").data("id"),
+          staff_id: $("input[name='staff']:checked").data("id"),
           routeCode: $("input[name='route']:checked").data("code")
         };
 

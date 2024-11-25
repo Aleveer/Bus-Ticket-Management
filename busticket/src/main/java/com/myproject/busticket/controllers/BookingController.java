@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import com.myproject.busticket.responses.VNPayResponse;
 import com.myproject.busticket.services.*;
 import com.myproject.busticket.utilities.VNPayUtil;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,7 +143,7 @@ public class BookingController {
     }
 
     @PostMapping("/home/index/booking/oneway-payment/save")
-    public String saveBooking(@RequestBody BookingInfoDTO bookingInfoDTO) {
+    public String saveBooking(@RequestBody BookingInfoDTO bookingInfoDTO) throws MessagingException {
         //BookingInfoDTO bookingInfoDTO = (BookingInfoDTO) session.getAttribute("bookingInfoDTO");
         String paymentDate = bookingInfoDTO.getPaymentDate();
         // Định dạng của chuỗi

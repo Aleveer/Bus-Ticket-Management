@@ -60,7 +60,7 @@ public class BookingService {
         Account account = SecurityUtil.getCurrentAccount();
         return account != null;
     }
-    public void createTicketOneWay(BookingInfoDTO booking, LocalDateTime paymentDate) throws MessagingException {
+    public void createTicketOneWay(BookingInfoDTO booking, LocalDateTime paymentDate) {
         Booking newBooking = new Booking();
 
         // xử lý thông tin khách hàng
@@ -126,7 +126,18 @@ public class BookingService {
         //send Email
         Context context = new Context();
         String subject = "[EASYBUS] HÓA ĐƠN ĐIỆN TỬ CỦA VÉ SỐ" + newBooking.getBookingId();
-        emailService.sendBookingEmail(email, subject, "email-template", context);
+        context.setVariable("routeName", newBooking.getTrip().getRoute().getName());
+        context.setVariable("departureTime", newBooking.getTrip().getDepartureTime());
+        context.setVariable("departureTime", newBooking.getTrip().getDepartureTime());
+        context.setVariable("numberOfSeat", numberOfSeat);
+        context.setVariable("listSeat", booking.getTicketInfoDTO().getSeatNumbers());
+        context.setVariable("totalFee", billDetail.getFee());
+        try {
+            emailService.sendBookingEmail(email, subject, "email-template", context);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public List<Booking> findByTrip(Trip trip) {

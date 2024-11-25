@@ -14,7 +14,6 @@ import com.myproject.busticket.services.CheckpointService;
 import com.myproject.busticket.services.RouteCheckpointService;
 import com.myproject.busticket.services.RouteService;
 
-
 @RequestMapping("/home")
 @Controller
 public class IndexPageController {
@@ -22,7 +21,8 @@ public class IndexPageController {
     RouteCheckpointService routeCheckpointService;
     RouteService routeService;
 
-    public IndexPageController(CheckpointService checkpointService, RouteCheckpointService routeCheckpointService, RouteService routeService) {
+    public IndexPageController(CheckpointService checkpointService, RouteCheckpointService routeCheckpointService,
+            RouteService routeService) {
         this.checkpointService = checkpointService;
         this.routeService = routeService;
         this.routeCheckpointService = routeCheckpointService;
@@ -85,10 +85,6 @@ public class IndexPageController {
         return "404";
     }
 
-    @GetMapping("/login")
-    public String login(){
-        return "login";
-    }
     @GetMapping("/vnpay")
     public String finnishBookingTest() {
         return "vnpay";

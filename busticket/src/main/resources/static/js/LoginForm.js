@@ -15,6 +15,7 @@ let errorMessage = getQueryParam('error');
 if (errorMessage) {
     alert(errorMessage);
 }
+
 document.getElementById("loginForm").addEventListener("submit", async function (event) {
     event.preventDefault();
     const email = document.getElementById("email").value;
@@ -37,8 +38,8 @@ document.getElementById("loginForm").addEventListener("submit", async function (
 
         if (data.success) {
             alert("Login successful");
-            //localStorage.setItem("jwtToken", data.data.loginToken);
-            window.location.href = "/home/index"; // Redirect to index.html
+            window.localStorage.setItem("jwtToken", data.token);
+            window.location.href = "/home/index";
         } else {
             alert(`Failed to login: ${data.message}`);
         }

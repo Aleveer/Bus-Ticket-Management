@@ -55,6 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (jwt == null) {
             logger.warning("JWT token is missing");
+            clearCurrentSession(request, response);
             filterChain.doFilter(request, response);
             return;
         }
@@ -89,7 +90,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private void clearCurrentSession(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
+            logger.info("Invalidating session for user: " + auth.getName());
             new SecurityContextLogoutHandler().logout(request, response, auth);
+            logger.info("Session invalidated and SecurityContext cleared.");
+        } else {
+            logger.info("No authentication found in SecurityContext.");
         }
     }
 }

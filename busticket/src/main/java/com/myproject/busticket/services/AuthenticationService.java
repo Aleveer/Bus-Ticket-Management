@@ -111,14 +111,6 @@ public class AuthenticationService {
         return account;
     }
 
-    public void signOut(String email) {
-        Account account = accountRepository.findByEmail(email)
-                .orElseThrow(() -> new ModelNotFoundException("User not found"));
-
-        account.setLoginToken(null);
-        accountRepository.save(account);
-    }
-
     public void requestPasswordReset(String email) {
         Account account = accountRepository.findByEmail(email)
                 .orElseThrow(
@@ -290,7 +282,14 @@ public class AuthenticationService {
         String emailContent = message.toString();
 
         try {
-            String recipientEmail = account != null ? account.getEmail() : customer.getEmail();
+            String recipientEmail;
+            if (account != null) {
+                recipientEmail = account.getEmail();
+            } else if (customer != null) {
+                recipientEmail = customer.getEmail();
+            } else {
+                throw new ModelNotFoundException("No account or customer found with the provided email.");
+            }
             emailService.sendBillingEmail(recipientEmail, subject, emailContent);
         } catch (MessagingException e) {
             e.printStackTrace();

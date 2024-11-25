@@ -1,5 +1,6 @@
 package com.myproject.busticket.api;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -212,7 +214,11 @@ public class RouteAPI {
 
         // Proceed with the update
         updateRouteDetails(existingRoute, name, time, distance);
-        updateRouteCheckpoints(existingRoute, oldRouteCheckpoints, newCheckpoints);
+        ResponseEntity<Map<String, Object>> checkpointUpdateResponse = updateRouteCheckpoints(existingRoute,
+                oldRouteCheckpoints, newCheckpoints);
+        if (checkpointUpdateResponse.getStatusCode() != HttpStatus.OK) {
+            return checkpointUpdateResponse;
+        }
 
         response.put("message", "Route updated successfully.");
         return ResponseEntity.ok(response);
@@ -275,49 +281,77 @@ public class RouteAPI {
         routeService.save(existingRoute);
     }
 
-    private void updateRouteCheckpoints(Route existingRoute, List<Route_Checkpoint> oldRouteCheckpoints,
+    private ResponseEntity<Map<String, Object>> updateRouteCheckpoints(Route existingRoute,
+            List<Route_Checkpoint> oldRouteCheckpoints,
             List<Map<String, Object>> newCheckpoints) {
+        Map<String, Object> response = new HashMap<>();
+
         if (newCheckpoints.size() < 2) {
-            throw new IllegalArgumentException("A route must have at least 2 checkpoints.");
+            response.put("message", "A route must have at least 2 checkpoints.");
+            return ResponseEntity.badRequest().body(response);
         }
 
-        // Delete old checkpoints
-        for (Route_Checkpoint oldRouteCheckpoint : oldRouteCheckpoints) {
-            routeCheckpointService.delete(oldRouteCheckpoint);
-        }
-
-        // Add new checkpoints
+        // Validate new checkpoints
+        List<Route_Checkpoint> newRouteCheckpoints = new ArrayList<>();
         int i = 1;
         for (Map<String, Object> checkpointData : newCheckpoints) {
             Route_Checkpoint routeCheckpoint = new Route_Checkpoint();
             routeCheckpoint.setRoute(existingRoute);
 
-            Integer checkpointId = parseCheckpointId(checkpointData.get("checkpointId"));
+            Integer checkpointId;
+            try {
+                checkpointId = parseCheckpointId(checkpointData.get("checkpointId"));
+            } catch (IllegalArgumentException e) {
+                response.put("message", "Invalid checkpoint ID format for checkpoint " + i);
+                return ResponseEntity.badRequest().body(response);
+            }
             routeCheckpoint.setCheckpoint(checkpointService.getById(checkpointId));
 
             String type = (String) checkpointData.get("checkpointType");
             if (type == null || type.isEmpty()) {
-                throw new IllegalArgumentException("Checkpoint type is missing.");
+                response.put("message", "Checkpoint type is missing for checkpoint " + i);
+                return ResponseEntity.badRequest().body(response);
             }
 
             if (i == 1) {
                 routeCheckpoint.setType(CheckpointType.departure);
+            } else if (i == newCheckpoints.size()) {
+                routeCheckpoint.setType(CheckpointType.drop_off);
+            } else {
+                CheckpointType checkpointType;
+                try {
+                    checkpointType = parseCheckpointType(type);
+                } catch (IllegalArgumentException e) {
+                    response.put("message", "Invalid checkpoint type for checkpoint " + i);
+                    return ResponseEntity.badRequest().body(response);
+                }
+                if (checkpointType == CheckpointType.departure || checkpointType == CheckpointType.drop_off) {
+                    response.put("message",
+                            "Only the first checkpoint can be 'departure' and the last checkpoint can be 'drop_off'.");
+                    return ResponseEntity.badRequest().body(response);
+                }
+                routeCheckpoint.setType(checkpointType);
             }
 
-            if (i > 1 && i < newCheckpoints.size()) {
-                routeCheckpoint.setType(parseCheckpointType(type));
-            }
-
-            routeCheckpoint.setType(parseCheckpointType(type));
             routeCheckpoint.setCheckpointOrder(checkpointData.get("checkpointOrder") == null ? i++
                     : (int) checkpointData.get("checkpointOrder"));
-            // Take the last index then set drop_off:
-            if (i == newCheckpoints.size()) {
-                routeCheckpoint.setType(CheckpointType.drop_off);
-            }
-            routeCheckpointService.save(routeCheckpoint);
+            newRouteCheckpoints.add(routeCheckpoint);
             i++;
         }
+
+        // If validation passes, proceed with the update
+        // Delete old checkpoints
+        for (Route_Checkpoint oldRouteCheckpoint : oldRouteCheckpoints) {
+            routeCheckpointService.delete(oldRouteCheckpoint);
+        }
+
+        // Save new checkpoints
+        for (Route_Checkpoint newRouteCheckpoint : newRouteCheckpoints) {
+            routeCheckpointService.save(newRouteCheckpoint);
+        }
+
+        response.put("message", "Checkpoints updated successfully.");
+        return ResponseEntity.ok(response);
     }
 
     private Integer parseCheckpointId(Object checkpointIdObj) {

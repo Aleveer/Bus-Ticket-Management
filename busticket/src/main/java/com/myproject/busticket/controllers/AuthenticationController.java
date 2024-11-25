@@ -2,6 +2,7 @@ package com.myproject.busticket.controllers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +28,6 @@ import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.LoginUserModel;
 import com.myproject.busticket.models.RegisterUserModel;
 import com.myproject.busticket.models.VerifyAccountModel;
-import com.myproject.busticket.services.AccountService;
 import com.myproject.busticket.services.AuthenticationService;
 import com.myproject.busticket.services.JwtService;
 
@@ -38,9 +38,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/auth")
 @Controller
 public class AuthenticationController {
-
-    @Autowired
-    private AccountService accountService;
+    private static final Logger logger = Logger.getLogger(AuthenticationController.class.getName());
 
     @Autowired
     private JwtService jwtService;
@@ -99,9 +97,6 @@ public class AuthenticationController {
         try {
             Account authenticatedAccount = authenticationService.signIn(loginUserDto);
             String jwtToken = jwtService.generateToken(authenticatedAccount);
-            authenticatedAccount.setLoginToken(jwtToken);
-            accountService.save(authenticatedAccount);
-
             Cookie cookie = new Cookie("jwtToken", jwtToken);
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
@@ -112,6 +107,7 @@ public class AuthenticationController {
             responseBody.put("success", true);
             responseBody.put("message", "Login successful");
             responseBody.put("data", authenticatedAccount);
+            responseBody.put("token", jwtToken);
             return ResponseEntity.ok(responseBody);
         } catch (AccountStatusException e) {
             responseBody.put("success", false);
@@ -123,20 +119,30 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
     }
+
     @ResponseBody
     @PostMapping("/logout")
     public Map<String, Object> signOut(@RequestBody Map<String, String> request, HttpServletRequest httpRequest,
             HttpServletResponse httpResponse) {
         Map<String, Object> response = new HashMap<>();
         try {
-            String email = request.get("email");
-            authenticationService.signOut(email);
+            logger.info("Attempting to clear JWT token");
+
+            // Invalidate the JWT token by setting its max age to 0
+            Cookie cookie = new Cookie("jwtToken", null);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(0);
+            httpResponse.addCookie(cookie);
+
             clearCurrentSession(httpRequest, httpResponse);
+
+            logger.info("JWT token cleared and current session invalidated.");
             response.put("success", true);
             response.put("message", "User signed out successfully");
-        } catch (ModelNotFoundException e) {
-            throw e;
         } catch (Exception e) {
+            logger.severe("An error occurred during signing out: " + e.getMessage());
             response.put("success", false);
             response.put("message", "An error occurred during signing out");
         }
@@ -184,12 +190,12 @@ public class AuthenticationController {
             authenticationService.resetPassword(token, newPassword);
             String message = "Password reset successfully";
             return ResponseEntity.status(HttpStatus.FOUND)
-                    .header(HttpHeaders.LOCATION, "/home/login?message=" + message)
+                    .header(HttpHeaders.LOCATION, "/auth/login?message=" + message)
                     .body(response);
         } catch (ModelNotFoundException | ValidationException | AccountStatusException e) {
             String message = e.getMessage();
             return ResponseEntity.status(HttpStatus.FOUND)
-                    .header(HttpHeaders.LOCATION, "/home/login?error=" + message)
+                    .header(HttpHeaders.LOCATION, "/auth/login?error=" + message)
                     .body(response);
         }
     }
@@ -214,7 +220,11 @@ public class AuthenticationController {
     private void clearCurrentSession(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
+            logger.info("Invalidating session for user: " + auth.getName());
             new SecurityContextLogoutHandler().logout(request, response, auth);
+            logger.info("Session invalidated and SecurityContext cleared.");
+        } else {
+            logger.info("No authentication found in SecurityContext.");
         }
     }
 }

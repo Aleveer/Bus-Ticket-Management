@@ -489,12 +489,17 @@
             formData.append('fullName', $('#updateName').val());
             formData.append('phone', $('#updatePhone').val());
             formData.append('status', $('#updateStatus').val());
-            formData.append('password', $('#newPassword').val());
 
             // Kiểm tra mật khẩu và xác nhận mật khẩu
-            if ($('#newPassword').val() !== $('#confirmNewPassword').val()) {
+            var newPassword = $('#newPassword').val();
+            if (newPassword !== $('#confirmNewPassword').val()) {
                 alert('New password and confirm new password do not match.');
                 return;
+            }
+
+            // Nếu mật khẩu mới có giá trị, thì mới thêm vào FormData
+            if (newPassword) {
+                formData.append('password', newPassword);
             }
 
             // Gửi yêu cầu POST tới backend

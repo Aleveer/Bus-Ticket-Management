@@ -53,7 +53,7 @@ public class VNPayController {
             // Xử lý logic thanh toán tại đây
             String paymentTime = queryParams.get("vnp_CreateDate");
             model.addAttribute("paymentTime", paymentTime);
-            return "payment-successfull";
+            return "vnpay";
         } else if("02".equals(transactionStatus)){
             return "404";
         } else {

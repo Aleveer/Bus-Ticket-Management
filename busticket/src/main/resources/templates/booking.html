@@ -434,7 +434,7 @@
                 }
                 
             };
-
+            document.cookie = "bookingInfo=" + JSON.stringify(ticket) + "; path=/; max-age=3600";
             fetch('/home/index/booking/oneway-payment', {
                 method: 'POST',
                 headers: {

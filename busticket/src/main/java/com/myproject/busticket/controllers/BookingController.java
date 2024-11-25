@@ -9,7 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.myproject.busticket.responses.VNPayResponse;
+import com.myproject.busticket.services.*;
+import com.myproject.busticket.utilities.VNPayUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +24,7 @@ import com.myproject.busticket.dto.SeatReservationsDTO;
 import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.models.Booking;
 import com.myproject.busticket.models.SeatReservations;
-import com.myproject.busticket.services.BookingService;
-import com.myproject.busticket.services.CustomerService;
-import com.myproject.busticket.services.RouteCheckpointService;
-import com.myproject.busticket.services.SeatReservationsService;
-import com.myproject.busticket.services.TripService;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class BookingController {
@@ -41,6 +42,9 @@ public class BookingController {
 
     @Autowired
     private SeatReservationsService seatReservationsService;
+
+    @Autowired
+    private VNPayService vnPayService;
 
     @GetMapping("/home/index/search")
     public String searchForm(@RequestParam String tripType, @RequestParam String departure,
@@ -96,10 +100,33 @@ public class BookingController {
     // model.addAttribute("tripId", tripId);
     // return "payment";
     // }
-    @PostMapping("/home/index/booking/oneway")
-    public String booking(@RequestBody BookingInfoDTO bookingInfoDTO) {
-        bookingService.createTicketOneWay(bookingInfoDTO);
-        return "redirect:/";
+//    @PostMapping("/home/index/booking/oneway")
+//    public String booking(@RequestBody BookingInfoDTO bookingInfoDTO, Model model) {
+//        //bookingService.createTicketOneWay(bookingInfoDTO);
+//        TripDTO selectedTrip = tripService.findById(bookingInfoDTO.getTicketInfoDTO().getTripId());
+//        model.addAttribute("selectedTrip", selectedTrip);
+//        model.addAttribute("bookingInfoDTO", bookingInfoDTO);
+//        return "redirect:/home/index/booking/oneway-payment";
+//    }
+    @PostMapping("/home/index/booking/oneway-payment")
+    public ResponseEntity<String> payment(@RequestBody BookingInfoDTO bookingInfoDTO, Model model, HttpServletRequest request) {
+        //bookingService.createTicketOneWay(bookingInfoDTO);
+        //TripDTO selectedTrip = tripService.findById(bookingInfoDTO.getTicketInfoDTO().getTripId());
+        long amount = (long) (bookingInfoDTO.getTicketInfoDTO().getPrice() * 25000);
+        VNPayResponse vnPayResponse = vnPayService.createVNPayPayment(amount, "NCB", request);
+
+        Map<String, String> params = VNPayUtil.extractParamsFromUrl(vnPayResponse.paymentURL());
+        boolean isPaymentValid = vnPayService.verifyVNPayPayment(params, params.get("vnp_SecureHash"));
+
+        if (isPaymentValid) {
+            // TODO: Save payment and other details to database
+            System.out.println("Payment URL: " + vnPayResponse.paymentURL());
+            return ResponseEntity.ok(vnPayResponse.paymentURL());
+           // return "redirect:" + vnPayResponse.paymentURL();
+        } else {
+            return ResponseEntity.badRequest().body("Không thể tạo link thanh toán");
+        }
+
     }
 
     @PostMapping("/home/index/booking/roundtrip")

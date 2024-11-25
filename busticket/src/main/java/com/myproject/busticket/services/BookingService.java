@@ -10,6 +10,7 @@ import com.myproject.busticket.repositories.BookingRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.myproject.busticket.utilities.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ public class BookingService {
     private CustomerService customerService;
     private SeatReservationsService seatReservationsService;
 
+
     public BookingService(BookingRepository bookingRepository, TripService tripService, AccountService accountService, CustomerService customerService, SeatReservationsService seatReservationsService) {
         this.bookingRepository = bookingRepository;
         this.tripService = tripService;
@@ -39,13 +41,13 @@ public class BookingService {
 
 
     public boolean checkLogin(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account currentAccount = (Account) authentication.getPrincipal();
-        return currentAccount != null;
+        Account account = SecurityUtil.getCurrentAccount();
+        return account != null;
     }
     public void createTicketOneWay(BookingInfoDTO booking) {
         Booking newBooking = new Booking();
 
+        // xử lý thông tin khách hàng
         String email = booking.getCustomer().getEmail();
 //        if (checkLogin()) {
 //            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -72,6 +74,7 @@ public class BookingService {
         customerService.create(newCustomer);
         newBooking.setCustomer(newCustomer);
 
+        // lưu vé
         int tripId = booking.getTicketInfoDTO().getTripId();
         newBooking.setTrip(tripService.findTripById(tripId));
 
@@ -81,11 +84,16 @@ public class BookingService {
         newBooking.setRoundTripId(null);
         bookingRepository.save(newBooking);
 
+        // đổi trạng thái số ghế
         List<Integer> listSeatId = booking.getTicketInfoDTO().getSeatNumbers().stream()
                 .map(Integer::valueOf)
                 .toList();
         int bookingID = newBooking.getBookingId();
         seatReservationsService.updateStatusWithBooking(listSeatId, bookingID);
+
+        // lưu hóa đơn
+
+        // lưu chi tiết hóa đơn
     }
 
     public List<Booking> findByTrip(Trip trip) {

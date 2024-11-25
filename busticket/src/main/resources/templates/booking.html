@@ -431,7 +431,8 @@
                     numberOfSeat: parseInt(document.getElementById('count').innerText),
                     seatNumbers: listselectedSeatID,
                     price: parseFloat(document.getElementById('total').innerText),
-                }
+                },
+                paymentDay: null
                 
             };
             document.cookie = "bookingInfo=" + JSON.stringify(ticket) + "; path=/; max-age=3600";

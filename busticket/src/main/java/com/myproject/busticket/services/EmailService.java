@@ -6,11 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 @Service
 public class EmailService {
     @Autowired
     private JavaMailSender emailSender;
+
+    @Autowired
+    private TemplateEngine templateEngine;
 
     public void sendVerificationEmail(String to, String subject, String text) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
@@ -33,4 +38,19 @@ public class EmailService {
 
         emailSender.send(mimeMessage);
     }
+
+    public void sendBookingEmail(String email, String subject, String template, Context context) throws MessagingException {
+        MimeMessage mimeMessage = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+
+        String htmlContent = templateEngine.process(template, context);
+
+        helper.setTo(email);
+        helper.setSubject(subject);
+        helper.setText(htmlContent, true);
+
+        emailSender.send(mimeMessage);
+    }
+
+
 }

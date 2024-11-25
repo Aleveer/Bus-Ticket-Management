@@ -142,9 +142,15 @@ public class BookingController {
     }
 
     @PostMapping("/home/index/booking/oneway-payment/save")
-    public String saveBooking(HttpSession session) {
-        BookingInfoDTO bookingInfoDTO = (BookingInfoDTO) session.getAttribute("bookingInfoDTO");
-        bookingService.createTicketOneWay(bookingInfoDTO);
+    public String saveBooking(@RequestBody BookingInfoDTO bookingInfoDTO) {
+        //BookingInfoDTO bookingInfoDTO = (BookingInfoDTO) session.getAttribute("bookingInfoDTO");
+        String paymentDate = bookingInfoDTO.getPaymentDate();
+        // Định dạng của chuỗi
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+        // Chuyển đổi chuỗi thành LocalDateTime
+        LocalDateTime paymentFormat = LocalDateTime.parse(paymentDate, formatter);
+        bookingService.createTicketOneWay(bookingInfoDTO, paymentFormat);
         return "index";
     }
 

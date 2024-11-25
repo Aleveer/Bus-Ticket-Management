@@ -16,4 +16,7 @@ public class BookingInfoDTO {
 
     @JsonProperty("tripDetail")
     private TicketInfoDTO ticketInfoDTO;
+
+    @JsonProperty("paymentDate")
+    private String paymentDate;
 }

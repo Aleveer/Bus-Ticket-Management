@@ -1,22 +1,24 @@
 package com.myproject.busticket.services;
 
 import com.myproject.busticket.dto.BookingInfoDTO;
-import com.myproject.busticket.models.Account;
-import com.myproject.busticket.models.Booking;
-import com.myproject.busticket.models.Customer;
-import com.myproject.busticket.models.Trip;
+import com.myproject.busticket.enums.PaymentMethod;
+import com.myproject.busticket.enums.TicketType;
+import com.myproject.busticket.models.*;
 import com.myproject.busticket.repositories.BookingRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.myproject.busticket.utilities.SecurityUtil;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 
 @Service
 public class BookingService {
@@ -25,14 +27,28 @@ public class BookingService {
     private AccountService accountService;
     private CustomerService customerService;
     private SeatReservationsService seatReservationsService;
+    private BillService billService;
+    private BillDetailService billDetailService;
+
+    private EmailService emailService;
 
 
-    public BookingService(BookingRepository bookingRepository, TripService tripService, AccountService accountService, CustomerService customerService, SeatReservationsService seatReservationsService) {
+    public BookingService(BookingRepository bookingRepository,
+                          TripService tripService,
+                          AccountService accountService,
+                          CustomerService customerService,
+                          SeatReservationsService seatReservationsService,
+                          BillService billService,
+                          BillDetailService billDetailService,
+                          EmailService emailService) {
         this.bookingRepository = bookingRepository;
         this.tripService = tripService;
         this.accountService = accountService;
         this.customerService = customerService;
         this.seatReservationsService = seatReservationsService;
+        this.billService = billService;
+        this.billDetailService = billDetailService;
+        this.emailService = emailService;
     }
 
     public Booking getBookingById(int bookingId) {
@@ -44,7 +60,7 @@ public class BookingService {
         Account account = SecurityUtil.getCurrentAccount();
         return account != null;
     }
-    public void createTicketOneWay(BookingInfoDTO booking) {
+    public void createTicketOneWay(BookingInfoDTO booking, LocalDateTime paymentDate) throws MessagingException {
         Booking newBooking = new Booking();
 
         // xử lý thông tin khách hàng
@@ -92,8 +108,25 @@ public class BookingService {
         seatReservationsService.updateStatusWithBooking(listSeatId, bookingID);
 
         // lưu hóa đơn
+        Bill bill = new Bill();
+        bill.setCustomer(newCustomer);
+        bill.setPaymentMethod(PaymentMethod.vnpay);
+        bill.setPaymentDate(paymentDate);
+        billService.save(bill);
 
         // lưu chi tiết hóa đơn
+        Bill_Detail billDetail = new Bill_Detail();
+        billDetail.setBill(bill);
+        billDetail.setTrip(newBooking.getTrip());
+        billDetail.setNumberOfTicket(numberOfSeat);
+        billDetail.setFee(newBooking.getTrip().getPrice());
+        billDetail.setTicketType(TicketType.one_way_ticket);
+        billDetailService.save(billDetail);
+
+        //send Email
+        Context context = new Context();
+        String subject = "[EASYBUS] HÓA ĐƠN ĐIỆN TỬ CỦA VÉ SỐ" + newBooking.getBookingId();
+        emailService.sendBookingEmail(email, subject, "email-template", context);
     }
 
     public List<Booking> findByTrip(Trip trip) {

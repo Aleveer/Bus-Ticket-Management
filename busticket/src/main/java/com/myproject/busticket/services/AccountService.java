@@ -35,6 +35,10 @@ public class AccountService {
     // return accountRepository.findByRole(role);
     // }
 
+    public void delete(int accountId){
+        accountRepository.deleteById(accountId);
+    }
+
     public List<Account> allAccounts() {
         List<Account> users = new ArrayList<>();
         accountRepository.findAll().forEach(users::add);

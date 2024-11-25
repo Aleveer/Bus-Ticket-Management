@@ -123,7 +123,7 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
         }
     }
-
+    @ResponseBody
     @PostMapping("/logout")
     public Map<String, Object> signOut(@RequestBody Map<String, String> request, HttpServletRequest httpRequest,
             HttpServletResponse httpResponse) {

@@ -300,10 +300,23 @@ public class RouteAPI {
                 throw new IllegalArgumentException("Checkpoint type is missing.");
             }
 
+            if (i == 1) {
+                routeCheckpoint.setType(CheckpointType.departure);
+            }
+
+            if (i > 1 && i < newCheckpoints.size()) {
+                routeCheckpoint.setType(parseCheckpointType(type));
+            }
+
             routeCheckpoint.setType(parseCheckpointType(type));
             routeCheckpoint.setCheckpointOrder(checkpointData.get("checkpointOrder") == null ? i++
                     : (int) checkpointData.get("checkpointOrder"));
+            // Take the last index then set drop_off:
+            if (i == newCheckpoints.size()) {
+                routeCheckpoint.setType(CheckpointType.drop_off);
+            }
             routeCheckpointService.save(routeCheckpoint);
+            i++;
         }
     }
 

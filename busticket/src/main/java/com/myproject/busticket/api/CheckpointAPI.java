@@ -106,7 +106,16 @@ public class CheckpointAPI {
         String city = (String) checkpointRequest.get("city");
         String phone = (String) checkpointRequest.get("phone");
         String region = (String) checkpointRequest.get("region");
-
+        if (region.equals("mien_bac")) {
+            region = "Miền Bắc";
+        } else if (region.equals("mien_trung")) {
+            region = "Miền Trung";
+        } else if (region.equals("mien_nam")) {
+            region = "Miền Nam";
+        } else {
+            response.put("message", "Invalid region.");
+            return ResponseEntity.badRequest().body(response);
+        }
         String validationMessage = CheckpointValidation.validateCheckpointFields(placeName, address, province, city,
                 phone, region);
         if (validationMessage != null) {
@@ -153,6 +162,17 @@ public class CheckpointAPI {
         String city = (String) checkpointRequest.get("city");
         String phone = (String) checkpointRequest.get("phone");
         String region = (String) checkpointRequest.get("region");
+
+        if (region.equals("mien_bac")) {
+            region = "Miền Bắc";
+        } else if (region.equals("mien_trung")) {
+            region = "Miền Trung";
+        } else if (region.equals("mien_nam")) {
+            region = "Miền Nam";
+        } else {
+            response.put("message", "Invalid region.");
+            return ResponseEntity.badRequest().body(response);
+        }
 
         String validationMessage = CheckpointValidation.validateCheckpointFields(placeName, address, province, city,
                 phone, region);

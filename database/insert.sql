@@ -4803,27 +4803,27 @@ VALUES
     );
 
 INSERT INTO
-    `controller` (`controller_id`, `account_id`, `status`)
+    `controller` (`controller_id`, `account_id`)
 VALUES
-    (1, 3, 'active'),
-    (2, 9, 'inactive'),
-    (3, 14, 'active');
+    (1, 3),
+    (2, 9),
+    (3, 14);
 
 INSERT INTO
-    `driver` (`driver_id`, `account_id`, `status`)
+    `driver` (`driver_id`, `account_id`)
 VALUES
-    (1, 2, 'active'),
-    (2, 7, 'active'),
-    (3, 12, 'active'),
-    (4, 18, 'inactive');
+    (1, 2),
+    (2, 7),
+    (3, 12),
+    (4, 18);
 
 INSERT INTO
-    `staff` (`staff_id`, `account_id`, `status`)
+    `staff` (`staff_id`, `account_id`)
 VALUES
-    (1, 4, 'active'),
-    (2, 8, 'active'),
-    (3, 15, 'active'),
-    (4, 20, 'active');
+    (1, 4),
+    (2, 8),
+    (3, 15),
+    (4, 20);
 
 INSERT INTO
     `customer` (`customer_id`, `email`, `name`, `phone`)
@@ -4950,107 +4950,107 @@ VALUES
     );
 
 INSERT INTO
-    `staff` (`staff_id`, `account_id`, `status`)
+    `staff` (`staff_id`, `account_id`)
 VALUES
-    (5, 16, 'active');
+    (5, 16);
 
-INSERT INTO
-    `trip` (
-        `trip_id`,
-        `departure_time`,
-        `arrival_time`,
-        `price`,
-        `status`,
-        `bus_id`,
-        `driver_id`,
-        `controller_id`,
-        `staff_id`,
-        `route_code`
-    )
-SELECT
-    NULL,
-    CASE
-        WHEN RAND() < 0.5 THEN DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 30) DAY)
-        ELSE DATE_ADD(NOW(), INTERVAL FLOOR(RAND() * 30) DAY)
-    END AS departure_time,
-    CASE
-        WHEN RAND() < 0.5 THEN DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 30 + 1) DAY)
-        ELSE DATE_ADD(NOW(), INTERVAL FLOOR(RAND() * 30 + 1) DAY)
-    END AS arrival_time,
-    ROUND(RAND() * 100 + 20, 2) AS price,
-    /* Random price between 20 and 120 */
-    CASE
-        WHEN RAND() < 0.5 THEN CASE
-            WHEN RAND() < 0.5 THEN 'finished'
-            ELSE 'arriving'
-        END
-        ELSE CASE
-            WHEN RAND() < 0.7 THEN 'waiting'
-            WHEN RAND() < 0.85 THEN 'arriving'
-            ELSE 'started'
-        END
-    END AS status,
-    bus.bus_id,
-    driver.driver_id,
-    controller.controller_id,
-    staff.staff_id,
-    route.code AS route_code
-FROM
-    (
-        SELECT
-            1
-        FROM
-            DUAL
-        LIMIT
-            3
-    ) AS x
-    JOIN (
-        SELECT
-            bus_id
-        FROM
-            `bus`
-        ORDER BY
-            RAND()
-        LIMIT
-            3
-    ) AS bus ON 1 = 1
-    JOIN (
-        SELECT
-            driver_id
-        FROM
-            `driver`
-        ORDER BY
-            RAND()
-        LIMIT
-            3
-    ) AS driver ON 1 = 1
-    JOIN (
-        SELECT
-            controller_id
-        FROM
-            `controller`
-        ORDER BY
-            RAND()
-        LIMIT
-            3
-    ) AS controller ON 1 = 1
-    JOIN (
-        SELECT
-            staff_id
-        FROM
-            `staff`
-        ORDER BY
-            RAND()
-        LIMIT
-            3
-    ) AS staff ON 1 = 1
-    JOIN (
-        SELECT
-            `code`
-        FROM
-            `route`
-        ORDER BY
-            RAND()
-        LIMIT
-            3
-    ) AS route ON 1 = 1;
+-- INSERT INTO
+--     `trip` (
+--         `trip_id`,
+--         `departure_time`,
+--         `arrival_time`,
+--         `price`,
+--         `status`,
+--         `bus_id`,
+--         `driver_id`,
+--         `controller_id`,
+--         `staff_id`,
+--         `route_code`
+--     )
+-- SELECT
+--     NULL,
+--     CASE
+--         WHEN RAND() < 0.5 THEN DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 30) DAY)
+--         ELSE DATE_ADD(NOW(), INTERVAL FLOOR(RAND() * 30) DAY)
+--     END AS departure_time,
+--     CASE
+--         WHEN RAND() < 0.5 THEN DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 30 + 1) DAY)
+--         ELSE DATE_ADD(NOW(), INTERVAL FLOOR(RAND() * 30 + 1) DAY)
+--     END AS arrival_time,
+--     ROUND(RAND() * 100 + 20, 2) AS price,
+--     /* Random price between 20 and 120 */
+--     CASE
+--         WHEN RAND() < 0.5 THEN CASE
+--             WHEN RAND() < 0.5 THEN 'finished'
+--             ELSE 'arriving'
+--         END
+--         ELSE CASE
+--             WHEN RAND() < 0.7 THEN 'waiting'
+--             WHEN RAND() < 0.85 THEN 'arriving'
+--             ELSE 'started'
+--         END
+--     END AS status,
+--     bus.bus_id,
+--     driver.driver_id,
+--     controller.controller_id,
+--     staff.staff_id,
+--     route.code AS route_code
+-- FROM
+--     (
+--         SELECT
+--             1
+--         FROM
+--             DUAL
+--         LIMIT
+--             3
+--     ) AS x
+--     JOIN (
+--         SELECT
+--             bus_id
+--         FROM
+--             `bus`
+--         ORDER BY
+--             RAND()
+--         LIMIT
+--             3
+--     ) AS bus ON 1 = 1
+--     JOIN (
+--         SELECT
+--             driver_id
+--         FROM
+--             `driver`
+--         ORDER BY
+--             RAND()
+--         LIMIT
+--             3
+--     ) AS driver ON 1 = 1
+--     JOIN (
+--         SELECT
+--             controller_id
+--         FROM
+--             `controller`
+--         ORDER BY
+--             RAND()
+--         LIMIT
+--             3
+--     ) AS controller ON 1 = 1
+--     JOIN (
+--         SELECT
+--             staff_id
+--         FROM
+--             `staff`
+--         ORDER BY
+--             RAND()
+--         LIMIT
+--             3
+--     ) AS staff ON 1 = 1
+--     JOIN (
+--         SELECT
+--             `code`
+--         FROM
+--             `route`
+--         ORDER BY
+--             RAND()
+--         LIMIT
+--             3
+--     ) AS route ON 1 = 1;

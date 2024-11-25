@@ -1,5 +1,6 @@
 package com.myproject.busticket.controllers;
 
+import com.myproject.busticket.models.Role;
 import com.myproject.busticket.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,11 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import com.myproject.busticket.models.Account;
 import com.myproject.busticket.services.AccountService;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -83,6 +82,14 @@ public class AccountController {
         existingAccount.setStatus(account.getStatus());
         existingAccount.setPassword(account.getPassword());
         accountService.save(existingAccount);
+        return "redirect:/easy-bus/account-management";
+    }
+
+    @PostMapping("/easy-bus/new-account")
+    public String saveAccount(@ModelAttribute Account account, @RequestParam String roleName) {
+        Role role = roleService.getRoleByName(roleName);
+        account.setRole(role); // Gán role từ cơ sở dữ liệu
+        accountService.save(account);
         return "redirect:/easy-bus/account-management";
     }
 }

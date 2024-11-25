@@ -457,9 +457,9 @@ public class BillAPI {
         }
 
         if (roundTripId != null) {
-            if (tripService.findTripById(tripId).getDepartureTime()
+            if (tripService.findTripById(tripId).getArrivalTime()
                     .isAfter(tripService.findTripById(roundTripId).getDepartureTime())) {
-                response.put("errorMessage", "Departure time of round trip must be after departure time of trip.");
+                response.put("errorMessage", "Departure time of round trip must be after arrival time of trip.");
                 response.put("success", false);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
@@ -491,7 +491,11 @@ public class BillAPI {
         billDetail.setTrip(tripService.findTripById(tripId));
         billDetail.setNumberOfTicket(numberOfTickets);
         billDetail.setFee(fee);
-        billDetail.setTicketType(TicketType.one_way_ticket);
+        if (ticketType.equals("round_trip_ticket")) {
+            billDetail.setTicketType(TicketType.round_trip_ticket);
+        } else {
+            billDetail.setTicketType(TicketType.one_way_ticket);
+        }
         billDetailService.save(billDetail);
 
         if (ticketType.equals("round_trip_ticket") && roundTripId != null) {

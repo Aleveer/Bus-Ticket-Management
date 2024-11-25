@@ -56,7 +56,7 @@ public class ControllerAPI {
                             account.getPasswordResetToken(),
                             account.getPasswordResetExpiration(),
                             account.isEnabled());
-                    return new ControllerDTO(controller.getId(), accountDTO, controller.getStatus());
+                    return new ControllerDTO(controller.getId(), accountDTO);
                 })
                 .collect(Collectors.toList());
 

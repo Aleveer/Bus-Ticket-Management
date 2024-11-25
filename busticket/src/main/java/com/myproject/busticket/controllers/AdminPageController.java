@@ -232,7 +232,6 @@ public class AdminPageController {
 		int totalPages = bookingPages.getTotalPages();
 		int startPage = Math.max(0, page - 2);
 		int endPage = Math.min(totalPages - 1, page + 2);
-
 		List<BookingDTO> bookings = bookingPages.getContent().stream()
 				.map(booking -> new BookingDTO(
 						booking.getBookingId(),
@@ -266,8 +265,7 @@ public class AdminPageController {
 												booking.getTrip().getDriver().getAccount().getLoginToken(),
 												booking.getTrip().getDriver().getAccount().getPasswordResetToken(),
 												booking.getTrip().getDriver().getAccount().getPasswordResetExpiration(),
-												booking.getTrip().getDriver().getAccount().isEnabled()),
-										booking.getTrip().getDriver().getStatus()),
+												booking.getTrip().getDriver().getAccount().isEnabled())),
 								new ControllerDTO(
 										booking.getTrip().getController().getId(),
 										new AccountDTO(
@@ -285,10 +283,9 @@ public class AdminPageController {
 												booking.getTrip().getController().getAccount().getPasswordResetToken(),
 												booking.getTrip().getController().getAccount()
 														.getPasswordResetExpiration(),
-												booking.getTrip().getController().getAccount().isEnabled()),
-										booking.getTrip().getController().getStatus()),
+												booking.getTrip().getController().getAccount().isEnabled())),
 								new StaffDTO(
-										booking.getTrip().getStaff().getStaffId(),
+										booking.getTrip().getStaff().getStaff_id(),
 										new AccountDTO(
 												booking.getTrip().getStaff().getAccount().getId(),
 												booking.getTrip().getStaff().getAccount().getEmail(),
@@ -302,8 +299,7 @@ public class AdminPageController {
 												booking.getTrip().getStaff().getAccount().getLoginToken(),
 												booking.getTrip().getStaff().getAccount().getPasswordResetToken(),
 												booking.getTrip().getStaff().getAccount().getPasswordResetExpiration(),
-												booking.getTrip().getStaff().getAccount().isEnabled()),
-										booking.getTrip().getStaff().getStatus()),
+												booking.getTrip().getStaff().getAccount().isEnabled())),
 								new RouteDTO(
 										booking.getTrip().getRoute().getRouteId(),
 										booking.getTrip().getRoute().getCode(),
@@ -314,7 +310,6 @@ public class AdminPageController {
 						booking.isRoundTrip(),
 						booking.getRoundTripId()))
 				.collect(Collectors.toList());
-
 		List<Integer> pageNumbers = IntStream.rangeClosed(startPage, endPage)
 				.boxed()
 				.collect(Collectors.toList());

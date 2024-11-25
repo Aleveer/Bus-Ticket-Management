@@ -56,7 +56,7 @@ public class StaffAPI {
                             account.getPasswordResetToken(),
                             account.getPasswordResetExpiration(),
                             account.isEnabled());
-                    return new StaffDTO(staff.getStaffId(), accountDTO, staff.getStatus());
+                    return new StaffDTO(staff.getStaff_id(), accountDTO);
                 })
                 .collect(Collectors.toList());
 

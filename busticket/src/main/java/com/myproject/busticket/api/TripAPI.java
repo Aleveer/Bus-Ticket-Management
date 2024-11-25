@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -308,7 +307,7 @@ public class TripAPI {
             return ResponseEntity.badRequest().body(response);
         }
 
-        int staffId = Integer.parseInt(tripRequest.get("staffId").toString());
+        int staffId = Integer.parseInt(tripRequest.get("staff_id").toString());
         if (staffId <= 0) {
             response.put("message", "Staff ID is required.");
             return ResponseEntity.badRequest().body(response);
@@ -632,7 +631,7 @@ public class TripAPI {
                 response.put("errorMessage", "Controller not found.");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-            Staff staff = staffService.getStaffById(trip.getStaff().getStaffId());
+            Staff staff = staffService.getStaffById(trip.getStaff().getStaff_id());
             if (staff == null) {
                 response.put("errorMessage", "Staff not found.");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -651,7 +650,7 @@ public class TripAPI {
             tripData.put("busPlate", trip.getBus().getPlate());
             tripData.put("driverId", trip.getDriver().getDriverId());
             tripData.put("controllerId", trip.getController().getId());
-            tripData.put("staff_id", trip.getStaff().getStaffId());
+            tripData.put("staff_id", trip.getStaff().getStaff_id());
             tripData.put("routeCode", trip.getRoute().getCode());
             response.put("trip", tripData);
             return ResponseEntity.ok(response);
@@ -717,17 +716,11 @@ public class TripAPI {
             seatReservationService.deleteAll(reservations);
         }
 
-        List<Booking> bookings = bookingService.findByTrip(existingTrip);
-        if (!bookings.isEmpty()) {
-            bookingService.deleteAll(bookings);
-        }
-
         List<Bill_Detail> billDetails = billDetailService.findByTrip(existingTrip);
-        for (Bill_Detail billDetail : billDetails) {
-            Optional<Bill> bill = billService.findByBillId(billDetail.getBill());
-            if (bill.isPresent()) {
-                billService.delete(bill.get());
-            }
+        if (!billDetails.isEmpty()) {
+            Bill bill = billDetails.get(0).getBill();
+            billDetailService.deleteAll(billDetails);
+            billService.delete(bill);
         }
 
         tripService.deleteTripById(tripId);

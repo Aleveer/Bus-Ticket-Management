@@ -22,8 +22,8 @@ public class StaffService {
         return staffRepository.findAll();
     }
 
-    public Staff getStaffById(int id) {
-        return staffRepository.findByStaffId(id);
+    public Staff getStaffById(int staff_id) {
+        return staffRepository.findById(staff_id).isPresent() ? staffRepository.findById(staff_id).get() : null;
     }
 
     public Page<Staff> getAllStaffs(Pageable pageable) {

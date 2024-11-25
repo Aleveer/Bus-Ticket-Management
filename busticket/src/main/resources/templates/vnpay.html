@@ -78,29 +78,29 @@
 
 <script>
     function getCookie(name) {
-        const value = ; ${document.cookie};
-        const parts = value.split(; ${name}=);
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
         if (parts.length === 2) return parts.pop().split(';').shift();
         return null;
-    }
-
-    const bookingInfoCookie = getCookie('bookingInfo');
-    if (bookingInfoCookie) {
-        const bookingInfo = JSON.parse(bookingInfoCookie);
-        console.log(bookingInfo);  // In thông tin vé đã lưu
-    } else {
-        console.log("Không tìm thấy thông tin booking.");
     }
 
     // Gọi POST method để lưu thông tin BookingInfoDTO từ session
     (async function confirmBooking() {
         try {
+            const paymentDate = document.getElementById('payment_date').value;
+            const bookingInfo = JSON.parse(getCookie("bookingInfo"));
+            console.log('paymentDate:', paymentDate);
+            console.log('bookingInfo:', bookingInfo);
             const response = await fetch('/home/index/booking/oneway-payment/save', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(getCookie('bookingInfo'))
+                body: JSON.stringify({
+                    cusDetail: bookingInfo.cusDetail, // Parse cookie nếu có
+                    tripDetail: bookingInfo.tripDetail, // Parse cookie nếu có
+                    paymentDate: paymentDate, // Thêm payment_date vào body
+                })
             });
 
             if (response.ok) {

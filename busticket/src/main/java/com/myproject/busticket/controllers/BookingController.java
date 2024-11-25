@@ -34,8 +34,8 @@ import com.myproject.busticket.services.TripService;
 import com.myproject.busticket.services.VNPayService;
 import com.myproject.busticket.utilities.VNPayUtil;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class BookingController {
@@ -155,9 +155,15 @@ public class BookingController {
     }
 
     @PostMapping("/home/index/booking/oneway-payment/save")
-    public String saveBooking(HttpSession session) {
-        BookingInfoDTO bookingInfoDTO = (BookingInfoDTO) session.getAttribute("bookingInfoDTO");
-        bookingService.createTicketOneWay(bookingInfoDTO);
+    public String saveBooking(@RequestBody BookingInfoDTO bookingInfoDTO) throws MessagingException {
+        //BookingInfoDTO bookingInfoDTO = (BookingInfoDTO) session.getAttribute("bookingInfoDTO");
+        String paymentDate = bookingInfoDTO.getPaymentDate();
+        // Định dạng của chuỗi
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+        // Chuyển đổi chuỗi thành LocalDateTime
+        LocalDateTime paymentFormat = LocalDateTime.parse(paymentDate, formatter);
+        bookingService.createTicketOneWay(bookingInfoDTO, paymentFormat);
         return "index";
     }
 

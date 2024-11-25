@@ -14,35 +14,6 @@
    <meta name="keywords" content="">
    <meta name="description" content="">
    <meta name="author" content="">
-   <!--Bootstrap icon -->
-   <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css}">
-   <!-- bootstrap css -->
-   <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
-   <!-- style css -->
-   <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
-   <!-- Responsive-->
-   <link rel="stylesheet" th:href="@{/css/responsive.css}">
-   <!-- fevicon -->
-   <link rel="icon"  type="image/gif" />
-   <!-- Scrollbar Custom CSS -->
-   <link rel="stylesheet" th:href="@{/css/jquery.mCustomScrollbar.min.css}">
-   <!-- Tweaks for older IEs-->
-   <link rel="stylesheet"
-      th:href="@{https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css}"
-      integrity="sha384-NvKbDTEnL+A8F/AA5Tc5kmMLSJHUO868P+lDtTpJIeQdGYaUIuLr4lVGOEA1OcMy" crossorigin="anonymous">
-   <!-- fonts -->
-   <link th:href="@{https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap}" rel="stylesheet">
-   <!-- font awesome -->
-   <!-- <link rel="stylesheet" type="text/css" th:href="@{https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css}"> -->
-   <!--  -->
-   <link rel="stylesheet" th:href="@{/css/fontawesome.css/fontawesome.min.css}">
-   <!-- owl stylesheets -->
-   <link th:href="@{https://fonts.googleapis.com/css?family=Great+Vibes|Poppins:400,700&display=swap&subset=latin-ext}"
-      rel="stylesheet">
-   <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}">
-   <link rel="stylesoeet" th:href="@{/css/owl.theme.default.min.css}">
-   <link rel="stylesheet" th:href="@{https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css}"
-      media="screen">
 </head>
 <body>
 
@@ -50,29 +21,28 @@
     <h3 class="full text-dark">Thông tin lượt đi</h3>
     <div class="full d-flex justify-content-between">
       <h4 class="full d-flex   ">Tuyến xe</h4>
-      <span th:text="${selectedTrip.route.name}" class="full d-flex justify-content-end text_right "></span>
+      <span th:text="${routeName}" class="full d-flex justify-content-end text_right "></span>
     </div>
     <div class="d-flex justify-content-between full">
       <h4 class="full">Thời gian xuất bến</h4>
-      <span th:text="${#temporals.format(selectedTrip.departureTime,'yyyy-MM-dd HH:mm')}" class="full d-flex justify-content-end"></span>
+      <span th:text="${#temporals.format(departureTime,'yyyy-MM-dd HH:mm')}" class="full d-flex justify-content-end"></span>
     </div>
     <div class="d-flex justify-content-between full">
       <h4 class="full">Số lượng ghế</h4>
         <h4 class="text d-flex flex-nowrap">
-          <span class="space_right" id="count">0 </span> ghế
+          <span class="space_right" id="count" th:text="${numberOfSeat}"> </span> ghế
         </h4>
     </div>
     <div class="d-flex justify-content-between full">
       <h4 class="full">Số ghế</h4>
-      <span class="full d-flex justify-content-end" id="seat_number"></span>
+      <span class="full d-flex justify-content-end" id="seat_number" th:text="${#strings.arrayJoin(listSeat, ', ')}"></span>
     </div>
     <div class="d-flex justify-content-between full">
       <h4 class="full">Tổng tiền lượt đi</h4>
         <h4 class="text d-flex flex-nowrap">
-          <span class="space_right" id="total"> </span> $
+          <span class="space_right" id="total" th:text="${totalFee}"> </span> $
         </h4>
     </div>
-    <input type="hidden" id="ticketPrice" th:value="${selectedTrip.price}">
     
   </div>
 </body>

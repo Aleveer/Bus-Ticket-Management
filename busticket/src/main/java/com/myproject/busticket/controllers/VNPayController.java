@@ -5,6 +5,7 @@ import com.myproject.busticket.services.BookingService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,14 +19,12 @@ import jakarta.validation.Valid;
 
 import java.util.Map;
 
+@Controller
 @RequestMapping("/vnpay")
-@RestController
 public class VNPayController {
     @Autowired
     private VNPayService vnPayService;
 
-    @Autowired
-    private BookingService bookingService;
 
     @PostMapping("/createVNPayPayment")
     public ResponseEntity<VNPayResponse> createVNPayPayment(@RequestBody @Valid VNPayRequest payRequest,
@@ -51,7 +50,7 @@ public class VNPayController {
         String transactionStatus = queryParams.get("vnp_TransactionStatus");
         if ("00".equals(transactionStatus)) {
             // Xử lý logic thanh toán tại đây
-            String paymentTime = queryParams.get("vnp_CreateDate");
+            String paymentTime = queryParams.get("vnp_PayDate");
             model.addAttribute("paymentTime", paymentTime);
             return "vnpay";
         } else if("02".equals(transactionStatus)){

@@ -115,10 +115,6 @@ public class AuthenticationService {
         Account account = accountRepository.findByEmail(email)
                 .orElseThrow(() -> new ModelNotFoundException("User not found"));
 
-        if (account.getLoginToken() == null) {
-            throw new ValidationException("User is not logged in");
-        }
-
         account.setLoginToken(null);
         accountRepository.save(account);
     }

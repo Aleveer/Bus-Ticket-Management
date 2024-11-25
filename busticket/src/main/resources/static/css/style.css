@@ -267,15 +267,21 @@ button {
     color: #000;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    padding: 12px 16px;
+    padding: 10px 12px;
     z-index: 1;
-    right: 0;
+    right: 10px;
+    font-size: 12px;
+    border-radius: 16px 3px 16px 16px;
+    
 }
+
 .dropdown-info a{
     color: #000 !important;
+    font-size: 12px !important;
 }
 .dropdown:hover .dropdown-content {
     display: block;
+  
   }
 /* banner bg main start */
 

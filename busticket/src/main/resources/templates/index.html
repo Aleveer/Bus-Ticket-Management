@@ -79,10 +79,10 @@
                       <i class="bi bi-person-circle "></i>
                   </a>
                       <div class="dropdown-content">
-                        <span  th:text="'Hello, ' + ${#authentication.principal.username}"></span>
-                        <ul class="dropdown-info">
+                        <span th:text="${#authentication.principal.username}"></span>
+                        <ul class="dropdown-info d-flex flex-column">
                            <li><a >Profile</a></li>
-                           <li><a >Logout</a></li>
+                           <li><button onclick="logout()" th:data-email="${#authentication.principal.username}">Logout</button></li>
                        </ul>
                      </div>
                </div>
@@ -90,7 +90,7 @@
                </li>
                <li th:if="${#authentication.principal == null}">
                   <a th:href="@{login}">
-                     <i class="bi bi-person-circle"></i>
+                     <i class="bi bi-person-circle user-not-in"></i>
                   </a>
                </li>
             </ul>
@@ -322,7 +322,34 @@
       }
       // Set the default date when the page loads
       window.onload = setDefaultDate;
+      function logout() {
+         const logoutButton = document.querySelector('button[onclick="logout()"]');
+         const email = logoutButton.getAttribute('data-email');
+         console.log(email);
 
+         fetch('/auth/logout', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ email: email }) 
+         })
+         .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+         })
+         .then(data => {
+             if (data.success) {
+                 window.location.href = '/home/index'; 
+             } else {
+                 alert(data.message);
+             }
+         })
+         .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred during logout. Please try again.');
+        });
+     }
 
     </script>
 </body>

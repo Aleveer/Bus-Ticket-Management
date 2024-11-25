@@ -9,22 +9,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.myproject.busticket.responses.VNPayResponse;
-import com.myproject.busticket.services.*;
-import com.myproject.busticket.utilities.VNPayUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.myproject.busticket.dto.BookingInfoDTO;
 import com.myproject.busticket.dto.SeatReservationsDTO;
 import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.models.Booking;
 import com.myproject.busticket.models.SeatReservations;
+import com.myproject.busticket.responses.VNPayResponse;
+import com.myproject.busticket.services.BookingService;
+import com.myproject.busticket.services.CustomerService;
+import com.myproject.busticket.services.RouteCheckpointService;
+import com.myproject.busticket.services.SeatReservationsService;
+import com.myproject.busticket.services.TripService;
+import com.myproject.busticket.services.VNPayService;
+import com.myproject.busticket.utilities.VNPayUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class BookingController {
@@ -50,6 +61,7 @@ public class BookingController {
     public String searchForm(@RequestParam String tripType, @RequestParam String departure,
             @RequestParam String destination,
             @RequestParam String date,
+            @RequestParam String returnDate,
             @RequestParam String ticketNum, Model model) {
         int numberOfTickets = Integer.parseInt(ticketNum);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -58,7 +70,7 @@ public class BookingController {
 
         List<String> provinces = routeCheckpointService.getAllProvinces();
         List<String> cities = routeCheckpointService.getAllCities();
-        model.addAttribute("tripType", "one-way");
+        model.addAttribute("tripType", "one-way" );
         model.addAttribute("provinces", provinces);
         model.addAttribute("cities", cities);
 
@@ -67,6 +79,7 @@ public class BookingController {
         model.addAttribute("departure", departure);
         model.addAttribute("destination", destination);
         model.addAttribute("date", date);
+        model.addAttribute("returnDate", returnDate);
         model.addAttribute("ticketNum", ticketNum);
         return "search-booking";
     }

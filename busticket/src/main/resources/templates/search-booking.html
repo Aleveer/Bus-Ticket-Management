@@ -159,6 +159,15 @@
                <i class="bi bi-list-stars d-flex flex-grow justify-content-center  h1"></i>
                <p class="d-flex flex-grow justify-content-center nospace about_text_4 ">Không tìm thấy chuyến xe nào.</p> 
             </div>
+            <div th:if="${tripType == 'round-trip' && !#lists.isEmpty(trips)}" class="box-card d-flex flex-row justify-content-between full">
+               <div class="trip-go d-flex justify-content-center full">
+                     <p class="about_text_4">CHUYẾN ĐI - <span th:text="${date}" ></span> </p> 
+               </div>
+               <div class="trip-return d-flex justify-content-center full">
+                   <p class="about_text_4">CHUYẾN VỀ - <span th:text="${returnDate}"></span></p> 
+               </div>
+               
+            </div>
             <div th:if="${!#lists.isEmpty(trips)}">
                <div class="route-info h3">
                  <span th:text="${departure} + ' - ' + ${destination}"></span>
@@ -276,6 +285,40 @@
                returnDateElement.classList.add('hide');
          }
          }
+
+         document.addEventListener('DOMContentLoaded', function () {
+            const daysInVietnamese = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
+        
+            // Function to format date
+            function formatDate(date) {
+                const dayOfWeek = daysInVietnamese[date.getDay()];
+                const day = date.getDate();
+                const month = date.getMonth() + 1; // Months are zero-based
+                return `${dayOfWeek},${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}`;
+            }
+            
+        
+            // Handle the trip go date
+            const dateElement = document.querySelector('#date');
+            const tripGoElement = document.querySelector('.trip-go span');
+        
+            if (dateElement && tripGoElement) {
+                const tripGoDate = new Date(dateElement.value); // Get date from the input field
+                if (!isNaN(tripGoDate)) {
+                    tripGoElement.textContent = formatDate(tripGoDate); // Set formatted date
+                }
+            }
+        
+            // Handle the return date (if visible)
+            const returnDateElement = document.querySelector('#returnDate');
+            const tripReturnElement = document.querySelector('.trip-return span');
+            if (returnDateElement && tripReturnElement) {
+                const tripReturnDate = new Date(returnDateElement.value);
+                if (!isNaN(tripReturnDate)) {
+                  tripReturnElement.textContent = formatDate(tripReturnDate);
+                }
+            }
+        });
    </script>
 </body>
 

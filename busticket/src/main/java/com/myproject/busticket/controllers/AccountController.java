@@ -80,7 +80,10 @@ public class AccountController {
         existingAccount.setRole(roleService.getRoleByName(account.getRole().getRoleName()));        existingAccount.setFullName(account.getFullName());
         existingAccount.setPhone(account.getPhone());
         existingAccount.setStatus(account.getStatus());
-        existingAccount.setPassword(account.getPassword());
+
+        if (account.getPassword() != null && !account.getPassword().isEmpty()) {
+            existingAccount.setPassword(account.getPassword());
+        }
         accountService.save(existingAccount);
         return "redirect:/easy-bus/account-management";
     }

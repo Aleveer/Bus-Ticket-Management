@@ -13,6 +13,7 @@ import com.myproject.busticket.responses.VNPayResponse;
 import com.myproject.busticket.services.*;
 import com.myproject.busticket.utilities.VNPayUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -115,21 +116,36 @@ public class BookingController {
         // bookingService.createTicketOneWay(bookingInfoDTO);
         // TripDTO selectedTrip =
         // tripService.findById(bookingInfoDTO.getTicketInfoDTO().getTripId());
-        long amount = (long) (bookingInfoDTO.getTicketInfoDTO().getPrice() * 25000);
-        VNPayResponse vnPayResponse = vnPayService.createVNPayPayment(amount, "NCB", request);
+        // Lưu BookingInfoDTO vào session
+        // session.setAttribute("bookingInfoDTO", bookingInfoDTO);
 
-        Map<String, String> params = VNPayUtil.extractParamsFromUrl(vnPayResponse.paymentURL());
-        boolean isPaymentValid = vnPayService.verifyVNPayPayment(params, params.get("vnp_SecureHash"));
+        try {
+            // session.setAttribute("bookingInfoDTO", bookingInfoDTO);
 
-        if (isPaymentValid) {
-            // TODO: Save payment and other details to database
-            System.out.println("Payment URL: " + vnPayResponse.paymentURL());
-            return ResponseEntity.ok(vnPayResponse.paymentURL());
-            // return "redirect:" + vnPayResponse.paymentURL();
-        } else {
-            return ResponseEntity.badRequest().body("Không thể tạo link thanh toán");
+            long amount = (long) (bookingInfoDTO.getTicketInfoDTO().getPrice() * 25000);
+            VNPayResponse vnPayResponse = vnPayService.createVNPayPayment(amount, "NCB", request);
+
+            Map<String, String> params = VNPayUtil.extractParamsFromUrl(vnPayResponse.paymentURL());
+            boolean isPaymentValid = vnPayService.verifyVNPayPayment(params, params.get("vnp_SecureHash"));
+
+            if (isPaymentValid) {
+                System.out.println("Payment URL: " + vnPayResponse.paymentURL());
+                return ResponseEntity.ok(vnPayResponse.paymentURL());
+            } else {
+                return ResponseEntity.badRequest().body("Không thể tạo link thanh toán");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace(); // Log đầy đủ stacktrace
+            throw ex; // Để @ExceptionHandler xử lý
         }
 
+    }
+
+    @PostMapping("/home/index/booking/oneway-payment/save")
+    public String saveBooking(HttpSession session) {
+        BookingInfoDTO bookingInfoDTO = (BookingInfoDTO) session.getAttribute("bookingInfoDTO");
+        bookingService.createTicketOneWay(bookingInfoDTO);
+        return "index";
     }
 
     @PostMapping("/home/index/booking/roundtrip")

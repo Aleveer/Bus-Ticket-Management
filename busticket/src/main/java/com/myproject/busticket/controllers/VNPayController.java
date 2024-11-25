@@ -1,7 +1,11 @@
 package com.myproject.busticket.controllers;
 
+import com.myproject.busticket.dto.BookingInfoDTO;
+import com.myproject.busticket.services.BookingService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.myproject.busticket.models.VNPayRequest;
@@ -19,6 +23,9 @@ import java.util.Map;
 public class VNPayController {
     @Autowired
     private VNPayService vnPayService;
+
+    @Autowired
+    private BookingService bookingService;
 
     @PostMapping("/createVNPayPayment")
     public ResponseEntity<VNPayResponse> createVNPayPayment(@RequestBody @Valid VNPayRequest payRequest,
@@ -40,17 +47,17 @@ public class VNPayController {
     }
 
     @GetMapping("/return")
-    public ResponseEntity<VNPayResponse> handleVNPayReturn(
-            @RequestParam Map<String, String> queryParams) {
-
+    public String handleVNPayReturn( @RequestParam Map<String, String> queryParams, HttpServletRequest request, Model model) {
         String transactionStatus = queryParams.get("vnp_TransactionStatus");
         if ("00".equals(transactionStatus)) {
             // Xử lý logic thanh toán tại đây
-            return ResponseEntity.ok(new VNPayResponse("ok", "success", "Payment successful"));
+            String paymentTime = queryParams.get("vnp_CreateDate");
+            model.addAttribute("paymentTime", paymentTime);
+            return "vnpay";
         } else if("02".equals(transactionStatus)){
-            return ResponseEntity.badRequest().body(new VNPayResponse("error", "Payment failed", ""));
+            return "404";
         } else {
-            return ResponseEntity.badRequest().body(new VNPayResponse("error", "Payment verification failed", ""));
+            return "404";
         }
         // Xử lý logic thanh toán tại đây
 //        return ResponseEntity.ok(new VNPayResponse("ok", "success", "Payment successful"));

@@ -239,7 +239,7 @@ public class BillAPI {
         }
 
         Bill bill = createBill(customerId, paymentMethod);
-        createBillDetails(bill, tripId, roundTripId, numberOfTickets, fee, ticketType);
+        createBillDetails(bill, tripId, roundTripId, numberOfTickets, numberOfTicketsRoundTrip, fee, ticketType);
 
         response.put("message", "Bill created successfully.");
         response.put("success", true);
@@ -358,7 +358,7 @@ public class BillAPI {
         }
         billService.save(bill);
         billDetailService.deleteByBillId(bill);
-        createBillDetails(bill, tripId, roundTripId, numberOfTickets, fee, ticketType);
+        createBillDetails(bill, tripId, roundTripId, numberOfTickets, numberOfTicketsRoundTrip, fee, ticketType);
 
         response.put("message", "Bill updated successfully.");
         response.put("success", true);
@@ -483,7 +483,8 @@ public class BillAPI {
         return bill;
     }
 
-    private void createBillDetails(Bill bill, int tripId, Integer roundTripId, int numberOfTickets, float fee,
+    private void createBillDetails(Bill bill, int tripId, Integer roundTripId, int numberOfTickets,
+            int numberOfTicketsRoundTrip, float fee,
             String ticketType) {
         Bill_Detail billDetail = new Bill_Detail();
         billDetail.setBill(bill);
@@ -497,7 +498,7 @@ public class BillAPI {
             Bill_Detail roundTripBillDetail = new Bill_Detail();
             roundTripBillDetail.setBill(bill);
             roundTripBillDetail.setTrip(tripService.findTripById(roundTripId));
-            roundTripBillDetail.setNumberOfTicket(numberOfTickets);
+            roundTripBillDetail.setNumberOfTicket(numberOfTicketsRoundTrip);
             roundTripBillDetail.setFee(fee);
             roundTripBillDetail.setTicketType(TicketType.round_trip_ticket);
             billDetailService.save(roundTripBillDetail);

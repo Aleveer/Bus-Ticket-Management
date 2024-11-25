@@ -65,10 +65,10 @@
                     </div>
                     <div class="info-row-2">
                         <h4>Tổng giá vé:</h4>
-                        <h4>PTTT:</h4>
-                        <h4>Trạng thái:</h4>
+                        <h4>PTTT: <p>VNPAY</p></h4>
+                        <h4>Trạng thái: <p>Thanh Toán Thành Công</p></h4>
                     </div>
-                    <input type="hidden" id="payment_date" name="payment_date">
+                    <input type="hidden" id="payment_date" name="payment_date" th:value="${paymentTime}">
                 </div>
             </div>
         </div>
@@ -77,44 +77,48 @@
 
 
 <script>
-    // const submitForm = document.getElementById('form-test');
-    // submitForm.addEventListener('submit', function (event) {
-    //     event.preventDefault();
-    //     fetch('/home/index/booking-oneway', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //     })
-    //         .then(data => console.log("data here" + data))
-    //         .catch(error => console.error(error));
-    // });
+    function getCookie(name) {
+        const value = ; ${document.cookie};
+        const parts = value.split(; ${name}=);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
 
-    // document.getElementById("payButton").addEventListener("click", () => {
-    //     // Lấy dữ liệu từ Thymeleaf
-    //     const bookingInfoDTO = /*[[${bookingInfoDTO}]]*/ {};
-    //
-    //     // Gửi request đến server
-    //     fetch('/payment', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(bookingInfoDTO)
-    //     })
-    //         .then(response => {
-    //             if (response.ok) {
-    //                 return response.json();
-    //             } else {
-    //                 throw new Error('Có lỗi xảy ra khi thanh toán');
-    //             }
-    //         })
-    //         .then(data => {
-    //             console.log('Phản hồi từ server:', data);
-    //             alert('Thanh toán thành công!');
-    //         })
-    //         .catch(error => console.error('Error:', error));
-    // });
+    const bookingInfoCookie = getCookie('bookingInfo');
+    if (bookingInfoCookie) {
+        const bookingInfo = JSON.parse(bookingInfoCookie);
+        console.log(bookingInfo);  // In thông tin vé đã lưu
+    } else {
+        console.log("Không tìm thấy thông tin booking.");
+    }
+
+    // Gọi POST method để lưu thông tin BookingInfoDTO từ session
+    (async function confirmBooking() {
+        try {
+            const response = await fetch('/home/index/booking/oneway-payment/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(getCookie('bookingInfo'))
+            });
+
+            if (response.ok) {
+                const message = await response.text();
+                console.log('Success:', message);
+                alert('Đặt vé thành công: ' + message);
+
+                // Redirect tới trang xác nhận nếu cần
+                //window.location.href = '/bookings/confirmation';
+            } else {
+                console.error('Failed to confirm booking:', response.status);
+                alert('Lỗi khi lưu thông tin đặt vé.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Đã xảy ra lỗi. Vui lòng thử lại.');
+        }
+    })();
 
 
 </script>

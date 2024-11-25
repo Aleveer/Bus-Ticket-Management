@@ -137,10 +137,10 @@
                   <div class="col-10">
                      <div class="form-header">
                         <label>
-                           <input type="radio" name="tripType" value="one-way" th:checked="${tripType == 'one-way'}" checked> Một chiều
+                           <input type="radio" name="tripType" value="one-way" th:checked="${tripType == 'one-way'}" checked onclick="toggleReturnDate()"> Một chiều
                         </label>
                         <label>
-                           <input type="radio" name="tripType" value="round-trip" th:checked="${tripType == 'round-trip'}"> Khứ hồi
+                           <input type="radio" name="tripType" value="round-trip" th:checked="${tripType == 'round-trip'}" onclick="toggleReturnDate()"> Khứ hồi
                         </label>
                      </div>
                   </div>
@@ -170,6 +170,10 @@
                   <div class="form-group">
                      <label for="date">Ngày đi</label>
                      <input type="date" id="date" name="date" th:value="${date}">
+                  </div>
+                  <div class="form-group hide" id="return-date">
+                     <label for="returnDate">Ngày về</label>
+                     <input type="date" id="returnDate" name="returnDate" th:value="${returnDate}">
                   </div>
                   <div class="form-group">
                      <label for="ticketNum">Số vé</label>
@@ -320,8 +324,16 @@
          departureInput.value = location;
          scrollToSection(); // Scroll to the booking section after setting the text
       }
+      function setMinDate() {
+         const today = new Date().toISOString().split('T')[0];
+         document.getElementById('date').setAttribute('min', today);
+         document.getElementById('returnDate').setAttribute('min', today);
+      }
       // Set the default date when the page loads
-      window.onload = setDefaultDate;
+      window.onload = function() {
+         setDefaultDate();
+         setMinDate();
+      };
       function logout() {
          const logoutButton = document.querySelector('button[onclick="logout()"]');
          const email = logoutButton.getAttribute('data-email');
@@ -350,6 +362,15 @@
             alert('An error occurred during logout. Please try again.');
         });
      }
+     function toggleReturnDate() {
+      const tripType = document.querySelector('input[name="tripType"]:checked').value;
+      const returnDateElement = document.getElementById('return-date');
+         if (tripType === 'round-trip') {
+            returnDateElement.classList.remove('hide');
+      } else {
+            returnDateElement.classList.add('hide');
+      }
+      }
 
     </script>
 </body>

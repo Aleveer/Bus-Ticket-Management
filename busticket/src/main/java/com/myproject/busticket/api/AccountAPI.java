@@ -9,17 +9,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.busticket.dto.AccountDTO;
+import com.myproject.busticket.enums.AccountRole;
 import com.myproject.busticket.models.Account;
 import com.myproject.busticket.services.AccountService;
 import com.myproject.busticket.services.RoleService;
+import com.myproject.busticket.utilities.SecurityUtil;
+import com.myproject.busticket.validations.AccountValidation;
 
 @RestController
 @RequestMapping("/api/account")
@@ -86,7 +93,7 @@ public class AccountAPI {
     }
 
     @GetMapping("/account-detail/{accountId}")
-    public ResponseEntity<Map<String, Object>> getAccountDetails(@RequestParam int accountId) {
+    public ResponseEntity<Map<String, Object>> getAccountDetails(@PathVariable int accountId) {
         Account account = accountService.getById(accountId);
         if (account == null) {
             return ResponseEntity.notFound().build();
@@ -108,4 +115,68 @@ public class AccountAPI {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/update-account")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateAccount(@RequestBody Map<String, Object> updatedAccount) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            int accountId = (int) updatedAccount.get("accountId");
+            Account account = accountService.getById(accountId);
+            if (account == null) {
+                response.put("message", "Account not found.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // check current logged in account with the account to be updated, if it's the
+            // same, return unauthorized
+            Account currentAccount = SecurityUtil.getCurrentAccount();
+            if (currentAccount.getId() == accountId) {
+                response.put("message", "Unauthorized to update account.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+
+            String role = (String) updatedAccount.get("role");
+            if (role == null) {
+                response.put("message", "Role is required.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            if (!AccountRole.admin.toString().equals(role) && !AccountRole.customer.toString().equals(role) &&
+                    !AccountRole.controller.toString().equals(role) && !AccountRole.driver.toString().equals(role) &&
+                    !AccountRole.staff.toString().equals(role)) {
+                response.put("message", "Invalid role.");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            String fullname = (String) updatedAccount.get("fullname");
+            if (fullname == null) {
+                response.put("message", "Fullname is required.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            String phoneNumber = (String) updatedAccount.get("phone");
+            if (phoneNumber == null) {
+                response.put("message", "Phone number is required.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            if (AccountValidation.isValidPhone(phoneNumber)) {
+                response.put("message", "Invalid phone number format.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            String status = (String) updatedAccount.get("status");
+            if (status == null) {
+                response.put("message", "Status is required.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            response.put("message", "Account updated successfully.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("message", "Error updating account: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

@@ -20,14 +20,14 @@
             <div class="content-wrapper-before"></div>
             <div class="content-header row">
                 <div class="content-header-left col-md-4 col-12 mb-2">
-                    <h3 class="content-header-title">Tables</h3>
+<!--                    <h3 class="content-header-title">Tables</h3>-->
                 </div>
                 <div class="content-header-right col-md-8 col-12">
                     <div class="breadcrumbs-top float-md-right">
                         <div class="breadcrumb-wrapper mr-1">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                                <li class="breadcrumb-item active">Tables</li>
+<!--                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>-->
+<!--                                <li class="breadcrumb-item active">Tables</li>-->
                             </ol>
                         </div>
                     </div>
@@ -379,40 +379,83 @@
             });
         }
 
-        $('#updateAccountForm').on('submit', function (event) {
-            event.preventDefault();
-            var accountId = $('#updateAccountId').val();
-            var updatedAccount = {
-                id: accountId,
-                email: $('#updateEmail').val(),
-                role: { roleName: $('#updateRole').val() },
-                fullName: $('#updateName').val(),
-                phone: $('#updatePhone').val(),
-                status: $('#updateStatus').val(),
-                newPassword: $('#newPassword').val(),
-                confirmNewPassword: $('#confirmNewPassword').val()
-            };
+        // $('#updateAccountForm').on('submit', function (event) {
+        //     event.preventDefault();
+        //     var accountId = $('#updateAccountId').val();
+        //     var updatedAccount = {
+        //         id: accountId,
+        //         email: $('#updateEmail').val(),
+        //         role: { roleName: $('#updateRole').val() },
+        //         fullName: $('#updateName').val(),
+        //         phone: $('#updatePhone').val(),
+        //         status: $('#updateStatus').val(),
+        //         newPassword: $('#newPassword').val(),
+        //         confirmNewPassword: $('#confirmNewPassword').val()
+        //     };
+        //
+        //     if (updatedAccount.newPassword !== updatedAccount.confirmNewPassword) {
+        //         alert('New password and confirm new password do not match.');
+        //         return;
+        //     }
+        //
+        //     fetch('/api/account/update-account', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify(updatedAccount)
+        //     })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.message) {
+        //                 alert(data.message);
+        //                 if (data.message === "Account updated successfully.") {
+        //                     $('#updateAccountModal').modal('hide');
+        //                     loadAccounts(0);
+        //                 }
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('Error updating account:', error);
+        //         });
+        // });
 
-            if (updatedAccount.newPassword !== updatedAccount.confirmNewPassword) {
+        $('#updateAccountForm').on('submit', function (event) {
+            event.preventDefault(); // Ngăn không cho biểu mẫu tải lại trang.
+
+            // Lấy thông tin từ các trường trong form
+            var accountId = $('#updateAccountId').val();
+            var formData = new FormData(); // Dùng FormData để truyền dữ liệu dạng form.
+
+            formData.append('email', $('#updateEmail').val());
+            formData.append('role.roleName', $('#updateRole').val()); // Nếu backend xử lý nested object thì cần tên đầy đủ.
+            formData.append('fullName', $('#updateName').val());
+            formData.append('phone', $('#updatePhone').val());
+            formData.append('status', $('#updateStatus').val());
+            formData.append('password', $('#newPassword').val());
+
+            // Kiểm tra mật khẩu và xác nhận mật khẩu
+            if ($('#newPassword').val() !== $('#confirmNewPassword').val()) {
                 alert('New password and confirm new password do not match.');
                 return;
             }
 
-            fetch('/api/account/update-account', {
+            // Gửi yêu cầu POST tới backend
+            fetch(`/easy-bus/update-account/${accountId}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updatedAccount)
+                body: formData // Truyền FormData
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (response.redirected) {
+                        // Nếu server trả về redirect, thực hiện chuyển hướng.
+                        window.location.href = response.url;
+                    } else {
+                        return response.text();
+                    }
+                })
                 .then(data => {
-                    if (data.message) {
-                        alert(data.message);
-                        if (data.message === "Account updated successfully.") {
-                            $('#updateAccountModal').modal('hide');
-                            loadAccounts(0);
-                        }
+                    if (data) {
+                        alert(data); // Hiển thị thông báo nếu có.
                     }
                 })
                 .catch(error => {

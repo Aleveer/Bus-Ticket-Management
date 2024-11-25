@@ -1,5 +1,6 @@
 package com.myproject.busticket.controllers;
 
+import com.myproject.busticket.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.myproject.busticket.models.Account;
 import com.myproject.busticket.services.AccountService;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -19,8 +21,12 @@ public class AccountController {
     @Autowired
     private final AccountService accountService;
 
-    public AccountController(AccountService accountService) {
+    @Autowired
+    private final RoleService roleService;
+
+    public AccountController(AccountService accountService, RoleService roleService) {
         this.accountService = accountService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/accounts/me")
@@ -63,5 +69,20 @@ public class AccountController {
         }
         model.addAttribute("account",account);
         return "update-account";
+    }
+
+    @PostMapping("/easy-bus/update-account/{accountId}")
+    public String updateAccount(@PathVariable int accountId, Account account){
+        Account existingAccount = accountService.getById(accountId);
+        if( existingAccount == null){
+            return "redirect:/easy-bus/account-management";
+        }
+        existingAccount.setEmail(account.getEmail());
+        existingAccount.setRole(roleService.getRoleByName(account.getRole().getRoleName()));        existingAccount.setFullName(account.getFullName());
+        existingAccount.setPhone(account.getPhone());
+        existingAccount.setStatus(account.getStatus());
+        existingAccount.setPassword(account.getPassword());
+        accountService.save(existingAccount);
+        return "redirect:/easy-bus/account-management";
     }
 }

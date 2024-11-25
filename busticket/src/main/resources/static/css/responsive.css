@@ -495,4 +495,17 @@
     .confirm_info{
         margin: 0px;
     }
+    .customer-container{
+        display: flex;
+        flex-wrap: nowrap !important;
+        width: 960px;
+        margin-top: 20px;
+        height: auto;
+    }
+    .rule{
+        display: none !important;
+    }
+    .rule-header{
+        display: none !important;
+    }
 }

@@ -155,7 +155,6 @@
             </div>
         </div>
     </div>
-
     <!-- New Account Modal -->
     <div class="modal fade" id="newAccountModal" tabindex="-1" role="dialog" aria-labelledby="newAccountModalLabel"
         aria-hidden="true">
@@ -201,7 +200,7 @@
                         </div>
                         <div class="form-group">
                             <label for="newPassword">Password</label>
-                            <input type="password" class="form-control" id="new-Password" required>
+                            <input type="password" class="form-control" id="newPassword" required>
                         </div>
                         <div class="form-group">
                             <label for="confirmPassword">Confirm Password</label>
@@ -265,12 +264,13 @@
                                 Verification Code</button>
                         </div> -->
                         <div class="form-group">
-                            <label for="newPassword">New Password</label>
-                            <input type="password" class="form-control" id="newPassword" autocomplete="new-password">
+                            <label for="updateNewPassword">New Password</label>
+                            <input type="password" class="form-control" id="updateNewPassword"
+                                autocomplete="new-password">
                         </div>
                         <div class="form-group">
-                            <label for="confirmNewPassword">Confirm New Password</label>
-                            <input type="password" class="form-control" id="confirmNewPassword"
+                            <label for="confirmUpdateNewPassword">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirmUpdateNewPassword"
                                 autocomplete="new-password">
                         </div>
                         <button type="submit" class="btn btn-primary">Save changes</button>
@@ -298,6 +298,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- END PAGE LEVEL JS-->
     <script>
+        let currentAccount;
         function loadAccounts(page) {
             $.ajax({
                 url: '/api/account/accounts',
@@ -424,12 +425,14 @@
                     $('#updateName').val(account.fullName);
                     $('#updatePhone').val(account.phone);
                     $('#updateStatus').val(account.status);
-                    // if (account.status === 'unverified') {
-                    //     $('#verificationCode').val(account.verificationCode);
-                    //     $('#verificationCodeGroup').show();
-                    // } else {
-                    //     $('#verificationCodeGroup').hide();
-                    // }
+                    // Lock role and status selection if updating own account or if the account has role admin
+                    if (currentAccount.id === account.id || account.role.roleName === 'admin') {
+                        $('#updateRole').prop('disabled', true);
+                        $('#updateStatus').prop('disabled', true);
+                    } else {
+                        $('#updateRole').prop('disabled', false);
+                        $('#updateStatus').prop('disabled', false);
+                    }
                     $('#updateAccountModal').modal('show');
                 },
                 error: function (error) {
@@ -479,9 +482,9 @@
         //         });
         // });
 
+        // Handle form submission
         $('#updateAccountForm').on('submit', function (event) {
             event.preventDefault();
-
             var accountId = $('#updateAccountId').val();
             var updatedAccount = {
                 id: accountId,
@@ -490,15 +493,13 @@
                 fullName: $('#updateName').val(),
                 phone: $('#updatePhone').val(),
                 status: $('#updateStatus').val(),
-                newPassword: $('#newPassword').val(),
-                confirmNewPassword: $('#confirmNewPassword').val()
+                newPassword: $('#updateNewPassword').val(),
+                confirmNewPassword: $('#confirmUpdateNewPassword').val()
             };
-
             if (updatedAccount.newPassword !== updatedAccount.confirmNewPassword) {
                 alert('New password and confirm new password do not match.');
                 return;
             }
-
             fetch(`/api/account/update-account/${accountId}`, {
                 method: 'POST',
                 headers: {
@@ -512,8 +513,6 @@
                         alert(data.message);
                         if (data.message === "Account updated successfully.") {
                             $('#updateAccountModal').modal('hide');
-                            //take jwt token:
-                            window.localStorage.setItem('jwtToken', data.token);
                             loadAccounts(0);
                         }
                     }
@@ -573,39 +572,45 @@
                     });
             }
         }
-
         function newAccount() {
             $('#newAccountModal').modal('show');
 
             $('#newAccountForm').on('submit', function (event) {
                 event.preventDefault();
 
-                const formData = new FormData();
-                formData.append("email", $('#newEmail').val());
-                formData.append("roleName", $('#newRole').val());
-                formData.append("fullName", $('#newName').val());
-                formData.append("phone", $('#newPhone').val());
-                formData.append("status", $('#newStatus').val());
-                formData.append("password", $('#new-Password').val());
+                const accountData = {
+                    email: $('#newEmail').val(),
+                    role: $('#newRole').val(),
+                    fullName: $('#newName').val(),
+                    phone: $('#newPhone').val(),
+                    status: $('#newStatus').val(),
+                    password: $('#newPassword').val(),
+                    confirmPassword: $('#confirmPassword').val()
+                };
 
-                // Kiểm tra mật khẩu xác nhận
-                const confirmPassword = $('#confirmPassword').val();
-                if (formData.get("password") !== confirmPassword) {
-                    alert("Passwords do not match!");
-                    return;
-                }
+                // // Check password confirmation
+                // const confirmPassword = $('#confirmPassword').val();
+                // console.log(confirmPassword);
+                // console.log("accountData: ", accountData.password);
+                // if (accountData.password !== confirmPassword) {
+                //     alert("Passwords do not match!");
+                //     return;
+                // }
 
-                // Gửi dữ liệu qua API
+                // Send data via API
                 fetch('/api/account/new-account', {
                     method: 'POST',
-                    body: formData
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(accountData)
                 })
                     .then(response => {
                         if (response.redirected) {
-                            // Điều hướng đến trang quản lý tài khoản nếu thành công
+                            // Redirect to account management page if successful
                             window.location.href = response.url;
                         } else {
-                            return response.json(); // Xử lý lỗi nếu server không chuyển hướng
+                            return response.json(); // Handle error if server does not redirect
                         }
                     })
                     .then(data => {
@@ -628,6 +633,20 @@
 
 
         $(document).ready(function () {
+            $.ajax({
+                url: '/api/account/me',
+                method: 'GET',
+                success: function (data) {
+                    currentAccount = data;
+                    if (currentAccount.role.roleName == 'admin') {
+                        $('#updateRole').prop('disabled', true);
+                        $('#updateStatus').prop('disabled', true);
+                    }
+                },
+                error: function (error) {
+                    console.error('Error fetching current account details:', error);
+                }
+            });
             loadAccounts(0);
         });
     </script>

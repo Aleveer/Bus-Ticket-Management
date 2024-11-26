@@ -1,28 +1,32 @@
 package com.myproject.busticket.validations;
 
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+
 public class CheckpointValidation {
+
+    public static String normalizeVietnamese(String input) {
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("");
+    }
+
     public static String validateCheckpointFields(String placeName, String address, String province, String city,
             String phone, String region) {
-        if (placeName == null || placeName.isEmpty() ||
-                address == null || address.isEmpty() ||
-                province == null || province.isEmpty() ||
-                city == null || city.isEmpty() ||
-                phone == null || phone.isEmpty() ||
-                region == null || region.isEmpty()) {
-            return "All fields are required.";
-        }
+        String regex = "^[A-Za-z0-9\\s\\*\\,\\.\\-\\_\\(\\)\\[\\]\\{\\}\\@\\#\\$\\%\\^\\&\\!\\?\\+\\=\\:\\;\\'\\\"]*$";
 
-        String regex = "^[A-Za-z0-9\\s\\*\\,\\.\\-\\_\\(\\)\\[\\]\\{\\}\\@\\#\\$\\%\\^\\&\\!\\?\\+\\=\\:\\;\\'\\\"ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸỳỵỷỹ]*$";
+        // Normalize the input fields
+        placeName = normalizeVietnamese(placeName);
+        address = normalizeVietnamese(address);
+        province = normalizeVietnamese(province);
+        city = normalizeVietnamese(city);
+        phone = normalizeVietnamese(phone);
+        region = normalizeVietnamese(region);
+
         if (!placeName.matches(regex) || !address.matches(regex) || !province.matches(regex) ||
                 !city.matches(regex) || !phone.matches(regex) || !region.matches(regex)) {
             return "Invalid characters in input fields.";
         }
-
-        // Check for valid phone number:
-        if (!phone.matches("^[0-9\\.]*$")) {
-            return "Invalid phone number.";
-        }
-
         return null;
     }
 }

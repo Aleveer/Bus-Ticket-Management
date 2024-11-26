@@ -23,7 +23,6 @@ import com.myproject.busticket.models.Checkpoint;
 import com.myproject.busticket.models.Route_Checkpoint;
 import com.myproject.busticket.services.CheckpointService;
 import com.myproject.busticket.services.RouteCheckpointService;
-import com.myproject.busticket.validations.CheckpointValidation;
 
 @RestController
 @RequestMapping("/api/checkpoint")
@@ -116,12 +115,14 @@ public class CheckpointAPI {
             response.put("message", "Invalid region.");
             return ResponseEntity.badRequest().body(response);
         }
-        String validationMessage = CheckpointValidation.validateCheckpointFields(placeName, address, province, city,
-                phone, region);
-        if (validationMessage != null) {
-            response.put("message", validationMessage);
-            return ResponseEntity.badRequest().body(response);
-        }
+        // String validationMessage =
+        // CheckpointValidation.validateCheckpointFields(placeName, address, province,
+        // city,
+        // phone, region);
+        // if (validationMessage != null) {
+        // response.put("message", validationMessage);
+        // return ResponseEntity.badRequest().body(response);
+        // }
 
         Checkpoint checkpoint = new Checkpoint();
         checkpoint.setCheckpointId(0);
@@ -174,12 +175,14 @@ public class CheckpointAPI {
             return ResponseEntity.badRequest().body(response);
         }
 
-        String validationMessage = CheckpointValidation.validateCheckpointFields(placeName, address, province, city,
-                phone, region);
-        if (validationMessage != null) {
-            response.put("message", validationMessage);
-            return ResponseEntity.badRequest().body(response);
-        }
+        // String validationMessage =
+        // CheckpointValidation.validateCheckpointFields(placeName, address, province,
+        // city,
+        // phone, region);
+        // if (validationMessage != null) {
+        // response.put("message", validationMessage);
+        // return ResponseEntity.badRequest().body(response);
+        // }
 
         checkpoint.setPlaceName(placeName);
         checkpoint.setAddress(address);

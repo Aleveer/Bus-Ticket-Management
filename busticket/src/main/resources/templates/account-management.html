@@ -607,10 +607,10 @@
                 })
                     .then(response => {
                         if (response.redirected) {
-                            // Redirect to account management page if successful
-                            window.location.href = response.url;
+                            $('#newAccountModal').modal('hide');
+                            loadAccounts(0);
                         } else {
-                            return response.json(); // Handle error if server does not redirect
+                            return response.json();
                         }
                     })
                     .then(data => {
@@ -625,10 +625,9 @@
             });
         }
 
-        // Gắn sự kiện cho nút Add Account để gọi hàm newAccount
         $('[data-action="add-account"]').on('click', function (event) {
-            event.preventDefault(); // Ngăn điều hướng mặc định
-            newAccount(); // Gọi hàm newAccount
+            event.preventDefault();
+            newAccount();
         });
 
 

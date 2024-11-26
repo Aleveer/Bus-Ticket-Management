@@ -176,9 +176,12 @@
                <div class="route-info h3">
                  <span th:text="${departure} + ' - ' + ${destination}"></span>
                </div>
+               <div class="box-card chosen-trip d-flex flex-row justify-content-center full">
+                  
+               </div>
              </div>
          <div class="tripGo-container" id="listOfTripGo">
-            <div class="trip-card d-flex flex-wrap full" th:each="trip: ${trips}"  id="listOfTripGo" >   
+            <div class="trip-card d-flex flex-wrap full" th:each="trip: ${trips}" >   
                <div class="trip-time ">
                   <div class="d-flex justify-content-between">
                      <div class="d-flex flex-nowrap">
@@ -209,9 +212,12 @@
                       <span th:text="${routeParts.length > 1 ? routeParts[1] : ''}"></span>
                     </div>
                   </div>
-                <form class="booking-detail-form" id="bookingDetailForm" th:action="@{'/home/index/booking/' + ${trip.tripId}}" method="get">
-                    <button  class="choose-trip-button">Chọn chuyến</button>
-                </form>
+                  <form class="booking-detail-form" th:if="${tripType == 'one-way'}" th:action="@{'/home/index/booking/' + ${trip.tripId}}" method="get">
+                     <button class="choose-trip-button">Chọn chuyến</button>
+                  </form>
+                  <button class="choose-trip-button" th:if="${tripType == 'round-trip'}" th:onclick="selectTrip('departure', [[${trip.tripId}]])">
+                     Chọn chuyến
+                  </button>
                </div>
             </div>
          </div>
@@ -247,12 +253,18 @@
                       <span th:text="${routeParts.length > 1 ? routeParts[1] : ''}"></span>
                     </div>
                   </div>
-                <form class="booking-detail-form" id="bookingDetailForm" th:action="@{'/home/index/booking/' + ${trip.tripId}}" method="get">
-                    <button  class="choose-trip-button">Chọn chuyến</button>
-                </form>
+                  <span th:text="${trip.tripId}"></span>
+                  <button class="choose-trip-button" th:if="${tripType == 'round-trip'}" th:onclick="selectTrip('return',  [[${trip.tripId}]])">
+                     Chọn chuyến
+                 </button>
                </div>
             </div>
          </div>
+         <form class="booking-detail-form" th:if="${tripType == 'round-trip'}" id="bookingDetailForm" th:action="@{'/home/index/booking-roundtrip'}" method="get">
+            <input type="hidden" id="departureTripId" name="departureTripId" />
+            <input type="hidden" id="returnTripId" name="returnTripId" />
+            <button class="choose-trip-button" type="submit">Chọn chuyến</button>
+        </form>
       </div>
    </div>
    <!-- footer section start -->
@@ -340,6 +352,32 @@
             listOfTripReturn.style.display = 'flex';
          }
          }
+       }
+       let selectedDepartureTripId = null;
+       let selectedReturnTripId = null;
+   
+       function selectTrip(type, tripId) {
+           if (type === 'departure') {
+               console.log(tripId);
+               selectedDepartureTripId = tripId;
+               console.log(selectedDepartureTripId);
+               document.getElementById('departureTripId').value = tripId;
+            
+           } else if (type === 'return') {
+            console.log(tripId);
+               selectedReturnTripId = tripId;
+               console.log(selectedReturnTripId);
+               document.getElementById('returnTripId').value = tripId;
+               
+           }
+           updateFormAction();
+       }
+   
+       function updateFormAction() {
+           if (selectedDepartureTripId && selectedReturnTripId) {
+               const form = document.getElementById('bookingDetailForm');
+               form.action = `/home/index/booking-roundtrip?departureTripId=${selectedDepartureTripId}&returnTripId=${selectedReturnTripId}`;
+           }
        }
          document.addEventListener('DOMContentLoaded', function () {
             showTrips('go');

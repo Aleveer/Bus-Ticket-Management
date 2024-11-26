@@ -454,28 +454,29 @@ public class AccountAPI {
         Map<String, Object> response = new HashMap<>();
 
         try {
-            // Lấy tài khoản theo ID
             Account account = accountService.getById(accountId);
             if (account == null) {
                 response.put("message", "Account not found.");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
 
-            // Kiểm tra nếu tài khoản bị xóa là tài khoản hiện tại đang đăng nhập
             Account currentAccount = SecurityUtil.getCurrentAccount();
             if (currentAccount != null && currentAccount.getId() == accountId) {
                 response.put("message", "You cannot delete your own account.");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
             }
 
-            // Xóa tài khoản
-            accountService.delete(accountId);
+            boolean isAdmin = SecurityUtil.getCurrentUserRoles().stream()
+                    .anyMatch(role -> role.getAuthority().equals(AccountRole.admin.toString().toUpperCase()));
+            if (isAdmin && account.getRole().getRoleName().equalsIgnoreCase(AccountRole.admin.toString())) {
+                response.put("message", "You can't delete another admin account.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
 
-            // Phản hồi thành công
+            accountService.delete(accountId);
             response.put("message", "Account deleted successfully.");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            // Xử lý lỗi chung
             response.put("message", "Error deleting account: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }

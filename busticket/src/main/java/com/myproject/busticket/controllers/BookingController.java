@@ -61,20 +61,28 @@ public class BookingController {
     public String searchForm(@RequestParam String tripType, @RequestParam String departure,
             @RequestParam String destination,
             @RequestParam String date,
-            @RequestParam String returnDate,
+            @RequestParam(required = false) String returnDate,
             @RequestParam String ticketNum, Model model) {
         int numberOfTickets = Integer.parseInt(ticketNum);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime dateDeparture = LocalDate.parse(date, formatter).atStartOfDay();
+        
+        
         List<TripDTO> trips = tripService.searchTrip(departure, destination, dateDeparture, numberOfTickets);
-
+        
+        if ("round-trip".equals(tripType) && returnDate != null && !returnDate.isEmpty()) {
+            LocalDateTime dateReturn = LocalDate.parse(returnDate, formatter).atStartOfDay();
+            List<TripDTO> returnTrips = tripService.searchTrip(destination, departure, dateReturn, numberOfTickets);
+            model.addAttribute("returnTrips", returnTrips);  
+        }
         List<String> provinces = routeCheckpointService.getAllProvinces();
         List<String> cities = routeCheckpointService.getAllCities();
         model.addAttribute("tripType", "one-way" );
         model.addAttribute("provinces", provinces);
         model.addAttribute("cities", cities);
-
+              
         model.addAttribute("trips", trips);
+        
         model.addAttribute("tripType", tripType);
         model.addAttribute("departure", departure);
         model.addAttribute("destination", destination);

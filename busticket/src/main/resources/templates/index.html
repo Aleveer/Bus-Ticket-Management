@@ -175,7 +175,7 @@
                   </div>
                </div>
                <div class="btn-container d-flex justify-content-center">
-                  <button type="submit" class="search-btn">Tìm chuyến xe</button>
+                  <button type="submit" class="search-btn" onclick="validateForm(event)">Tìm chuyến xe</button>
                </div>
             </div>
          </form>
@@ -318,13 +318,36 @@
          document.getElementById('date').setAttribute('min', today);
          document.getElementById('returnDate').setAttribute('min', today);
       }
+      function validateForm(event) {
+         const tripType = document.querySelector('input[name="tripType"]:checked').value;
+         const returnDateElement = document.getElementById('returnDate');
+
+         if (tripType === 'round-trip' && (!returnDateElement || !returnDateElement.value)) {
+            alert('Vui lòng chọn ngày về cho chuyến khứ hồi.');
+            event.preventDefault(); // Prevent form submission
+         }
+         else if (tripType === 'round-trip' && returnDate < document.getElementById('date').value) {
+             alert('Ngày về không thể trước ngày đi.');
+             event.preventDefault(); // Prevent form submission
+         }
+         
+      }
 
       // Set the default date when the page loads
       window.onload = function () {
          setDefaultDate();
          setMinDate();
+         toggleReturnDate();
       };
-
+      function toggleReturnDate() {
+         const tripType = document.querySelector('input[name="tripType"]:checked').value;
+         const returnDateElement = document.getElementById('return-date');
+         if (tripType === 'round-trip') {
+             returnDateElement.classList.remove('hide');
+         } else {
+             returnDateElement.classList.add('hide');
+         }
+     }
       function logout() {
          fetch('/auth/logout', {
             method: 'POST',

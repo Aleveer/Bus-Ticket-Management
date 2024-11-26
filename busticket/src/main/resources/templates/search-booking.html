@@ -159,21 +159,26 @@
                <i class="bi bi-list-stars d-flex flex-grow justify-content-center  h1"></i>
                <p class="d-flex flex-grow justify-content-center nospace about_text_4 ">Không tìm thấy chuyến xe nào.</p> 
             </div>
-            <div th:if="${tripType == 'round-trip' && !#lists.isEmpty(trips)}" class="box-card d-flex flex-row justify-content-between full">
-               <div class="trip-go d-flex justify-content-center full">
+            <div th:if="${#lists.isEmpty(returnTrips)}" class="d-flex flex-column justify-content-center space">
+               <i class="bi bi-list-stars d-flex flex-grow justify-content-center  h1"></i>
+               <p class="d-flex flex-grow justify-content-center nospace about_text_4 ">Không tìm thấy chuyến xe nào.</p> 
+            </div>
+            <div th:if="${tripType == 'round-trip' && !#lists.isEmpty(trips) || tripType == 'round-trip' && !#lists.isEmpty(returnTrips)}" class="box-card d-flex flex-row justify-content-between full">
+               <div class="trip-go d-flex justify-content-center full" id="tripGo" onclick="showTrips('go')">
                      <p class="about_text_4">CHUYẾN ĐI - <span th:text="${date}" ></span> </p> 
                </div>
-               <div class="trip-return d-flex justify-content-center full">
+               <div class="trip-return d-flex justify-content-center full" id="tripReturn" onclick="showTrips('return')">
                    <p class="about_text_4">CHUYẾN VỀ - <span th:text="${returnDate}"></span></p> 
                </div>
                
             </div>
-            <div th:if="${!#lists.isEmpty(trips)}">
+            <div th:if="${!#lists.isEmpty(trips) || !#lists.isEmpty(returnTrips)}" >
                <div class="route-info h3">
                  <span th:text="${departure} + ' - ' + ${destination}"></span>
                </div>
              </div>
-            <div class="trip-card d-flex flex-wrap" th:each="trip: ${trips}">   
+         <div class="tripGo-container" id="listOfTripGo">
+            <div class="trip-card d-flex flex-wrap full" th:each="trip: ${trips}"  id="listOfTripGo" >   
                <div class="trip-time ">
                   <div class="d-flex justify-content-between">
                      <div class="d-flex flex-nowrap">
@@ -208,8 +213,46 @@
                     <button  class="choose-trip-button">Chọn chuyến</button>
                 </form>
                </div>
-               
             </div>
+         </div>
+         <div class="tripReturn-container" id="listOfTripReturn">
+            <div class="trip-card d-flex flex-wrap full" th:each="trip: ${returnTrips}" >   
+               <div class="trip-time ">
+                  <div class="d-flex justify-content-between">
+                     <div class="d-flex flex-nowrap">
+                        <span class="time" th:text="${#temporals.format(trip.departureTime,'HH:mm')}"></span>
+                        <i class="bi bi-record-circle icon"></i>
+                     </div> 
+                     <div class="time-line"></div>
+                     <div class="d-flex flex-nowrap">    
+                        <i class="bi bi-geo-alt-fill icon"></i>
+                        <span class="time" th:text="${#temporals.format(trip.arrivalTime,'HH:mm')}"></span>
+                     </div>  
+                  </div>
+                  
+              </div>
+               <div class="trip-details">
+                  <span th:text="${trip.getBus().getSeatType()}"></span>
+               </div>
+               <div class="price">
+                     <span th:text="${trip.price}"></span>
+               </div>
+               
+               <div class="route d-flex ">
+                  <div th:with="routeParts=${#strings.arraySplit(#strings.replace(trip.route.name, ' - ','|'),'|')}" class="d-flex flex-nowrap flex-grow-1 justify-content-between align-items-center locationContent">
+                    <div class="departureLocation h6">
+                      <span th:text="${routeParts[0]}"></span>
+                    </div>
+                    <div class="destinationLocation h6">
+                      <span th:text="${routeParts.length > 1 ? routeParts[1] : ''}"></span>
+                    </div>
+                  </div>
+                <form class="booking-detail-form" id="bookingDetailForm" th:action="@{'/home/index/booking/' + ${trip.tripId}}" method="get">
+                    <button  class="choose-trip-button">Chọn chuyến</button>
+                </form>
+               </div>
+            </div>
+         </div>
       </div>
    </div>
    <!-- footer section start -->
@@ -285,8 +328,21 @@
                returnDateElement.classList.add('hide');
          }
          }
-
+      function showTrips(type) {
+      const listOfTripGo = document.getElementById('listOfTripGo');
+      const listOfTripReturn = document.getElementById('listOfTripReturn');
+      if (listOfTripGo && listOfTripReturn) {
+         if (type === 'go') {
+            listOfTripGo.style.display = 'flex';
+            listOfTripReturn.style.display = 'none';
+         } else if (type === 'return') {
+            listOfTripGo.style.display = 'none';
+            listOfTripReturn.style.display = 'flex';
+         }
+         }
+       }
          document.addEventListener('DOMContentLoaded', function () {
+            showTrips('go');
             const daysInVietnamese = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
         
             // Function to format date

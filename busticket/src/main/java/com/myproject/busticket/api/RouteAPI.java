@@ -336,7 +336,7 @@ public class RouteAPI {
             routeCheckpoint.setCheckpointOrder(checkpointData.get("checkpointOrder") == null ? i++
                     : (int) checkpointData.get("checkpointOrder"));
             newRouteCheckpoints.add(routeCheckpoint);
-            i++;
+            ++i;
         }
 
         // If validation passes, proceed with the update

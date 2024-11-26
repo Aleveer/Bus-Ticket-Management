@@ -598,37 +598,39 @@
                 // }
 
                 // Send data via API
-                fetch('/api/account/new-account', {
+                $.ajax({
+                    url: '/api/account/new-account',
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(accountData)
-                })
-                    .then(response => {
-                        if (response.redirected) {
-                            // Redirect to account management page if successful
-                            window.location.href = response.url;
-                        } else {
-                            return response.json(); // Handle error if server does not redirect
-                        }
-                    })
-                    .then(data => {
-                        if (data && data.message) {
+                    contentType: 'application/json',
+                    data: JSON.stringify(accountData),
+                    success: function (data) {
+                        if (data.message) {
                             alert(data.message);
+                            if (data.message === "Account created successfully.") {
+                                $('#newAccountModal').modal('hide');
+                                //clear all fields in modal:
+                                $('#newEmail').val('');
+                                $('#newRole').val('');
+                                $('#newName').val('');
+                                $('#newPhone').val('');
+                                $('#newStatus').val('');
+                                $('#newPassword').val('');
+                                $('#confirmPassword').val('');
+                                //loadAccounts(0);
+                            }
                         }
-                    })
-                    .catch(error => {
+                    },
+                    error: function (error) {
                         console.error('Error creating account:', error);
                         alert('An error occurred while creating the account.');
-                    });
+                    }
+                });
             });
         }
 
-        // Gắn sự kiện cho nút Add Account để gọi hàm newAccount
         $('[data-action="add-account"]').on('click', function (event) {
-            event.preventDefault(); // Ngăn điều hướng mặc định
-            newAccount(); // Gọi hàm newAccount
+            event.preventDefault();
+            newAccount();
         });
 
 

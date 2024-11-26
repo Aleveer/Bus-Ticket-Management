@@ -8,11 +8,8 @@ import com.myproject.busticket.repositories.BookingRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import com.myproject.busticket.utilities.SecurityUtil;
 import jakarta.mail.MessagingException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -32,15 +29,14 @@ public class BookingService {
 
     private EmailService emailService;
 
-
     public BookingService(BookingRepository bookingRepository,
-                          TripService tripService,
-                          AccountService accountService,
-                          CustomerService customerService,
-                          SeatReservationsService seatReservationsService,
-                          BillService billService,
-                          BillDetailService billDetailService,
-                          EmailService emailService) {
+            TripService tripService,
+            AccountService accountService,
+            CustomerService customerService,
+            SeatReservationsService seatReservationsService,
+            BillService billService,
+            BillDetailService billDetailService,
+            EmailService emailService) {
         this.bookingRepository = bookingRepository;
         this.tripService = tripService;
         this.accountService = accountService;
@@ -55,11 +51,11 @@ public class BookingService {
         return bookingRepository.findById(bookingId).orElse(null);
     }
 
-
-    public boolean checkLogin(){
+    public boolean checkLogin() {
         Account account = SecurityUtil.getCurrentAccount();
         return account != null;
     }
+
     public void createTicketOneWay(BookingInfoDTO booking, LocalDateTime paymentDate) {
         Booking newBooking = new Booking();
 
@@ -70,9 +66,9 @@ public class BookingService {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Account currentAccount = (Account) authentication.getPrincipal();
             newBooking.setCustomer(customerService.getCustomerByEmail(currentAccount.getEmail()));
-        } else {  // ko login
+        } else { // ko login
             // email có tồn tại account thì dùng account đó
-            if (accountService.existsByEmail(email)){
+            if (accountService.getUserByEmail(email).isPresent()) {
                 newBooking.setCustomer(customerService.getCustomerByEmail(email));
             } else if (customerService.existsByEmail(email)) { // Nếu đã là kh mà chưa có account thì lấy cus
                 newBooking.setCustomer(customerService.getCustomerByEmail(email));
@@ -125,7 +121,7 @@ public class BookingService {
         billDetail.setTicketType(TicketType.one_way_ticket);
         billDetailService.save(billDetail);
 
-        //send Email
+        // send Email
         Context context = new Context();
         String subject = "[EASYBUS] HÓA ĐƠN ĐIỆN TỬ CỦA VÉ SỐ" + newBooking.getBookingId();
         context.setVariable("routeName", newBooking.getTrip().getRoute().getName());

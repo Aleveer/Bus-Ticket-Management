@@ -65,24 +65,26 @@ public class BookingService {
 
         // xử lý thông tin khách hàng
         String email = booking.getCustomer().getEmail();
-//        if (checkLogin()) {
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            Account currentAccount = (Account) authentication.getPrincipal();
-//            newBooking.setCustomer(customerService.getCustomerByEmail(currentAccount.getEmail()));
-//        } else {
-//            if (accountService.existsByEmail(email)){
-//                newBooking.setCustomer(customerService.getCustomerByEmail(email));
-//            } else if (customerService.existsByEmail(email)) {
-//                newBooking.setCustomer(customerService.getCustomerByEmail(email));
-//            } else {
-//                Customer newCustomer = new Customer();
-//                newCustomer.setEmail(email);
-//                newCustomer.setName(booking.getCustomer().getName());
-//                newCustomer.setPhone(booking.getCustomer().getPhone());
-//                customerService.create(newCustomer);
-//                newBooking.setCustomer(newCustomer);
-//            }
-//        }
+        // Có login
+        if (checkLogin()) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Account currentAccount = (Account) authentication.getPrincipal();
+            newBooking.setCustomer(customerService.getCustomerByEmail(currentAccount.getEmail()));
+        } else {  // ko login
+            // email có tồn tại account thì dùng account đó
+            if (accountService.existsByEmail(email)){
+                newBooking.setCustomer(customerService.getCustomerByEmail(email));
+            } else if (customerService.existsByEmail(email)) { // Nếu đã là kh mà chưa có account thì lấy cus
+                newBooking.setCustomer(customerService.getCustomerByEmail(email));
+            } else { // Nếu ko thì là kh lần đầu => tạo account mới
+                Customer newCustomer = new Customer();
+                newCustomer.setEmail(email);
+                newCustomer.setName(booking.getCustomer().getName());
+                newCustomer.setPhone(booking.getCustomer().getPhone());
+                customerService.create(newCustomer);
+                newBooking.setCustomer(newCustomer);
+            }
+        }
         Customer newCustomer = new Customer();
         newCustomer.setEmail(email);
         newCustomer.setName(booking.getCustomer().getName());

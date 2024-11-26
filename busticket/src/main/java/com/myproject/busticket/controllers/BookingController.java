@@ -66,17 +66,21 @@ public class BookingController {
         int numberOfTickets = Integer.parseInt(ticketNum);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime dateDeparture = LocalDate.parse(date, formatter).atStartOfDay();
-        
-        
+
+        // Lấy chuyến đi
         List<TripDTO> trips = tripService.searchTrip(departure, destination, dateDeparture, numberOfTickets);
-        
+
+        // Lấy chuyến về nếu có
         if ("round-trip".equals(tripType) && returnDate != null && !returnDate.isEmpty()) {
             LocalDateTime dateReturn = LocalDate.parse(returnDate, formatter).atStartOfDay();
             List<TripDTO> returnTrips = tripService.searchTrip(destination, departure, dateReturn, numberOfTickets);
             model.addAttribute("returnTrips", returnTrips);  
         }
+
+        // Lấy thông tin các tỉnh/thành cho dropdown bên front end
         List<String> provinces = routeCheckpointService.getAllProvinces();
         List<String> cities = routeCheckpointService.getAllCities();
+
         model.addAttribute("tripType", "one-way" );
         model.addAttribute("provinces", provinces);
         model.addAttribute("cities", cities);
@@ -175,6 +179,39 @@ public class BookingController {
         return "index";
     }
 
+    // =============ROUND TRIP============
+    @GetMapping("/home/index/booking-roundtrip/{TripIds}")
+    public String chooseInfRoundTrip(@PathVariable String TripIds, Model model) {
+        String[] listTrip = TripIds.split("&");
+        int tripId = Integer.parseInt(listTrip[0]);
+        int roundTripId = Integer.parseInt(listTrip[1]);
+        TripDTO trip = tripService.findById(tripId);
+        TripDTO roundTrip = tripService.findById(roundTripId);
+
+        List<SeatReservationsDTO> statusSeatsTrip = seatReservationsService.getListStatusSeat(tripId);
+        List<SeatReservationsDTO> statusSeatsRoundTrip = seatReservationsService.getListStatusSeat(roundTripId);
+
+        //Trip
+
+        List<SeatReservationsDTO> firstFloorTrip = statusSeatsTrip.subList(0, statusSeatsTrip.size() / 2);
+        List<SeatReservationsDTO> secondFloorTrip = statusSeatsTrip.subList(statusSeatsTrip.size() / 2, statusSeatsTrip.size());
+
+        //Round Trip
+        List<SeatReservationsDTO> firstFloorRoundTrip = statusSeatsRoundTrip.subList(0, statusSeatsRoundTrip.size() / 2);
+        List<SeatReservationsDTO> secondFloorRoundTrip = statusSeatsRoundTrip.subList(statusSeatsRoundTrip.size() / 2, statusSeatsRoundTrip.size());
+
+        //Trip
+        model.addAttribute("firstFloorTrip", firstFloorTrip);
+        model.addAttribute("secondFloorTrip", secondFloorTrip);
+
+        //Round Trip
+        model.addAttribute("firstFloorRoundTrip", firstFloorRoundTrip);
+        model.addAttribute("secondFloorRoundTrip", secondFloorRoundTrip);
+
+        model.addAttribute("seatTypeTrip", trip.getBus().getSeatType().toString().trim());
+        model.addAttribute("seatTypeRoundTrip", roundTrip.getBus().getSeatType().toString().trim());
+        return "booking";
+    }
     @PostMapping("/home/index/booking/roundtrip")
     public String booking(@ModelAttribute Booking outboundTicket, @ModelAttribute Booking returnTicket) {
         if (!customerService.hasCustomer(outboundTicket.getCustomer().getEmail())) {

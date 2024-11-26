@@ -35,9 +35,16 @@ public class ControllerAPI {
     @GetMapping("/controllers")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getControllers(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
+            @RequestParam(defaultValue = "15") int size,
+            @RequestParam(required = false) String searchValue) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Controller> controllerPages = controllerService.getAll(pageable);
+        Page<Controller> controllerPages;
+
+        if (searchValue != null && !searchValue.isEmpty()) {
+            controllerPages = controllerService.searchControllersByNameOrEmail(pageable, searchValue);
+        } else {
+            controllerPages = controllerService.getAll(pageable);
+        }
 
         List<ControllerDTO> controllerDTOs = controllerPages.getContent().stream()
                 .map(controller -> {

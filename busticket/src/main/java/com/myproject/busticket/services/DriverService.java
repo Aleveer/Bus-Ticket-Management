@@ -42,4 +42,9 @@ public class DriverService {
     public Driver save(Driver driver) {
         return driverRepository.save(driver);
     }
+
+    public Page<Driver> searchDriversByNameOrEmail(Pageable pageable, String searchValue) {
+        return driverRepository.findByAccountFullNameContainingOrAccountEmailContainingAllIgnoreCase(searchValue,
+                searchValue, pageable);
+    }
 }

@@ -85,16 +85,31 @@ public class TripAPI {
 
     @GetMapping("/trips")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getTrips(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
+    public ResponseEntity<Map<String, Object>> getTrips(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size,
+            @RequestParam(required = false) String searchValue,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Trip> tripsPage = tripService.getAll(pageable);
+        Page<Trip> tripsPage;
+
+        LocalDateTime startDateTime = null;
+        LocalDateTime endDateTime = null;
+
+        if (startDate != null && !startDate.isEmpty()) {
+            startDateTime = LocalDateTime.parse(startDate);
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            endDateTime = LocalDateTime.parse(endDate);
+        }
+
+        tripsPage = tripService.searchTrips(pageable, searchValue, startDateTime, endDateTime);
 
         List<Trip> trips = tripsPage.getContent().stream()
                 .map(trip -> new Trip(trip.getTripId(), trip.getDepartureTime(), trip.getArrivalTime(),
                         trip.getPrice(), trip.getStatus(), trip.getBus(), trip.getDriver(),
-                        trip.getController(),
-                        trip.getStaff(), trip.getRoute()))
+                        trip.getController(), trip.getStaff(), trip.getRoute()))
                 .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();

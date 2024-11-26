@@ -120,4 +120,19 @@ public class TripService {
     public void deleteTripById(int tripId) {
         tripRepository.deleteById(tripId);
     }
+
+    public Page<Trip> searchTrips(Pageable pageable, String query, LocalDateTime startDate, LocalDateTime endDate) {
+        if (query == null) {
+            query = "";
+        }
+        if (startDate == null && endDate == null) {
+            return tripRepository.findBySearchValue(query, pageable);
+        } else if (startDate == null) {
+            return tripRepository.findBySearchValueAndArrivalTimeBefore(query, endDate, pageable);
+        } else if (endDate == null) {
+            return tripRepository.findBySearchValueAndDepartureTimeAfter(query, startDate, pageable);
+        } else {
+            return tripRepository.findBySearchValueAndDepartureTimeBetween(query, startDate, endDate, pageable);
+        }
+    }
 }

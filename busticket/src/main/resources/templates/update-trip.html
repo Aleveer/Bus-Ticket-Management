@@ -32,6 +32,81 @@
         #controllerSchedule {
             margin-top: 20px;
         }
+
+        .schedule-table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .schedule-table th {
+            background-color: #f8f9fa;
+        }
+
+        .schedule-table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #controllerCalendar {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .search-box {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .search-box .form-group {
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .search-box .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .search-box .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .search-box .btn-search {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .search-box .btn-search i {
+            margin-right: 5px;
+        }
+
+        .search-box .btn-search:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 
@@ -73,8 +148,11 @@
                 </select>
             </div>
             <h2 class="mt-4">Select Bus</h2>
-            <div class="form-group">
+            <div class="search-box">
                 <input type="text" class="form-control" id="busSearchBox" placeholder="Search bus..." />
+                <button class="btn-search" id="searchBusButton" type="button" onclick="loadBuses(0)">
+                    <i class="ft-search"></i> Search
+                </button>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -97,8 +175,11 @@
                 <div id="busCalendar"></div>
             </div>
             <h2 class="mt-4">Select Driver</h2>
-            <div class="form-group">
+            <div class="search-box">
                 <input type="text" class="form-control" id="driverSearchBox" placeholder="Search driver..." />
+                <button class="btn-search" id="searchDriverButton" type="button" onclick="loadDrivers(0)">
+                    <i class="ft-search"></i> Search
+                </button>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -125,8 +206,11 @@
             </div>
 
             <h2 class="mt-4">Select Controller</h2>
-            <div class="form-group">
+            <div class="search-box">
                 <input type="text" class="form-control" id="controllerSearchBox" placeholder="Search controller..." />
+                <button class="btn-search" id="searchControllerButton" type="button" onclick="loadControllers(0)">
+                    <i class="ft-search"></i> Search
+                </button>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -151,8 +235,11 @@
             </div>
 
             <h2 class="mt-4">Select Staff</h2>
-            <div class="form-group">
+            <div class="search-box">
                 <input type="text" class="form-control" id="staffSearchBox" placeholder="Search staff..." />
+                <button class="btn-search" id="searchStaffButton" type="button" onclick="loadStaff(0)">
+                    <i class="ft-search"></i> Search
+                </button>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -172,8 +259,11 @@
                 <div id="selectedStaffDetails" class="mt-3"></div>
             </div>
             <h2 class="mt-4">Select Route</h2>
-            <div class="form-group">
+            <div class="search-box">
                 <input type="text" class="form-control" id="routeSearchBox" placeholder="Search route..." />
+                <button class="btn-search" id="searchRouteButton" type="button" onclick="loadRoutes(0)">
+                    <i class="ft-search"></i> Search
+                </button>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -209,7 +299,7 @@
         function loadBuses(page, searchTerm = "") {
             $.ajax({
                 url: "/api/bus/buses",
-                data: { page: page, size: 10, search: searchTerm },
+                data: { page: page, size: 10, searchValue: searchTerm },
                 method: "GET",
                 success: function (data) {
                     var buses = data.buses;
@@ -237,7 +327,7 @@
                     // Add Previous button
                     if (currentPage > 0) {
                         $("#busPaginationControls").append(
-                            '<li><a onclick="loadBuses(' + (currentPage - 1) + ", '" + searchTerm + "')\">&laquo;</a></li>"
+                            '<li><a onclick="loadBuses(' + (currentPage - 1) + ', \'' + searchTerm + '\')">&laquo;</a></li>'
                         );
                     }
 
@@ -247,41 +337,49 @@
 
                     if (startPage > 0) {
                         $("#busPaginationControls").append(
-                            "<li><a onclick=\"loadBuses(0, '" + searchTerm + "')\">1</a></li>"
+                            '<li><a onclick="loadBuses(0, \'' + searchTerm + '\')">1</a></li>'
                         );
                         if (startPage > 1) {
-                            $("#busPaginationControls").append("<li><span>...</span></li>");
+                            $("#busPaginationControls").append(
+                                '<li><span>...</span></li>'
+                            );
                         }
                     }
 
                     for (var i = startPage; i <= endPage; i++) {
                         $("#busPaginationControls").append(
-                            '<li class="' + (i === currentPage ? "active" : "") + '"><a onclick="loadBuses(' + i + ", '" + searchTerm + "')\">" + (i + 1) + "</a></li>"
+                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadBuses(' + i + ', \'' + searchTerm + '\')">' + (i + 1) + '</a></li>'
                         );
                     }
 
                     if (endPage < totalPages - 1) {
                         if (endPage < totalPages - 2) {
-                            $("#busPaginationControls").append("<li><span>...</span></li>");
+                            $("#busPaginationControls").append(
+                                '<li><span>...</span></li>'
+                            );
                         }
                         $("#busPaginationControls").append(
-                            '<li><a onclick="loadBuses(' + (totalPages - 1) + ", '" + searchTerm + "')\">" + totalPages + "</a></li>"
+                            '<li><a onclick="loadBuses(' + (totalPages - 1) + ', \'' + searchTerm + '\')">' + totalPages + '</a></li>'
                         );
                     }
 
                     // Add Next button
                     if (currentPage < totalPages - 1) {
                         $("#busPaginationControls").append(
-                            '<li><a onclick="loadBuses(' + (currentPage + 1) + ", '" + searchTerm + "')\">&raquo;</a></li>"
+                            '<li><a onclick="loadBuses(' + (currentPage + 1) + ', \'' + searchTerm + '\')">&raquo;</a></li>'
                         );
                     }
                 },
+                error: function (error) {
+                    console.error('Error loading buses:', error);
+                }
             });
         }
+
         function loadDrivers(page, searchTerm = "") {
             $.ajax({
                 url: "/api/driver/drivers",
-                data: { page: page, size: 10, search: searchTerm },
+                data: { page: page, size: 10, searchValue: searchTerm },
                 method: "GET",
                 success: function (data) {
                     var drivers = data.drivers;
@@ -310,7 +408,7 @@
                     // Add Previous button
                     if (currentPage > 0) {
                         $("#driverPaginationControls").append(
-                            '<li><a onclick="loadDrivers(' + (currentPage - 1) + ", '" + searchTerm + "')\">&laquo;</a></li>"
+                            '<li><a onclick="loadDrivers(' + (currentPage - 1) + ', \'' + searchTerm + '\')">&laquo;</a></li>'
                         );
                     }
 
@@ -320,41 +418,49 @@
 
                     if (startPage > 0) {
                         $("#driverPaginationControls").append(
-                            "<li><a onclick=\"loadDrivers(0, '" + searchTerm + "')\">1</a></li>"
+                            '<li><a onclick="loadDrivers(0, \'' + searchTerm + '\')">1</a></li>'
                         );
                         if (startPage > 1) {
-                            $("#driverPaginationControls").append("<li><span>...</span></li>");
+                            $("#driverPaginationControls").append(
+                                '<li><span>...</span></li>'
+                            );
                         }
                     }
 
                     for (var i = startPage; i <= endPage; i++) {
                         $("#driverPaginationControls").append(
-                            '<li class="' + (i === currentPage ? "active" : "") + '"><a onclick="loadDrivers(' + i + ", '" + searchTerm + "')\">" + (i + 1) + "</a></li>"
+                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadDrivers(' + i + ', \'' + searchTerm + '\')">' + (i + 1) + '</a></li>'
                         );
                     }
 
                     if (endPage < totalPages - 1) {
                         if (endPage < totalPages - 2) {
-                            $("#driverPaginationControls").append("<li><span>...</span></li>");
+                            $("#driverPaginationControls").append(
+                                '<li><span>...</span></li>'
+                            );
                         }
                         $("#driverPaginationControls").append(
-                            '<li><a onclick="loadDrivers(' + (totalPages - 1) + ", '" + searchTerm + "')\">" + totalPages + "</a></li>"
+                            '<li><a onclick="loadDrivers(' + (totalPages - 1) + ', \'' + searchTerm + '\')">' + totalPages + '</a></li>'
                         );
                     }
 
                     // Add Next button
                     if (currentPage < totalPages - 1) {
                         $("#driverPaginationControls").append(
-                            '<li><a onclick="loadDrivers(' + (currentPage + 1) + ", '" + searchTerm + "')\">&raquo;</a></li>"
+                            '<li><a onclick="loadDrivers(' + (currentPage + 1) + ', \'' + searchTerm + '\')">&raquo;</a></li>'
                         );
                     }
                 },
+                error: function (error) {
+                    console.error('Error loading drivers:', error);
+                }
             });
         }
+
         function loadControllers(page, searchTerm = "") {
             $.ajax({
                 url: "/api/controller/controllers",
-                data: { page: page, size: 10, search: searchTerm },
+                data: { page: page, size: 10, searchValue: searchTerm },
                 method: "GET",
                 success: function (data) {
                     var controllers = data.controllers;
@@ -376,14 +482,13 @@
                             "</tr>"
                         );
                     });
-
                     // Clear the pagination controls
                     $("#controllerPaginationControls").empty();
 
                     // Add Previous button
                     if (currentPage > 0) {
                         $("#controllerPaginationControls").append(
-                            '<li><a onclick="loadControllers(' + (currentPage - 1) + ", '" + searchTerm + "')\">&laquo;</a></li>"
+                            '<li><a onclick="loadControllers(' + (currentPage - 1) + ', \'' + searchTerm + '\')">&laquo;</a></li>'
                         );
                     }
 
@@ -393,41 +498,49 @@
 
                     if (startPage > 0) {
                         $("#controllerPaginationControls").append(
-                            "<li><a onclick=\"loadControllers(0, '" + searchTerm + "')\">1</a></li>"
+                            '<li><a onclick="loadControllers(0, \'' + searchTerm + '\')">1</a></li>'
                         );
                         if (startPage > 1) {
-                            $("#controllerPaginationControls").append("<li><span>...</span></li>");
+                            $("#controllerPaginationControls").append(
+                                '<li><span>...</span></li>'
+                            );
                         }
                     }
 
                     for (var i = startPage; i <= endPage; i++) {
                         $("#controllerPaginationControls").append(
-                            '<li class="' + (i === currentPage ? "active" : "") + '"><a onclick="loadControllers(' + i + ", '" + searchTerm + "')\">" + (i + 1) + "</a></li>"
+                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadControllers(' + i + ', \'' + searchTerm + '\')">' + (i + 1) + '</a></li>'
                         );
                     }
 
                     if (endPage < totalPages - 1) {
                         if (endPage < totalPages - 2) {
-                            $("#controllerPaginationControls").append("<li><span>...</span></li>");
+                            $("#controllerPaginationControls").append(
+                                '<li><span>...</span></li>'
+                            );
                         }
                         $("#controllerPaginationControls").append(
-                            '<li><a onclick="loadControllers(' + (totalPages - 1) + ", '" + searchTerm + "')\">" + totalPages + "</a></li>"
+                            '<li><a onclick="loadControllers(' + (totalPages - 1) + ', \'' + searchTerm + '\')">' + totalPages + '</a></li>'
                         );
                     }
 
                     // Add Next button
                     if (currentPage < totalPages - 1) {
                         $("#controllerPaginationControls").append(
-                            '<li><a onclick="loadControllers(' + (currentPage + 1) + ", '" + searchTerm + "')\">&raquo;</a></li>"
+                            '<li><a onclick="loadControllers(' + (currentPage + 1) + ', \'' + searchTerm + '\')">&raquo;</a></li>'
                         );
                     }
                 },
+                error: function (error) {
+                    console.error('Error loading controllers:', error);
+                }
             });
         }
+
         function loadStaff(page, searchTerm = "") {
             $.ajax({
                 url: "/api/staff/staffs",
-                data: { page: page, size: 10, search: searchTerm },
+                data: { page: page, size: 10, searchValue: searchTerm },
                 method: "GET",
                 success: function (data) {
                     var staffs = data.staffs;
@@ -436,7 +549,8 @@
 
                     // Clear the table body
                     $("#staffTableBody").empty();
-                    // Populate the table with staff
+
+                    // Populate the table with staffs
                     staffs.forEach(function (staff) {
                         $("#staffTableBody").append(
                             "<tr>" +
@@ -455,7 +569,7 @@
                     // Add Previous button
                     if (currentPage > 0) {
                         $("#staffPaginationControls").append(
-                            '<li><a onclick="loadStaff(' + (currentPage - 1) + ", '" + searchTerm + "')\">&laquo;</a></li>"
+                            '<li><a onclick="loadStaff(' + (currentPage - 1) + ', \'' + searchTerm + '\')">&laquo;</a></li>'
                         );
                     }
 
@@ -465,41 +579,49 @@
 
                     if (startPage > 0) {
                         $("#staffPaginationControls").append(
-                            "<li><a onclick=\"loadStaff(0, '" + searchTerm + "')\">1</a></li>"
+                            '<li><a onclick="loadStaff(0, \'' + searchTerm + '\')">1</a></li>'
                         );
                         if (startPage > 1) {
-                            $("#staffPaginationControls").append("<li><span>...</span></li>");
+                            $("#staffPaginationControls").append(
+                                '<li><span>...</span></li>'
+                            );
                         }
                     }
 
                     for (var i = startPage; i <= endPage; i++) {
                         $("#staffPaginationControls").append(
-                            '<li class="' + (i === currentPage ? "active" : "") + '"><a onclick="loadStaff(' + i + ", '" + searchTerm + "')\">" + (i + 1) + "</a></li>"
+                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadStaff(' + i + ', \'' + searchTerm + '\')">' + (i + 1) + '</a></li>'
                         );
                     }
 
                     if (endPage < totalPages - 1) {
                         if (endPage < totalPages - 2) {
-                            $("#staffPaginationControls").append("<li><span>...</span></li>");
+                            $("#staffPaginationControls").append(
+                                '<li><span>...</span></li>'
+                            );
                         }
                         $("#staffPaginationControls").append(
-                            '<li><a onclick="loadStaff(' + (totalPages - 1) + ", '" + searchTerm + "')\">" + totalPages + "</a></li>"
+                            '<li><a onclick="loadStaff(' + (totalPages - 1) + ', \'' + searchTerm + '\')">' + totalPages + '</a></li>'
                         );
                     }
 
                     // Add Next button
                     if (currentPage < totalPages - 1) {
                         $("#staffPaginationControls").append(
-                            '<li><a onclick="loadStaff(' + (currentPage + 1) + ", '" + searchTerm + "')\">&raquo;</a></li>"
+                            '<li><a onclick="loadStaff(' + (currentPage + 1) + ', \'' + searchTerm + '\')">&raquo;</a></li>'
                         );
                     }
                 },
+                error: function (error) {
+                    console.error('Error loading staffs:', error);
+                }
             });
         }
+
         function loadRoutes(page, searchTerm = "") {
             $.ajax({
                 url: "/api/route/routes",
-                data: { page: page, size: 10, search: searchTerm },
+                data: { page: page, size: 10, searchValue: searchTerm },
                 method: "GET",
                 success: function (data) {
                     var routes = data.routes;
@@ -528,7 +650,7 @@
                     // Add Previous button
                     if (currentPage > 0) {
                         $("#routePaginationControls").append(
-                            '<li><a onclick="loadRoutes(' + (currentPage - 1) + ", '" + searchTerm + "')\">&laquo;</a></li>"
+                            '<li><a onclick="loadRoutes(' + (currentPage - 1) + ', \'' + searchTerm + '\')">&laquo;</a></li>'
                         );
                     }
 
@@ -538,35 +660,42 @@
 
                     if (startPage > 0) {
                         $("#routePaginationControls").append(
-                            "<li><a onclick=\"loadRoutes(0, '" + searchTerm + "')\">1</a></li>"
+                            '<li><a onclick="loadRoutes(0, \'' + searchTerm + '\')">1</a></li>'
                         );
                         if (startPage > 1) {
-                            $("#routePaginationControls").append("<li><span>...</span></li>");
+                            $("#routePaginationControls").append(
+                                '<li><span>...</span></li>'
+                            );
                         }
                     }
 
                     for (var i = startPage; i <= endPage; i++) {
                         $("#routePaginationControls").append(
-                            '<li class="' + (i === currentPage ? "active" : "") + '"><a onclick="loadRoutes(' + i + ", '" + searchTerm + "')\">" + (i + 1) + "</a></li>"
+                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadRoutes(' + i + ', \'' + searchTerm + '\')">' + (i + 1) + '</a></li>'
                         );
                     }
 
                     if (endPage < totalPages - 1) {
                         if (endPage < totalPages - 2) {
-                            $("#routePaginationControls").append("<li><span>...</span></li>");
+                            $("#routePaginationControls").append(
+                                '<li><span>...</span></li>'
+                            );
                         }
                         $("#routePaginationControls").append(
-                            '<li><a onclick="loadRoutes(' + (totalPages - 1) + ", '" + searchTerm + "')\">" + totalPages + "</a></li>"
+                            '<li><a onclick="loadRoutes(' + (totalPages - 1) + ', \'' + searchTerm + '\')">' + totalPages + '</a></li>'
                         );
                     }
 
                     // Add Next button
                     if (currentPage < totalPages - 1) {
                         $("#routePaginationControls").append(
-                            '<li><a onclick="loadRoutes(' + (currentPage + 1) + ", '" + searchTerm + "')\">&raquo;</a></li>"
+                            '<li><a onclick="loadRoutes(' + (currentPage + 1) + ', \'' + searchTerm + '\')">&raquo;</a></li>'
                         );
                     }
                 },
+                error: function (error) {
+                    console.error('Error loading routes:', error);
+                }
             });
         }
 
@@ -622,7 +751,6 @@
                     console.error("Error fetching default selected entities:", error);
                 });
         }
-
 
         function getFormData(form) {
             const formData = new FormData(form);

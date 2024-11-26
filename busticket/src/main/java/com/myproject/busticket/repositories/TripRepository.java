@@ -3,6 +3,9 @@ package com.myproject.busticket.repositories;
 import com.myproject.busticket.models.Bus;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Trip;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -49,4 +52,26 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
 
         @Query("SELECT t FROM Trip t WHERE t.status = 'arriving' OR t.status = 'waiting' AND t.departureTime <= :currentTime AND t.arrivalTime >= :currentTime")
         List<Trip> findOnGoingTrips(@Param("currentTime") LocalDateTime currentTime);
+
+        @Query("SELECT t FROM Trip t WHERE t.departureTime >= :startDate AND t.arrivalTime <= :endDate AND " +
+                        "(t.route.code LIKE %:query% OR t.bus.plate LIKE %:query% OR t.driver.account.fullName LIKE %:query%)")
+        Page<Trip> findBySearchValueAndDepartureTimeBetween(@Param("query") String query,
+                        @Param("startDate") LocalDateTime startDate,
+                        @Param("endDate") LocalDateTime endDate,
+                        Pageable pageable);
+
+        @Query("SELECT t FROM Trip t WHERE t.arrivalTime <= :endDate AND " +
+                        "(t.route.code LIKE %:query% OR t.bus.plate LIKE %:query% OR t.driver.account.fullName LIKE %:query%)")
+        Page<Trip> findBySearchValueAndArrivalTimeBefore(@Param("query") String query,
+                        @Param("endDate") LocalDateTime endDate,
+                        Pageable pageable);
+
+        @Query("SELECT t FROM Trip t WHERE t.departureTime >= :startDate AND " +
+                        "(t.route.code LIKE %:query% OR t.bus.plate LIKE %:query% OR t.driver.account.fullName LIKE %:query%)")
+        Page<Trip> findBySearchValueAndDepartureTimeAfter(@Param("query") String query,
+                        @Param("startDate") LocalDateTime startDate,
+                        Pageable pageable);
+
+        @Query("SELECT t FROM Trip t WHERE t.route.code LIKE %:query% OR t.bus.plate LIKE %:query% OR t.driver.account.fullName LIKE %:query%")
+        Page<Trip> findBySearchValue(@Param("query") String query, Pageable pageable);
 }

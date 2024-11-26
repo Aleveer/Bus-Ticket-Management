@@ -80,10 +80,18 @@ public class AccountAPI {
 
     @GetMapping("/accounts")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getAccounts(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
+    public ResponseEntity<Map<String, Object>> getAccounts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size,
+            @RequestParam(required = false) String searchValue) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Account> accountPages = accountService.getAll(pageable);
+        Page<Account> accountPages;
+
+        if (searchValue != null && !searchValue.isEmpty()) {
+            accountPages = accountService.searchAccountsByEmailAndNameAndPhone(pageable, searchValue);
+        } else {
+            accountPages = accountService.getAll(pageable);
+        }
 
         List<AccountDTO> accountDTOs = accountPages.getContent().stream()
                 .map(account -> new AccountDTO(account.getId(), account.getEmail(),

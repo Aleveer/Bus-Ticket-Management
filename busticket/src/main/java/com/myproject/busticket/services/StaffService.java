@@ -42,4 +42,9 @@ public class StaffService {
     public Staff save(Staff staff) {
         return staffRepository.save(staff);
     }
+
+    public Page<Staff> searchStaffsByNameOrEmail(Pageable pageable, String searchValue) {
+        return staffRepository.findByAccountFullNameContainingOrAccountEmailContainingAllIgnoreCase(searchValue,
+                searchValue, pageable);
+    }
 }

@@ -6,6 +6,58 @@
   <div th:insert="~{dashboard-header.html}"></div>
   <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}">
   <style>
+    .search-box {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      background-color: #f1f1f1;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .search-box .form-group {
+      flex: 1;
+      margin-right: 15px;
+    }
+
+    .search-box .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .search-box .form-group input,
+    .search-box .form-group .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .search-box .btn-search {
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .search-box .btn-search i {
+      margin-right: 5px;
+    }
+
+    .search-box .btn-search:hover {
+      background-color: #0056b3;
+    }
+
     .btn-darker-red {
       background-color: #8B0000;
       /* Darker red color */
@@ -59,12 +111,23 @@
                     </a>
                   </ul>
                 </div>
-                <div class="search-box" id="searchBox" style="display: none;">
-                  <input type="text" class="input-search" placeholder="Search trip...">
-                  <button class="btn-search" id="searchButton">
-                    <i class="ft-search"></i>
-                  </button>
-                </div>
+                <form id="searchForm" method="get" onsubmit="handleSearch(event)">
+                  <div class="search-box" id="searchBox">
+                    <input type="text" id="searchField" name="searchValue" class="input-search"
+                      placeholder="Search trip..." />
+                    <div class="form-group">
+                      <label for="startDate">Start Date</label>
+                      <input type="datetime-local" class="form-control" id="startDate" name="startDate" />
+                    </div>
+                    <div class="form-group">
+                      <label for="endDate">End Date</label>
+                      <input type="datetime-local" class="form-control" id="endDate" name="endDate" />
+                    </div>
+                    <button class="btn-search" id="searchButton" type="submit">
+                      <i class="ft-search"></i>
+                    </button>
+                  </div>
+                </form>
               </div>
               <div class="card-content collapse show">
                 <div class="table-responsive">
@@ -165,10 +228,18 @@
   <!-- BEGIN PAGE LEVEL JS-->
   <!-- END PAGE LEVEL JS-->
   <script>
-    function loadTrips(page) {
+    function handleSearch(event) {
+      event.preventDefault();
+      const searchValue = document.getElementById('searchField').value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      loadTrips(0, searchValue, startDate, endDate);
+    }
+
+    function loadTrips(page, searchValue = "", startDate = "", endDate = "") {
       $.ajax({
         url: '/api/trip/trips',
-        data: { page: page, size: 15 },
+        data: { page: page, size: 15, searchValue: searchValue, startDate: startDate, endDate: endDate },
         success: function (data) {
           var trips = data.trips;
           var totalPages = data.totalPages;
@@ -202,7 +273,7 @@
               "')\">" +
               '<i class="ft-trash"></i>' +
               "</button>" +
-              '<button class="btn btn-danger btn-sm" title="Force Delete Trip" onclick="deleteTrip(\'' +
+              '<button class="btn btn-darker-red btn-sm" title="Force Delete Trip" onclick="deleteTrip(\'' +
               trip.tripId +
               "', true)\">" +
               '<i class="ft-trash"></i>' +
@@ -218,7 +289,7 @@
           // Add Previous button
           if (currentPage > 0) {
             $('#paginationControls').append(
-              '<li><a onclick="loadTrips(' + (currentPage - 1) + ')">&laquo;</a></li>'
+              '<li><a onclick="loadTrips(' + (currentPage - 1) + ', \'' + searchValue + '\', \'' + startDate + '\', \'' + endDate + '\')">&laquo;</a></li>'
             );
           }
 
@@ -228,7 +299,7 @@
 
           if (startPage > 0) {
             $('#paginationControls').append(
-              '<li><a onclick="loadTrips(0)">1</a></li>'
+              '<li><a onclick="loadTrips(0, \'' + searchValue + '\', \'' + startDate + '\', \'' + endDate + '\')">1</a></li>'
             );
             if (startPage > 1) {
               $('#paginationControls').append(
@@ -239,7 +310,7 @@
 
           for (var i = startPage; i <= endPage; i++) {
             $('#paginationControls').append(
-              '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadTrips(' + i + ')">' + (i + 1) + '</a></li>'
+              '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadTrips(' + i + ', \'' + searchValue + '\', \'' + startDate + '\', \'' + endDate + '\')">' + (i + 1) + '</a></li>'
             );
           }
 
@@ -250,16 +321,19 @@
               );
             }
             $('#paginationControls').append(
-              '<li><a onclick="loadTrips(' + (totalPages - 1) + ')">' + totalPages + '</a></li>'
+              '<li><a onclick="loadTrips(' + (totalPages - 1) + ', \'' + searchValue + '\', \'' + startDate + '\', \'' + endDate + '\')">' + totalPages + '</a></li>'
             );
           }
 
           // Add Next button
           if (currentPage < totalPages - 1) {
             $('#paginationControls').append(
-              '<li><a onclick="loadTrips(' + (currentPage + 1) + ')">&raquo;</a></li>'
+              '<li><a onclick="loadTrips(' + (currentPage + 1) + ', \'' + searchValue + '\', \'' + startDate + '\', \'' + endDate + '\')">&raquo;</a></li>'
             );
           }
+        },
+        error: function (error) {
+          console.error('Error loading trips:', error);
         }
       });
     }

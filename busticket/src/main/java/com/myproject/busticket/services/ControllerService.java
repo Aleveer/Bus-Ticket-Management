@@ -44,4 +44,9 @@ public class ControllerService {
     public Controller save(Controller controller) {
         return controllerRepository.save(controller);
     }
+
+    public Page<Controller> searchControllersByNameOrEmail(Pageable pageable, String searchValue) {
+        return controllerRepository.findByAccountFullNameContainingOrAccountEmailContainingAllIgnoreCase(searchValue,
+                searchValue, pageable);
+    }
 }

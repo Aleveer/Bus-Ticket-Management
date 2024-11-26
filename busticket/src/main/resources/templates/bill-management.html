@@ -8,58 +8,53 @@
     <style>
         .search-box {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
-            gap: 10px;
-            background-color: #f9f9f9;
+            background-color: #f1f1f1;
+            border-radius: 10px;
             padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
-        .input-search {
+        .search-box .form-group {
             flex: 1;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 10px;
-            font-size: 16px;
+            margin-right: 15px;
         }
 
-        .form-control {
-            flex: 1;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 10px;
-            font-size: 16px;
-        }
-
-        .form-group {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
+        .search-box .form-group label {
+            display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
 
-        .btn-search {
+        .search-box .form-group input,
+        .search-box .form-group .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .search-box .btn-search {
             background-color: #007bff;
             border: none;
             color: white;
-            padding: 10px 15px;
-            border-radius: 4px;
+            padding: 10px 20px;
+            border-radius: 5px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 16px;
         }
 
-        .btn-search i {
-            font-size: 18px;
+        .search-box .btn-search i {
+            margin-right: 5px;
         }
 
-        .btn-search:hover {
+        .search-box .btn-search:hover {
             background-color: #0056b3;
         }
     </style>

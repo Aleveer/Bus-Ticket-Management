@@ -6,6 +6,53 @@
     <div th:insert="~{dashboard-header.html}"></div>
     <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #f1f1f1;
+            border-radius: 25px;
+            padding: 5px 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .input-search {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 25px;
+        }
+
+        .input-search::placeholder {
+            color: #999;
+        }
+
+        .btn-search {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-search i {
+            font-size: 18px;
+        }
+
+        .btn-search:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar" data-open="click"
@@ -53,12 +100,15 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="search-box" id="searchBox" style="display: none">
-                                    <input type="text" class="input-search" placeholder="Search account..." />
-                                    <button class="btn-search" id="searchButton">
-                                        <i class="ft-search"></i>
-                                    </button>
-                                </div>
+                                <form id="searchForm" method="get" onsubmit="handleSearch(event)">
+                                    <div class="search-box" id="searchBox" style="display: none">
+                                        <input type="text" id="searchField" name="searchValue" class="input-search"
+                                            placeholder="Search account..." />
+                                        <button class="btn-search" id="searchButton" type="submit">
+                                            <i class="ft-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                             <div class="card-content collapse show">
                                 <div class="table-responsive">
@@ -298,29 +348,48 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- END PAGE LEVEL JS-->
     <script>
+        function handleSearch(event) {
+            event.preventDefault();
+            const searchValue = document.getElementById('searchField').value;
+            loadAccounts(0, searchValue);
+        }
+
         let currentAccount;
-        function loadAccounts(page) {
+
+        function loadAccounts(page, searchTerm = "") {
             $.ajax({
-                url: '/api/account/accounts',
-                data: { page: page, size: 15 },
+                url: "/api/account/accounts",
+                data: { page: page, size: 15, searchValue: searchTerm },
                 success: function (data) {
                     var accounts = data.accounts;
                     var totalPages = data.totalPages;
                     var currentPage = data.currentPage;
 
                     // Clear the table body
-                    $('#accountTableBody').empty();
+                    $("#accountTableBody").empty();
 
                     // Populate the table with accounts
                     accounts.forEach(function (account) {
-                        $('#accountTableBody').append(
-                            '<tr>' +
-                            '<td>' + account.id + '</td>' +
-                            '<td>' + account.email + '</td>' +
-                            '<td>' + account.role.roleName + '</td>' +
-                            '<td>' + account.fullName + '</td>' +
-                            '<td>' + account.phone + '</td>' +
-                            '<td>' + account.status + '</td>' +
+                        $("#accountTableBody").append(
+                            "<tr>" +
+                            "<td>" +
+                            account.id +
+                            "</td>" +
+                            "<td>" +
+                            account.email +
+                            "</td>" +
+                            "<td>" +
+                            account.role.roleName +
+                            "</td>" +
+                            "<td>" +
+                            account.fullName +
+                            "</td>" +
+                            "<td>" +
+                            account.phone +
+                            "</td>" +
+                            "<td>" +
+                            account.status +
+                            "</td>" +
                             "<td>" +
                             '<button class="btn btn-primary btn-sm" title="View Details" onclick="viewAccountDetails(\'' +
                             account.id +
@@ -338,59 +407,66 @@
                             '<i class="ft-trash"></i>' +
                             "</button>" +
                             "</td>" +
-                            '</tr>'
+                            "</tr>"
                         );
                     });
 
-                    // Clear the pagination controls
-                    $('#paginationControls').empty();
+                    $("#paginationControls").empty();
 
-                    // Add Previous button
                     if (currentPage > 0) {
-                        $('#paginationControls').append(
-                            '<li><a onclick="loadAccounts(' + (currentPage - 1) + ')">&laquo;</a></li>'
+                        $("#paginationControls").append(
+                            '<li><a onclick="loadAccounts(' +
+                            (currentPage - 1) +
+                            ', \'' + searchTerm + '\')">&laquo;</a></li>'
                         );
                     }
 
-                    // Add page numbers with ellipsis
                     var startPage = Math.max(0, currentPage - 2);
                     var endPage = Math.min(totalPages - 1, currentPage + 2);
 
                     if (startPage > 0) {
-                        $('#paginationControls').append(
-                            '<li><a onclick="loadAccounts(0)">1</a></li>'
+                        $("#paginationControls").append(
+                            '<li><a onclick="loadAccounts(0, \'' + searchTerm + '\')">1</a></li>'
                         );
                         if (startPage > 1) {
-                            $('#paginationControls').append(
-                                '<li><span>...</span></li>'
-                            );
+                            $("#paginationControls").append("<li><span>...</span></li>");
                         }
                     }
 
                     for (var i = startPage; i <= endPage; i++) {
-                        $('#paginationControls').append(
-                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadAccounts(' + i + ')">' + (i + 1) + '</a></li>'
+                        $("#paginationControls").append(
+                            '<li class="' +
+                            (i === currentPage ? "active" : "") +
+                            '"><a onclick="loadAccounts(' +
+                            i +
+                            ', \'' + searchTerm + '\')">' +
+                            (i + 1) +
+                            "</a></li>"
                         );
                     }
 
                     if (endPage < totalPages - 1) {
                         if (endPage < totalPages - 2) {
-                            $('#paginationControls').append(
-                                '<li><span>...</span></li>'
-                            );
+                            $("#paginationControls").append("<li><span>...</span></li>");
                         }
-                        $('#paginationControls').append(
-                            '<li><a onclick="loadAccounts(' + (totalPages - 1) + ')">' + totalPages + '</a></li>'
+                        $("#paginationControls").append(
+                            '<li><a onclick="loadAccounts(' +
+                            (totalPages - 1) +
+                            ', \'' + searchTerm + '\')">' +
+                            totalPages +
+                            "</a></li>"
                         );
                     }
 
                     // Add Next button
                     if (currentPage < totalPages - 1) {
-                        $('#paginationControls').append(
-                            '<li><a onclick="loadAccounts(' + (currentPage + 1) + ')">&raquo;</a></li>'
+                        $("#paginationControls").append(
+                            '<li><a onclick="loadAccounts(' +
+                            (currentPage + 1) +
+                            ', \'' + searchTerm + '\')">&raquo;</a></li>'
                         );
                     }
-                }
+                },
             });
         }
 

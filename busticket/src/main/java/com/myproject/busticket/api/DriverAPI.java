@@ -35,9 +35,16 @@ public class DriverAPI {
     @GetMapping("/drivers")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getDrivers(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
+            @RequestParam(defaultValue = "15") int size,
+            @RequestParam(required = false) String searchValue) {
+
         Pageable pageable = PageRequest.of(page, size);
-        Page<Driver> driverPages = driverService.getAllDrivers(pageable);
+        Page<Driver> driverPages;
+        if (searchValue != null && !searchValue.isEmpty()) {
+            driverPages = driverService.searchDriversByNameOrEmail(pageable, searchValue);
+        } else {
+            driverPages = driverService.getAllDrivers(pageable);
+        }
 
         List<DriverDTO> driverDTOs = driverPages.getContent().stream()
                 .map(driver -> {

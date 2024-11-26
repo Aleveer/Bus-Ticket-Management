@@ -132,10 +132,10 @@
                                                         on-click="viewBusDetail('${bus.plate}')">
                                                         <i class="ft-eye"></i>
                                                     </button>
-                                                    <button class="btn btn-warning btn-sm" title="Update Bus"
+                                                    <!-- <button class="btn btn-warning btn-sm" title="Update Bus"
                                                         on-click="updateBus('${bus.plate}')">
                                                         <i class="ft-settings"></i>
-                                                    </button>
+                                                    </button> -->
                                                     <button class="btn btn-danger btn-sm" title="Delete Bus"
                                                         on-click="deleteBus('${bus.plate}')">
                                                         <i class="ft-trash"></i>
@@ -223,9 +223,9 @@
                             '<button class="btn btn-primary btn-sm" title="View Details" onclick="viewBusDetail(\'' + bus.plate + "')\">" +
                             '<i class="ft-eye"></i>' +
                             "</button>" +
-                            '<button class="btn btn-warning btn-sm" title="Update Bus" onclick="updateBus(\'' + bus.plate + "')\">" +
-                            '<i class="ft-settings"></i>' +
-                            "</button>" +
+                            // '<button class="btn btn-warning btn-sm" title="Update Bus" onclick="updateBus(\'' + bus.plate + "')\">" +
+                            // '<i class="ft-settings"></i>' +
+                            // "</button>" +
                             '<button class="btn btn-danger btn-sm" title="Delete Bus" onclick="deleteBus(\'' + bus.plate + "')\">" +
                             '<i class="ft-trash"></i>' +
                             "</button>" +
@@ -284,9 +284,9 @@
             window.location.href = "/easy-bus/bus-detail/" + busPlate;
         }
 
-        function updateBus(busPlate) {
-            alert("Update bus: " + busPlate);
-        }
+        // function updateBus(busPlate) {
+        //     alert("Update bus: " + busPlate);
+        // }
 
         function deleteBus(busPlate) {
             if (confirm("Are you sure you want to delete this bus?")) {

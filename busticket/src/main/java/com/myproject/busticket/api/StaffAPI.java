@@ -35,9 +35,16 @@ public class StaffAPI {
     @GetMapping("/staffs")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getStaffs(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
+            @RequestParam(defaultValue = "15") int size,
+            @RequestParam(required = false) String searchValue) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Staff> staffPages = staffService.getAllStaffs(pageable);
+        Page<Staff> staffPages;
+
+        if (searchValue != null && !searchValue.isEmpty()) {
+            staffPages = staffService.searchStaffsByNameOrEmail(pageable, searchValue);
+        } else {
+            staffPages = staffService.getAllStaffs(pageable);
+        }
 
         List<StaffDTO> staffDTOs = staffPages.getContent().stream()
                 .map(staff -> {

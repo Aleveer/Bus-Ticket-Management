@@ -35,7 +35,7 @@ public class AccountService {
     // return accountRepository.findByRole(role);
     // }
 
-    public void delete(int accountId){
+    public void delete(int accountId) {
         accountRepository.deleteById(accountId);
     }
 
@@ -47,5 +47,9 @@ public class AccountService {
 
     public Page<Account> getAll(Pageable pageable) {
         return accountRepository.findAll(pageable);
+    }
+
+    public Page<Account> searchAccountsByEmailAndNameAndPhone(Pageable pageable, String searchValue) {
+        return accountRepository.findByEmailContainingOrFullNameContainingOrPhoneContaining(pageable, searchValue);
     }
 }

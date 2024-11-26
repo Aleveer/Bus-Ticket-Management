@@ -68,6 +68,16 @@ public class AccountAPI {
     @Autowired
     private TokenStoreService tokenStoreService;
 
+    @GetMapping("/me")
+    @ResponseBody
+    public ResponseEntity<Account> authenticatedAccount() {
+        Account currentAccount = SecurityUtil.getCurrentAccount();
+        if (currentAccount == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(currentAccount);
+    }
+
     @GetMapping("/accounts")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getAccounts(@RequestParam(defaultValue = "0") int page,
@@ -334,17 +344,22 @@ public class AccountAPI {
         Map<String, Object> response = new HashMap<>();
 
         try {
-            // Lấy dữ liệu từ request
+            // Validate input data
             String email = (String) newAccountData.get("email");
             String role = (String) newAccountData.get("role");
-            String fullName = (String) newAccountData.get("fullname");
+            String fullName = (String) newAccountData.get("fullName");
             String phone = (String) newAccountData.get("phone");
             String status = (String) newAccountData.get("status");
             String password = (String) newAccountData.get("password");
-
-            // Kiểm tra tính hợp lệ của dữ liệu
+            String confirmPassword = (String) newAccountData.get("confirmPassword");
             if (email == null || email.isEmpty()) {
                 response.put("message", "Email is required.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // check if email is valid:
+            if (!AccountValidation.isValidEmail(email)) {
+                response.put("message", "Invalid email format.");
                 return ResponseEntity.badRequest().body(response);
             }
 
@@ -380,24 +395,54 @@ public class AccountAPI {
                 return ResponseEntity.badRequest().body(response);
             }
 
-            // Tạo đối tượng Account mới
+            if (confirmPassword == null || confirmPassword.isEmpty()) {
+                response.put("message", "Confirm password is required.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            if (!password.equals(confirmPassword)) {
+                response.put("message", "Passwords do not match.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // check if password is valid:
+            if (!AccountValidation.isValidPassword(password)) {
+                response.put("message",
+                        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            if (!AccountValidation.isValidEmail(email)) {
+                response.put("message", "Invalid email format.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            if (accountService.getUserByEmail(email).isPresent()) {
+                response.put("message", "Email already in use.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // Create new account
             Account newAccount = new Account();
             newAccount.setEmail(email);
             newAccount.setRole(roleService.getRoleByName(role));
             newAccount.setFullName(fullName);
             newAccount.setPhone(phone);
-            newAccount.setStatus(AccountStatus.valueOf(status)); // Giả sử status là một enum.
-            newAccount.setPassword(password); // Nên mã hóa mật khẩu trước khi lưu.
+            newAccount.setStatus(AccountStatus.valueOf(status));
+            newAccount.setPassword(passwordEncoder.encode(password));
 
-            // Lưu tài khoản vào cơ sở dữ liệu
-            accountService.save(newAccount);
+            // Handle role-specific logic
+            handleRoleSpecificLogic(newAccount, role);
 
-            // Phản hồi thành công
             response.put("message", "Account created successfully.");
+            if (AccountRole.admin.toString().equals(role)) {
+                response.put("warning", "You have created an account with admin privileges.");
+            }
+
+            accountService.save(newAccount);
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            // Xử lý lỗi chung
             response.put("message", "Error creating account: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }

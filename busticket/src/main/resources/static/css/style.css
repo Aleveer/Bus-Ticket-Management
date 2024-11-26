@@ -1447,6 +1447,13 @@ input.mail_bt::placeholder {
     cursor: pointer;
     padding-top: 10px;
 }
+.trip-go p{
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+}
 .trip-go .about_text_4{
     padding-bottom: 5px;
 }
@@ -1458,13 +1465,27 @@ input.mail_bt::placeholder {
     cursor: pointer;
     padding-top: 10px;
 }
+.trip-return p{
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+}
 .trip-return .about_text_4{
     padding-bottom: 5px;
 }
 .trip-return:hover{
     border-bottom: 3px solid #ff4d4d;
 }
-
+.tripGo-container{
+    width: 100%;
+    flex-wrap: wrap;
+}
+.tripReturn-container{
+    width: 100%;
+    flex-wrap: wrap;
+}
 /* Additional layout styling for alignment */
 .trip-card-container {
     max-width: 800px;

@@ -8,38 +8,36 @@
    <meta name="keywords" content="">
    <meta name="description" content="">
    <meta name="author" content="">
-
-
 </head>
 <body>
-
-  <div class="confirm_info trip-card d-flex align-self-start flex-column col-sm-4" style="display: flex; align-items: center; justify-content: space-between; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); flex: 0 0 33.333333%; max-width: 33.333333%; flex-direction: column; align-self: flex-start;">
-    <h3 class="full text-dark" style="float: left; width: 100%; color: #343a40!important;">Thông tin lượt đi</h3>
-    <div class="full d-flex justify-content-between" style="float: left; width: 100%; display: flex; justify-content: space-between;">
-      <h4 class="full d-flex" style="float: left; width: 100%; display: flex;">Tuyến xe</h4>
-      <span th:text="${routeName}" class="full d-flex justify-content-end text_right" style="float: left; width: 100%; display: flex; justify-content: flex-end; text-align: right;"></span>
-    </div>
-    <div class="d-flex justify-content-between full" style="display: flex; justify-content: space-between; float: left; width: 100%;">
-      <h4 class="full" style="float: left; width: 100%;">Thời gian xuất bến</h4>
-      <span th:text="${#temporals.format(departureTime,'yyyy-MM-dd HH:mm')}" class="full d-flex justify-content-end" style="float: left; width: 100%; display: flex; justify-content: flex-end;"></span>
-    </div>
-    <div class="d-flex justify-content-between full" style="display: flex; justify-content: space-between; float: left; width: 100%;">
-      <h4 class="full" style="float: left; width: 100%;">Số lượng ghế</h4>
-        <h4 class="text d-flex flex-nowrap" style="color: #007bff; display: flex; flex-wrap: nowrap;">
-          <span class="space_right" id="count" th:text="${numberOfSeat}" style="margin-right: 10px;"> </span> ghế
-        </h4>
-    </div>
-    <div class="d-flex justify-content-between full" style="display: flex; justify-content: space-between; float: left; width: 100%;">
-      <h4 class="full" style="float: left; width: 100%;">Số ghế</h4>
-      <span class="full d-flex justify-content-end" id="seat_number" th:text="${#strings.arrayJoin(listSeat, ', ')}" style="float: left; width: 100%; display: flex; justify-content: flex-end;"></span>
-    </div>
-    <div class="d-flex justify-content-between full" style="display: flex; justify-content: space-between; float: left; width: 100%;">
-      <h4 class="full" style="float: left; width: 100%;">Tổng tiền lượt đi</h4>
-        <h4 class="text d-flex flex-nowrap" style="color: #007bff; display: flex; flex-wrap: nowrap;">
-          <span class="space_right" id="total" th:text="${totalFee}" style="margin-right: 10px;"> </span> $
-        </h4>
-    </div>
-    
-  </div>
+  <table class="confirm_info trip-card" style="width: 100%; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 15px; background-color: #f9f9f9; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+      <tr>
+          <td colspan="2" style="padding-bottom: 10px; font-size: 24px; font-weight: bold; color: #343a40 !important;">Thông tin vé điện tử</td>
+      </tr>
+      <tr>
+          <td style="padding-bottom: 10px; font-size: 18px;">Tuyến xe</td>
+          <td style="padding-bottom: 10px; font-size: 18px; text-align: right;" th:text="${routeName}"></td>
+      </tr>
+      <tr>
+          <td style="padding-bottom: 10px; font-size: 18px;">Thời gian xuất bến</td>
+          <td style="padding-bottom: 10px; font-size: 18px; text-align: right;" th:text="${#temporals.format(departureTime,'yyyy-MM-dd HH:mm')}"></td>
+      </tr>
+      <tr>
+          <td style="padding-bottom: 10px; font-size: 18px;">Số lượng ghế</td>
+          <td style="padding-bottom: 10px; font-size: 18px; color: #007bff;text-align: right;">
+              <span th:text="${numberOfSeat}" style="margin-right: 10px;"></span> ghế
+          </td>
+      </tr>
+      <tr>
+          <td style="padding-bottom: 10px; font-size: 18px;">Số ghế</td>
+          <td style="padding-bottom: 10px; font-size: 18px; text-align: right;" th:text="${#strings.arrayJoin(listSeat, ', ')}"></td>
+      </tr>
+      <tr>
+          <td style="padding-bottom: 10px; font-size: 18px;">Tổng tiền lượt đi</td>
+          <td style="padding-bottom: 10px; font-size: 18px; color: #007bff;text-align: right;">
+              <span th:text="${totalFee}" style="margin-right: 10px;"></span> $
+          </td>
+      </tr>
+  </table>
 </body>
 </html>

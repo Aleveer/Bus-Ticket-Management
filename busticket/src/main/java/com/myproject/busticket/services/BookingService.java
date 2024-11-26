@@ -110,7 +110,7 @@ public class BookingService {
 
         // lưu hóa đơn
         Bill bill = new Bill();
-        bill.setCustomer(newCustomer);
+        bill.setCustomer(newBooking.getCustomer());
         bill.setPaymentMethod(PaymentMethod.vnpay);
         bill.setPaymentDate(paymentDate);
         billService.save(bill);

@@ -20,14 +20,14 @@
             <div class="content-wrapper-before"></div>
             <div class="content-header row">
                 <div class="content-header-left col-md-4 col-12 mb-2">
-<!--                    <h3 class="content-header-title">Tables</h3>-->
+                    <!--                    <h3 class="content-header-title">Tables</h3>-->
                 </div>
                 <div class="content-header-right col-md-8 col-12">
                     <div class="breadcrumbs-top float-md-right">
                         <div class="breadcrumb-wrapper mr-1">
                             <ol class="breadcrumb">
-<!--                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>-->
-<!--                                <li class="breadcrumb-item active">Tables</li>-->
+                                <!--                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>-->
+                                <!--                                <li class="breadcrumb-item active">Tables</li>-->
                             </ol>
                         </div>
                     </div>
@@ -157,7 +157,8 @@
     </div>
 
     <!-- New Account Modal -->
-    <div class="modal fade" id="newAccountModal" tabindex="-1" role="dialog" aria-labelledby="newAccountModalLabel" aria-hidden="true">
+    <div class="modal fade" id="newAccountModal" tabindex="-1" role="dialog" aria-labelledby="newAccountModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -449,12 +450,12 @@
         //         newPassword: $('#newPassword').val(),
         //         confirmNewPassword: $('#confirmNewPassword').val()
         //     };
-        //
+
         //     if (updatedAccount.newPassword !== updatedAccount.confirmNewPassword) {
         //         alert('New password and confirm new password do not match.');
         //         return;
         //     }
-        //
+
         //     fetch('/api/account/update-account', {
         //         method: 'POST',
         //         headers: {
@@ -478,46 +479,42 @@
         // });
 
         $('#updateAccountForm').on('submit', function (event) {
-            event.preventDefault(); // Ngăn không cho biểu mẫu tải lại trang.
+            event.preventDefault();
 
-            // Lấy thông tin từ các trường trong form
             var accountId = $('#updateAccountId').val();
-            var formData = new FormData(); // Dùng FormData để truyền dữ liệu dạng form.
+            var updatedAccount = {
+                id: accountId,
+                email: $('#updateEmail').val(),
+                role: $('#updateRole').val(),
+                fullName: $('#updateName').val(),
+                phone: $('#updatePhone').val(),
+                status: $('#updateStatus').val(),
+                newPassword: $('#newPassword').val(),
+                confirmNewPassword: $('#confirmNewPassword').val()
+            };
 
-            formData.append('email', $('#updateEmail').val());
-            formData.append('role.roleName', $('#updateRole').val()); // Nếu backend xử lý nested object thì cần tên đầy đủ.
-            formData.append('fullName', $('#updateName').val());
-            formData.append('phone', $('#updatePhone').val());
-            formData.append('status', $('#updateStatus').val());
-
-            // Kiểm tra mật khẩu và xác nhận mật khẩu
-            var newPassword = $('#newPassword').val();
-            if (newPassword !== $('#confirmNewPassword').val()) {
+            if (updatedAccount.newPassword !== updatedAccount.confirmNewPassword) {
                 alert('New password and confirm new password do not match.');
                 return;
             }
 
-            // Nếu mật khẩu mới có giá trị, thì mới thêm vào FormData
-            if (newPassword) {
-                formData.append('password', newPassword);
-            }
-
-            // Gửi yêu cầu POST tới backend
-            fetch(`/easy-bus/update-account/${accountId}`, {
+            fetch(`/api/account/update-account/${accountId}`, {
                 method: 'POST',
-                body: formData // Truyền FormData
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedAccount)
             })
-                .then(response => {
-                    if (response.redirected) {
-                        // Nếu server trả về redirect, thực hiện chuyển hướng.
-                        window.location.href = response.url;
-                    } else {
-                        return response.text();
-                    }
-                })
+                .then(response => response.json())
                 .then(data => {
-                    if (data) {
-                        alert(data); // Hiển thị thông báo nếu có.
+                    if (data.message) {
+                        alert(data.message);
+                        if (data.message === "Account updated successfully.") {
+                            $('#updateAccountModal').modal('hide');
+                            //take jwt token:
+                            window.localStorage.setItem('jwtToken', data.token);
+                            loadAccounts(0);
+                        }
                     }
                 })
                 .catch(error => {
@@ -577,14 +574,11 @@
         }
 
         function newAccount() {
-            // Hiển thị modal New Account
             $('#newAccountModal').modal('show');
 
-            // Gắn sự kiện submit cho form New Account
             $('#newAccountForm').on('submit', function (event) {
-                event.preventDefault(); // Ngăn reload trang
+                event.preventDefault();
 
-                // Thu thập dữ liệu từ form
                 const formData = new FormData();
                 formData.append("email", $('#newEmail').val());
                 formData.append("roleName", $('#newRole').val());
@@ -601,7 +595,7 @@
                 }
 
                 // Gửi dữ liệu qua API
-                fetch('/easy-bus/new-account', {
+                fetch('/api/account/new-account', {
                     method: 'POST',
                     body: formData
                 })

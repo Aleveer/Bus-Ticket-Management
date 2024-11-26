@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.myproject.busticket.mapper.StaffMapper;
+import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.Staff;
 import com.myproject.busticket.repositories.StaffRepository;
 
@@ -26,7 +27,19 @@ public class StaffService {
         return staffRepository.findById(staff_id).isPresent() ? staffRepository.findById(staff_id).get() : null;
     }
 
+    public List<Staff> getStaffByAccount(Account account) {
+        return staffRepository.findByAccount(account);
+    }
+
     public Page<Staff> getAllStaffs(Pageable pageable) {
         return staffRepository.findAll(pageable);
+    }
+
+    public void deleteStaff(Staff staff) {
+        staffRepository.delete(staff);
+    }
+
+    public Staff save(Staff staff) {
+        return staffRepository.save(staff);
     }
 }

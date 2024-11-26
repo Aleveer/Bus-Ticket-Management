@@ -17,6 +17,6 @@ public class AccountValidation {
     }
 
     public static boolean isValidPhone(String phone) {
-        return phone.matches("^\\+(?:[0-9] ?){6,14}[0-9]$");
+        return phone.matches("^(\\+?[0-9]{1,3})?([0-9]{10,14})$");
     }
 }

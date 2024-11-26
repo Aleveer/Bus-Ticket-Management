@@ -1,8 +1,11 @@
 package com.myproject.busticket.services;
 
 import com.myproject.busticket.mapper.DriverMapper;
+import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.Driver;
 import com.myproject.busticket.repositories.DriverRepository;
+
+import java.util.List;
 
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +29,17 @@ public class DriverService {
 
     public Page<Driver> getAllDrivers(Pageable pageable) {
         return driverRepository.findAll(pageable);
+    }
+
+    public List<Driver> getDriverByAccount(Account account) {
+        return driverRepository.findByAccount(account);
+    }
+
+    public void deleteDriver(Driver driver) {
+        driverRepository.delete(driver);
+    }
+
+    public Driver save(Driver driver) {
+        return driverRepository.save(driver);
     }
 }

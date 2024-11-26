@@ -21,5 +21,4 @@ public interface RouteRepository extends JpaRepository<Route, Integer> {
 
     Page<Route> findByCodeContainingOrNameContainingAllIgnoreCase(String code, String name, Pageable pageable);
 
-    // TODO: More methods here if needed
 }

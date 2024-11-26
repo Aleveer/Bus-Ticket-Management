@@ -5,6 +5,54 @@
     <title>Bus Management</title>
     <div th:insert="~{dashboard-header.html}"></div>
     <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}" />
+    <style>
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #f1f1f1;
+            border-radius: 25px;
+            padding: 5px 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .input-search {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 25px;
+        }
+
+        .input-search::placeholder {
+            color: #999;
+        }
+
+        .btn-search {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+        }
+
+        .btn-search i {
+            font-size: 18px;
+        }
+
+        .btn-search:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar" data-open="click"
@@ -33,9 +81,6 @@
                 </div>
             </div>
             <div class="content-body">
-                <!-- Basic Tables start -->
-                <!-- Basic Tables end -->
-                <!-- Striped rows start -->
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
@@ -54,11 +99,16 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="search-box" id="searchBox" style="display: none">
-                                    <input type="text" class="input-search" placeholder="Search bus..." />
-                                    <button class="btn-search" id="searchButton">
-                                        <i class="ft-search"></i>
-                                    </button>
+                                <div class="content-body">
+                                    <form id="searchForm" method="get" onsubmit="handleSearch(event)">
+                                        <div class="search-box" id="searchBox" style="display: none">
+                                            <input type="text" id="searchField" name="searchValue" class="input-search"
+                                                placeholder="Search bus..." />
+                                            <button class="btn-search" id="searchButton" type="submit">
+                                                <i class="ft-search"></i>
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                             <div class="card-content collapse show">
@@ -144,99 +194,86 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- END PAGE LEVEL JS-->
     <script>
-        function loadBuses(page) {
+        function handleSearch(event) {
+            event.preventDefault();
+            const searchValue = document.getElementById('searchField').value;
+            loadBuses(0, searchValue);
+        }
+
+        function loadBuses(page, searchTerm = "") {
             $.ajax({
                 url: "/api/bus/buses",
-                data: { page: page, size: 15 },
+                data: { page: page, size: 15, searchValue: searchTerm },
                 success: function (data) {
                     var buses = data.buses;
                     var totalPages = data.totalPages;
                     var currentPage = data.currentPage;
+
                     // Clear the table body
                     $("#busTableBody").empty();
+
                     // Populate the table with buses
                     buses.forEach(function (bus) {
                         $("#busTableBody").append(
                             "<tr>" +
+                            "<td>" + bus.plate + "</td>" +
+                            "<td>" + bus.seatType + "</td>" +
+                            "<td>" + bus.numberOfSeat + "</td>" +
                             "<td>" +
-                            bus.plate +
-                            "</td>" +
-                            "<td>" +
-                            bus.seatType +
-                            "</td>" +
-                            "<td>" +
-                            bus.numberOfSeat +
-                            "</td>" +
-                            "<td>" +
-                            '<button class="btn btn-primary btn-sm" title="View Details" onclick="viewBusDetail(\'' +
-                            bus.plate +
-                            "')\">" +
+                            '<button class="btn btn-primary btn-sm" title="View Details" onclick="viewBusDetail(\'' + bus.plate + "')\">" +
                             '<i class="ft-eye"></i>' +
                             "</button>" +
-                            '<button class="btn btn-warning btn-sm" title="Update Bus" onclick="updateBus(\'' +
-                            bus.plate +
-                            "')\">" +
+                            '<button class="btn btn-warning btn-sm" title="Update Bus" onclick="updateBus(\'' + bus.plate + "')\">" +
                             '<i class="ft-settings"></i>' +
                             "</button>" +
-                            '<button class="btn btn-danger btn-sm" title="Delete Bus" onclick="deleteBus(\'' +
-                            bus.plate +
-                            "')\">" +
+                            '<button class="btn btn-danger btn-sm" title="Delete Bus" onclick="deleteBus(\'' + bus.plate + "')\">" +
                             '<i class="ft-trash"></i>' +
                             "</button>" +
                             "</td>" +
                             "</tr>"
                         );
                     });
+
                     // Clear the pagination controls
                     $("#paginationControls").empty();
-                    // Add Previous button
+
                     if (currentPage > 0) {
                         $("#paginationControls").append(
-                            '<li><a onclick="loadBuses(' +
-                            (currentPage - 1) +
-                            ')">&laquo;</a></li>'
+                            '<li><a onclick="loadBuses(' + (currentPage - 1) + ', \'' + searchTerm + '\')">&laquo;</a></li>'
                         );
                     }
-                    // Add page numbers with ellipsis
+
                     var startPage = Math.max(0, currentPage - 2);
                     var endPage = Math.min(totalPages - 1, currentPage + 2);
+
                     if (startPage > 0) {
                         $("#paginationControls").append(
-                            '<li><a onclick="loadBuses(0)">1</a></li>'
+                            '<li><a onclick="loadBuses(0, \'' + searchTerm + '\')">1</a></li>'
                         );
                         if (startPage > 1) {
                             $("#paginationControls").append("<li><span>...</span></li>");
                         }
                     }
+
                     for (var i = startPage; i <= endPage; i++) {
                         $("#paginationControls").append(
-                            '<li class="' +
-                            (i === currentPage ? "active" : "") +
-                            '"><a onclick="loadBuses(' +
-                            i +
-                            ')">' +
-                            (i + 1) +
-                            "</a></li>"
+                            '<li class="' + (i === currentPage ? "active" : "") + '"><a onclick="loadBuses(' + i + ', \'' + searchTerm + '\')">' + (i + 1) + "</a></li>"
                         );
                     }
+
                     if (endPage < totalPages - 1) {
                         if (endPage < totalPages - 2) {
                             $("#paginationControls").append("<li><span>...</span></li>");
                         }
                         $("#paginationControls").append(
-                            '<li><a onclick="loadBuses(' +
-                            (totalPages - 1) +
-                            ')">' +
-                            totalPages +
-                            "</a></li>"
+                            '<li><a onclick="loadBuses(' + (totalPages - 1) + ', \'' + searchTerm + '\')">' + totalPages + "</a></li>"
                         );
                     }
+
                     // Add Next button
                     if (currentPage < totalPages - 1) {
                         $("#paginationControls").append(
-                            '<li><a onclick="loadBuses(' +
-                            (currentPage + 1) +
-                            ')">&raquo;</a></li>'
+                            '<li><a onclick="loadBuses(' + (currentPage + 1) + ', \'' + searchTerm + '\')">&raquo;</a></li>'
                         );
                     }
                 },

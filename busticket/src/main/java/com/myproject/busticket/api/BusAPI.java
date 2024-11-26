@@ -45,10 +45,18 @@ public class BusAPI {
 
     @GetMapping("/buses")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getBuses(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
+    public ResponseEntity<Map<String, Object>> getBuses(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size,
+            @RequestParam(required = false) String searchValue) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Bus> busPages = busService.getAll(pageable);
+        Page<Bus> busPages;
+
+        if (searchValue != null && !searchValue.isEmpty()) {
+            busPages = busService.searchBusesByPlateAndSeatType(pageable, searchValue);
+        } else {
+            busPages = busService.getAll(pageable);
+        }
 
         List<Bus> buses = busPages.getContent().stream()
                 .map(bus -> new Bus(bus.getPlate(), bus.getSeatType(), bus.getNumberOfSeat()))

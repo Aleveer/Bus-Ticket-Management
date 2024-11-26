@@ -54,7 +54,8 @@ public class RouteService {
         }
         return route;
     }
-    public Page<Route> searchRouteByCodeAndName(Pageable pageable, String query){
+
+    public Page<Route> searchRouteByCodeAndName(Pageable pageable, String query) {
         return routeRepository.findByCodeContainingOrNameContainingAllIgnoreCase(query, query, pageable);
     }
 }

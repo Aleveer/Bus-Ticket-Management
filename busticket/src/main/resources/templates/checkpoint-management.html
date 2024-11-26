@@ -11,6 +11,56 @@
       display: flex;
       justify-content: center;
     }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background-color: #f1f1f1;
+      border-radius: 25px;
+      padding: 5px 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+      /* Adjust the max-width as needed */
+      margin: 20px auto;
+      /* Center the search box and add some margin */
+    }
+
+    .input-search {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: none;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 25px;
+    }
+
+    .input-search::placeholder {
+      color: #999;
+    }
+
+    .btn-search {
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 25px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
+      /* Add some space between the input and the button */
+    }
+
+    .btn-search i {
+      font-size: 18px;
+    }
+
+    .btn-search:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 
@@ -60,11 +110,12 @@
                     </li>
                   </ul>
                 </div>
-                <div class="search-box" id="searchBox" style="display: none">
-                  <input type="text" class="input-search" placeholder="Search checkpoint..." />
-                  <button class="btn-search" id="searchButton">
-                    <i class="ft-search"></i>
-                  </button>
+                <div class="content-body">
+                  <div class="search-box" id="searchBox" style="display: none">
+                    <form id="searchForm" onsubmit="handleSearch(event)">
+                      <input type="text" id="searchField" class="input-search" placeholder="Search checkpoint..." />
+                    </form>
+                  </div>
                 </div>
               </div>
               <div class="card-content collapse show">
@@ -309,10 +360,16 @@
     var selectedCityName = '';
     var newProvinceName = '';
     var newCityName = '';
-    function loadCheckpoints(page) {
+    function handleSearch(event) {
+      event.preventDefault();
+      const searchValue = document.getElementById('searchField').value;
+      loadCheckpoints(0, searchValue);
+    }
+
+    function loadCheckpoints(page, searchTerm = "") {
       $.ajax({
         url: '/api/checkpoint/checkpoints',
-        data: { page: page, size: 15 },
+        data: { page: page, size: 15, searchValue: searchTerm },
         success: function (data) {
           var checkpoints = data.checkpoints;
           var totalPages = data.totalPages;
@@ -359,7 +416,7 @@
           // Add Previous button
           if (currentPage > 0) {
             $('#paginationControls').append(
-              '<li><a onclick="loadCheckpoints(' + (currentPage - 1) + ')">&laquo;</a></li>'
+              '<li><a onclick="loadCheckpoints(' + (currentPage - 1) + ', \'' + searchTerm + '\')">&laquo;</a></li>'
             );
           }
 
@@ -369,7 +426,7 @@
 
           if (startPage > 0) {
             $('#paginationControls').append(
-              '<li><a onclick="loadCheckpoints(0)">1</a></li>'
+              '<li><a onclick="loadCheckpoints(0, \'' + searchTerm + '\')">1</a></li>'
             );
             if (startPage > 1) {
               $('#paginationControls').append(
@@ -380,7 +437,7 @@
 
           for (var i = startPage; i <= endPage; i++) {
             $('#paginationControls').append(
-              '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadCheckpoints(' + i + ')">' + (i + 1) + '</a></li>'
+              '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadCheckpoints(' + i + ', \'' + searchTerm + '\')">' + (i + 1) + '</a></li>'
             );
           }
 
@@ -391,14 +448,14 @@
               );
             }
             $('#paginationControls').append(
-              '<li><a onclick="loadCheckpoints(' + (totalPages - 1) + ')">' + totalPages + '</a></li>'
+              '<li><a onclick="loadCheckpoints(' + (totalPages - 1) + ', \'' + searchTerm + '\')">' + totalPages + '</a></li>'
             );
           }
 
           // Add Next button
           if (currentPage < totalPages - 1) {
             $('#paginationControls').append(
-              '<li><a onclick="loadCheckpoints(' + (currentPage + 1) + ')">&raquo;</a></li>'
+              '<li><a onclick="loadCheckpoints(' + (currentPage + 1) + ', \'' + searchTerm + '\')">&raquo;</a></li>'
             );
           }
         }
@@ -573,7 +630,6 @@
 
     $(document).ready(function () {
       loadCheckpoints(0);
-      // Fetch provinces and populate the province dropdowns
       var provinceSettings = {
         "url": "https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1",
         "method": "GET",

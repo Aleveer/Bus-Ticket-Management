@@ -48,15 +48,22 @@ public class RouteAPI {
 
     @GetMapping("/routes")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getRoutes(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
+    public ResponseEntity<Map<String, Object>> getRoutes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size,
+            @RequestParam(required = false) String searchValue) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Route> routePages = routeService.getAll(pageable);
+        Page<Route> routePages;
+
+        if (searchValue != null && !searchValue.isEmpty()) {
+            routePages = routeService.searchRouteByCodeAndName(pageable, searchValue);
+        } else {
+            routePages = routeService.getAll(pageable);
+        }
 
         List<Route> routes = routePages.getContent().stream()
                 .map(route -> new Route(route.getRouteId(), route.getCode(), route.getName(),
-                        route.getTime(),
-                        route.getDistance()))
+                        route.getTime(), route.getDistance()))
                 .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();

@@ -36,4 +36,8 @@ public class BusService {
     public void delete(Bus bus) {
         busRepository.delete(bus);
     }
+
+    public Page<Bus> searchBusesByPlateAndSeatType(Pageable pageable, String searchValue) {
+        return busRepository.searchBusesByPlateAndSeatType(pageable, searchValue);
+    }
 }

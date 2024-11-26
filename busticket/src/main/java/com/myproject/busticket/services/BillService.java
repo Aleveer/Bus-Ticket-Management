@@ -1,5 +1,6 @@
 package com.myproject.busticket.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,35 @@ public class BillService {
 
     public Bill findByBillIdAndCustomer(int billId, int customerId) {
         return billRepository.findByBillIdAndCustomer(billId, customerId);
+    }
+
+    public Page<Bill> searchBills(Pageable pageable, String query, String startDate, String endDate) {
+        LocalDateTime startDateTime = null;
+        LocalDateTime endDateTime = null;
+
+        if (startDate != null && !startDate.isEmpty()) {
+            startDateTime = LocalDateTime.parse(startDate);
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            endDateTime = LocalDateTime.parse(endDate);
+        }
+
+        if (query == null || query.isEmpty()) {
+            query = "";
+        }
+
+        if (startDateTime == null && endDateTime == null) {
+            return billRepository.findByCustomerNameContainingOrCustomerEmailContaining(
+                    query, pageable);
+        } else if (startDateTime == null) {
+            return billRepository.findByCustomerNameContainingOrCustomerEmailContainingAndPaymentDateBefore(
+                    query, endDateTime, pageable);
+        } else if (endDateTime == null) {
+            return billRepository.findByCustomerNameContainingOrCustomerEmailContainingAndPaymentDateAfter(
+                    query, startDateTime, pageable);
+        } else {
+            return billRepository.findByCustomerNameContainingOrCustomerEmailContainingAndPaymentDateBetween(
+                    query, startDateTime, endDateTime, pageable);
+        }
     }
 }

@@ -74,10 +74,21 @@ public class BillAPI {
 
     @GetMapping("/bills")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getBills(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
+    public ResponseEntity<Map<String, Object>> getBills(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size,
+            @RequestParam(required = false) String searchValue,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Bill> billPages = billService.getAll(pageable);
+        Page<Bill> billPages;
+
+        if ((searchValue != null && !searchValue.isEmpty())
+                || (startDate != null && !startDate.isEmpty()) || (endDate != null && !endDate.isEmpty())) {
+            billPages = billService.searchBills(pageable, searchValue, startDate, endDate);
+        } else {
+            billPages = billService.getAll(pageable);
+        }
 
         List<BillDTO> bills = billMapper.map(billPages.getContent());
 

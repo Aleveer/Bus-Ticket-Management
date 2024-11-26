@@ -5,6 +5,53 @@
     <title>Route Management</title>
     <div th:insert="~{dashboard-header.html}"></div>
     <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}" />
+    <style>
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #f1f1f1;
+            border-radius: 25px;
+            padding: 5px 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .input-search {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 25px;
+        }
+
+        .input-search::placeholder {
+            color: #999;
+        }
+
+        .btn-search {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-search i {
+            font-size: 18px;
+        }
+
+        .btn-search:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar" data-open="click"
@@ -46,7 +93,7 @@
                                         </a>
                                     </ul>
                                 </div>
-                                <form action="/easy-bus/route-management/search" method="get">
+                                <form id="searchForm" method="get" onsubmit="handleSearch(event)">
                                     <div class="search-box" id="searchBox" style="display: none">
                                         <input type="text" id="searchField" name="searchValue" class="input-search"
                                             placeholder="Search route..." />
@@ -55,6 +102,7 @@
                                         </button>
                                     </div>
                                 </form>
+
                             </div>
                             <div class="card-content collapse show">
                                 <div class="table-responsive">
@@ -124,10 +172,17 @@
     <script th:src="@{/theme-assets/js/core/app-menu-lite.js}" type="text/javascript"></script>
     <script th:src="@{/theme-assets/js/core/app-lite.js}" type="text/javascript"></script>
     <script>
-        function loadRoutes(page) {
+
+        function handleSearch(event) {
+            event.preventDefault();
+            const searchValue = document.getElementById('searchField').value;
+            loadRoutes(0, searchValue);
+        }
+
+        function loadRoutes(page, searchTerm = "") {
             $.ajax({
                 url: "/api/route/routes",
-                data: { page: page, size: 15 },
+                data: { page: page, size: 15, searchValue: searchTerm },
                 success: function (data) {
                     var routes = data.routes;
                     var totalPages = data.totalPages;
@@ -182,7 +237,7 @@
                         $("#paginationControls").append(
                             '<li><a onclick="loadRoutes(' +
                             (currentPage - 1) +
-                            ')">&laquo;</a></li>'
+                            ', \'' + searchTerm + '\')">&laquo;</a></li>'
                         );
                     }
 
@@ -191,7 +246,7 @@
 
                     if (startPage > 0) {
                         $("#paginationControls").append(
-                            '<li><a onclick="loadRoutes(0)">1</a></li>'
+                            '<li><a onclick="loadRoutes(0, \'' + searchTerm + '\')">1</a></li>'
                         );
                         if (startPage > 1) {
                             $("#paginationControls").append("<li><span>...</span></li>");
@@ -204,7 +259,7 @@
                             (i === currentPage ? "active" : "") +
                             '"><a onclick="loadRoutes(' +
                             i +
-                            ')">' +
+                            ', \'' + searchTerm + '\')">' +
                             (i + 1) +
                             "</a></li>"
                         );
@@ -217,7 +272,7 @@
                         $("#paginationControls").append(
                             '<li><a onclick="loadRoutes(' +
                             (totalPages - 1) +
-                            ')">' +
+                            ', \'' + searchTerm + '\')">' +
                             totalPages +
                             "</a></li>"
                         );
@@ -228,7 +283,7 @@
                         $("#paginationControls").append(
                             '<li><a onclick="loadRoutes(' +
                             (currentPage + 1) +
-                            ')">&raquo;</a></li>'
+                            ', \'' + searchTerm + '\')">&raquo;</a></li>'
                         );
                     }
                 },

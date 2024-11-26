@@ -30,6 +30,7 @@ public class CheckpointService {
     public List<String> getAllCities() {
         return checkpointRepository.getAllCities();
     }
+
     public String findDepartureName(String routeCode) {
         return checkpointRepository.findDepartureName(routeCode);
     }
@@ -37,6 +38,7 @@ public class CheckpointService {
     public String findDropOffName(String routeCode) {
         return checkpointRepository.findDropOffName(routeCode);
     }
+
     public List<Checkpoint> getAll() {
         return checkpointRepository.findAll();
     }
@@ -55,5 +57,11 @@ public class CheckpointService {
 
     public void deleteById(int id) {
         checkpointRepository.deleteById(id);
+    }
+
+    public Page<Checkpoint> searchCheckpoints(String searchValue, Pageable pageable) {
+        return checkpointRepository
+                .findByPlaceNameContainingOrAddressContainingOrProvinceContainingOrCityContainingOrPhoneContainingOrRegionContainingAllIgnoreCase(
+                        searchValue, searchValue, searchValue, searchValue, searchValue, searchValue, pageable);
     }
 }

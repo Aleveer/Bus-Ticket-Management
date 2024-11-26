@@ -33,12 +33,20 @@ public class CheckpointAPI {
     @Autowired
     private RouteCheckpointService routeCheckpointService;
 
-    @RequestMapping("/checkpoints")
+    @GetMapping("/checkpoints")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getCheckpoints(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
+    public ResponseEntity<Map<String, Object>> getCheckpoints(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size,
+            @RequestParam(required = false) String searchValue) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Checkpoint> checkpointPages = checkpointService.getAll(pageable);
+        Page<Checkpoint> checkpointPages;
+
+        if (searchValue != null && !searchValue.isEmpty()) {
+            checkpointPages = checkpointService.searchCheckpoints(searchValue, pageable);
+        } else {
+            checkpointPages = checkpointService.getAll(pageable);
+        }
 
         List<Checkpoint> checkpoints = checkpointPages.getContent().stream()
                 .map(checkpoint -> new Checkpoint(

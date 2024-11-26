@@ -1,13 +1,14 @@
 package com.myproject.busticket.services;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class EmailService {
@@ -41,14 +42,16 @@ public class EmailService {
 
     public void sendBookingEmail(String email, String subject, String template, Context context) throws MessagingException {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true,"UTF-8");
 
         String htmlContent = templateEngine.process(template, context);
 
         helper.setTo(email);
         helper.setSubject(subject);
         helper.setText(htmlContent, true);
-
+        // Ensure the email content is sent with UTF-8 encoding
+        mimeMessage.setHeader("Content-Type", "text/html; charset=UTF-8");
+        
         emailSender.send(mimeMessage);
     }
 

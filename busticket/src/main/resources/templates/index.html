@@ -319,6 +319,8 @@
          document.getElementById('returnDate').setAttribute('min', today);
       }
       function validateForm(event) {
+         const departureDate = new Date(document.getElementById('date').value);
+         const returnDate = new Date(document.getElementById('returnDate').value)
          const tripType = document.querySelector('input[name="tripType"]:checked').value;
          const returnDateElement = document.getElementById('returnDate');
 
@@ -326,7 +328,7 @@
             alert('Vui lòng chọn ngày về cho chuyến khứ hồi.');
             event.preventDefault(); // Prevent form submission
          }
-         else if (tripType === 'round-trip' && returnDate < document.getElementById('date').value) {
+         else if (tripType === 'round-trip' && returnDate < departureDate) {
              alert('Ngày về không thể trước ngày đi.');
              event.preventDefault(); // Prevent form submission
          }

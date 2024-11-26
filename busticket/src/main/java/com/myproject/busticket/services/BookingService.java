@@ -1,21 +1,29 @@
 package com.myproject.busticket.services;
 
-import com.myproject.busticket.dto.BookingInfoDTO;
-import com.myproject.busticket.enums.PaymentMethod;
-import com.myproject.busticket.enums.TicketType;
-import com.myproject.busticket.models.*;
-import com.myproject.busticket.repositories.BookingRepository;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import com.myproject.busticket.utilities.SecurityUtil;
-import jakarta.mail.MessagingException;
+import java.util.Locale;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
+
+import com.myproject.busticket.dto.BookingInfoDTO;
+import com.myproject.busticket.enums.PaymentMethod;
+import com.myproject.busticket.enums.TicketType;
+import com.myproject.busticket.models.Account;
+import com.myproject.busticket.models.Bill;
+import com.myproject.busticket.models.Bill_Detail;
+import com.myproject.busticket.models.Booking;
+import com.myproject.busticket.models.Customer;
+import com.myproject.busticket.models.Trip;
+import com.myproject.busticket.repositories.BookingRepository;
+import com.myproject.busticket.utilities.SecurityUtil;
+
+import jakarta.mail.MessagingException;
 
 @Service
 public class BookingService {
@@ -58,6 +66,7 @@ public class BookingService {
 
     public void createTicketOneWay(BookingInfoDTO booking, LocalDateTime paymentDate) {
         Booking newBooking = new Booking();
+        Customer newCustomer = new Customer();
 
         // xử lý thông tin khách hàng
         String email = booking.getCustomer().getEmail();
@@ -73,7 +82,6 @@ public class BookingService {
             } else if (customerService.existsByEmail(email)) { // Nếu đã là kh mà chưa có account thì lấy cus
                 newBooking.setCustomer(customerService.getCustomerByEmail(email));
             } else { // Nếu ko thì là kh lần đầu => tạo account mới
-                Customer newCustomer = new Customer();
                 newCustomer.setEmail(email);
                 newCustomer.setName(booking.getCustomer().getName());
                 newCustomer.setPhone(booking.getCustomer().getPhone());
@@ -81,12 +89,7 @@ public class BookingService {
                 newBooking.setCustomer(newCustomer);
             }
         }
-        Customer newCustomer = new Customer();
-        newCustomer.setEmail(email);
-        newCustomer.setName(booking.getCustomer().getName());
-        newCustomer.setPhone(booking.getCustomer().getPhone());
-        customerService.create(newCustomer);
-        newBooking.setCustomer(newCustomer);
+
 
         // lưu vé
         int tripId = booking.getTicketInfoDTO().getTripId();
@@ -107,7 +110,7 @@ public class BookingService {
 
         // lưu hóa đơn
         Bill bill = new Bill();
-        bill.setCustomer(newCustomer);
+        bill.setCustomer(newBooking.getCustomer());
         bill.setPaymentMethod(PaymentMethod.vnpay);
         bill.setPaymentDate(paymentDate);
         billService.save(bill);
@@ -117,13 +120,13 @@ public class BookingService {
         billDetail.setBill(bill);
         billDetail.setTrip(newBooking.getTrip());
         billDetail.setNumberOfTicket(numberOfSeat);
-        billDetail.setFee(newBooking.getTrip().getPrice());
+        billDetail.setFee(newBooking.getTrip().getPrice() * numberOfSeat);
         billDetail.setTicketType(TicketType.one_way_ticket);
         billDetailService.save(billDetail);
 
         // send Email
-        Context context = new Context();
-        String subject = "[EASYBUS] HÓA ĐƠN ĐIỆN TỬ CỦA VÉ SỐ" + newBooking.getBookingId();
+        Context context = new Context(Locale.forLanguageTag("vi"));
+        String subject = "[EASYBUS] HÓA ĐƠN ĐIỆN TỬ CỦA VÉ SỐ " + newBooking.getBookingId();
         context.setVariable("routeName", newBooking.getTrip().getRoute().getName());
         context.setVariable("departureTime", newBooking.getTrip().getDepartureTime());
         context.setVariable("departureTime", newBooking.getTrip().getDepartureTime());

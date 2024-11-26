@@ -51,6 +51,9 @@
     <div class="d-flex justify-content-center">
         <h1 class="finish-title">Mua vé xe thành công</h1>
     </div>
+    <div class="d-flex justify-content-center">
+        <p class="about_text_4  ">Hóa đơn đang được gửi đến Email của bạn</p>
+    </div>
     <div class="container">
         <div class="about_section">
             <div class="d-flex justify-content-center box-custom flex-wrap">
@@ -58,15 +61,15 @@
                     <h1 >THÔNG TIN MUA VÉ</h1>
                 </div>
                 <div class="d-flex bill-info flex-row full ">
-                    <div class="info-row-1">
-                        <h4>Họ và Tên:</h4>
-                        <h4>Số điện thoại:</h4>
-                        <h4>Email:</h4>
+                    <div class="info-row-1 full">
+                        <h4 class="d-flex flex-nowrap">Họ và Tên:<span class= "d-flex justify-content-start space_left" id="customerName"></span></h4>
+                        <h4 class="d-flex flex-nowrap">Số điện thoại:<span class= "d-flex justify-content-start space_left" id="phoneNumber"></span></h4>
+                        <h4 class="d-flex flex-nowrap">Email:<span class= "d-flex justify-content-start space_left" id="email"></span></h4>
                     </div>
-                    <div class="info-row-2">
-                        <h4>Tổng giá vé:</h4>
-                        <h4>PTTT: <p>VNPAY</p></h4>
-                        <h4>Trạng thái: <p>Thanh Toán Thành Công</p></h4>
+                    <div class="info-row-2 full">
+                        <h4 class="d-flex flex-nowrap">Tổng giá vé:<span class= "d-flex justify-content-start space_left" id="totalAmount"></span></h4>
+                        <h4 class="d-flex flex-nowrap">PTTT:  <span class= "d-flex justify-content-start space_left"> VNPAY</span></h4>
+                        <h4 class="d-flex flex-nowrap">Trạng thái:  <span class= "d-flex justify-content-start text-success space_left"> Thanh Toán Thành Công</span></h4>
                     </div>
                     <input type="hidden" id="payment_date" name="payment_date" th:value="${paymentTime}">
                 </div>
@@ -78,11 +81,29 @@
 
 <script>
     function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
+        let cookieArr = document.cookie.split(";");
+        for (let i = 0; i < cookieArr.length; i++) {
+            let cookiePair = cookieArr[i].split("=");
+            if (name == cookiePair[0].trim()) {
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
         return null;
     }
+    // Retrieve the bookingInfo cookie
+    const bookingInfo = JSON.parse(getCookie('bookingInfo'));
+    console.log('bookingInfo:', bookingInfo);
+    const total = document.getElementById('totalAmount');
+    if (bookingInfo) {
+        document.getElementById('customerName').innerText = bookingInfo.cusDetail.name;
+        document.getElementById('phoneNumber').innerText = bookingInfo.cusDetail.phone;
+        document.getElementById('email').innerText = bookingInfo.cusDetail.email;
+        total.innerText = (bookingInfo.tripDetail.price*25000).toFixed(0) + ' VND';
+    }else {
+        console.error('Booking information not found in cookies.');
+    }
+
+
 
     // Gọi POST method để lưu thông tin BookingInfoDTO từ session
     (async function confirmBooking() {
@@ -106,7 +127,7 @@
             if (response.ok) {
                 const message = await response.text();
                 console.log('Success:', message);
-                alert('Đặt vé thành công: ' + message);
+                alert('Đặt vé thành công ' );
 
                 // Redirect tới trang xác nhận nếu cần
                 //window.location.href = '/bookings/confirmation';

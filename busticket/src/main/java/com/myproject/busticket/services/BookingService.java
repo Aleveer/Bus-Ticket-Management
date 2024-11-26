@@ -1,21 +1,29 @@
 package com.myproject.busticket.services;
 
-import com.myproject.busticket.dto.BookingInfoDTO;
-import com.myproject.busticket.enums.PaymentMethod;
-import com.myproject.busticket.enums.TicketType;
-import com.myproject.busticket.models.*;
-import com.myproject.busticket.repositories.BookingRepository;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import com.myproject.busticket.utilities.SecurityUtil;
-import jakarta.mail.MessagingException;
+import java.util.Locale;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
+
+import com.myproject.busticket.dto.BookingInfoDTO;
+import com.myproject.busticket.enums.PaymentMethod;
+import com.myproject.busticket.enums.TicketType;
+import com.myproject.busticket.models.Account;
+import com.myproject.busticket.models.Bill;
+import com.myproject.busticket.models.Bill_Detail;
+import com.myproject.busticket.models.Booking;
+import com.myproject.busticket.models.Customer;
+import com.myproject.busticket.models.Trip;
+import com.myproject.busticket.repositories.BookingRepository;
+import com.myproject.busticket.utilities.SecurityUtil;
+
+import jakarta.mail.MessagingException;
 
 @Service
 public class BookingService {
@@ -117,7 +125,7 @@ public class BookingService {
         billDetailService.save(billDetail);
 
         // send Email
-        Context context = new Context();
+        Context context = new Context(Locale.forLanguageTag("vi"));
         String subject = "[EASYBUS] HÓA ĐƠN ĐIỆN TỬ CỦA VÉ SỐ " + newBooking.getBookingId();
         context.setVariable("routeName", newBooking.getTrip().getRoute().getName());
         context.setVariable("departureTime", newBooking.getTrip().getDepartureTime());

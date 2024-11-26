@@ -42,16 +42,14 @@ public class EmailService {
 
     public void sendBookingEmail(String email, String subject, String template, Context context) throws MessagingException {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true,"UTF-8");
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
         String htmlContent = templateEngine.process(template, context);
 
         helper.setTo(email);
         helper.setSubject(subject);
         helper.setText(htmlContent, true);
-        // Ensure the email content is sent with UTF-8 encoding
-        mimeMessage.setHeader("Content-Type", "text/html; charset=UTF-8");
-        
+
         emailSender.send(mimeMessage);
     }
 

@@ -58,6 +58,7 @@ public class BookingService {
 
     public void createTicketOneWay(BookingInfoDTO booking, LocalDateTime paymentDate) {
         Booking newBooking = new Booking();
+        Customer newCustomer = new Customer();
 
         // xử lý thông tin khách hàng
         String email = booking.getCustomer().getEmail();
@@ -73,7 +74,6 @@ public class BookingService {
             } else if (customerService.existsByEmail(email)) { // Nếu đã là kh mà chưa có account thì lấy cus
                 newBooking.setCustomer(customerService.getCustomerByEmail(email));
             } else { // Nếu ko thì là kh lần đầu => tạo account mới
-                Customer newCustomer = new Customer();
                 newCustomer.setEmail(email);
                 newCustomer.setName(booking.getCustomer().getName());
                 newCustomer.setPhone(booking.getCustomer().getPhone());
@@ -81,12 +81,7 @@ public class BookingService {
                 newBooking.setCustomer(newCustomer);
             }
         }
-        Customer newCustomer = new Customer();
-        newCustomer.setEmail(email);
-        newCustomer.setName(booking.getCustomer().getName());
-        newCustomer.setPhone(booking.getCustomer().getPhone());
-        customerService.create(newCustomer);
-        newBooking.setCustomer(newCustomer);
+
 
         // lưu vé
         int tripId = booking.getTicketInfoDTO().getTripId();
@@ -117,13 +112,13 @@ public class BookingService {
         billDetail.setBill(bill);
         billDetail.setTrip(newBooking.getTrip());
         billDetail.setNumberOfTicket(numberOfSeat);
-        billDetail.setFee(newBooking.getTrip().getPrice());
+        billDetail.setFee(newBooking.getTrip().getPrice() * numberOfSeat);
         billDetail.setTicketType(TicketType.one_way_ticket);
         billDetailService.save(billDetail);
 
         // send Email
         Context context = new Context();
-        String subject = "[EASYBUS] HÓA ĐƠN ĐIỆN TỬ CỦA VÉ SỐ" + newBooking.getBookingId();
+        String subject = "[EASYBUS] HÓA ĐƠN ĐIỆN TỬ CỦA VÉ SỐ " + newBooking.getBookingId();
         context.setVariable("routeName", newBooking.getTrip().getRoute().getName());
         context.setVariable("departureTime", newBooking.getTrip().getDepartureTime());
         context.setVariable("departureTime", newBooking.getTrip().getDepartureTime());

@@ -452,17 +452,16 @@
             }
         });
        
-       const selectedSeatsGo = document.querySelectorAll(".row_2 .seat.selected");
-       const listselectedSeatGoID = [...selectedSeatsGo].map(seat => seat.id);
+        const selectedSeatsGo = document.querySelectorAll(".row_2 .seat.selected");
+        const listselectedSeatGoID = [...selectedSeatsGo].map(seat => seat.id);
+
+        const selectedSeatsReturn = document.querySelectorAll(".row_3 .seat.selected");
+        const listselectedSeatReturnID = [...selectedSeatsReturn].map(seat => seat.id);
+
         const submitForm = document.getElementById('form-test');
         submitForm.addEventListener('submit', function (event) {
             event.preventDefault();
-            const formData = new FormData(submitForm);
-            console.log(document.getElementById('trip_id').value);
-            console.log(document.getElementById('count').innerText);
-            console.log(listselectedSeatID);
-            console.log(document.getElementById('total').innerText);
-            const ticket = {
+            const ticketGo = {
                 cusDetail: {
                   name: document.getElementById('name').value,
                   phone: document.getElementById('phone').value,
@@ -470,20 +469,36 @@
                 },
                 tripDetail: {
                     tripId: parseInt(document.getElementById('trip_id').value),
-                    numberOfSeat: parseInt(document.getElementById('count').innerText),
-                    seatNumbers: listselectedSeatID,
-                    price: parseFloat(document.getElementById('total').innerText),
+                    numberOfSeat: parseInt(document.getElementById('countDeparture').innerText),
+                    seatNumbers: listselectedSeatGoID,
+                    price: parseFloat(document.getElementById('totalDeparture').innerText),
                 },
                 paymentDay: null
                 
             };
-            document.cookie = "bookingInfo=" + JSON.stringify(ticket) + "; path=/; max-age=3600";
-            fetch('/home/index/booking/oneway-payment', {
+            const ticketReturn = {
+                cusDetail: {
+                    name: document.getElementById('name').value,
+                    phone: document.getElementById('phone').value,
+                    email: document.getElementById('email').value,
+                },
+                tripDetail: {
+                    tripId: parseInt(document.getElementById('round_trip_id').value),
+                    numberOfSeat: parseInt(document.getElementById('countReturn').innerText),
+                    seatNumbers: listselectedSeatReturnID,
+                    price: parseFloat(document.getElementById('totalReturn').innerText),
+                },
+                paymentDay: null
+
+            };
+            const payload = [ticketGo, ticketReturn];
+            document.cookie = "bookingList=" + JSON.stringify(payload) + "; path=/; max-age=3600";
+            fetch('/home/index/booking/roundtrip-payment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(ticket)
+                body: JSON.stringify(payload)
             })
                 .then(response => {
                     if (!response.ok) {

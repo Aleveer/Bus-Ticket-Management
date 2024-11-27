@@ -264,10 +264,10 @@ public class BookingController {
 
     @PostMapping("/home/index/booking/roundtrip-payment/save")
     public String saveBooking(@RequestBody List<BookingInfoDTO> bookingInfoDTO) throws MessagingException {
-        //BookingInfoDTO bookingInfoDTO = (BookingInfoDTO) session.getAttribute("bookingInfoDTO");
         String paymentDate = bookingInfoDTO.get(0).getPaymentDate();
         // Định dạng của chuỗi
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
         // Chuyển đổi chuỗi thành LocalDateTime
         LocalDateTime paymentDateFormat = LocalDateTime.parse(paymentDate, formatter);
         bookingService.createTicketRoundTrip(bookingInfoDTO, paymentDateFormat);

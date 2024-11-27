@@ -213,6 +213,12 @@
 			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
 			<version>3.1.2.RELEASE</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.mvnpm/chart.js -->
+		<dependency>
+			<groupId>org.mvnpm</groupId>
+			<artifactId>chart.js</artifactId>
+			<version>4.4.6</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

@@ -26,7 +26,12 @@ public class SeatReservationsService {
 
     public List<SeatReservationsDTO> getListStatusSeat(int TripId) {
         List<SeatReservations> seatReservations = seatReservationsRepository.findByTrip_TripId(TripId);
-        return seatReservationsMapper.map(seatReservations);
+        try {
+            return seatReservationsMapper.map(seatReservations);
+        } catch (Exception e){
+            System.out.println("Seat reservation" + e);
+        }
+        return null;
     }
 
     public List<SeatReservations> getBySeat(Bus_Seats bus_Seats) {

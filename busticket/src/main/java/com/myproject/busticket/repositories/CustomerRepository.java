@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.myproject.busticket.dto.CustomerBookingDTO;
 import com.myproject.busticket.models.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
@@ -20,7 +21,14 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
         Page<Customer> findByNameContainingOrEmailContainingOrPhoneContainingAllIgnoreCase(String searchValue,
                         String searchValue2, Pageable pageable);
 
-        @Query("SELECT c.email, COUNT(bk.bookingId) AS number FROM Customer c JOIN Booking bk ON c.customerId = bk.customer.customerId JOIN Bill bl ON c.customerId = bl.customer.customerId WHERE bl.paymentDate BETWEEN :startDate AND :endDate GROUP BY c.email ORDER BY number DESC")
-        List<Object[]> findTopCustomerByBookingsInRange(@Param("startDate") LocalDateTime startDate,
+        @Query("SELECT new com.myproject.busticket.dto.CustomerBookingDTO(c.email, COUNT(bk.bookingId)) " +
+                        "FROM Customer c " +
+                        "JOIN Booking bk ON c.customerId = bk.customer.customerId " +
+                        "JOIN Bill_Detail bd ON bk.trip.tripId = bd.trip.tripId " +
+                        "JOIN Bill b ON bd.bill.billId = b.billId " +
+                        "WHERE b.paymentDate BETWEEN :startDate AND :endDate " +
+                        "GROUP BY c.email " +
+                        "ORDER BY COUNT(bk.bookingId) DESC")
+        List<CustomerBookingDTO> findTopCustomerByBookingsInRange(@Param("startDate") LocalDateTime startDate,
                         @Param("endDate") LocalDateTime endDate, Pageable pageable);
 }

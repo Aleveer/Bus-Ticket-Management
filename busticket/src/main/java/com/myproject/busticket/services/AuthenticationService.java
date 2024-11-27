@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -169,6 +172,47 @@ public class AuthenticationService {
         account.setPasswordResetToken(null);
         account.setPasswordResetExpiration(null);
         accountRepository.save(account);
+    }
+
+    public void changePassword(String currentPassword, String newPassword) {
+        // Get the currently authenticated user
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        
+        Account account = accountRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Verify the current password
+        if (!passwordEncoder.matches(currentPassword, account.getPassword())) {
+            throw new ValidationException("Current password is incorrect");
+        }
+
+        // Ensure the new password is different from the current password
+        if (passwordEncoder.matches(newPassword, account.getPassword())) {
+            throw new ValidationException("New password must be different from the current password");
+        }
+
+        // Validate the new password
+        if (!AccountValidation.isValidPassword(newPassword)) {
+            throw new ValidationException(
+                    "New password does not meet security requirements. Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 special character, 1 number.");
+        }
+
+        // Update the password
+        account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account);
+    }
+
+    public int getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String email = userDetails.getUsername();
+            Account account = accountRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            return account.getId();
+        }
+        throw new RuntimeException("User is not authenticated");
     }
 
     public void verifyAccount(VerifyAccountModel input) {

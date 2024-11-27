@@ -1366,7 +1366,20 @@ input.mail_bt::placeholder {
     justify-content: space-between;
     border: 1px solid #ddd;
     border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.trip-card-2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border: 1px solid #ddd;
+    width: 100%;
+    border-radius: 8px;
     padding: 15px;
+    margin-top: 20px;
     margin-bottom: 20px;
     background-color: #f9f9f9;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -1522,10 +1535,14 @@ input.mail_bt::placeholder {
     margin-left: 10px;
 }
 .destinationLocation{
-    margin-left: 10px;
+    margin-right: 20px;
 }
 
 /* choose seat section start */
+.choose-container{
+    width: 100%;
+    justify-content: space-around;
+}
 .booking_section{
     margin-top: 60px;
     width: 100%;
@@ -1560,7 +1577,13 @@ input.mail_bt::placeholder {
     display: flex;
     flex-wrap: nowrap;
   }
-  
+  .seat_container_2 {
+    margin-top: 20px;
+    perspective: 1000px;
+    margin-bottom: 3px;
+    display: flex;
+    flex-wrap: nowrap;
+  }
   .seat {
     background-color: #a5d5e5;
     height: 30px;
@@ -1664,6 +1687,29 @@ input.mail_bt::placeholder {
     display: flex;
   }
     .row_2_1 .seat:nth-of-type(2){
+        margin-right: 18px;
+    } 
+   
+
+    .first_floor .row_3:nth-of-type(1) .seat:nth-of-type(1){
+        margin-right: 50px;
+    }
+   
+    .second_floor .row_3:nth-of-type(1) .seat:nth-of-type(1){
+        margin-right: 50px;
+    }
+  .row_3 {
+    display: flex;
+  }
+  .row_3 span{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+  }
+  .row_3_1 {
+    display: flex;
+  }
+    .row_3_1 .seat:nth-of-type(2){
         margin-right: 18px;
     } 
     

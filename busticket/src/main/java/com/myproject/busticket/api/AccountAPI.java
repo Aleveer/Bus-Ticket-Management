@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.myproject.busticket.enums.AccountStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,11 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.myproject.busticket.dto.AccountDTO;
 import com.myproject.busticket.enums.AccountRole;
+import com.myproject.busticket.enums.AccountStatus;
 import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.Controller;
 import com.myproject.busticket.models.Driver;
 import com.myproject.busticket.models.Staff;
 import com.myproject.busticket.services.AccountService;
+import com.myproject.busticket.services.AuthenticationService;
 import com.myproject.busticket.services.ControllerService;
 import com.myproject.busticket.services.DriverService;
 import com.myproject.busticket.services.JwtService;
@@ -67,6 +68,9 @@ public class AccountAPI {
 
     @Autowired
     private TokenStoreService tokenStoreService;
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
     @GetMapping("/me")
     @ResponseBody
@@ -139,6 +143,12 @@ public class AccountAPI {
         response.put("totalPages", accountPages.getTotalPages());
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/current-user-id")
+    public ResponseEntity<Integer> getCurrentUserId() {
+        int userId = authenticationService.getCurrentUserId();
+        return ResponseEntity.ok(userId);
     }
 
     @GetMapping("/account-detail/{accountId}")

@@ -217,6 +217,13 @@ public class AuthenticationController {
         }
     }
 
+    @ResponseBody
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestParam String currentPassword, @RequestParam String newPassword) {
+        authenticationService.changePassword(currentPassword, newPassword);
+        return ResponseEntity.ok("Password changed successfully");
+    }
+    
     private void clearCurrentSession(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {

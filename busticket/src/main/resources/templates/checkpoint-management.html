@@ -90,6 +90,31 @@
     .btn-search:hover {
       background-color: #0056b3;
     }
+
+    .form-group {
+      margin: 0; /* Loại bỏ khoảng cách mặc định bên ngoài form-group */
+    }
+
+    .form-group label {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .form-group input.form-control {
+      width: 100%; /* Đảm bảo input chiếm hết chiều rộng */
+      padding: 10px; /* Điều chỉnh padding cho input */
+      border: 1px solid #ccc; /* Đảm bảo đường viền */
+      border-radius: 5px; /* Bo góc cho input */
+      box-sizing: border-box; /* Đảm bảo padding không làm phình rộng input */
+    }
+
+    .form-group select.form-control {
+      width: 100%; /* Đảm bảo select chiếm hết chiều rộng */
+      padding: 10px; /* Thêm không gian bên trong select */
+      border: 1px solid #ccc; /* Đảm bảo có đường viền */
+      border-radius: 5px; /* Bo góc cho select */
+      box-sizing: border-box; /* Đảm bảo padding không làm phình rộng select */
+    }
   </style>
 </head>
 
@@ -105,14 +130,14 @@
       <div class="content-wrapper-before"></div>
       <div class="content-header row">
         <div class="content-header-left col-md-4 col-12 mb-2">
-          <h3 class="content-header-title">Tables</h3>
+          <h3 class="content-header-title"></h3>
         </div>
         <div class="content-header-right col-md-8 col-12">
           <div class="breadcrumbs-top float-md-right">
             <div class="breadcrumb-wrapper mr-1">
               <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active">Tables</li>
+                <li class="breadcrumb-item"><a href="index.html"></a></li>
+                <li class="breadcrumb-item active"></li>
               </ol>
             </div>
           </div>

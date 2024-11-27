@@ -145,7 +145,13 @@ public class BookingController {
         // session.setAttribute("bookingInfoDTO", bookingInfoDTO);
 
         try {
-            // session.setAttribute("bookingInfoDTO", bookingInfoDTO);
+            // Giữ chỗ trong 15p
+            // đổi trạng thái số ghế
+            List<Integer> listSeatId = bookingInfoDTO.getTicketInfoDTO().getSeatNumbers().stream()
+                    .map(Integer::valueOf)
+                    .toList();
+            seatReservationsService.updateStatusReserved(listSeatId,
+                    bookingInfoDTO.getTicketInfoDTO().getTripId());
 
             long amount = (long) (bookingInfoDTO.getTicketInfoDTO().getPrice() * 25000);
             VNPayResponse vnPayResponse = vnPayService.createVNPayPayment(amount, "NCB", request);
@@ -180,11 +186,13 @@ public class BookingController {
     }
 
     // =============ROUND TRIP============
-    @GetMapping("/home/index/booking-roundtrip/{TripIds}")
-    public String chooseInfRoundTrip(@PathVariable String TripIds, Model model) {
-        String[] listTrip = TripIds.split("&");
-        int tripId = Integer.parseInt(listTrip[0]);
-        int roundTripId = Integer.parseInt(listTrip[1]);
+    @GetMapping("/home/index/booking-roundtrip")
+    public String chooseInfRoundTrip(
+            @RequestParam("departureTripId") String departureTripId,
+            @RequestParam("returnTripId") String returnTripId,
+            Model model) {
+        int tripId = Integer.parseInt(departureTripId);
+        int roundTripId = Integer.parseInt(returnTripId);
         TripDTO trip = tripService.findById(tripId);
         TripDTO roundTrip = tripService.findById(roundTripId);
 
@@ -210,7 +218,7 @@ public class BookingController {
 
         model.addAttribute("seatTypeTrip", trip.getBus().getSeatType().toString().trim());
         model.addAttribute("seatTypeRoundTrip", roundTrip.getBus().getSeatType().toString().trim());
-        return "booking";
+        return "booking-round-trip";
     }
     @PostMapping("/home/index/booking/roundtrip")
     public String booking(@ModelAttribute Booking outboundTicket, @ModelAttribute Booking returnTicket) {

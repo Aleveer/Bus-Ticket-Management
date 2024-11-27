@@ -32,4 +32,10 @@ public interface SeatReservationsRepository extends JpaRepository<SeatReservatio
     @Transactional
     @Query("UPDATE SeatReservations s SET s.status = 'booked', s.booking.bookingId = :bookingId WHERE s.seat.id IN :seatId")
     void updateStatusWithBooking(@Param("seatId") List<Integer> seatId, @Param("bookingId") int bookingId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE SeatReservations s SET s.status = 'reserved' WHERE s.seat.id IN :seatId AND s.trip.tripId = :tripId")
+    void updateStatusReserved(@Param("seatId") List<Integer> seatId, @Param("tripId") int tripId);
+
 }

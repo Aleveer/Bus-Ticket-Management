@@ -242,9 +242,13 @@
           data: { startDate: startDate, endDate: endDate },
           success: function (data) {
             console.log('Revenue Data:', data);
-            $('#totalRevenue').text(data.totalRevenue.toFixed(2));
-            $('#transactionCount').text(data.transactionCount);
-            $('#averageRevenue').text(data.averageRevenue.toFixed(2));
+            const totalRevenue = data.totalRevenue || 0;
+            const transactionCount = data.transactionCount || 0;
+            const averageRevenue = data.averageRevenue || 0;
+
+            $('#totalRevenue').text(totalRevenue.toFixed(2));
+            $('#transactionCount').text(transactionCount);
+            $('#averageRevenue').text(averageRevenue.toFixed(2));
 
             const ctxRevenue = $('#revenueChart')[0].getContext('2d');
 
@@ -259,7 +263,7 @@
                 labels: ['Total Revenue', 'Number of Transactions', 'Average Revenue per Transaction'],
                 datasets: [{
                   label: 'Revenue Statistics',
-                  data: [data.totalRevenue, data.transactionCount, data.averageRevenue],
+                  data: [totalRevenue, transactionCount, averageRevenue],
                   backgroundColor: 'rgba(75, 192, 192, 0.2)',
                   borderColor: 'rgba(75, 192, 192, 1)',
                   borderWidth: 1

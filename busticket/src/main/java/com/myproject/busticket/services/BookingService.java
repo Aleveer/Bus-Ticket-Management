@@ -184,7 +184,7 @@ public class BookingService {
             }
 
         } else { // ko login
-            email = newBookingTrip.getCustomer().getEmail();
+            email = booking.get(0).getCustomer().getEmail();
             // email có tồn tại account thì dùng account đó
             if (accountService.getUserByEmail(email).isPresent()) {
                 newBookingTrip.setCustomer(customerService.getCustomerByEmail(email));
@@ -228,7 +228,7 @@ public class BookingService {
         seatReservationsService.updateStatusWithBooking(listTripSeatId,
                 bookingTripId);
 
-        List<Integer> listRoundTripSeatId = booking.get(0).getTicketInfoDTO().getSeatNumbers().stream()
+        List<Integer> listRoundTripSeatId = booking.get(1).getTicketInfoDTO().getSeatNumbers().stream()
                 .map(Integer::valueOf)
                 .toList();
         int bookingRoundTripId = newBookingTrip.getBookingId();

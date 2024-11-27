@@ -355,6 +355,7 @@
                 
             };
             document.cookie = "bookingInfo=" + JSON.stringify(ticket) + "; path=/; max-age=3600";
+            document.cookie = "tripType=one-way; path=/; max-age=3600"; // Lưu cookie có thời hạn 1 giờ
             fetch('/home/index/booking/oneway-payment', {
                 method: 'POST',
                 headers: {

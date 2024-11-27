@@ -366,7 +366,8 @@
     const seatIdsInput = document.getElementById("seat_ids");
     const totalPriceInput = document.getElementById("total_price");
     // Clear local storage on page load to avoid using outdated data
-    localStorage.removeItem("selectedSeats");
+    localStorage.removeItem("selectedSeatsGo");
+    localStorage.removeItem("selectedSeatsReturn");
     populateUI();
 
     const updateSelectedCount = () => {
@@ -452,14 +453,15 @@
             }
         });
        
-        const selectedSeatsGo = document.querySelectorAll(".row_2 .seat.selected");
-        const listselectedSeatGoID = [...selectedSeatsGo].map(seat => seat.id);
-
-        const selectedSeatsReturn = document.querySelectorAll(".row_3 .seat.selected");
-        const listselectedSeatReturnID = [...selectedSeatsReturn].map(seat => seat.id);
+        
 
         const submitForm = document.getElementById('form-test');
         submitForm.addEventListener('submit', function (event) {
+          const selectedSeatsGo = document.querySelectorAll(".row_2 .seat.selected");
+          const listselectedSeatGoID = [...selectedSeatsGo].map(seat => seat.id);
+
+          const selectedSeatsReturn = document.querySelectorAll(".row_3 .seat.selected");
+          const listselectedSeatReturnID = [...selectedSeatsReturn].map(seat => seat.id);
             event.preventDefault();
             const ticketGo = {
                 cusDetail: {
@@ -493,6 +495,7 @@
             };
             const payload = [ticketGo, ticketReturn];
             document.cookie = "bookingList=" + JSON.stringify(payload) + "; path=/; max-age=3600";
+            document.cookie = "tripType=round-trip; path=/; max-age=3600"; // Lưu cookie có thời hạn 1 giờ
             fetch('/home/index/booking/roundtrip-payment', {
                 method: 'POST',
                 headers: {

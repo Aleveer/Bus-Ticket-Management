@@ -94,20 +94,31 @@
     // Retrieve the bookingInfo cookie
     const bookingInfo = JSON.parse(getCookie('bookingInfo'));
     console.log('bookingInfo:', bookingInfo);
+
+    const bookingList = JSON.parse(getCookie('bookingList'));
+    console.log('bookingList:', bookingList);
+
+     // Retrieve the tripType cookie
+     const tripType = getCookie('tripType');
+     console.log('tripType:', tripType);
     const total = document.getElementById('totalAmount');
     if (bookingInfo) {
         document.getElementById('customerName').innerText = bookingInfo.cusDetail.name;
         document.getElementById('phoneNumber').innerText = bookingInfo.cusDetail.phone;
         document.getElementById('email').innerText = bookingInfo.cusDetail.email;
         total.innerText = (bookingInfo.tripDetail.price*25000).toFixed(0) + ' VND';
-    }else {
+    }else if(bookingList){
+        document.getElementById('customerName').innerText = bookingList[0].cusDetail.name;
+        document.getElementById('phoneNumber').innerText = bookingList[0].cusDetail.phone;
+        document.getElementById('email').innerText = bookingList[0].cusDetail.email;
+        total.innerText = (bookingList[0].tripDetail.price*25000).toFixed(0) + ' VND';
+    }
+    else {
         console.error('Booking information not found in cookies.');
     }
 
-
-
-    // Gọi POST method để lưu thông tin BookingInfoDTO từ session
-    (async function confirmBooking() {
+    // Gọi POST method để lưu thông tin BookingInfoDTO từ session for oneway
+    async function confirmBookingOneWay() {
         try {
             const paymentDate = document.getElementById('payment_date').value;
             const bookingInfo = JSON.parse(getCookie("bookingInfo"));
@@ -140,9 +151,43 @@
             console.error('Error:', error);
             alert('Đã xảy ra lỗi. Vui lòng thử lại.');
         }
-    })();
+    }
+    // Gọi POST method để lưu thông tin BookingInfoDTO từ session for roundtrip
+    async function confirmBookingRoundTrip() {
+        try {
+            const paymentDate = document.getElementById('payment_date').value;
+            const bookingList = JSON.parse(getCookie("bookingList"));
+            bookingList[0].paymentDate = paymentDate;
+            bookingList[1].paymentDate = paymentDate;
+            const response = await fetch('/home/index/booking/roundtrip-payment/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(bookingList)
+            });
 
-
+            if (response.ok) {
+                const message = await response.text();
+                console.log('Success:', message);
+                alert('Đặt vé thành công' );
+            } else {
+                console.error('Failed to confirm booking:', response.status);
+                alert('Lỗi khi lưu thông tin đặt vé.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Đã xảy ra lỗi. Vui lòng thử lại.');
+        }
+    }
+        // Call the appropriate function based on the trip type
+        if (tripType === 'one-way') {
+            confirmBookingOneWay();
+        } else if (tripType === 'round-trip') {
+            confirmBookingRoundTrip();
+        } else {
+            console.error('Invalid trip type.');
+        }
 </script>
 
 </html>

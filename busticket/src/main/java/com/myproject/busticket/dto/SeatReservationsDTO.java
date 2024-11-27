@@ -15,5 +15,5 @@ public class SeatReservationsDTO {
     private BusSeatsDTO seat;
     private BookingDTO booking;
     private TripDTO trip;
-    private SeatReservationStatus status;
+    private String status;
 }

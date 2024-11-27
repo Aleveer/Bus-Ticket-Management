@@ -416,13 +416,7 @@
                form.action = `/home/index/booking-roundtrip?departureTripId=${selectedDepartureTripId}&returnTripId=${selectedReturnTripId}`;
            }
        }
-       const confirmButton = document.getElementById('confirmButton');
-      confirmButton.addEventListener('click', function(event) {
-         if (!selectedDepartureTripId || !selectedReturnTripId) {
-               alert('Bạn phải chọn cả chuyến đi và chuyến về trước khi xác nhận.');
-               event.preventDefault(); // Prevent form submission
-         }
-      });
+      
          document.addEventListener('DOMContentLoaded', function () {
             showTrips('go');
             const daysInVietnamese = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
@@ -456,6 +450,13 @@
                   tripReturnElement.textContent = formatDate(tripReturnDate);
                 }
             }
+            const confirmButton = document.getElementById('confirmButton');
+            confirmButton.addEventListener('click', function(event) {
+               if (!selectedDepartureTripId || !selectedReturnTripId) {
+                     alert('Bạn phải chọn cả chuyến đi và chuyến về trước khi xác nhận.');
+                     event.preventDefault(); // Prevent form submission
+               }
+            });
         });
    </script>
 </body>

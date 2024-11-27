@@ -28,6 +28,7 @@ import com.myproject.busticket.models.Role;
 import com.myproject.busticket.models.VerifyAccountModel;
 import com.myproject.busticket.repositories.AccountRepository;
 import com.myproject.busticket.repositories.RoleRepository;
+import com.myproject.busticket.utilities.SecurityUtil;
 import com.myproject.busticket.validations.AccountValidation;
 
 import jakarta.mail.MessagingException;
@@ -175,11 +176,12 @@ public class AuthenticationService {
     }
 
     public void changePassword(String currentPassword, String newPassword) {
-        // Get the currently authenticated user
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = userDetails.getUsername();
+        Account account = SecurityUtil.getCurrentAccount();
+        if (account == null) {
+            throw new RuntimeException("User is not authenticated");
+        }
 
-        Account account = accountRepository.findByEmail(username)
+        account = accountRepository.findByEmail(account.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // Verify the current password

@@ -342,6 +342,86 @@ public class AccountAPI {
         }
     }
 
+    @PostMapping("/update-account")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateCustomerAccount(@RequestBody Map<String, Object> updatedAccount,
+            HttpServletResponse httpResponse) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Account currentAccount = SecurityUtil.getCurrentAccount();
+            if (currentAccount == null) {
+                response.put("success", false);
+                response.put("message", "You are not logged in.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+
+            // Validate input data
+            String email = (String) updatedAccount.get("email");
+            String fullName = (String) updatedAccount.get("fullName");
+            String phone = (String) updatedAccount.get("phone");
+
+            // check if anything changed, if not return:
+            if (email.equals(currentAccount.getEmail()) && fullName.equals(currentAccount.getFullName())
+                    && phone.equals(currentAccount.getPhone())) {
+                response.put("success", false);
+                response.put("message", "No changes detected.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            if (email == null || email.isEmpty()) {
+                response.put("success", false);
+                response.put("message", "Email is required.");
+                return ResponseEntity.badRequest().body(response);
+            }
+            if (!AccountValidation.isValidEmail(email)) {
+                response.put("success", false);
+                response.put("message", "Invalid email format.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // check if email is already in use:
+            if (!email.equals(currentAccount.getEmail()) && accountService.getUserByEmail(email).isPresent()) {
+                response.put("message", "Email already in use.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            if (fullName == null || fullName.isEmpty()) {
+                response.put("success", false);
+                response.put("message", "Fullname is required.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            if (phone == null || phone.isEmpty() || !AccountValidation.isValidPhone(phone)) {
+                response.put("success", false);
+                response.put("message", "Invalid phone number format.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // Update account details
+            currentAccount.setEmail(email);
+            currentAccount.setFullName(fullName);
+            currentAccount.setPhone(phone);
+            accountService.save(currentAccount);
+
+            // Invalidate the current JWT token and issue a new one
+            String newJwtToken = jwtService.generateToken(currentAccount);
+            Cookie cookie = new Cookie("jwtToken", newJwtToken);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(24 * 60 * 60);
+            httpResponse.addCookie(cookie);
+            response.put("jwtToken", newJwtToken);
+            response.put("success", true);
+            response.put("message", "Account updated successfully.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error updating account: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
     @PostMapping("/update-account/{accountId}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> updateAccount(@PathVariable int accountId,
@@ -469,6 +549,27 @@ public class AccountAPI {
                     return ResponseEntity.badRequest().body(response);
                 }
                 account.setRole(accountRole);
+
+                // If changing to customer, delete existing records in driver, controller, and
+                // staff tables
+                if (AccountRole.customer.name().equalsIgnoreCase(role)) {
+                    if (account.getRole().getRoleName().equalsIgnoreCase(AccountRole.driver.name())) {
+                        List<Driver> drivers = driverService.getDriverByAccount(account);
+                        for (Driver driver : drivers) {
+                            driverService.deleteDriver(driver);
+                        }
+                    } else if (account.getRole().getRoleName().equalsIgnoreCase(AccountRole.controller.name())) {
+                        List<Controller> controllers = controllerService.getControllerByAccount(account);
+                        for (Controller controller : controllers) {
+                            controllerService.deleteController(controller);
+                        }
+                    } else if (account.getRole().getRoleName().equalsIgnoreCase(AccountRole.staff.name())) {
+                        List<Staff> staffs = staffService.getStaffByAccount(account);
+                        for (Staff staff : staffs) {
+                            staffService.deleteStaff(staff);
+                        }
+                    }
+                }
             }
 
             account.setEmail(email);

@@ -140,8 +140,6 @@ public class RouteAPI {
         newRoute.setDistance(distance);
         routeService.save(newRoute);
 
-        int i = 1;
-
         List<Map<String, Object>> checkpoints = (List<Map<String, Object>>) routeRequest.get("checkpoints");
         if (checkpoints.isEmpty()) {
             response.put("message", "No checkpoints found for this route.");
@@ -154,10 +152,12 @@ public class RouteAPI {
             return ResponseEntity.badRequest().body(response);
         }
 
+        int index = 0;
+        int checkpointOrder = 0;
         for (Map<String, Object> checkpointData : checkpoints) {
             Route_Checkpoint routeCheckpoint = new Route_Checkpoint();
             routeCheckpoint.setRoute(newRoute);
-            routeCheckpoint.setCheckpointOrder(i++);
+            routeCheckpoint.setCheckpointOrder(checkpointOrder++);
 
             // Ensure checkpointId is correctly retrieved and cast to an integer
             Object checkpointIdObj = checkpointData.get("checkpointId");
@@ -177,7 +177,15 @@ public class RouteAPI {
             }
 
             routeCheckpoint.setCheckpoint(checkpointService.getById(checkpointId));
-            routeCheckpoint.setType(CheckpointType.departure);
+            if (index == 0) {
+                routeCheckpoint.setType(CheckpointType.departure);
+            }
+            if (index == checkpoints.size() - 1) {
+                routeCheckpoint.setType(CheckpointType.drop_off);
+            } else if (index > 0 && index < checkpoints.size() - 1) {
+                routeCheckpoint.setType(CheckpointType.en_route);
+            }
+            index += 1;
             routeCheckpointService.save(routeCheckpoint);
         }
 

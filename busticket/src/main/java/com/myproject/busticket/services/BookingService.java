@@ -167,13 +167,13 @@ public class BookingService {
         // xử lý thông tin khách hàng
         String email = null;
         // Có login
-        if (checkLogin() != null ) {
+        if (checkLogin() != null) {
             // đã từng đặt xe chưa, rồi thì lấy cus đó
-            if (customerService.existsByEmail(checkLogin())){
+            if (customerService.existsByEmail(checkLogin())) {
                 newBookingTrip.setCustomer(customerService.getCustomerByEmail(checkLogin()));
                 newBookingRoundTrip.setCustomer(customerService.getCustomerByEmail(checkLogin()));
                 email = checkLogin();
-            } else {     //chưa thì thêm cus
+            } else { // chưa thì thêm cus
                 newCustomer.setEmail(checkLogin());
                 customerService.create(newCustomer);
 
@@ -202,7 +202,6 @@ public class BookingService {
             }
         }
 
-
         // lưu vé
         int tripId = booking.get(0).getTicketInfoDTO().getTripId();
         int returnTripId = booking.get(1).getTicketInfoDTO().getTripId();
@@ -215,8 +214,10 @@ public class BookingService {
         newBookingRoundTrip.setNumberOfSeat(numberOfSeatRoundTrip);
         newBookingTrip.setRoundTrip(true);
         newBookingRoundTrip.setRoundTrip(true);
-        newBookingTrip.setRoundTripId("RT" + newBookingRoundTrip.getBookingId() + newBookingTrip.getCustomer().getCustomerId());
-        newBookingRoundTrip.setRoundTripId("RT" + newBookingRoundTrip.getBookingId() + newBookingTrip.getCustomer().getCustomerId());
+        newBookingTrip.setRoundTripId(
+                "RT" + newBookingRoundTrip.getBookingId() + newBookingTrip.getCustomer().getCustomerId());
+        newBookingRoundTrip.setRoundTripId(
+                "RT" + newBookingRoundTrip.getBookingId() + newBookingTrip.getCustomer().getCustomerId());
         bookingRepository.save(newBookingTrip);
         bookingRepository.save(newBookingRoundTrip);
 
@@ -273,7 +274,8 @@ public class BookingService {
 
         // send Email
         Context context = new Context(Locale.forLanguageTag("vi"));
-        String subject = "[EASYBUS] HÓA ĐƠN ĐIỆN TỬ CỦA VÉ KHỨ HỒI SỐ" + newBookingTrip.getBookingId() + "VÀ" + newBookingRoundTrip.getBookingId();
+        String subject = "[EASYBUS] HÓA ĐƠN ĐIỆN TỬ CỦA VÉ KHỨ HỒI SỐ" + newBookingTrip.getBookingId() + "VÀ"
+                + newBookingRoundTrip.getBookingId();
         context.setVariable("routeNameTrip", newBookingTrip.getTrip().getRoute().getName());
         context.setVariable("departureTimeTrip", newBookingTrip.getTrip().getDepartureTime());
         context.setVariable("numberOfSeatTrip", numberOfSeatTrip);

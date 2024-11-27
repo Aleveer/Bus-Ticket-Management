@@ -89,7 +89,7 @@
                 <p><strong>Email:</strong> <span th:text="${customer.email}"></span></p>
                 <p><strong>Phone:</strong> <span th:text="${customer.phone}"></span></p>
                 <p><strong>Total Price:</strong> <span th:text="${totalPrice}"></span></p>
-                <button class="btn btn-primary btn-sm" onclick="sendMail('${customer.email}')">Send Email</button>
+                <!-- <button class="btn btn-primary btn-sm" onclick="sendMail('${customer.email}')">Send Email</button> -->
             </div>
         </div>
 
@@ -212,7 +212,7 @@
             </div>
         </div>
     </div>
-    <script>
+    <!-- <script>
         function sendMail() {
             // Extract billId from URL
             const urlPath = window.location.pathname;
@@ -239,7 +239,7 @@
                     console.error("Error:", error);
                 });
         }
-    </script>
+    </script> -->
 </body>
 
 </html>

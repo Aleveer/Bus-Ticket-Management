@@ -94,7 +94,7 @@ public class AuthenticationService {
 
     public Account signIn(LoginUserModel input) {
         Account account = accountRepository.findByEmail(input.getEmail())
-                .orElseThrow(() -> new AccountStatusException("An account is not found"));
+                .orElseThrow(() -> new AccountStatusException("An account with the provided email was not found."));
         if (account.getStatus() == AccountStatus.unverified) {
             throw new AccountStatusException("Account not verified. Please verify your account.");
         }
@@ -107,9 +107,9 @@ public class AuthenticationService {
                             input.getEmail(),
                             input.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new ValidationException("Incorrect email or password");
+            throw new ValidationException("Incorrect email or password.");
         } catch (Exception e) {
-            throw new ValidationException("Authentication failed");
+            throw new ValidationException("Authentication failed due to an unexpected error.");
         }
         return account;
     }
@@ -178,7 +178,7 @@ public class AuthenticationService {
         // Get the currently authenticated user
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userDetails.getUsername();
-        
+
         Account account = accountRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

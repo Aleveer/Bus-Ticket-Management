@@ -59,9 +59,9 @@ public class BookingService {
         return bookingRepository.findById(bookingId).orElse(null);
     }
 
-    public boolean checkLogin() {
+    public String checkLogin() {
         Account account = SecurityUtil.getCurrentAccount();
-        return account != null;
+        return account != null ? account.getEmail() : null;
     }
 
     public void createTicketOneWay(BookingInfoDTO booking, LocalDateTime paymentDate) {
@@ -71,10 +71,8 @@ public class BookingService {
         // xử lý thông tin khách hàng
         String email = booking.getCustomer().getEmail();
         // Có login
-        if (checkLogin()) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Account currentAccount = (Account) authentication.getPrincipal();
-            newBooking.setCustomer(customerService.getCustomerByEmail(currentAccount.getEmail()));
+        if (checkLogin() != null) {
+            newBooking.setCustomer(customerService.getCustomerByEmail(checkLogin()));
         } else { // ko login
             // email có tồn tại account thì dùng account đó
             if (accountService.getUserByEmail(email).isPresent()) {

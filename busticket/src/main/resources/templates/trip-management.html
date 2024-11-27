@@ -6,56 +6,180 @@
   <div th:insert="~{dashboard-header.html}"></div>
   <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}">
   <style>
+    /*.search-box {*/
+    /*  display: flex;*/
+    /*  flex-wrap: wrap;*/
+    /*  align-items: center;*/
+    /*  background-color: #f1f1f1;*/
+    /*  border-radius: 10px;*/
+    /*  padding: 15px;*/
+    /*  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
+    /*  margin-bottom: 20px;*/
+    /*}*/
+
+    /*.search-box .form-group {*/
+    /*  flex: 1;*/
+    /*  margin-right: 15px;*/
+    /*}*/
+
+    /*.search-box .form-group label {*/
+    /*  display: block;*/
+    /*  margin-bottom: 5px;*/
+    /*  font-weight: bold;*/
+    /*}*/
+
+    /*.search-box .form-group input,*/
+    /*.search-box .form-group .form-control {*/
+    /*  width: 100%;*/
+    /*  padding: 10px;*/
+    /*  border: 1px solid #ccc;*/
+    /*  border-radius: 5px;*/
+    /*  font-size: 16px;*/
+    /*}*/
+
+    /*.search-box .btn-search {*/
+    /*  background-color: #007bff;*/
+    /*  border: none;*/
+    /*  color: white;*/
+    /*  padding: 10px 20px;*/
+    /*  border-radius: 5px;*/
+    /*  cursor: pointer;*/
+    /*  display: flex;*/
+    /*  align-items: center;*/
+    /*  justify-content: center;*/
+    /*  font-size: 16px;*/
+    /*}*/
+
+    /*.search-box .btn-search i {*/
+    /*  margin-right: 5px;*/
+    /*}*/
+
+    /*.search-box .btn-search:hover {*/
+    /*  background-color: #0056b3;*/
+    /*}*/
+
+    /*Search Form v1 */
+
+    /*#searchForm {*/
+    /*  display: flex;*/
+    /*  flex-wrap: wrap; !* Cho phép xuống hàng nếu không đủ chỗ *!*/
+    /*  align-items: flex-start; !* Căn các mục theo chiều dọc từ trên xuống *!*/
+    /*  justify-content: space-between; !* Tạo khoảng cách đều giữa các mục *!*/
+    /*  gap: 15px; !* Khoảng cách giữa các phần tử *!*/
+    /*  padding: 15px; !* Tạo không gian bên trong form *!*/
+    /*}*/
+
+    /*.search-box {*/
+    /*  display: flex;*/
+    /*  flex-wrap: wrap; !* Cho phép các mục xuống hàng nếu cần *!*/
+    /*  align-items: center; !* Căn giữa các mục theo chiều dọc *!*/
+    /*  gap: 10px; !* Khoảng cách giữa các phần tử trong search-box *!*/
+    /*  width: 100%; !* Đảm bảo search-box chiếm toàn bộ chiều rộng *!*/
+    /*}*/
+
+    /*.input-search {*/
+    /*  flex: 1; !* Input tìm kiếm chiếm không gian tối đa *!*/
+    /*  padding: 10px; !* Thêm không gian bên trong input *!*/
+    /*  border: 1px solid #ddd; !* Đường viền nhạt *!*/
+    /*  border-radius: 5px; !* Bo góc input *!*/
+    /*  font-size: 16px; !* Kích thước chữ dễ nhìn *!*/
+    /*}*/
+
+    /*.form-group {*/
+    /*  display: flex;*/
+    /*  flex-direction: column; !* Label nằm trên input *!*/
+    /*  gap: 5px; !* Khoảng cách giữa label và input *!*/
+    /*  flex: 1; !* Cho phép form-group tự động co giãn *!*/
+    /*}*/
+
+    /*.form-group label {*/
+    /*  font-weight: bold; !* Làm nổi bật nhãn *!*/
+    /*  font-size: 14px; !* Cỡ chữ nhãn vừa phải *!*/
+    /*}*/
+
+    /*.form-group input {*/
+    /*  padding: 8px; !* Thêm không gian trong input *!*/
+    /*  border: 1px solid #ccc; !* Đường viền nhạt *!*/
+    /*  border-radius: 5px; !* Bo góc *!*/
+    /*  font-size: 14px; !* Kích thước chữ trong input *!*/
+    /*}*/
+
+    /*.btn-search {*/
+    /*  background-color: #007bff; !* Màu xanh lam cho nút *!*/
+    /*  color: white; !* Chữ màu trắng *!*/
+    /*  padding: 10px 20px; !* Thêm không gian bên trong nút *!*/
+    /*  border: none; !* Loại bỏ viền *!*/
+    /*  border-radius: 5px; !* Bo góc nút *!*/
+    /*  cursor: pointer; !* Con trỏ thành bàn tay khi hover *!*/
+    /*  display: flex;*/
+    /*  align-items: center;*/
+    /*  gap: 5px; !* Khoảng cách giữa icon và chữ *!*/
+    /*  font-size: 16px; !* Kích thước chữ *!*/
+    /*  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); !* Đổ bóng nhẹ *!*/
+    /*}*/
+
+    /*.btn-search:hover {*/
+    /*  background-color: #0056b3; !* Màu tối hơn khi hover *!*/
+    /*}*/
+
+
+    /*Search Form v2 */
+    #searchForm {
+      display: flex;
+      flex-direction: column; /* Các thành phần trong form sẽ xếp theo cột */
+      gap: 15px; /* Khoảng cách giữa các thành phần */
+      padding: 15px; /* Thêm không gian bên trong form */
+    }
+
     .search-box {
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      background-color: #f1f1f1;
-      border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
-    }
-
-    .search-box .form-group {
-      flex: 1;
-      margin-right: 15px;
-    }
-
-    .search-box .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-
-    .search-box .form-group input,
-    .search-box .form-group .form-control {
+      align-items: center; /* Căn giữa các phần tử theo chiều dọc */
+      gap: 10px; /* Khoảng cách giữa các thành phần */
       width: 100%;
+    }
+
+    .input-search {
+      flex: 1; /* Input tìm kiếm chiếm toàn bộ không gian còn lại */
       padding: 10px;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
       border-radius: 5px;
       font-size: 16px;
     }
 
-    .search-box .btn-search {
+    .btn-search {
       background-color: #007bff;
-      border: none;
       color: white;
       padding: 10px 20px;
+      border: none;
       border-radius: 5px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 5px;
       font-size: 16px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
-    .search-box .btn-search i {
-      margin-right: 5px;
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* Căn nhãn và input về bên trái */
+      gap: 5px;
+      width: 100%; /* Các form-group chiếm toàn bộ chiều rộng */
     }
 
-    .search-box .btn-search:hover {
-      background-color: #0056b3;
+    .form-group label {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%; /* Input chiếm toàn bộ chiều rộng của form-group */
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
     }
 
     .btn-darker-red {
@@ -79,15 +203,15 @@
       <div class="content-wrapper-before"></div>
       <div class="content-header row">
         <div class="content-header-left col-md-4 col-12 mb-2">
-          <h3 class="content-header-title">Tables</h3>
+          <h3 class="content-header-title"></h3>
         </div>
         <div class="content-header-right col-md-8 col-12">
           <div class="breadcrumbs-top float-md-right">
             <div class="breadcrumb-wrapper mr-1">
               <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a>
+                <li class="breadcrumb-item"><a href="index.html"></a>
                 </li>
-                <li class="breadcrumb-item active">Tables
+                <li class="breadcrumb-item active">
                 </li>
               </ol>
             </div>
@@ -105,7 +229,7 @@
                 <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                 <div class="heading-elements">
                   <ul class="list-inline mb-0">
-                    <li><a data-action="search" title="Search"><i class="ft-search"></i></a></li>
+<!--                    <li><a data-action="search" title="Search"><i class="ft-search"></i></a></li>-->
                     <a th:href="@{/easy-bus/new-trip}" data-action="add-trip" title="Add Trip">
                       <i class="ft-plus"></i>
                     </a>
@@ -113,19 +237,21 @@
                 </div>
                 <form id="searchForm" method="get" onsubmit="handleSearch(event)">
                   <div class="search-box" id="searchBox">
-                    <input type="text" id="searchField" name="searchValue" class="input-search"
-                      placeholder="Search trip..." />
-                    <div class="form-group">
-                      <label for="startDate">Start Date</label>
-                      <input type="datetime-local" class="form-control" id="startDate" name="startDate" />
-                    </div>
-                    <div class="form-group">
-                      <label for="endDate">End Date</label>
-                      <input type="datetime-local" class="form-control" id="endDate" name="endDate" />
-                    </div>
+                    <input type="text" id="searchField" name="searchValue" class="input-search" placeholder="Search trip..." />
                     <button class="btn-search" id="searchButton" type="submit">
                       <i class="ft-search"></i>
                     </button>
+                  </div>
+
+                  <!-- Các form-group nằm ngoài search-box, sẽ được đặt dưới cùng -->
+                  <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input type="datetime-local" class="form-control" id="startDate" name="startDate" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="endDate">End Date</label>
+                    <input type="datetime-local" class="form-control" id="endDate" name="endDate" />
                   </div>
                 </form>
               </div>

@@ -209,6 +209,8 @@ public class BookingController {
         List<SeatReservationsDTO> secondFloorRoundTrip = statusSeatsRoundTrip.subList(statusSeatsRoundTrip.size() / 2, statusSeatsRoundTrip.size());
 
         //Trip
+        model.addAttribute("trip", trip);
+        model.addAttribute("roundTrip", roundTrip);
         model.addAttribute("firstFloorTrip", firstFloorTrip);
         model.addAttribute("secondFloorTrip", secondFloorTrip);
 
@@ -218,6 +220,10 @@ public class BookingController {
 
         model.addAttribute("seatTypeTrip", trip.getBus().getSeatType().toString().trim());
         model.addAttribute("seatTypeRoundTrip", roundTrip.getBus().getSeatType().toString().trim());
+        System.out.println("firstFloorRoundTrip: " + firstFloorRoundTrip);
+        System.out.println("secondFloorRoundTrip: " + secondFloorRoundTrip);
+        System.out.println("seatTypeTrip: " + trip.getBus().getSeatType().toString().trim());
+        System.out.println("seatTypeRoundTrip: " + roundTrip.getBus().getSeatType().toString().trim());
         return "booking-round-trip";
     }
     @PostMapping("/home/index/booking/roundtrip")

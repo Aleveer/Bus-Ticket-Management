@@ -56,9 +56,7 @@
       <div class="all-container container d-flex flex-nowrap ">
         <div class="choose_seat trip-card d-flex flex-column justify-content-center col-sm-8">
             <h3 class="full">Chọn ghế</h3>
-              <div>
-                <strong>Seat Type:</strong> <span th:text="${selectedTrip.getBus().getSeatType()}"></span>
-              </div>
+              
                 <ul class="showcase">
                     <li>
                       <div class="seat"></div>
@@ -73,8 +71,8 @@
                       <small>Đã Bán</small>
                     </li>
                   </ul>
-                  
-                  <div th:switch="${seatType}">
+                  <!-- Seat trip here-->
+                  <div th:switch="${seatTypeTrip}">
                     
                     <!-- Seat container for economy -->
                     <div  th:case="'economy'">
@@ -84,13 +82,13 @@
                       </div>
                       <div class="seat_container ">
                         <div class="left-side">
-                          <div th:each="i: ${#numbers.sequence(0, (firstFloor.size() / 2) - 1)}" class="row_2">
-                              <span th:each="seatReservation: ${firstFloor.subList(i * 2, i * 2 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                          <div th:each="i: ${#numbers.sequence(0, (firstFloorTrip.size() / 2) - 1)}" class="row_2">
+                              <span th:each="seatReservation: ${firstFloorTrip.subList(i * 2, i * 2 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                           </div>
                         </div>
                           <div class="right-side">
-                              <div th:each="i: ${#numbers.sequence(0, (secondFloor.size() / 2) - 1)}" class="row_2">
-                                  <span th:each="seatReservation: ${secondFloor.subList(i * 2, i * 2 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                              <div th:each="i: ${#numbers.sequence(0, (secondFloorTrip.size() / 2) - 1)}" class="row_2">
+                                  <span th:each="seatReservation: ${secondFloorTrip.subList(i * 2, i * 2 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                               </div>
                           </div>
                       </div>
@@ -105,64 +103,149 @@
                         <div class="first_floor">
                           <!-- First row with exactly 2 seats -->
                           <div class="row_2">
-                            <span th:each="seatReservation: ${firstFloor.subList(0, 2 > firstFloor.size() ? firstFloor.size() : 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                            <span th:each="seatReservation: ${firstFloorTrip.subList(0, 2 > firstFloorTrip.size() ? firstFloorTrip.size() : 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                           </div>
                           <!-- Subsequent rows with 3 seats each -->
-                          <div th:each="i: ${#numbers.sequence(1, ((firstFloor.size() - 2) / 3) + 1)}" class="row_2">
-                            <span th:each="seatReservation: ${firstFloor.subList(i * 3 - 1, i * 3 + 2 > firstFloor.size() ? firstFloor.size() : i * 3 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                          <div th:each="i: ${#numbers.sequence(1, ((firstFloorTrip.size() - 2) / 3) + 1)}" class="row_2">
+                            <span th:each="seatReservation: ${firstFloorTrip.subList(i * 3 - 1, i * 3 + 2 > firstFloorTrip.size() ? firstFloorTrip.size() : i * 3 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                           </div>
                         </div>
                     
                         <div class="second_floor">
                           <!-- First row with exactly 2 seats -->
                           <div class="row_2">
-                            <span th:each="seatReservation: ${secondFloor.subList(0, 2 > secondFloor.size() ? secondFloor.size() : 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                            <span th:each="seatReservation: ${secondFloorTrip.subList(0, 2 > secondFloorTrip.size() ? secondFloorTrip.size() : 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                           </div>
                           <!-- Subsequent rows with 3 seats each -->
-                          <div th:each="i: ${#numbers.sequence(1, ((secondFloor.size() - 2) / 3) + 1)}" class="row_2">
-                            <span th:each="seatReservation: ${secondFloor.subList(i * 3 - 1, i * 3 + 2 > secondFloor.size() ? secondFloor.size() : i * 3 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                          <div th:each="i: ${#numbers.sequence(1, ((secondFloorTrip.size() - 2) / 3) + 1)}" class="row_2">
+                            <span th:each="seatReservation: ${secondFloorTrip.subList(i * 3 - 1, i * 3 + 2 > secondFloorTrip.size() ? secondFloorTrip.size() : i * 3 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                           </div>
                         </div>
                       </div>
                     </div>
                     <!-- Add a default case to help debug -->
                     <div th:case="*">
-                      <p>No matching seat type found. Current type: <span th:text="${seatType}"></span></p>
+                      <p>No matching seat type found. Current type: <span th:text="${seatTypeTrip}"></span></p>
                     </div>
-
                   </div>
-                </div>
-         
-            <div class="confirm_info trip-card d-flex align-self-start flex-column col-sm-4">
-              <h3 class="full text-dark">Thông tin lượt đi</h3>
-              <div class="full d-flex justify-content-between">
-                <h4 class="full d-flex   ">Tuyến xe</h4>
-                <span th:text="${selectedTrip.route.name}" class="full d-flex justify-content-end text_right "></span>
-              </div>
-              <div class="d-flex justify-content-between full">
-                <h4 class="full">Thời gian xuất bến</h4>
-                <span th:text="${#temporals.format(selectedTrip.departureTime,'yyyy-MM-dd HH:mm')}" class="full d-flex justify-content-end"></span>
-              </div>
-              <div class="d-flex justify-content-between full">
-                <h4 class="full">Số lượng ghế</h4>
-                  <h4 class="text d-flex flex-nowrap">
-                    <span class="space_right" id="count">0 </span> ghế
-                  </h4>
-              </div>
-              <div class="d-flex justify-content-between full">
-                <h4 class="full">Số ghế</h4>
-                <span class="full d-flex justify-content-end" id="seat_number"></span>
-              </div>
-              <div class="d-flex justify-content-between full">
-                <h4 class="full">Tổng tiền lượt đi</h4>
-                  <h4 class="text d-flex flex-nowrap">
-                    <span class="space_right" id="total"> </span> $
-                  </h4>
-              </div>
-              <input type="hidden" id="ticketPrice" th:value="${selectedTrip.price}">
-              
-            </div>
-        </div>    
+                  <!-- Seat roundtrip here--> 
+                  <div th:switch="${seatTypeRoundTrip}">
+                    
+                    <!-- Seat container for economy -->
+                    <div  th:case="'economy'">
+                      <div class="floor-container d-flex justify-content-center">
+                        <div class="left_side">Dãy Trái</div>
+                        <div class="right_side">Dãy Phải</div>
+                      </div>
+                      <div class="seat_container ">
+                        <div class="left-side">
+                          <div th:each="i: ${#numbers.sequence(0, (firstFloorRoundTrip.size() / 2) - 1)}" class="row_2">
+                              <span th:each="seatReservation: ${firstFloorRoundTrip.subList(i * 2, i * 2 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                          </div>
+                        </div>
+                          <div class="right-side">
+                              <div th:each="i: ${#numbers.sequence(0, (secondFloorRoundTrip.size() / 2) - 1)}" class="row_2">
+                                  <span th:each="seatReservation: ${secondFloorRoundTrip.subList(i * 2, i * 2 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                    <!-- Seat container for limousine -->
+                    <div th:case="'limousine'">
+                      <div class="floor-container d-flex justify-content-center">
+                        <div class="floor_1">Tầng dưới</div>
+                        <div class="floor_2">Tầng trên</div>
+                      </div>
+                      <div class="seat_container">
+                        <div class="first_floor">
+                          <!-- First row with exactly 2 seats -->
+                          <div class="row_2">
+                            <span th:each="seatReservation: ${firstFloorRoundTrip.subList(0, 2 > firstFloorRoundTrip.size() ? firstFloorRoundTrip.size() : 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                          </div>
+                          <!-- Subsequent rows with 3 seats each -->
+                          <div th:each="i: ${#numbers.sequence(1, ((firstFloorRoundTrip.size() - 2) / 3) + 1)}" class="row_2">
+                            <span th:each="seatReservation: ${firstFloorRoundTrip.subList(i * 3 - 1, i * 3 + 2 > firstFloorRoundTrip.size() ? firstFloorRoundTrip.size() : i * 3 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                          </div>
+                        </div>
+                    
+                        <div class="second_floor">
+                          <!-- First row with exactly 2 seats -->
+                          <div class="row_2">
+                            <span th:each="seatReservation: ${secondFloorRoundTrip.subList(0, 2 > secondFloorRoundTrip.size() ? secondFloorRoundTrip.size() : 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                          </div>
+                          <!-- Subsequent rows with 3 seats each -->
+                          <div th:each="i: ${#numbers.sequence(1, ((secondFloorRoundTrip.size() - 2) / 3) + 1)}" class="row_2">
+                            <span th:each="seatReservation: ${secondFloorRoundTrip.subList(i * 3 - 1, i * 3 + 2 > secondFloorRoundTrip.size() ? secondFloorRoundTrip.size() : i * 3 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Add a default case to help debug -->
+                    <div th:case="*">
+                      <p>No matching seat type found. Current type: <span th:text="${seatTypeRoundTrip}"></span></p>
+                    </div>
+                  </div>
+           </div>   
+         <!-- Trip info here-->
+         <div class="confirm_info trip-card d-flex align-self-start flex-column col-sm-4">
+          <h3 class="full text-dark">Thông tin lượt đi</h3>
+          <div class="full d-flex justify-content-between">
+            <h4 class="full d-flex   ">Tuyến xe</h4>
+            <span th:text="${trip.route.name}" class="full d-flex justify-content-end text_right "></span>
+          </div>
+          <div class="d-flex justify-content-between full">
+            <h4 class="full">Thời gian xuất bến</h4>
+            <span th:text="${#temporals.format(trip.departureTime,'yyyy-MM-dd HH:mm')}" class="full d-flex justify-content-end"></span>
+          </div>
+          <div class="d-flex justify-content-between full">
+            <h4 class="full">Số lượng ghế</h4>
+              <h4 class="text d-flex flex-nowrap">
+                <span class="space_right" id="count">0 </span> ghế
+              </h4>
+          </div>
+          <div class="d-flex justify-content-between full">
+            <h4 class="full">Số ghế</h4>
+            <span class="full d-flex justify-content-end" id="seat_number"></span>
+          </div>
+          <div class="d-flex justify-content-between full">
+            <h4 class="full">Tổng tiền lượt đi</h4>
+              <h4 class="text d-flex flex-nowrap">
+                <span class="space_right" id="total"> </span> $
+              </h4>
+          </div>
+          <input type="hidden" id="ticketPrice" th:value="${trip.price}">
+          
+        </div> 
+        <!-- roundTrip info here-->
+        <div class="confirm_info trip-card d-flex align-self-start flex-column col-sm-4">
+          <h3 class="full text-dark">Thông tin lượt đi</h3>
+          <div class="full d-flex justify-content-between">
+            <h4 class="full d-flex   ">Tuyến xe</h4>
+            <span th:text="${roundTrip.route.name}" class="full d-flex justify-content-end text_right "></span>
+          </div>
+          <div class="d-flex justify-content-between full">
+            <h4 class="full">Thời gian xuất bến</h4>
+            <span th:text="${#temporals.format(roundTrip.departureTime,'yyyy-MM-dd HH:mm')}" class="full d-flex justify-content-end"></span>
+          </div>
+          <div class="d-flex justify-content-between full">
+            <h4 class="full">Số lượng ghế</h4>
+              <h4 class="text d-flex flex-nowrap">
+                <span class="space_right" id="count">0 </span> ghế
+              </h4>
+          </div>
+          <div class="d-flex justify-content-between full">
+            <h4 class="full">Số ghế</h4>
+            <span class="full d-flex justify-content-end" id="seat_number"></span>
+          </div>
+          <div class="d-flex justify-content-between full">
+            <h4 class="full">Tổng tiền lượt đi</h4>
+              <h4 class="text d-flex flex-nowrap">
+                <span class="space_right" id="total"> </span> $
+              </h4>
+          </div>
+          <input type="hidden" id="ticketPrice" th:value="${roundTrip.price}">
+          
+        </div> 
     </div>
     <!-- booking section end -->
     <!--User information start-->
@@ -210,7 +293,8 @@
             <div class="d-flex ">
               <button type="button" class="payment-button" onclick="history.back()">Hủy</button>
               <form id="form-test" >
-                <input type="hidden" id="trip_id" th:value="${selectedTrip.tripId}" />
+                <input type="hidden" id="trip_id" th:value="${trip.tripId}" />
+                <input type="hidden" id="round_trip_id" name="round_trip_id" th:value="${roundTrip.tripId}" />
                 <button type="submit" class="payment-button" >Thanh Toán</button>
               </form>
             </div>

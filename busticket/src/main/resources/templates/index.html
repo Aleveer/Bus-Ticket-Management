@@ -68,7 +68,7 @@
                         
                         <ul class="dropdown-info d-flex flex-column">
                            <li><a th:href="@{booking-history}"></a></li>
-                           <li sec:authorize="hasAuthority('ADMIN') or hasAuthority('STAFF')"> <a href="/easy-bus/dashboard">Dashboard</a></li>
+                           <li sec:authorize="hasAuthority('ADMIN') or hasAuthority('STAFF')"> <a class="text-dark" href="/easy-bus/dashboard">Dashboard</a></li>
                            <li ><button th:href="@{personal-profile}">Profile</button></li>
                            <li>
                               <button th:data-email="${#authentication.name}" onclick="logout()">Logout</button>

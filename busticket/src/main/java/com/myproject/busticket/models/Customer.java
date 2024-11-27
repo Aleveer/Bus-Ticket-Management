@@ -26,9 +26,9 @@ public class Customer {
     @Column(name = "email", nullable = false, length = 255)
     private String email;
 
-    @Column(name = "name", nullable = false, length = 70)
+    @Column(name = "name", length = 70)
     private String name;
 
-    @Column(name = "phone", nullable = false, length = 12)
+    @Column(name = "phone", length = 12)
     private String phone;
 }

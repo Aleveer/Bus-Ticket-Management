@@ -74,4 +74,12 @@ public class BillService {
                     query, startDateTime, endDateTime, pageable);
         }
     }
+
+    public Double getTotalRevenueInRange(LocalDateTime startDate, LocalDateTime endDate) {
+        return billRepository.findTotalRevenueInRange(startDate, endDate);
+    }
+
+    public Long getTransactionCountInRange(LocalDateTime startDate, LocalDateTime endDate) {
+        return billRepository.countTransactionsInRange(startDate, endDate);
+    }
 }

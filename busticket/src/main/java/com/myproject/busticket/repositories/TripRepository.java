@@ -1,5 +1,6 @@
 package com.myproject.busticket.repositories;
 
+import com.myproject.busticket.dto.RouteTripCountDTO;
 import com.myproject.busticket.models.Bus;
 import com.myproject.busticket.models.Route;
 import com.myproject.busticket.models.Trip;
@@ -75,9 +76,10 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
     @Query("SELECT t FROM Trip t WHERE t.route.code LIKE %:query% OR t.bus.plate LIKE %:query% OR t.driver.account.fullName LIKE %:query%")
     Page<Trip> findBySearchValue(@Param("query") String query, Pageable pageable);
 
-    @Query("SELECT t.route.code, COUNT(t) AS number FROM Trip t " +
+    @Query("SELECT new com.myproject.busticket.dto.RouteTripCountDTO(t.route.code, COUNT(t)) " +
+            "FROM Trip t " +
             "WHERE (:routeCode IS NULL OR t.route.code = :routeCode) " +
             "GROUP BY t.route.code " +
             "ORDER BY COUNT(t) DESC")
-    List<Object[]> findTripCountByRouteCode(@Param("routeCode") String routeCode);
+    List<RouteTripCountDTO> findTripCountByRouteCode(@Param("routeCode") String routeCode, Pageable pageable);
 }

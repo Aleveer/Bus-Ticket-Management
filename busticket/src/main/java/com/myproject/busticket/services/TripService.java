@@ -10,9 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.myproject.busticket.dto.RouteTripCountDTO;
 import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.mapper.TripMapper;
 import com.myproject.busticket.models.Bus;
@@ -139,12 +141,8 @@ public class TripService {
         }
     }
 
-    public List<Object[]> getTripCountByRouteCode(String routeCode) {
-        logger.info("Fetching trip count for route code: {}", routeCode);
-        List<Object[]> result = tripRepository.findTripCountByRouteCode(routeCode);
-        for (Object[] row : result) {
-            logger.info("Route Code: {}, Trip Count: {}", row[0], row[1]);
-        }
-        return result;
+    public List<RouteTripCountDTO> getTripCountByRouteCode(String routeCode) {
+        Pageable pageable = PageRequest.of(0, 5);
+        return tripRepository.findTripCountByRouteCode(routeCode, pageable);
     }
 }

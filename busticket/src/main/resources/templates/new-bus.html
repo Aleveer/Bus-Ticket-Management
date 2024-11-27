@@ -81,7 +81,7 @@
                     .then((data) => {
                         if (data.message) {
                             alert(data.message);
-                            if (data.message === "Bus added successfully.") {
+                            if (data.message == "Bus saved successfully.") {
                                 window.location.href = "/easy-bus/bus-management";
                             }
                         }

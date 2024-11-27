@@ -71,7 +71,12 @@
                       <small>Đã Bán</small>
                     </li>
                   </ul>
+                <div class="d-flex choose-container">
+                    <span style="margin-left:60px;font-size:16px;font-weight:bold;">Chọn ghế chuyến đi</span>
+                    <span style="margin-right:60px;font-size:16px;font-weight:bold;">Chọn ghế chuyến về</span>
+                </div>
                 <div class="d-flex flex-row">
+                  
                   <!-- Seat trip here-->
                   <div th:switch="${seatTypeTrip}" class="space_right_large">
                     
@@ -138,14 +143,14 @@
                         <div class="left_side">Dãy Trái</div>
                         <div class="right_side">Dãy Phải</div>
                       </div>
-                      <div class="seat_container ">
+                      <div class="seat_container_2 ">
                         <div class="left-side">
-                          <div th:each="i: ${#numbers.sequence(0, (firstFloorRoundTrip.size() / 2) - 1)}" class="row_2">
+                          <div th:each="i: ${#numbers.sequence(0, (firstFloorRoundTrip.size() / 2) - 1)}" class="row_3">
                               <span th:each="seatReservation: ${firstFloorRoundTrip.subList(i * 2, i * 2 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                           </div>
                         </div>
                           <div class="right-side">
-                              <div th:each="i: ${#numbers.sequence(0, (secondFloorRoundTrip.size() / 2) - 1)}" class="row_2">
+                              <div th:each="i: ${#numbers.sequence(0, (secondFloorRoundTrip.size() / 2) - 1)}" class="row_3">
                                   <span th:each="seatReservation: ${secondFloorRoundTrip.subList(i * 2, i * 2 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                               </div>
                           </div>
@@ -160,22 +165,22 @@
                       <div class="seat_container">
                         <div class="first_floor">
                           <!-- First row with exactly 2 seats -->
-                          <div class="row_2">
+                          <div class="row_3">
                             <span th:each="seatReservation: ${firstFloorRoundTrip.subList(0, 2 > firstFloorRoundTrip.size() ? firstFloorRoundTrip.size() : 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                           </div>
                           <!-- Subsequent rows with 3 seats each -->
-                          <div th:each="i: ${#numbers.sequence(1, ((firstFloorRoundTrip.size() - 2) / 3) + 1)}" class="row_2">
+                          <div th:each="i: ${#numbers.sequence(1, ((firstFloorRoundTrip.size() - 2) / 3) + 1)}" class="row_3">
                             <span th:each="seatReservation: ${firstFloorRoundTrip.subList(i * 3 - 1, i * 3 + 2 > firstFloorRoundTrip.size() ? firstFloorRoundTrip.size() : i * 3 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                           </div>
                         </div>
                     
                         <div class="second_floor">
                           <!-- First row with exactly 2 seats -->
-                          <div class="row_2">
+                          <div class="row_3">
                             <span th:each="seatReservation: ${secondFloorRoundTrip.subList(0, 2 > secondFloorRoundTrip.size() ? secondFloorRoundTrip.size() : 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                           </div>
                           <!-- Subsequent rows with 3 seats each -->
-                          <div th:each="i: ${#numbers.sequence(1, ((secondFloorRoundTrip.size() - 2) / 3) + 1)}" class="row_2">
+                          <div th:each="i: ${#numbers.sequence(1, ((secondFloorRoundTrip.size() - 2) / 3) + 1)}" class="row_3">
                             <span th:each="seatReservation: ${secondFloorRoundTrip.subList(i * 3 - 1, i * 3 + 2 > secondFloorRoundTrip.size() ? secondFloorRoundTrip.size() : i * 3 + 2)}" th:class="${'seat ' + (seatReservation.status == 'booked' ? 'booked' : '')}" th:id="${seatReservation.seat.getId()}" th:text="${seatReservation.seat.getSeatName()}" th:data-name="${seatReservation.seat.getSeatName()}"></span>
                           </div>
                         </div>
@@ -203,20 +208,20 @@
           <div class="d-flex justify-content-between full">
             <h4 class="full">Số lượng ghế</h4>
               <h4 class="text d-flex flex-nowrap">
-                <span class="space_right" id="count">0 </span> ghế
+                <span class="space_right" id="countDeparture">0 </span> ghế
               </h4>
           </div>
           <div class="d-flex justify-content-between full">
             <h4 class="full">Số ghế</h4>
-            <span class="full d-flex justify-content-end" id="seat_number"></span>
+            <span class="full d-flex justify-content-end" id="seatNumberDeparture"></span>
           </div>
           <div class="d-flex justify-content-between full">
             <h4 class="full">Tổng tiền lượt đi</h4>
               <h4 class="text d-flex flex-nowrap">
-                <span class="space_right" id="total"> </span> $
+                <span class="space_right" id="totalDeparture"> </span> $
               </h4>
           </div>
-          <input type="hidden" id="ticketPrice" th:value="${trip.price}">
+          <input type="hidden" id="ticketPriceDeparture" th:value="${trip.price}">
           
         </div> 
         <!-- roundTrip info here-->
@@ -233,20 +238,20 @@
           <div class="d-flex justify-content-between full">
             <h4 class="full">Số lượng ghế</h4>
               <h4 class="text d-flex flex-nowrap">
-                <span class="space_right" id="count">0 </span> ghế
+                <span class="space_right" id="countReturn">0 </span> ghế
               </h4>
           </div>
           <div class="d-flex justify-content-between full">
             <h4 class="full">Số ghế</h4>
-            <span class="full d-flex justify-content-end" id="seat_number"></span>
+            <span class="full d-flex justify-content-end" id="seatNumberReturn"></span>
           </div>
           <div class="d-flex justify-content-between full">
-            <h4 class="full">Tổng tiền lượt đi</h4>
+            <h4 class="full">Tổng tiền lượt về</h4>
               <h4 class="text d-flex flex-nowrap">
-                <span class="space_right" id="total"> </span> $
+                <span class="space_right" id="totalReturn"> </span> $
               </h4>
           </div>
-          <input type="hidden" id="ticketPrice" th:value="${roundTrip.price}">
+          <input type="hidden" id="ticketPriceReturn" th:value="${roundTrip.price}">
           
         </div> 
         </div>
@@ -344,116 +349,76 @@
     <script>
       
 
-      document.addEventListener("DOMContentLoaded", function() {
-        const cardNumberInput = document.getElementById("cardNumber");
-        const expiryDateInput = document.getElementById("expiryDate");
-    
-        let cardNumberPlaceholderCleared = false;
-        let expiryDatePlaceholderCleared = false;
-    
-        cardNumberInput.addEventListener("input", function() {
-            if (!cardNumberPlaceholderCleared) {
-                cardNumberInput.value = '';
-                cardNumberPlaceholderCleared = true;
-            }
-            let value = cardNumberInput.value.replace(/\D/g, ''); // Remove all non-digit characters
-            if (value.length > 16) {
-                value = value.slice(0, 16); // Limit to 16 digits
-            }
-            let formattedValue = value.replace(/(\d{4})(?=\d)/g, "$1 "); // Add space every 4 digits
-            cardNumberInput.value = formattedValue; // No padding with asterisks
-        });
-    
-        expiryDateInput.addEventListener("input", function() {
-            if (!expiryDatePlaceholderCleared) {
-                expiryDateInput.value = '';
-                expiryDatePlaceholderCleared = true;
-            }
-            let value = expiryDateInput.value.replace(/\D/g, ''); // Remove all non-digit characters
-            if (value.length > 4) {
-                value = value.slice(0, 4); // Limit to 4 digits
-            }
-            let formattedValue = value.replace(/(\d{2})(?=\d)/g, "$1/"); // Add slash after 2 digits
-            expiryDateInput.value = formattedValue;
-        });
-    
-        // Prevent default behavior of contenteditable divs
-        cardNumberInput.addEventListener("keydown", function(e) {
-            if (e.key === "Backspace" || e.key === "Delete") {
-                return;
-            }
-            if (cardNumberInput.value.length >= 19 && !e.ctrlKey && !e.metaKey) {
-                e.preventDefault();
-            }
-        });
-    
-        expiryDateInput.addEventListener("keydown", function(e) {
-            if (e.key === "Backspace" || e.key === "Delete") {
-                return;
-            }
-            if (expiryDateInput.value.length >= 5 && !e.ctrlKey && !e.metaKey) {
-                e.preventDefault();
-            }
-        });
-    });
-    
-    function showVisaCard() {
-      const visaCardSection = document.getElementById("visaCardSection");
-      visaCardSection.classList.remove("hidden");
-      visaCardSection.classList.add("visible");
-  }
-        const container = document.querySelector(".seat_container");
-        const seats = document.querySelectorAll(".row_2 .seat:not(.booked)");
-        const count = document.getElementById("count");
-        const total = document.getElementById("total");
-        const price = document.getElementById("price");
-        const seatNumber = document.getElementById("seat_number");
-        const ticketPrice = document.getElementById("ticketPrice").value;
-        const seatIdsInput = document.getElementById("seat_ids");
-        const totalPriceInput = document.getElementById("total_price");
-       
-        populateUI();
+      
+    const containerGo = document.querySelector(".seat_container");
+    const containerReturn = document.querySelector(".seat_container_2");
+    const seatsGo = document.querySelectorAll(".row_2 .seat:not(.booked)");
+    const seatsReturn = document.querySelectorAll(".row_3 .seat:not(.booked)");
+    const countGo = document.getElementById("countDeparture");
+    const countReturn = document.getElementById("countReturn");
+    const totalGo = document.getElementById("totalDeparture");
+    const totalReturn = document.getElementById("totalReturn");
+    const price = document.getElementById("price");
+    const seatNumberGo = document.getElementById('seatNumberDeparture');
+    const seatNumberReturn = document.getElementById('seatNumberReturn');
+    const ticketGoPrice = document.getElementById("ticketPriceDeparture").value;
+    const ticketReturnPrice = document.getElementById("ticketPriceReturn").value;
+    const seatIdsInput = document.getElementById("seat_ids");
+    const totalPriceInput = document.getElementById("total_price");
+   
+    populateUI();
 
-        const updateSelectedCount = () => {
-          const selectedSeats = document.querySelectorAll(".row_2 .seat.selected");
-
-          const seatsIndex = [...selectedSeats].map((seat) => {
-              return [...seats].indexOf(seat);
+    const updateSelectedCount = () => {
+      const selectedSeatsGo = document.querySelectorAll(".row_2 .seat.selected");
+      const selectedSeatsReturn = document.querySelectorAll(".row_3 .seat.selected");
+      const seatsIndexGo = [...selectedSeatsGo].map((seat) => {
+          return [...seatsGo].indexOf(seat);
+      });
+      const seatsIndexReturn = [...selectedSeatsReturn].map((seat) => {
+          return [...seatsReturn].indexOf(seat);
+      });
+      localStorage.setItem("selectedSeatsGo", JSON.stringify(seatsIndexGo));
+      localStorage.setItem("selectedSeatsReturn", JSON.stringify(seatsIndexReturn));
+      const selectedSeatsCount = selectedSeatsGo.length;
+      const selectedSeatsCountReturn = selectedSeatsReturn.length;
+      countGo.innerText = selectedSeatsCount;
+      totalGo.innerText = (selectedSeatsCount * ticketGoPrice).toFixed(2);
+      countReturn.innerText = selectedSeatsCountReturn;
+      totalReturn.innerText = (selectedSeatsCountReturn * ticketReturnPrice).toFixed(2);
+      price.innerText = (selectedSeatsCount * ticketGoPrice + selectedSeatsCountReturn * ticketReturnPrice).toFixed(2);
+      
+      
+      // Update seat numbers
+     const selectedSeatNumbersGo = [...selectedSeatsGo].map(seat => seat.dataset.name).join(', ');
+      seatNumberGo.innerText = selectedSeatNumbersGo;
+      const selectedSeatNumbersReturn = [...selectedSeatsReturn].map(seat => seat.dataset.name).join(', ');
+      seatNumberReturn.innerText = selectedSeatNumbersReturn;
+      const selectedSeatIDGo = [...selectedSeatsGo].map(seat => seat.id).join(', ');
+      const selectedSeatIDReturn = [...selectedSeatsReturn].map(seat => seat.id).join(', ');
+       // Update hidden inputs
+      //seatIdsInput.value = selectedSeatID;
+      //totalPriceInput.value = (selectedSeatsCount * ticketPrice).toFixed(2);; 
+    };
+     
+    function populateUI() {
+      const selectedSeatsGo = JSON.parse(localStorage.getItem("selectedSeatsGo"));
+      const selectedSeatsReturn = JSON.parse(localStorage.getItem("selectedSeatsReturn"));
+      if (selectedSeatsGo !== null && selectedSeatsGo.length > 0) {
+          seatsGo.forEach((seat, index) => {
+          if (selectedSeatsGo.indexOf(index) > -1) {
+              seat.classList.add("selected");
+          }
           });
-
-          localStorage.setItem("selectedSeats", JSON.stringify(seatsIndex));
-
-          const selectedSeatsCount = selectedSeats.length;
-
-          count.innerText = selectedSeatsCount;
-          total.innerText = (selectedSeatsCount * ticketPrice).toFixed(2);
-          price.innerText = (selectedSeatsCount * ticketPrice).toFixed(2);
-          
-          
-          // Update seat numbers
-         const selectedSeatNumbers = [...selectedSeats].map(seat => seat.dataset.name).join(', ');
-          seatNumber.innerText = selectedSeatNumbers;
-
-          const selectedSeatID = [...selectedSeats].map(seat => seat.id).join(', ');
-          
-           // Update hidden inputs
-          //seatIdsInput.value = selectedSeatID;
-          //totalPriceInput.value = (selectedSeatsCount * ticketPrice).toFixed(2);; 
-        };
-         
-        function populateUI() {
-          const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats"));
-
-          if (selectedSeats !== null && selectedSeats.length > 0) {
-              seats.forEach((seat, index) => {
-              if (selectedSeats.indexOf(index) > -1) {
-                  seat.classList.add("selected");
-              }
-              });
+      }
+      if (selectedSeatsReturn !== null && selectedSeatsReturn.length > 0) {
+          seatsReturn.forEach((seat, index) => {
+          if (selectedSeatsReturn.indexOf(index) > -1) {
+              seat.classList.add("selected");
           }
-          }
-
-        container.addEventListener("click", (e) => {
+          });
+    }
+  }
+        containerGo.addEventListener("click", (e) => {
           if (
               e.target.classList.contains("seat") &&
               !e.target.classList.contains("booked")
@@ -469,9 +434,25 @@
           updateSelectedCount();
           }
        });
+        containerReturn.addEventListener("click", (e) => {
+            if (
+                e.target.classList.contains("seat") &&
+                !e.target.classList.contains("booked")
+            ) {
+              const selectedSeatsCount = document.querySelectorAll(".row_3_1 .seat.selected, .row_3 .seat.selected").length;
+              if (e.target.classList.contains("selected")) {
+                e.target.classList.remove("selected");
+            } else if (selectedSeatsCount < 5) {
+                e.target.classList.add("selected");
+            } else {
+                alert("Bạn đã chon đủ số ghế.");
+            }
+            updateSelectedCount();
+            }
+        });
        
-       const selectedSeats = document.querySelectorAll(".row_2 .seat.selected");
-       const listselectedSeatID = [...selectedSeats].map(seat => seat.id);
+       const selectedSeatsGo = document.querySelectorAll(".row_2 .seat.selected");
+       const listselectedSeatGoID = [...selectedSeatsGo].map(seat => seat.id);
         const submitForm = document.getElementById('form-test');
         submitForm.addEventListener('submit', function (event) {
             event.preventDefault();

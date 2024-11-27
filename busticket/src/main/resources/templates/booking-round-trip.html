@@ -71,8 +71,9 @@
                       <small>Đã Bán</small>
                     </li>
                   </ul>
+                <div class="d-flex flex-row">
                   <!-- Seat trip here-->
-                  <div th:switch="${seatTypeTrip}">
+                  <div th:switch="${seatTypeTrip}" class="space_right_large">
                     
                     <!-- Seat container for economy -->
                     <div  th:case="'economy'">
@@ -129,7 +130,7 @@
                     </div>
                   </div>
                   <!-- Seat roundtrip here--> 
-                  <div th:switch="${seatTypeRoundTrip}">
+                  <div th:switch="${seatTypeRoundTrip}" class="space_left_large">
                     
                     <!-- Seat container for economy -->
                     <div  th:case="'economy'">
@@ -185,9 +186,11 @@
                       <p>No matching seat type found. Current type: <span th:text="${seatTypeRoundTrip}"></span></p>
                     </div>
                   </div>
+                </div>
            </div>   
+           <div class="d-flex full flex-wrap">
          <!-- Trip info here-->
-         <div class="confirm_info trip-card d-flex align-self-start flex-column col-sm-4">
+         <div class="confirm_info trip-card d-flex align-self-start flex-column">
           <h3 class="full text-dark">Thông tin lượt đi</h3>
           <div class="full d-flex justify-content-between">
             <h4 class="full d-flex   ">Tuyến xe</h4>
@@ -217,8 +220,8 @@
           
         </div> 
         <!-- roundTrip info here-->
-        <div class="confirm_info trip-card d-flex align-self-start flex-column col-sm-4">
-          <h3 class="full text-dark">Thông tin lượt đi</h3>
+        <div class="confirm_info trip-card d-flex align-self-start flex-column ">
+          <h3 class="full text-dark">Thông tin lượt về</h3>
           <div class="full d-flex justify-content-between">
             <h4 class="full d-flex   ">Tuyến xe</h4>
             <span th:text="${roundTrip.route.name}" class="full d-flex justify-content-end text_right "></span>
@@ -246,6 +249,7 @@
           <input type="hidden" id="ticketPrice" th:value="${roundTrip.price}">
           
         </div> 
+        </div>
     </div>
     <!-- booking section end -->
     <!--User information start-->

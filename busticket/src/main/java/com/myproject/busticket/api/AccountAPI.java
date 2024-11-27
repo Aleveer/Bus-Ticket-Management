@@ -200,55 +200,52 @@ public class AccountAPI {
         }
     }
 
-    private ResponseEntity<Map<String, Object>> deleteControllerAndStaff(Account account) {
-        Map<String, Object> response = new HashMap<>();
-
+    private void deleteControllerAndStaff(Account account) {
         List<Controller> controllers = controllerService.getControllerByAccount(account);
         if (!controllers.isEmpty()) {
-            controllerService.deleteController(controllers.get(0));
+            for (Controller controller : controllers) {
+                controllerService.deleteController(controller);
+            }
         }
 
         List<Staff> staffs = staffService.getStaffByAccount(account);
         if (!staffs.isEmpty()) {
-            staffService.deleteStaff(staffs.get(0));
+            for (Staff staff : staffs) {
+                staffService.deleteStaff(staff);
+            }
         }
-
-        response.put("message", "Controller and Staff deleted successfully.");
-        return ResponseEntity.ok(response);
     }
 
-    private ResponseEntity<Map<String, Object>> deleteDriverAndStaff(Account account) {
-        Map<String, Object> response = new HashMap<>();
-
+    private void deleteDriverAndStaff(Account account) {
         List<Driver> drivers = driverService.getDriverByAccount(account);
         if (!drivers.isEmpty()) {
-            driverService.deleteDriver(drivers.get(0));
+            for (Driver driver : drivers) {
+                driverService.deleteDriver(driver);
+            }
         }
 
         List<Staff> staffs = staffService.getStaffByAccount(account);
         if (!staffs.isEmpty()) {
-            staffService.deleteStaff(staffs.get(0));
+            for (Staff staff : staffs) {
+                staffService.deleteStaff(staff);
+            }
         }
-
-        response.put("message", "Driver and Staff deleted successfully.");
-        return ResponseEntity.ok(response);
     }
 
-    private ResponseEntity<Map<String, Object>> deleteDriverAndController(Account account) {
-        Map<String, Object> response = new HashMap<>();
-
+    private void deleteDriverAndController(Account account) {
         List<Driver> drivers = driverService.getDriverByAccount(account);
         if (!drivers.isEmpty()) {
-            driverService.deleteDriver(drivers.get(0));
+            for (Driver driver : drivers) {
+                driverService.deleteDriver(driver);
+            }
         }
 
         List<Controller> controllers = controllerService.getControllerByAccount(account);
         if (!controllers.isEmpty()) {
-            controllerService.deleteController(controllers.get(0));
+            for (Controller controller : controllers) {
+                controllerService.deleteController(controller);
+            }
         }
-
-        response.put("message", "Driver and Controller deleted successfully.");
-        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/new-account")
@@ -356,6 +353,7 @@ public class AccountAPI {
                 response.put("message", "Account not found.");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
+
             // check account role:
             boolean isAdmin = SecurityUtil.getCurrentUserRoles().stream()
                     .anyMatch(role -> role.getAuthority().equals(AccountRole.admin.toString().toUpperCase()));
@@ -364,6 +362,7 @@ public class AccountAPI {
                 response.put("message", "You can't update another admin account.");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
             }
+
             // Validate input data
             String email = (String) updatedAccount.get("email");
             String role = (String) updatedAccount.get("role");
@@ -372,6 +371,14 @@ public class AccountAPI {
             String status = (String) updatedAccount.get("status");
             String password = (String) updatedAccount.get("password");
             String confirmPassword = (String) updatedAccount.get("confirmPassword");
+
+            // check if anything changed, if not return:
+            if (email.equals(account.getEmail()) && role.equals(account.getRole().getRoleName())
+                    && fullName.equals(account.getFullName()) && phone.equals(account.getPhone())
+                    && status.equals(account.getStatus().name()) && (password == null || password.isEmpty())) {
+                response.put("message", "No changes detected.");
+                return ResponseEntity.badRequest().body(response);
+            }
 
             if (email == null || email.isEmpty()) {
                 response.put("message", "Email is required.");
@@ -420,7 +427,8 @@ public class AccountAPI {
             }
 
             // Check if the role is being changed
-            if (!account.getRole().getRoleName().equalsIgnoreCase(role)) {
+            boolean roleChanged = !account.getRole().getRoleName().equalsIgnoreCase(role);
+            if (roleChanged) {
                 // Check if the account is assigned to any trips
                 if (account.getRole().getRoleName().equalsIgnoreCase(AccountRole.controller.name())) {
                     List<Controller> controllers = controllerService.getControllerByAccount(account);
@@ -460,7 +468,6 @@ public class AccountAPI {
                 account.setRole(accountRole);
             }
 
-            // Update other account details
             account.setEmail(email);
             account.setFullName(fullName);
             account.setPhone(phone);

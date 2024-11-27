@@ -33,25 +33,6 @@
             margin-top: 20px;
         }
 
-        .schedule-table {
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .schedule-table th,
-        .schedule-table td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        .schedule-table th {
-            background-color: #f8f9fa;
-        }
-
-        .schedule-table tbody tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
         #controllerCalendar {
             max-width: 900px;
             margin: 0 auto;
@@ -106,6 +87,47 @@
 
         .search-box .btn-search:hover {
             background-color: #0056b3;
+        }
+
+        .pagination-list {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            justify-content: center;
+            /* Center the pagination buttons */
+        }
+
+        .pagination-list li {
+            margin: 0 5px;
+        }
+
+        .pagination-list li a {
+            display: block;
+            padding: 8px 12px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            color: #007bff;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .pagination-list li a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .pagination-list li.active a {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .pagination-list li span {
+            display: block;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: #ccc;
         }
     </style>
 </head>
@@ -168,7 +190,12 @@
                         <!-- Buses will be dynamically loaded here -->
                     </tbody>
                 </table>
-                <div id="selectedBusDetails" class="mt-3"></div>
+                <div class="pagination d-flex justify-content-center">
+                    <ul class="pagination-list" id="busPaginationControls">
+                        <!-- Pagination controls will be dynamically generated here -->
+                    </ul>
+                </div>
+                <!-- <div id="selectedBusDetails" class="mt-3"></div> -->
             </div>
             <div id="busSchedule" class="mt-4">
                 <h3>Upcoming Trips for Selected Bus</h3>
@@ -196,7 +223,12 @@
                         <!-- Drivers will be dynamically loaded here -->
                     </tbody>
                 </table>
-                <div id="selectedDriverDetails" class="mt-3"></div>
+                <div class="pagination  d-flex justify-content-center">
+                    <ul class="pagination-list" id="driverPaginationControls">
+                        <!-- Pagination controls will be dynamically generated here -->
+                    </ul>
+                </div>
+                <!-- <div id="selectedDriverDetails" class="mt-3"></div> -->
             </div>
 
 
@@ -227,7 +259,13 @@
                         <!-- Controllers will be dynamically loaded here -->
                     </tbody>
                 </table>
-                <div id="selectedControllerDetails" class="mt-3"></div>
+                <div class="pagination d-flex justify-content-center">
+                    <ul class="pagination-list" id="controllerPaginationControls">
+                        <!-- Pagination controls will be dynamically generated here -->
+                    </ul>
+                </div>
+
+                <!-- <div id="selectedControllerDetails" class="mt-3"></div> -->
             </div>
             <div id="controllerSchedule" class="mt-4">
                 <h3>Upcoming Trips for Selected Controller</h3>
@@ -256,7 +294,14 @@
                         <!-- Staff will be dynamically loaded here -->
                     </tbody>
                 </table>
-                <div id="selectedStaffDetails" class="mt-3"></div>
+
+                <div class="pagination  d-flex justify-content-center">
+                    <ul class="pagination-list" id="staffPaginationControls">
+                        <!-- Pagination controls will be dynamically generated here -->
+                    </ul>
+                </div>
+
+                <!-- <div id="selectedStaffDetails" class="mt-3"></div> -->
             </div>
             <h2 class="mt-4">Select Route</h2>
             <div class="search-box">
@@ -280,7 +325,12 @@
                         <!-- Routes will be dynamically loaded here -->
                     </tbody>
                 </table>
-                <div id="selectedRouteDetails" class="mt-3"></div>
+                <div class="pagination">
+                    <ul class="pagination-list" id="routePaginationControls">
+                        <!-- Pagination controls will be dynamically generated here -->
+                    </ul>
+                </div>
+                <!-- <div id="selectedRouteDetails" class="mt-3"></div> -->
             </div>
 
             <div class="text-center">
@@ -299,8 +349,8 @@
         function loadBuses(page, searchTerm = "") {
             $.ajax({
                 url: "/api/bus/buses",
-                data: { page: page, size: 10, searchValue: searchTerm },
                 method: "GET",
+                data: { page: page, size: 10, searchValue: searchTerm },
                 success: function (data) {
                     var buses = data.buses;
                     var totalPages = data.totalPages;
@@ -482,6 +532,7 @@
                             "</tr>"
                         );
                     });
+
                     // Clear the pagination controls
                     $("#controllerPaginationControls").empty();
 
@@ -550,7 +601,7 @@
                     // Clear the table body
                     $("#staffTableBody").empty();
 
-                    // Populate the table with staffs
+                    // Populate the table with staff
                     staffs.forEach(function (staff) {
                         $("#staffTableBody").append(
                             "<tr>" +
@@ -613,7 +664,7 @@
                     }
                 },
                 error: function (error) {
-                    console.error('Error loading staffs:', error);
+                    console.error('Error loading staff:', error);
                 }
             });
         }

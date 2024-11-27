@@ -220,19 +220,52 @@ public class BookingController {
         model.addAttribute("seatTypeRoundTrip", roundTrip.getBus().getSeatType().toString().trim());
         return "booking-round-trip";
     }
-    @PostMapping("/home/index/booking/roundtrip")
-    public String booking(@ModelAttribute Booking outboundTicket, @ModelAttribute Booking returnTicket) {
-        if (!customerService.hasCustomer(outboundTicket.getCustomer().getEmail())) {
-            customerService.create(outboundTicket.getCustomer());
-            outboundTicket.getCustomer()
-                    .setCustomerId(customerService.findIDByEmail(outboundTicket.getCustomer().getEmail()));
-        }
+    @PostMapping("/home/index/booking/roundtrip-payment")
+    public ResponseEntity<String> booking(@RequestBody List<BookingInfoDTO> listBooking,
+                                          HttpServletRequest request) {
+        try {
+            long amount = 0;
+            for (BookingInfoDTO bookingInfoDTO : listBooking) {
+                // Giữ chỗ trong 15p
+                // đổi trạng thái số ghế
+                List<Integer> listSeatId = bookingInfoDTO.getTicketInfoDTO().getSeatNumbers().stream()
+                        .map(Integer::valueOf)
+                        .toList();
+                seatReservationsService.updateStatusReserved(listSeatId,
+                        bookingInfoDTO.getTicketInfoDTO().getTripId());
 
-        // set isRoundTrip to true
-        // set roundTripID
-        // bookingService.createTicket(outboundTicket);
-        // bookingService.createTicket(returnTicket);
-        return "redirect:/";
+                // format amount
+                amount += (long) (bookingInfoDTO.getTicketInfoDTO().getPrice() * 25000);
+            }
+
+            //long amount = (long) (bookingInfoDTO.getTicketInfoDTO().getPrice() * 25000);
+            VNPayResponse vnPayResponse = vnPayService.createVNPayPayment(amount, "NCB", request);
+
+            Map<String, String> params = VNPayUtil.extractParamsFromUrl(vnPayResponse.paymentURL());
+            boolean isPaymentValid = vnPayService.verifyVNPayPayment(params, params.get("vnp_SecureHash"));
+
+            if (isPaymentValid) {
+                System.out.println("Payment URL: " + vnPayResponse.paymentURL());
+                return ResponseEntity.ok(vnPayResponse.paymentURL());
+            } else {
+                return ResponseEntity.badRequest().body("Không thể tạo link thanh toán");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace(); // Log đầy đủ stacktrace
+            throw ex; // Để @ExceptionHandler xử lý
+        }
+    }
+
+    @PostMapping("/home/index/booking/roundtrip-payment/save")
+    public String saveBooking(@RequestBody List<BookingInfoDTO> bookingInfoDTO) throws MessagingException {
+        //BookingInfoDTO bookingInfoDTO = (BookingInfoDTO) session.getAttribute("bookingInfoDTO");
+        String paymentDate = bookingInfoDTO.get(0).getPaymentDate();
+        // Định dạng của chuỗi
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        // Chuyển đổi chuỗi thành LocalDateTime
+        LocalDateTime paymentDateFormat = LocalDateTime.parse(paymentDate, formatter);
+        bookingService.createTicketRoundTrip(bookingInfoDTO, paymentDateFormat);
+        return "index";
     }
 
     @GetMapping("/easy-bus/booking-detail/{bookingId}")

@@ -99,8 +99,6 @@ public class BookingService {
                 newBooking.setCustomer(customerService.getCustomerByEmail(email));
             } else { // Nếu ko thì là kh lần đầu => tạo account mới
                 newCustomer.setEmail(email);
-                newCustomer.setName(booking.getCustomer().getName());
-                newCustomer.setPhone(booking.getCustomer().getPhone());
                 customerService.create(newCustomer);
                 newBooking.setCustomer(newCustomer);
             }
@@ -157,6 +155,142 @@ public class BookingService {
         context.setVariable("totalFee", billDetail.getFee());
         try {
             emailService.sendBookingEmail(email, subject, "email-template", context);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void createTicketRoundTrip(List<BookingInfoDTO> booking, LocalDateTime paymentDate) {
+        Booking newBookingTrip = new Booking();
+        Booking newBookingRoundTrip = new Booking();
+        Customer newCustomer = new Customer();
+
+        // xử lý thông tin khách hàng
+        String email = null;
+        // Có login
+        if (checkLogin() != null ) {
+            // đã từng đặt xe chưa, rồi thì lấy cus đó
+            if (customerService.existsByEmail(checkLogin())){
+                newBookingTrip.setCustomer(customerService.getCustomerByEmail(checkLogin()));
+                newBookingRoundTrip.setCustomer(customerService.getCustomerByEmail(checkLogin()));
+                email = checkLogin();
+            } else {     //chưa thì thêm cus
+                newCustomer.setEmail(checkLogin());
+                customerService.create(newCustomer);
+
+                newBookingTrip.setCustomer(newCustomer);
+                newBookingRoundTrip.setCustomer(newCustomer);
+
+                email = checkLogin();
+            }
+
+        } else { // ko login
+            email = newBookingTrip.getCustomer().getEmail();
+            // email có tồn tại account thì dùng account đó
+            if (accountService.getUserByEmail(email).isPresent()) {
+                newBookingTrip.setCustomer(customerService.getCustomerByEmail(email));
+                newBookingRoundTrip.setCustomer(customerService.getCustomerByEmail(email));
+            } else if (customerService.existsByEmail(email)) { // Nếu đã là kh mà chưa có account thì lấy cus
+                newBookingTrip.setCustomer(customerService.getCustomerByEmail(email));
+                newBookingRoundTrip.setCustomer(customerService.getCustomerByEmail(email));
+            } else { // Nếu ko thì là kh lần đầu => tạo account mới
+                newCustomer.setEmail(email);
+                newCustomer.setName(newBookingTrip.getCustomer().getName());
+                newCustomer.setPhone(newBookingTrip.getCustomer().getPhone());
+                customerService.create(newCustomer);
+                newBookingTrip.setCustomer(newCustomer);
+                newBookingTrip.setCustomer(newCustomer);
+            }
+        }
+
+
+        // lưu vé
+        int tripId = booking.get(0).getTicketInfoDTO().getTripId();
+        int returnTripId = booking.get(1).getTicketInfoDTO().getTripId();
+        newBookingTrip.setTrip(tripService.findTripById(tripId));
+        newBookingRoundTrip.setTrip(tripService.findTripById(returnTripId));
+
+        byte numberOfSeatTrip = booking.get(0).getTicketInfoDTO().getNumberOfSeat();
+        byte numberOfSeatRoundTrip = booking.get(1).getTicketInfoDTO().getNumberOfSeat();
+        newBookingTrip.setNumberOfSeat(numberOfSeatTrip);
+        newBookingRoundTrip.setNumberOfSeat(numberOfSeatRoundTrip);
+        newBookingTrip.setRoundTrip(true);
+        newBookingRoundTrip.setRoundTrip(true);
+        newBookingTrip.setRoundTripId("RT" + newBookingRoundTrip.getBookingId() + newBookingTrip.getCustomer().getCustomerId());
+        newBookingRoundTrip.setRoundTripId("RT" + newBookingRoundTrip.getBookingId() + newBookingTrip.getCustomer().getCustomerId());
+        bookingRepository.save(newBookingTrip);
+        bookingRepository.save(newBookingRoundTrip);
+
+        // đổi trạng thái số ghế
+        List<Integer> listTripSeatId = booking.get(0).getTicketInfoDTO().getSeatNumbers().stream()
+                .map(Integer::valueOf)
+                .toList();
+        int bookingTripId = newBookingTrip.getBookingId();
+        seatReservationsService.updateStatusWithBooking(listTripSeatId,
+                bookingTripId);
+
+        List<Integer> listRoundTripSeatId = booking.get(0).getTicketInfoDTO().getSeatNumbers().stream()
+                .map(Integer::valueOf)
+                .toList();
+        int bookingRoundTripId = newBookingTrip.getBookingId();
+        seatReservationsService.updateStatusWithBooking(listRoundTripSeatId,
+                bookingRoundTripId);
+
+        // lấy seat name tương ứng với từng seat id
+        List<String> seatNameTrip = new ArrayList<>();
+        for (Integer seatId : listTripSeatId) {
+            seatNameTrip.add((busSeatsService.getSeatNameById(seatId)));
+        }
+
+        List<String> seatNameRoundTrip = new ArrayList<>();
+        for (Integer seatId : listRoundTripSeatId) {
+            seatNameRoundTrip.add((busSeatsService.getSeatNameById(seatId)));
+        }
+
+        // lưu hóa đơn
+        Bill bill = new Bill();
+        bill.setCustomer(newBookingTrip.getCustomer());
+        bill.setPaymentMethod(PaymentMethod.vnpay);
+        bill.setPaymentDate(paymentDate);
+        billService.save(bill);
+
+        // lưu chi tiết hóa đơn
+        Bill_Detail billDetailTrip = new Bill_Detail();
+        Bill_Detail billDetailRoundTrip = new Bill_Detail();
+        billDetailTrip.setBill(bill);
+        billDetailTrip.setTrip(newBookingTrip.getTrip());
+        billDetailTrip.setNumberOfTicket(numberOfSeatTrip);
+        billDetailTrip.setFee(newBookingTrip.getTrip().getPrice() * numberOfSeatTrip);
+        billDetailTrip.setTicketType(TicketType.round_trip_ticket);
+
+        billDetailRoundTrip.setBill(bill);
+        billDetailRoundTrip.setTrip(newBookingRoundTrip.getTrip());
+        billDetailRoundTrip.setNumberOfTicket(numberOfSeatRoundTrip);
+        billDetailRoundTrip.setFee(newBookingRoundTrip.getTrip().getPrice() * numberOfSeatRoundTrip);
+        billDetailRoundTrip.setTicketType(TicketType.round_trip_ticket);
+
+        billDetailService.save(billDetailTrip);
+        billDetailService.save(billDetailRoundTrip);
+
+        // send Email
+        Context context = new Context(Locale.forLanguageTag("vi"));
+        String subject = "[EASYBUS] HÓA ĐƠN ĐIỆN TỬ CỦA VÉ KHỨ HỒI SỐ" + newBookingTrip.getBookingId() + "VÀ" + newBookingRoundTrip.getBookingId();
+        context.setVariable("routeName", newBookingTrip.getTrip().getRoute().getName());
+        context.setVariable("departureTime", newBookingTrip.getTrip().getDepartureTime());
+        context.setVariable("departureTime", newBookingTrip.getTrip().getDepartureTime());
+        context.setVariable("numberOfSeat", numberOfSeatTrip);
+        context.setVariable("listSeat", seatNameTrip);
+        context.setVariable("totalFee", billDetailTrip.getFee());
+
+        context.setVariable("routeName", newBookingRoundTrip.getTrip().getRoute().getName());
+        context.setVariable("departureTime", newBookingRoundTrip.getTrip().getDepartureTime());
+        context.setVariable("departureTime", newBookingRoundTrip.getTrip().getDepartureTime());
+        context.setVariable("numberOfSeat", numberOfSeatRoundTrip);
+        context.setVariable("listSeat", seatNameRoundTrip);
+        context.setVariable("totalFee", billDetailRoundTrip.getFee());
+        try {
+            emailService.sendBookingEmail(email, subject, "email-roundtrip-template", context);
         } catch (MessagingException e) {
             e.printStackTrace();
         }

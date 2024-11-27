@@ -125,7 +125,7 @@
       );
       $.ajax({
         url: "/api/checkpoint/checkpoints",
-        data: { page: page, size: 10, search: searchTerm },
+        data: { page: page, size: 10, searchValue: searchTerm },
         method: "GET",
         success: function (data) {
           console.log("Checkpoints data received:", data);

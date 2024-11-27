@@ -11,11 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerService {
     @Autowired
-    CustomerRepository customerRepository;
-
-    public CustomerService(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
+    private CustomerRepository customerRepository;
 
     public int findIDByEmail(String email) {
         return customerRepository.findByEmail(email).getCustomerId();
@@ -36,6 +32,7 @@ public class CustomerService {
     public boolean existsByEmail(String email) {
         return customerRepository.existsByEmail(email);
     }
+
     public Customer create(Customer customer) {
         return customerRepository.saveAndFlush(customer);
     }
@@ -43,4 +40,11 @@ public class CustomerService {
     public Page<Customer> getAll(Pageable pageable) {
         return customerRepository.findAll(pageable);
     }
+
+    public Page<Customer> searchCustomersByNameOrEmailOrPhone(Pageable pageable, String searchValue) {
+        return customerRepository.findByNameContainingOrEmailContainingOrPhoneContainingAllIgnoreCase(searchValue,
+                searchValue,
+                pageable);
+    }
+
 }

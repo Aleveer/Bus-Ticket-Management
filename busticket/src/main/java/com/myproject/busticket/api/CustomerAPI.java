@@ -26,10 +26,17 @@ public class CustomerAPI {
     private CustomerService customerService;
 
     @GetMapping("/customers")
-    public ResponseEntity<Map<String, Object>> getGuests(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
+    public ResponseEntity<Map<String, Object>> getCustomers(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size,
+            @RequestParam(required = false) String searchValue) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Customer> customerPages = customerService.getAll(pageable);
+        Page<Customer> customerPages;
+
+        if (searchValue != null && !searchValue.isEmpty()) {
+            customerPages = customerService.searchCustomersByNameOrEmailOrPhone(pageable, searchValue);
+        } else {
+            customerPages = customerService.getAll(pageable);
+        }
 
         List<CustomerDTO> customerDTOs = customerPages.getContent().stream()
                 .map(customer -> new CustomerDTO(

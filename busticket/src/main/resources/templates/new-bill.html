@@ -224,7 +224,7 @@
         function loadTrips(page, searchTerm = "") {
             $.ajax({
                 url: "/api/trip/trips",
-                data: { page: page, size: 7, search: searchTerm },
+                data: { page: page, size: 7, searchValue: searchTerm },
                 success: function (data) {
                     var trips = data.trips;
                     var totalPages = data.totalPages;
@@ -298,7 +298,7 @@
         function loadRoundTrips(page, searchTerm = "") {
             $.ajax({
                 url: "/api/trip/trips",
-                data: { page: page, size: 7, search: searchTerm },
+                data: { page: page, size: 7, searchValue: searchTerm },
                 success: function (data) {
                     var trips = data.trips;
                     var totalPages = data.totalPages;
@@ -372,7 +372,7 @@
         function loadCustomers(page, searchTerm = "") {
             $.ajax({
                 url: "/api/customer/customers",
-                data: { page: page, size: 7, search: searchTerm },
+                data: { page: page, size: 7, searchValue: searchTerm },
                 success: function (data) {
                     var customers = data.customers;
                     var totalPages = data.totalPages;

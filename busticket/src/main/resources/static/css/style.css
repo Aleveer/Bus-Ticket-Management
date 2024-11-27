@@ -238,8 +238,14 @@ button {
 .space_left {
     margin-left: 5px;
 }
+.space_left_large {
+    margin-left: 50px;
+}
 .space_right {
     margin-right: 5px;
+}
+.space_right_large {
+    margin-right: 50px;
 }
 .text_right {
     text-align: right;

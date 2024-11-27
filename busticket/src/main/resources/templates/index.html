@@ -64,10 +64,12 @@
                         <i class="bi bi-person-circle"></i>
                      </a>
                      <div class="dropdown-content">
-                        <!-- <span sec:authentication="name"></span> -->
+                        <span sec:authentication="name"></span>
+                        
                         <ul class="dropdown-info d-flex flex-column">
                            <li><a th:href="@{booking-history}"></a></li>
-                           <li><a th:href="@{personal-profile}">Profile</a></li>
+                           <li sec:authorize="hasAuthority('ADMIN') or hasAuthority('STAFF')"> <a class="text-dark" href="/easy-bus/dashboard">Dashboard</a></li>
+                           <li ><button th:href="@{personal-profile}">Profile</button></li>
                            <li>
                               <button th:data-email="${#authentication.name}" onclick="logout()">Logout</button>
                            </li>

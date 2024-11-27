@@ -155,14 +155,8 @@
    <div class="fashion_section">
       <div class="container">
 
-            <div th:if="${#lists.isEmpty(trips)}" class="d-flex flex-column justify-content-center space">
-               <i class="bi bi-list-stars d-flex flex-grow justify-content-center  h1"></i>
-               <p class="d-flex flex-grow justify-content-center nospace about_text_4 ">Không tìm thấy chuyến xe nào.</p> 
-            </div>
-            <div th:if="${#lists.isEmpty(returnTrips)}" class="d-flex flex-column justify-content-center space">
-               <i class="bi bi-list-stars d-flex flex-grow justify-content-center  h1"></i>
-               <p class="d-flex flex-grow justify-content-center nospace about_text_4 ">Không tìm thấy chuyến xe nào.</p> 
-            </div>
+            
+            
             <div th:if="${tripType == 'round-trip' && !#lists.isEmpty(trips) || tripType == 'round-trip' && !#lists.isEmpty(returnTrips)}" class="box-card d-flex flex-row justify-content-between full">
                <div class="trip-go d-flex justify-content-center full" id="tripGo" onclick="showTrips('go')">
                      <p class="about_text_4">CHUYẾN ĐI - <span th:text="${date}" ></span> </p> 
@@ -178,7 +172,11 @@
                </div>
                
              </div>
-         <div class="tripGo-container" id="listOfTripGo">
+         <div class="tripGo-container " id="listOfTripGo">
+            <div th:if="${#lists.isEmpty(trips)}" class="d-flex flex-column justify-content-center space">
+               <i class="bi bi-list-stars d-flex flex-grow justify-content-center  h1"></i>
+               <p class="d-flex flex-grow justify-content-center nospace about_text_4 ">Không tìm thấy chuyến xe nào.</p> 
+            </div>
             <div class="trip-card d-flex flex-wrap full" th:each="trip: ${trips}" >   
                <div class="trip-time ">
                   <div class="d-flex justify-content-between">
@@ -220,6 +218,10 @@
             </div>
          </div>
          <div class="tripReturn-container" id="listOfTripReturn">
+            <div th:if="${#lists.isEmpty(returnTrips)}" class="d-flex flex-column justify-content-center space">
+               <i class="bi bi-list-stars d-flex flex-grow justify-content-center  h1"></i>
+               <p class="d-flex flex-grow justify-content-center nospace about_text_4 ">Không tìm thấy chuyến xe nào.</p> 
+            </div>
             <div class="trip-card d-flex flex-wrap full" th:each="trip: ${returnTrips}" >   
                <div class="trip-time ">
                   <div class="d-flex justify-content-between">
@@ -251,18 +253,26 @@
                       <span th:text="${routeParts.length > 1 ? routeParts[1] : ''}"></span>
                     </div>
                   </div>
-                  <span th:text="${trip.tripId}"></span>
+                  
                   <button class="choose-trip-button" th:if="${tripType == 'round-trip'}" th:onclick="selectTrip('return',  [[${trip.tripId}]])">
                      Chọn chuyến
                  </button>
                </div>
             </div>
          </div>
-         <form class="booking-detail-form" th:if="${tripType == 'round-trip'}" id="bookingDetailForm" th:action="@{'/home/index/booking-roundtrip'}" method="get">
-            <input type="hidden" id="departureTripId" name="departureTripId" />
-            <input type="hidden" id="returnTripId" name="returnTripId" />
-            <button class="choose-trip-button" type="submit">Chọn chuyến</button>
-        </form>
+         <div class="d-flex  trip-card">
+            <!-- Elements to display selected trips -->
+            <div id="selectedTrips" style="margin-top: 20px;">
+               <h4>Chuyến đi đã chọn:</h4>
+               <p id="selectedDepartureTrip">Chưa chọn chuyến đi</p>
+               <p id="selectedReturnTrip">Chưa chọn chuyến về</p>
+            </div>
+            <form class="booking-detail-form d-flex justify-content-center" th:if="${tripType == 'round-trip'}" id="bookingDetailForm" th:action="@{'/home/index/booking-roundtrip'}" method="get">
+               <input type="hidden" id="departureTripId" name="departureTripId" />
+               <input type="hidden" id="returnTripId" name="returnTripId" />
+               <button class="choose-trip-button" type="submit">Xác Nhận</button>
+         </form>
+        </div>
       </div>
    </div>
    <!-- footer section start -->
@@ -358,15 +368,13 @@
            if (type === 'departure') {
                console.log(tripId);
                selectedDepartureTripId = tripId;
-               console.log(selectedDepartureTripId);
                document.getElementById('departureTripId').value = tripId;
-            
+               document.getElementById('selectedDepartureTrip').innerText = `Chuyến đi đã chọn: ${tripId}`;
            } else if (type === 'return') {
             console.log(tripId);
                selectedReturnTripId = tripId;
-               console.log(selectedReturnTripId);
                document.getElementById('returnTripId').value = tripId;
-               
+               document.getElementById('selectedReturnTrip').innerText = `Chuyến về đã chọn: ${tripId}`;
            }
            updateFormAction();
        }

@@ -121,7 +121,7 @@
           .then(response => response.json())
           .then(data => {
             console.log('Top Customer Data:', data);
-            const dataPoints = data.map(item => ({ label: item[0], y: item[1] }));
+            const dataPoints = data.map(item => ({ label: item.email, y: item.numberOfBookings }));
 
             const chart = new CanvasJS.Chart("topCustomerChart", {
               theme: "light2",

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myproject.busticket.dto.CustomerBookingDTO;
 import com.myproject.busticket.services.CustomerService;
 import com.myproject.busticket.services.TripService;
 
@@ -25,7 +26,7 @@ public class StatisticsAPI {
     private TripService tripService;
 
     @GetMapping("/top-customer")
-    public List<Object[]> getTopCustomerByBookings(
+    public List<CustomerBookingDTO> getTopCustomerByBookings(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         return customerService.getTopCustomerByBookingsInRange(startDate, endDate, 5);

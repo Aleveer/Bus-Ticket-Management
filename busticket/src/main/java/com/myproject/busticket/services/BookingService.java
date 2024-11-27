@@ -71,8 +71,18 @@ public class BookingService {
         // xử lý thông tin khách hàng
         String email = booking.getCustomer().getEmail();
         // Có login
-        if (checkLogin() != null) {
-            newBooking.setCustomer(customerService.getCustomerByEmail(checkLogin()));
+        if (checkLogin() != null ) {
+            // đã từng đặt xe chưa, rồi thì lấy cus đó
+            if (customerService.existsByEmail(checkLogin())){
+                newBooking.setCustomer(customerService.getCustomerByEmail(checkLogin()));
+            } else {     //chưa thì thêm cus
+                newCustomer.setEmail(checkLogin());
+                newCustomer.setName(booking.getCustomer().getName());
+                newCustomer.setPhone(booking.getCustomer().getPhone());
+                customerService.create(newCustomer);
+                newBooking.setCustomer(newCustomer);
+            }
+
         } else { // ko login
             // email có tồn tại account thì dùng account đó
             if (accountService.getUserByEmail(email).isPresent()) {

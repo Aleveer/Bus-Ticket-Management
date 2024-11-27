@@ -2,7 +2,10 @@ package com.myproject.busticket.repositories;
 
 import com.myproject.busticket.dto.RouteTripCountDTO;
 import com.myproject.busticket.models.Bus;
+import com.myproject.busticket.models.Controller;
+import com.myproject.busticket.models.Driver;
 import com.myproject.busticket.models.Route;
+import com.myproject.busticket.models.Staff;
 import com.myproject.busticket.models.Trip;
 
 import org.springframework.data.domain.Page;
@@ -82,4 +85,10 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
             "GROUP BY t.route.code " +
             "ORDER BY COUNT(t) DESC")
     List<RouteTripCountDTO> findTripCountByRouteCode(@Param("routeCode") String routeCode, Pageable pageable);
+
+    List<Trip> findByDriver(Driver driver);
+
+    List<Trip> findByController(Controller controller);
+
+    List<Trip> findByStaff(Staff staff);
 }

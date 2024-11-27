@@ -28,7 +28,9 @@ import com.myproject.busticket.enums.AccountStatus;
 import com.myproject.busticket.models.Account;
 import com.myproject.busticket.models.Controller;
 import com.myproject.busticket.models.Driver;
+import com.myproject.busticket.models.Role;
 import com.myproject.busticket.models.Staff;
+import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.services.AccountService;
 import com.myproject.busticket.services.AuthenticationService;
 import com.myproject.busticket.services.ControllerService;
@@ -37,6 +39,7 @@ import com.myproject.busticket.services.JwtService;
 import com.myproject.busticket.services.RoleService;
 import com.myproject.busticket.services.StaffService;
 import com.myproject.busticket.services.TokenStoreService;
+import com.myproject.busticket.services.TripService;
 import com.myproject.busticket.utilities.SecurityUtil;
 import com.myproject.busticket.validations.AccountValidation;
 
@@ -48,8 +51,12 @@ import jakarta.servlet.http.HttpServletResponse;
 public class AccountAPI {
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private TripService tripService;
 
     @Autowired
     private RoleService roleService;
@@ -174,133 +181,6 @@ public class AccountAPI {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/update-account/{accountId}")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> updateAccount(@PathVariable int accountId,
-            @RequestBody Map<String, Object> updatedAccount, HttpServletResponse httpResponse) {
-        Map<String, Object> response = new HashMap<>();
-
-        try {
-            Account account = accountService.getById(accountId);
-            if (account == null) {
-                response.put("success", false);
-                response.put("message", "Account not found.");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            Account currentAccount = SecurityUtil.getCurrentAccount();
-
-            // Check if the current user has admin authority
-            boolean isAdmin = SecurityUtil.getCurrentUserRoles().stream()
-                    .anyMatch(role -> role.getAuthority().equals(AccountRole.admin.toString().toUpperCase()));
-
-            // Admin role can't change other admin role but can change own account
-            if (isAdmin && account.getRole().getRoleName().equalsIgnoreCase(AccountRole.admin.toString())
-                    && currentAccount.getId() != accountId) {
-                response.put("success", false);
-                response.put("message", "You don't have permission to update another admin account.");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-            }
-
-            // Validate role
-            String role = (String) updatedAccount.get("role");
-            if (role == null || !EnumSet
-                    .of(AccountRole.admin, AccountRole.customer, AccountRole.controller, AccountRole.driver,
-                            AccountRole.staff)
-                    .contains(AccountRole.valueOf(role))) {
-                response.put("success", false);
-                response.put("message", "Invalid or missing role.");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            // Validate fullname
-            String fullname = (String) updatedAccount.get("fullName");
-            if (fullname == null) {
-                response.put("success", false);
-                response.put("message", "Fullname is required.");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            // Validate phone number
-            String phoneNumber = (String) updatedAccount.get("phone");
-            if (phoneNumber == null || !AccountValidation.isValidPhone(phoneNumber)) {
-                response.put("success", false);
-                response.put("message", "Invalid or missing phone number.");
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            // Validate status
-            String status = (String) updatedAccount.get("status");
-            if (status == null) {
-                response.put("success", false);
-                response.put("message", "Status is required.");
-                return ResponseEntity.badRequest().body(response);
-            }
-            // Handle email if it's changed
-            String newEmail = (String) updatedAccount.get("email");
-            if (newEmail != null && !newEmail.equals(account.getEmail())) {
-                if (!AccountValidation.isValidEmail(newEmail)) {
-                    response.put("success", false);
-                    response.put("message", "Invalid email format.");
-                    return ResponseEntity.badRequest().body(response);
-                }
-                if (accountService.getUserByEmail(newEmail).isPresent()) {
-                    response.put("success", false);
-                    response.put("message", "Email already in use.");
-                    return ResponseEntity.badRequest().body(response);
-                }
-
-                // Check if the current email is currently logged in
-                String currentEmail = account.getEmail();
-                if (tokenStoreService.isTokenActive(currentEmail)) {
-                    // Invalidate the current JWT token for the current email
-                    tokenStoreService.invalidateToken(currentEmail);
-                }
-
-                // Update the email in the account
-                account.setEmail(newEmail);
-
-                // Invalidate the current JWT token and issue a new one
-                String newJwtToken = jwtService.generateToken(account);
-                Cookie cookie = new Cookie("jwtToken", newJwtToken);
-                cookie.setHttpOnly(true);
-                cookie.setSecure(true);
-                cookie.setPath("/");
-                cookie.setMaxAge(24 * 60 * 60);
-                httpResponse.addCookie(cookie);
-                response.put("jwtToken", newJwtToken);
-
-                // Store the new token
-                tokenStoreService.storeToken(newEmail, newJwtToken);
-            }
-
-            // Update account details
-            account.setFullName(fullname);
-            account.setPhone(phoneNumber);
-            account.setStatus(AccountStatus.valueOf(status));
-
-            // Update password if provided
-            String newPassword = (String) updatedAccount.get("newPassword");
-            if (newPassword != null && !newPassword.isEmpty()) {
-                account.setPassword(passwordEncoder.encode(newPassword));
-            }
-
-            // Handle role-specific logic
-            handleRoleSpecificLogic(account, role);
-
-            account.setRole(roleService.getRoleByName(role));
-            accountService.save(account);
-
-            response.put("success", true);
-            response.put("message", "Account updated successfully.");
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "Error updating account: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
     private void handleRoleSpecificLogic(Account account, String role) {
         if (AccountRole.driver.toString().equals(role)) {
             deleteControllerAndStaff(account);
@@ -320,47 +200,61 @@ public class AccountAPI {
         }
     }
 
-    private void deleteControllerAndStaff(Account account) {
-        List<Controller> controller = controllerService.getControllerByAccount(account);
-        if (controller.size() > 0) {
-            controllerService.deleteController(controller.get(0));
+    private ResponseEntity<Map<String, Object>> deleteControllerAndStaff(Account account) {
+        Map<String, Object> response = new HashMap<>();
+
+        List<Controller> controllers = controllerService.getControllerByAccount(account);
+        if (!controllers.isEmpty()) {
+            controllerService.deleteController(controllers.get(0));
         }
 
-        List<Staff> staff = staffService.getStaffByAccount(account);
-        if (staff.size() > 0) {
-            staffService.deleteStaff(staff.get(0));
+        List<Staff> staffs = staffService.getStaffByAccount(account);
+        if (!staffs.isEmpty()) {
+            staffService.deleteStaff(staffs.get(0));
         }
+
+        response.put("message", "Controller and Staff deleted successfully.");
+        return ResponseEntity.ok(response);
     }
 
-    private void deleteDriverAndStaff(Account account) {
-        List<Driver> driver = driverService.getDriverByAccount(account);
-        if (driver.size() > 0) {
-            driverService.deleteDriver(driver.get(0));
+    private ResponseEntity<Map<String, Object>> deleteDriverAndStaff(Account account) {
+        Map<String, Object> response = new HashMap<>();
+
+        List<Driver> drivers = driverService.getDriverByAccount(account);
+        if (!drivers.isEmpty()) {
+            driverService.deleteDriver(drivers.get(0));
         }
 
-        List<Staff> staff = staffService.getStaffByAccount(account);
-        if (staff.size() > 0) {
-            staffService.deleteStaff(staff.get(0));
+        List<Staff> staffs = staffService.getStaffByAccount(account);
+        if (!staffs.isEmpty()) {
+            staffService.deleteStaff(staffs.get(0));
         }
+
+        response.put("message", "Driver and Staff deleted successfully.");
+        return ResponseEntity.ok(response);
     }
 
-    private void deleteDriverAndController(Account account) {
-        List<Driver> driver = driverService.getDriverByAccount(account);
-        if (driver.size() > 0) {
-            driverService.deleteDriver(driver.get(0));
+    private ResponseEntity<Map<String, Object>> deleteDriverAndController(Account account) {
+        Map<String, Object> response = new HashMap<>();
+
+        List<Driver> drivers = driverService.getDriverByAccount(account);
+        if (!drivers.isEmpty()) {
+            driverService.deleteDriver(drivers.get(0));
         }
 
-        List<Controller> controller = controllerService.getControllerByAccount(account);
-        if (controller.size() > 0) {
-            controllerService.deleteController(controller.get(0));
+        List<Controller> controllers = controllerService.getControllerByAccount(account);
+        if (!controllers.isEmpty()) {
+            controllerService.deleteController(controllers.get(0));
         }
+
+        response.put("message", "Driver and Controller deleted successfully.");
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/new-account")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> newAccount(@RequestBody Map<String, Object> newAccountData) {
         Map<String, Object> response = new HashMap<>();
-
         try {
             // Validate input data
             String email = (String) newAccountData.get("email");
@@ -370,71 +264,53 @@ public class AccountAPI {
             String status = (String) newAccountData.get("status");
             String password = (String) newAccountData.get("password");
             String confirmPassword = (String) newAccountData.get("confirmPassword");
+
             if (email == null || email.isEmpty()) {
                 response.put("message", "Email is required.");
                 return ResponseEntity.badRequest().body(response);
             }
-
-            // check if email is valid:
             if (!AccountValidation.isValidEmail(email)) {
                 response.put("message", "Invalid email format.");
                 return ResponseEntity.badRequest().body(response);
             }
-
             if (role == null || role.isEmpty()) {
                 response.put("message", "Role is required.");
                 return ResponseEntity.badRequest().body(response);
             }
-
-            if (!AccountRole.admin.toString().equals(role) && !AccountRole.customer.toString().equals(role) &&
-                    !AccountRole.controller.toString().equals(role) && !AccountRole.driver.toString().equals(role) &&
-                    !AccountRole.staff.toString().equals(role)) {
+            if (!EnumSet.of(AccountRole.admin, AccountRole.customer, AccountRole.controller, AccountRole.driver,
+                    AccountRole.staff).contains(AccountRole.valueOf(role))) {
                 response.put("message", "Invalid role.");
                 return ResponseEntity.badRequest().body(response);
             }
-
             if (fullName == null || fullName.isEmpty()) {
                 response.put("message", "Fullname is required.");
                 return ResponseEntity.badRequest().body(response);
             }
-
             if (phone == null || phone.isEmpty() || !AccountValidation.isValidPhone(phone)) {
                 response.put("message", "Invalid phone number format.");
                 return ResponseEntity.badRequest().body(response);
             }
-
             if (status == null || status.isEmpty()) {
                 response.put("message", "Status is required.");
                 return ResponseEntity.badRequest().body(response);
             }
-
             if (password == null || password.isEmpty()) {
                 response.put("message", "Password is required.");
                 return ResponseEntity.badRequest().body(response);
             }
-
             if (confirmPassword == null || confirmPassword.isEmpty()) {
                 response.put("message", "Confirm password is required.");
                 return ResponseEntity.badRequest().body(response);
             }
-
             if (!password.equals(confirmPassword)) {
                 response.put("message", "Passwords do not match.");
                 return ResponseEntity.badRequest().body(response);
             }
-
-            // check if password is valid:
             if (!AccountValidation.isValidPassword(password)) {
                 response.put("message",
-                        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character.");
+                        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
                 return ResponseEntity.badRequest().body(response);
             }
-
-            if (!AccountValidation.isValidEmail(email)) {
-                response.put("message", "Invalid email format.");
-                return ResponseEntity.badRequest().body(response);
-            }
-
             if (accountService.getUserByEmail(email).isPresent()) {
                 response.put("message", "Email already in use.");
                 return ResponseEntity.badRequest().body(response);
@@ -443,25 +319,159 @@ public class AccountAPI {
             // Create new account
             Account newAccount = new Account();
             newAccount.setEmail(email);
-            newAccount.setRole(roleService.getRoleByName(role));
+            Role accountRole = roleService.getRoleByName(AccountRole.valueOf(role).name());
+            if (accountRole == null) {
+                response.put("message", "Role not found.");
+                return ResponseEntity.badRequest().body(response);
+            }
+            newAccount.setRole(accountRole);
             newAccount.setFullName(fullName);
             newAccount.setPhone(phone);
             newAccount.setStatus(AccountStatus.valueOf(status));
             newAccount.setPassword(passwordEncoder.encode(password));
+            newAccount.setEnabled(true);
 
-            // Handle role-specific logic
+            // Save the account first
+            accountService.save(newAccount);
             handleRoleSpecificLogic(newAccount, role);
-
             response.put("message", "Account created successfully.");
             if (AccountRole.admin.toString().equals(role)) {
                 response.put("warning", "You have created an account with admin privileges.");
             }
-
-            accountService.save(newAccount);
             return ResponseEntity.ok(response);
-
         } catch (Exception e) {
             response.put("message", "Error creating account: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PostMapping("/update-account/{accountId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateAccount(@PathVariable int accountId,
+            @RequestBody Map<String, Object> updatedAccount) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Account account = accountService.getById(accountId);
+            if (account == null) {
+                response.put("message", "Account not found.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+            // check account role:
+            boolean isAdmin = SecurityUtil.getCurrentUserRoles().stream()
+                    .anyMatch(role -> role.getAuthority().equals(AccountRole.admin.toString().toUpperCase()));
+
+            if (isAdmin && account.getRole().getRoleName().equalsIgnoreCase(AccountRole.admin.toString())) {
+                response.put("message", "You can't update another admin account.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+            // Validate input data
+            String email = (String) updatedAccount.get("email");
+            String role = (String) updatedAccount.get("role");
+            String fullName = (String) updatedAccount.get("fullName");
+            String phone = (String) updatedAccount.get("phone");
+            String status = (String) updatedAccount.get("status");
+            String password = (String) updatedAccount.get("password");
+            String confirmPassword = (String) updatedAccount.get("confirmPassword");
+
+            if (email == null || email.isEmpty()) {
+                response.put("message", "Email is required.");
+                return ResponseEntity.badRequest().body(response);
+            }
+            if (!AccountValidation.isValidEmail(email)) {
+                response.put("message", "Invalid email format.");
+                return ResponseEntity.badRequest().body(response);
+            }
+            if (role == null || role.isEmpty()) {
+                response.put("message", "Role is required.");
+                return ResponseEntity.badRequest().body(response);
+            }
+            if (!EnumSet.of(AccountRole.admin, AccountRole.customer, AccountRole.controller, AccountRole.driver,
+                    AccountRole.staff).contains(AccountRole.valueOf(role))) {
+                response.put("message", "Invalid role.");
+                return ResponseEntity.badRequest().body(response);
+            }
+            if (fullName == null || fullName.isEmpty()) {
+                response.put("message", "Fullname is required.");
+                return ResponseEntity.badRequest().body(response);
+            }
+            if (phone == null || phone.isEmpty() || !AccountValidation.isValidPhone(phone)) {
+                response.put("message", "Invalid phone number format.");
+                return ResponseEntity.badRequest().body(response);
+            }
+            if (status == null || status.isEmpty()) {
+                response.put("message", "Status is required.");
+                return ResponseEntity.badRequest().body(response);
+            }
+            if (password != null && !password.isEmpty()) {
+                if (confirmPassword == null || confirmPassword.isEmpty()) {
+                    response.put("message", "Confirm password is required.");
+                    return ResponseEntity.badRequest().body(response);
+                }
+                if (!password.equals(confirmPassword)) {
+                    response.put("message", "Passwords do not match.");
+                    return ResponseEntity.badRequest().body(response);
+                }
+                if (!AccountValidation.isValidPassword(password)) {
+                    response.put("message",
+                            "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
+                    return ResponseEntity.badRequest().body(response);
+                }
+                account.setPassword(passwordEncoder.encode(password));
+            }
+
+            // Check if the role is being changed
+            if (!account.getRole().getRoleName().equalsIgnoreCase(role)) {
+                // Check if the account is assigned to any trips
+                if (account.getRole().getRoleName().equalsIgnoreCase(AccountRole.controller.name())) {
+                    List<Controller> controllers = controllerService.getControllerByAccount(account);
+                    if (!controllers.isEmpty()) {
+                        List<Trip> trips = tripService.findTripsByController(controllers.get(0));
+                        if (!trips.isEmpty()) {
+                            response.put("message", "Controller is assigned to a trip and cannot be updated.");
+                            return ResponseEntity.badRequest().body(response);
+                        }
+                    }
+                } else if (account.getRole().getRoleName().equalsIgnoreCase(AccountRole.driver.name())) {
+                    List<Driver> drivers = driverService.getDriverByAccount(account);
+                    if (!drivers.isEmpty()) {
+                        List<Trip> trips = tripService.findTripsByDriver(drivers.get(0));
+                        if (!trips.isEmpty()) {
+                            response.put("message", "Driver is assigned to a trip and cannot be updated.");
+                            return ResponseEntity.badRequest().body(response);
+                        }
+                    }
+                } else if (account.getRole().getRoleName().equalsIgnoreCase(AccountRole.staff.name())) {
+                    List<Staff> staffs = staffService.getStaffByAccount(account);
+                    if (!staffs.isEmpty()) {
+                        List<Trip> trips = tripService.findTripsByStaff(staffs.get(0));
+                        if (!trips.isEmpty()) {
+                            response.put("message", "Staff is assigned to a trip and cannot be updated.");
+                            return ResponseEntity.badRequest().body(response);
+                        }
+                    }
+                }
+
+                // Update the role
+                Role accountRole = roleService.getRoleByName(AccountRole.valueOf(role).name());
+                if (accountRole == null) {
+                    response.put("message", "Role not found.");
+                    return ResponseEntity.badRequest().body(response);
+                }
+                account.setRole(accountRole);
+            }
+
+            // Update other account details
+            account.setEmail(email);
+            account.setFullName(fullName);
+            account.setPhone(phone);
+            account.setStatus(AccountStatus.valueOf(status));
+            handleRoleSpecificLogic(account, role);
+            accountService.save(account);
+
+            response.put("message", "Account updated successfully.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("message", "Error updating account: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
@@ -489,6 +499,37 @@ public class AccountAPI {
             if (isAdmin && account.getRole().getRoleName().equalsIgnoreCase(AccountRole.admin.toString())) {
                 response.put("message", "You can't delete another admin account.");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+
+            // Check if the role is controller, staff, or driver and ensure they are not
+            // assigned to any trips
+            if (account.getRole().getRoleName().equalsIgnoreCase(AccountRole.controller.name())) {
+                List<Controller> controllers = controllerService.getControllerByAccount(account);
+                if (!controllers.isEmpty()) {
+                    List<Trip> trips = tripService.findTripsByController(controllers.get(0));
+                    if (!trips.isEmpty()) {
+                        response.put("message", "Controller is assigned to a trip and cannot be deleted.");
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                    }
+                }
+            } else if (account.getRole().getRoleName().equalsIgnoreCase(AccountRole.driver.name())) {
+                List<Driver> drivers = driverService.getDriverByAccount(account);
+                if (!drivers.isEmpty()) {
+                    List<Trip> trips = tripService.findTripsByDriver(drivers.get(0));
+                    if (!trips.isEmpty()) {
+                        response.put("message", "Driver is assigned to a trip and cannot be deleted.");
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                    }
+                }
+            } else if (account.getRole().getRoleName().equalsIgnoreCase(AccountRole.staff.name())) {
+                List<Staff> staffs = staffService.getStaffByAccount(account);
+                if (!staffs.isEmpty()) {
+                    List<Trip> trips = tripService.findTripsByStaff(staffs.get(0));
+                    if (!trips.isEmpty()) {
+                        response.put("message", "Staff is assigned to a trip and cannot be deleted.");
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                    }
+                }
             }
 
             accountService.delete(accountId);

@@ -17,11 +17,8 @@ import org.springframework.stereotype.Service;
 public class DriverService {
     @Autowired
     private DriverRepository driverRepository;
-    DriverMapper driverMapper = Mappers.getMapper(DriverMapper.class);
 
-    public DriverService(DriverRepository driverRepository) {
-        this.driverRepository = driverRepository;
-    }
+    DriverMapper driverMapper = Mappers.getMapper(DriverMapper.class);
 
     public Driver getDriverById(int driverId) {
         return driverRepository.findById(driverId).orElse(null);

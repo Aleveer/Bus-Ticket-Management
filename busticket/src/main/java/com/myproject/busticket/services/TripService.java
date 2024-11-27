@@ -6,8 +6,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.mapstruct.factory.Mappers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,13 +16,15 @@ import com.myproject.busticket.dto.RouteTripCountDTO;
 import com.myproject.busticket.dto.TripDTO;
 import com.myproject.busticket.mapper.TripMapper;
 import com.myproject.busticket.models.Bus;
+import com.myproject.busticket.models.Controller;
+import com.myproject.busticket.models.Driver;
 import com.myproject.busticket.models.Route;
+import com.myproject.busticket.models.Staff;
 import com.myproject.busticket.models.Trip;
 import com.myproject.busticket.repositories.TripRepository;
 
 @Service
 public class TripService {
-    private static final Logger logger = LoggerFactory.getLogger(TripService.class);
     @Autowired
     private TripRepository tripRepository;
     TripMapper tripMapper = Mappers.getMapper(TripMapper.class);
@@ -144,5 +144,17 @@ public class TripService {
     public List<RouteTripCountDTO> getTripCountByRouteCode(String routeCode) {
         Pageable pageable = PageRequest.of(0, 5);
         return tripRepository.findTripCountByRouteCode(routeCode, pageable);
+    }
+
+    public List<Trip> findTripsByController(Controller controller) {
+        return tripRepository.findByController(controller);
+    }
+
+    public List<Trip> findTripsByStaff(Staff staff) {
+        return tripRepository.findByStaff(staff);
+    }
+
+    public List<Trip> findTripsByDriver(Driver driver) {
+        return tripRepository.findByDriver(driver);
     }
 }

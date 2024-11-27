@@ -12,6 +12,7 @@ import java.util.List;
 
 @Repository
 public interface ControllerRepository extends JpaRepository<Controller, Integer> {
+
     List<Controller> findByAccount(Account account);
 
     @Query("SELECT c FROM Controller c WHERE c.account.fullName LIKE %?1% OR c.account.email LIKE %?2%")

@@ -18,11 +18,6 @@ public class RoleService {
     @Autowired
     private RolePermissionRepository rolePermissionRepository;
 
-    public RoleService(RoleRepository roleRepository, RolePermissionRepository rolePermissionRepository) {
-        this.roleRepository = roleRepository;
-        this.rolePermissionRepository = rolePermissionRepository;
-    }
-
     public Role getRoleById(int id) {
         return roleRepository.findById(id).orElse(null);
     }

@@ -74,19 +74,19 @@ public class BookingController {
         if ("round-trip".equals(tripType) && returnDate != null && !returnDate.isEmpty()) {
             LocalDateTime dateReturn = LocalDate.parse(returnDate, formatter).atStartOfDay();
             List<TripDTO> returnTrips = tripService.searchTrip(destination, departure, dateReturn, numberOfTickets);
-            model.addAttribute("returnTrips", returnTrips);
+            model.addAttribute("returnTrips", returnTrips);  
         }
 
         // Lấy thông tin các tỉnh/thành cho dropdown bên front end
         List<String> provinces = routeCheckpointService.getAllProvinces();
         List<String> cities = routeCheckpointService.getAllCities();
 
-        model.addAttribute("tripType", "one-way");
+        model.addAttribute("tripType", "one-way" );
         model.addAttribute("provinces", provinces);
         model.addAttribute("cities", cities);
-
+              
         model.addAttribute("trips", trips);
-
+        
         model.addAttribute("tripType", tripType);
         model.addAttribute("departure", departure);
         model.addAttribute("destination", destination);
@@ -174,8 +174,7 @@ public class BookingController {
 
     @PostMapping("/home/index/booking/oneway-payment/save")
     public String saveBooking(@RequestBody BookingInfoDTO bookingInfoDTO) throws MessagingException {
-        // BookingInfoDTO bookingInfoDTO = (BookingInfoDTO)
-        // session.getAttribute("bookingInfoDTO");
+        //BookingInfoDTO bookingInfoDTO = (BookingInfoDTO) session.getAttribute("bookingInfoDTO");
         String paymentDate = bookingInfoDTO.getPaymentDate();
         // Định dạng của chuỗi
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
@@ -200,25 +199,22 @@ public class BookingController {
         List<SeatReservationsDTO> statusSeatsTrip = seatReservationsService.getListStatusSeat(tripId);
         List<SeatReservationsDTO> statusSeatsRoundTrip = seatReservationsService.getListStatusSeat(roundTripId);
 
-        // Trip
+        //Trip
 
         List<SeatReservationsDTO> firstFloorTrip = statusSeatsTrip.subList(0, statusSeatsTrip.size() / 2);
-        List<SeatReservationsDTO> secondFloorTrip = statusSeatsTrip.subList(statusSeatsTrip.size() / 2,
-                statusSeatsTrip.size());
+        List<SeatReservationsDTO> secondFloorTrip = statusSeatsTrip.subList(statusSeatsTrip.size() / 2, statusSeatsTrip.size());
 
-        // Round Trip
-        List<SeatReservationsDTO> firstFloorRoundTrip = statusSeatsRoundTrip.subList(0,
-                statusSeatsRoundTrip.size() / 2);
-        List<SeatReservationsDTO> secondFloorRoundTrip = statusSeatsRoundTrip.subList(statusSeatsRoundTrip.size() / 2,
-                statusSeatsRoundTrip.size());
+        //Round Trip
+        List<SeatReservationsDTO> firstFloorRoundTrip = statusSeatsRoundTrip.subList(0, statusSeatsRoundTrip.size() / 2);
+        List<SeatReservationsDTO> secondFloorRoundTrip = statusSeatsRoundTrip.subList(statusSeatsRoundTrip.size() / 2, statusSeatsRoundTrip.size());
 
-        // Trip
+        //Trip
         model.addAttribute("trip", trip);
         model.addAttribute("roundTrip", roundTrip);
         model.addAttribute("firstFloorTrip", firstFloorTrip);
         model.addAttribute("secondFloorTrip", secondFloorTrip);
 
-        // Round Trip
+        //Round Trip
         model.addAttribute("firstFloorRoundTrip", firstFloorRoundTrip);
         model.addAttribute("secondFloorRoundTrip", secondFloorRoundTrip);
 
@@ -230,10 +226,9 @@ public class BookingController {
         System.out.println("seatTypeRoundTrip: " + roundTrip.getBus().getSeatType().toString().trim());
         return "booking-round-trip";
     }
-
     @PostMapping("/home/index/booking/roundtrip-payment")
     public ResponseEntity<String> booking(@RequestBody List<BookingInfoDTO> listBooking,
-            HttpServletRequest request) {
+                                          HttpServletRequest request) {
         try {
             long amount = 0;
             for (BookingInfoDTO bookingInfoDTO : listBooking) {
@@ -249,7 +244,7 @@ public class BookingController {
                 amount += (long) (bookingInfoDTO.getTicketInfoDTO().getPrice() * 25000);
             }
 
-            // long amount = (long) (bookingInfoDTO.getTicketInfoDTO().getPrice() * 25000);
+            //long amount = (long) (bookingInfoDTO.getTicketInfoDTO().getPrice() * 25000);
             VNPayResponse vnPayResponse = vnPayService.createVNPayPayment(amount, "NCB", request);
 
             Map<String, String> params = VNPayUtil.extractParamsFromUrl(vnPayResponse.paymentURL());
@@ -269,11 +264,10 @@ public class BookingController {
 
     @PostMapping("/home/index/booking/roundtrip-payment/save")
     public String saveBooking(@RequestBody List<BookingInfoDTO> bookingInfoDTO) throws MessagingException {
-        // BookingInfoDTO bookingInfoDTO = (BookingInfoDTO)
-        // session.getAttribute("bookingInfoDTO");
         String paymentDate = bookingInfoDTO.get(0).getPaymentDate();
         // Định dạng của chuỗi
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
         // Chuyển đổi chuỗi thành LocalDateTime
         LocalDateTime paymentDateFormat = LocalDateTime.parse(paymentDate, formatter);
         bookingService.createTicketRoundTrip(bookingInfoDTO, paymentDateFormat);
@@ -346,11 +340,8 @@ public class BookingController {
             return "error";
         }
 
-        final Booking finalBooking = booking; // Create a final reference to booking
         List<SeatReservations> seatReservationsWithBookingId = seatReservations.stream()
-                .filter(seatReservation -> seatReservation.getBooking() != null
-                        && seatReservation.getBooking().getBookingId() == finalBooking.getBookingId())
-                .collect(Collectors.toList());
+                .filter(seatReservation -> seatReservation.getBooking() != null).collect(Collectors.toList());
 
         if (seatReservationsWithBookingId.isEmpty()) {
             model.addAttribute("message", "Seat reservation not found.");
@@ -376,6 +367,7 @@ public class BookingController {
                 model.addAttribute("message", "Round trip booking not found.");
                 return "error";
             }
+            final Booking finalBooking = booking;
             // Get the return trip (second booking in sequence)
             Booking roundTripBooking = roundTripBookings.stream()
                     .filter(b -> b.getBookingId() != finalBooking.getBookingId())
@@ -397,9 +389,7 @@ public class BookingController {
             }
 
             List<SeatReservations> roundTripSeatReservationsWithBookingId = roundTripSeatReservations.stream()
-                    .filter(seatReservation -> seatReservation.getBooking() != null
-                            && seatReservation.getBooking().getBookingId() == roundTripBooking.getBookingId())
-                    .collect(Collectors.toList());
+                    .filter(seatReservation -> seatReservation.getBooking() != null).collect(Collectors.toList());
 
             if (roundTripSeatReservationsWithBookingId.isEmpty()) {
                 model.addAttribute("message", "Seat reservation not found for round trip.");

@@ -97,6 +97,8 @@ public class BookingService {
                 newBooking.setCustomer(customerService.getCustomerByEmail(email));
             } else { // Nếu ko thì là kh lần đầu => tạo account mới
                 newCustomer.setEmail(email);
+                newCustomer.setName(booking.getCustomer().getName());
+                newCustomer.setPhone(booking.getCustomer().getPhone());
                 customerService.create(newCustomer);
                 newBooking.setCustomer(newCustomer);
             }
@@ -145,7 +147,6 @@ public class BookingService {
         Context context = new Context(Locale.forLanguageTag("vi"));
         String subject = "[EASYBUS] HÓA ĐƠN ĐIỆN TỬ CỦA VÉ SỐ " + newBooking.getBookingId();
         context.setVariable("routeName", newBooking.getTrip().getRoute().getName());
-        context.setVariable("departureTime", newBooking.getTrip().getDepartureTime());
         context.setVariable("departureTime", newBooking.getTrip().getDepartureTime());
         context.setVariable("numberOfSeat", numberOfSeat);
         context.setVariable("listSeat", seatName);
@@ -273,21 +274,19 @@ public class BookingService {
         // send Email
         Context context = new Context(Locale.forLanguageTag("vi"));
         String subject = "[EASYBUS] HÓA ĐƠN ĐIỆN TỬ CỦA VÉ KHỨ HỒI SỐ" + newBookingTrip.getBookingId() + "VÀ" + newBookingRoundTrip.getBookingId();
-        context.setVariable("routeName", newBookingTrip.getTrip().getRoute().getName());
-        context.setVariable("departureTime", newBookingTrip.getTrip().getDepartureTime());
-        context.setVariable("departureTime", newBookingTrip.getTrip().getDepartureTime());
-        context.setVariable("numberOfSeat", numberOfSeatTrip);
-        context.setVariable("listSeat", seatNameTrip);
-        context.setVariable("totalFee", billDetailTrip.getFee());
+        context.setVariable("routeNameTrip", newBookingTrip.getTrip().getRoute().getName());
+        context.setVariable("departureTimeTrip", newBookingTrip.getTrip().getDepartureTime());
+        context.setVariable("numberOfSeatTrip", numberOfSeatTrip);
+        context.setVariable("seatNameTrip", seatNameTrip);
+        context.setVariable("totalFeeTrip", billDetailTrip.getFee());
 
-        context.setVariable("routeName", newBookingRoundTrip.getTrip().getRoute().getName());
-        context.setVariable("departureTime", newBookingRoundTrip.getTrip().getDepartureTime());
-        context.setVariable("departureTime", newBookingRoundTrip.getTrip().getDepartureTime());
-        context.setVariable("numberOfSeat", numberOfSeatRoundTrip);
-        context.setVariable("listSeat", seatNameRoundTrip);
-        context.setVariable("totalFee", billDetailRoundTrip.getFee());
+        context.setVariable("routeNameRoundTrip", newBookingRoundTrip.getTrip().getRoute().getName());
+        context.setVariable("departureTimeRoundTrip", newBookingRoundTrip.getTrip().getDepartureTime());
+        context.setVariable("numberOfSeatRoundTrip", numberOfSeatRoundTrip);
+        context.setVariable("seatNameRoundTrip", seatNameRoundTrip);
+        context.setVariable("totalFeeRoundTrip", billDetailRoundTrip.getFee());
         try {
-            emailService.sendBookingEmail(email, subject, "email-roundtrip-template", context);
+            emailService.sendBookingEmail(email, subject, "roundTripEmail-template", context);
         } catch (MessagingException e) {
             e.printStackTrace();
         }

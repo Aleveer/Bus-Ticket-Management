@@ -74,6 +74,7 @@
                     <input type="hidden" id="payment_date" name="payment_date" th:value="${paymentTime}">
                 </div>
             </div>
+            <button class="btn btn-primary d-flex justify-content-center full" onclick="window.location.href='/home/index'">Trở về trang chủ</button>
         </div>
     </div>                    
 </body>
@@ -84,7 +85,7 @@
         let cookieArr = document.cookie.split(";");
         for (let i = 0; i < cookieArr.length; i++) {
             let cookiePair = cookieArr[i].split("=");
-            if (name == cookiePair[0].trim()) {
+            if (name === cookiePair[0].trim()) {
                 return decodeURIComponent(cookiePair[1]);
             }
         }

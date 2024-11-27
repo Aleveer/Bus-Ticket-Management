@@ -1,5 +1,6 @@
 package com.myproject.busticket.dto;
 
+import com.myproject.busticket.enums.SeatReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,5 +15,5 @@ public class SeatReservationsDTO {
     private BusSeatsDTO seat;
     private BookingDTO booking;
     private TripDTO trip;
-    private String status;
+    private SeatReservationStatus status;
 }

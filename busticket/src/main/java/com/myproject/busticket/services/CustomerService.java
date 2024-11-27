@@ -3,8 +3,12 @@ package com.myproject.busticket.services;
 import com.myproject.busticket.models.Customer;
 import com.myproject.busticket.repositories.CustomerRepository;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -47,4 +51,8 @@ public class CustomerService {
                 pageable);
     }
 
+    public List<Object[]> getTopCustomerByBookingsInRange(LocalDateTime startDate, LocalDateTime endDate, int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        return customerRepository.findTopCustomerByBookingsInRange(startDate, endDate, pageable);
+    }
 }

@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.mapstruct.factory.Mappers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import com.myproject.busticket.repositories.TripRepository;
 
 @Service
 public class TripService {
+    private static final Logger logger = LoggerFactory.getLogger(TripService.class);
     @Autowired
     private TripRepository tripRepository;
     TripMapper tripMapper = Mappers.getMapper(TripMapper.class);
@@ -134,5 +137,14 @@ public class TripService {
         } else {
             return tripRepository.findBySearchValueAndDepartureTimeBetween(query, startDate, endDate, pageable);
         }
+    }
+
+    public List<Object[]> getTripCountByRouteCode(String routeCode) {
+        logger.info("Fetching trip count for route code: {}", routeCode);
+        List<Object[]> result = tripRepository.findTripCountByRouteCode(routeCode);
+        for (Object[] row : result) {
+            logger.info("Route Code: {}, Trip Count: {}", row[0], row[1]);
+        }
+        return result;
     }
 }

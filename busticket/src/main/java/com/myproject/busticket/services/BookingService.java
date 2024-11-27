@@ -1,6 +1,7 @@
 package com.myproject.busticket.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,6 +37,7 @@ public class BookingService {
     private BillDetailService billDetailService;
 
     private EmailService emailService;
+    private Bus_SeatsService busSeatsService;
 
     public BookingService(BookingRepository bookingRepository,
             TripService tripService,
@@ -44,7 +46,8 @@ public class BookingService {
             SeatReservationsService seatReservationsService,
             BillService billService,
             BillDetailService billDetailService,
-            EmailService emailService) {
+            EmailService emailService,
+           Bus_SeatsService busSeatsService) {
         this.bookingRepository = bookingRepository;
         this.tripService = tripService;
         this.accountService = accountService;
@@ -53,6 +56,7 @@ public class BookingService {
         this.billService = billService;
         this.billDetailService = billDetailService;
         this.emailService = emailService;
+        this.busSeatsService = busSeatsService;
     }
 
     public Booking getBookingById(int bookingId) {
@@ -120,6 +124,12 @@ public class BookingService {
         int bookingID = newBooking.getBookingId();
         seatReservationsService.updateStatusWithBooking(listSeatId, bookingID);
 
+        // lấy seat name tương ứng với từng seat id
+        List<String> seatName = new ArrayList<>();
+        for (Integer seatId : listSeatId) {
+            seatName.add((busSeatsService.getSeatNameById(seatId)));
+        }
+
         // lưu hóa đơn
         Bill bill = new Bill();
         bill.setCustomer(newBooking.getCustomer());
@@ -143,7 +153,7 @@ public class BookingService {
         context.setVariable("departureTime", newBooking.getTrip().getDepartureTime());
         context.setVariable("departureTime", newBooking.getTrip().getDepartureTime());
         context.setVariable("numberOfSeat", numberOfSeat);
-        context.setVariable("listSeat", booking.getTicketInfoDTO().getSeatNumbers());
+        context.setVariable("listSeat", seatName);
         context.setVariable("totalFee", billDetail.getFee());
         try {
             emailService.sendBookingEmail(email, subject, "email-template", context);

@@ -345,7 +345,7 @@ public class AccountAPI {
     @PostMapping("/update-account/{accountId}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> updateAccount(@PathVariable int accountId,
-            @RequestBody Map<String, Object> updatedAccount) {
+            @RequestBody Map<String, Object> updatedAccount, HttpServletResponse httpResponse) {
         Map<String, Object> response = new HashMap<>();
         try {
             Account account = accountService.getById(accountId);
@@ -358,7 +358,9 @@ public class AccountAPI {
             boolean isAdmin = SecurityUtil.getCurrentUserRoles().stream()
                     .anyMatch(role -> role.getAuthority().equals(AccountRole.admin.toString().toUpperCase()));
 
-            if (isAdmin && account.getRole().getRoleName().equalsIgnoreCase(AccountRole.admin.toString())) {
+            Account currentAccount = SecurityUtil.getCurrentAccount();
+            if (isAdmin && account.getRole().getRoleName().equalsIgnoreCase(AccountRole.admin.toString())
+                    && currentAccount.getId() != accountId) {
                 response.put("message", "You can't update another admin account.");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
             }
@@ -388,6 +390,7 @@ public class AccountAPI {
                 response.put("message", "Invalid email format.");
                 return ResponseEntity.badRequest().body(response);
             }
+
             if (role == null || role.isEmpty()) {
                 response.put("message", "Role is required.");
                 return ResponseEntity.badRequest().body(response);
@@ -474,6 +477,23 @@ public class AccountAPI {
             account.setStatus(AccountStatus.valueOf(status));
             handleRoleSpecificLogic(account, role);
             accountService.save(account);
+
+            if (currentAccount != null && currentAccount.getId() == accountId) {
+                if (!currentAccount.getEmail().equals(email)) {
+                    // Invalidate the current JWT token and issue a new one
+                    String newJwtToken = jwtService.generateToken(account);
+                    Cookie cookie = new Cookie("jwtToken", newJwtToken);
+                    cookie.setHttpOnly(true);
+                    cookie.setSecure(true);
+                    cookie.setPath("/");
+                    cookie.setMaxAge(24 * 60 * 60);
+                    httpResponse.addCookie(cookie);
+                    response.put("jwtToken", newJwtToken);
+
+                    // Store the new token
+                    tokenStoreService.storeToken(email, newJwtToken);
+                }
+            }
 
             response.put("message", "Account updated successfully.");
             return ResponseEntity.ok(response);

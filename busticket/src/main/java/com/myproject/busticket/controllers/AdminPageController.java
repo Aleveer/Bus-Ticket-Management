@@ -81,7 +81,10 @@ public class AdminPageController {
 	@GetMapping("/trip-management")
 	public String adminTripPage(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "15") int size, Model model) {
-
+		Account account = SecurityUtil.getCurrentAccount();
+		if (account == null) {
+			return "redirect:/auth/login";
+		}
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Trip> tripsPage = tripService.getAll(pageable);
 
@@ -104,6 +107,10 @@ public class AdminPageController {
 	@GetMapping("/bus-management")
 	public String adminBusPage(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "15") int size, Model model) {
+		Account account = SecurityUtil.getCurrentAccount();
+		if (account == null) {
+			return "redirect:/auth/login";
+		}
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Bus> busesPage = busService.getAll(pageable);
 
@@ -126,6 +133,10 @@ public class AdminPageController {
 	@GetMapping("/route-management")
 	public String adminRoutePage(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "15") int size, Model model) {
+		Account account = SecurityUtil.getCurrentAccount();
+		if (account == null) {
+			return "redirect:/auth/login";
+		}
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Route> routesPage = routeService.getAll(pageable);
 
@@ -148,7 +159,10 @@ public class AdminPageController {
 	@GetMapping("/route-management/search")
 	public String adminSearchByCodeAndName(@RequestParam String searchValue, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "15") int size, Model model) {
-		System.out.println("searchValue: " + searchValue);
+		Account account = SecurityUtil.getCurrentAccount();
+		if (account == null) {
+			return "redirect:/auth/login";
+		}
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Route> routesSearchPage = routeService.searchRouteByCodeAndName(pageable, searchValue);
 
@@ -170,6 +184,10 @@ public class AdminPageController {
 	@GetMapping("/checkpoint-management")
 	public String adminCheckpointPage(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "15") int size, Model model) {
+		Account account = SecurityUtil.getCurrentAccount();
+		if (account == null) {
+			return "redirect:/auth/login";
+		}
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Checkpoint> checkpointPages = checkpointService.getAll(pageable);
 
@@ -192,6 +210,10 @@ public class AdminPageController {
 	@GetMapping("/account-management")
 	public String adminUserPage(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "15") int size, Model model) {
+		Account currentAccount = SecurityUtil.getCurrentAccount();
+		if (currentAccount == null) {
+			return "redirect:/auth/login";
+		}
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Account> accountPages = accountService.getAll(pageable);
 
@@ -226,6 +248,10 @@ public class AdminPageController {
 	@GetMapping("/booking-management")
 	public String bookingPage(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "15") int size, Model model) {
+		Account account = SecurityUtil.getCurrentAccount();
+		if (account == null) {
+			return "redirect:/auth/login";
+		}
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Booking> bookingPages = bookingService.getAll(pageable);
 
@@ -325,6 +351,10 @@ public class AdminPageController {
 	@GetMapping("/bill-management")
 	public String billPage(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "15") int size, Model model) {
+		Account account = SecurityUtil.getCurrentAccount();
+		if (account == null) {
+			return "redirect:/auth/login";
+		}
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Bill> billPages = billService.getAll(pageable);
 

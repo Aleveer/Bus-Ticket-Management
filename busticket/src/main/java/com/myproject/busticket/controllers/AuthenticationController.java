@@ -113,6 +113,10 @@ public class AuthenticationController {
             responseBody.put("success", false);
             responseBody.put("message", "Authentication failed: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseBody);
+        } catch (ValidationException e) {
+            responseBody.put("success", false);
+            responseBody.put("message", "Authentication failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
         } catch (Exception e) {
             responseBody.put("success", false);
             responseBody.put("message", "An error occurred: " + e.getMessage());
@@ -223,7 +227,7 @@ public class AuthenticationController {
         authenticationService.changePassword(currentPassword, newPassword);
         return ResponseEntity.ok("Password changed successfully");
     }
-    
+
     private void clearCurrentSession(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {

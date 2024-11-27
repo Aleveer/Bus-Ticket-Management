@@ -16,35 +16,31 @@ if (errorMessage) {
     alert(errorMessage);
 }
 
-document.getElementById("loginForm").addEventListener("submit", async function (event) {
+document.getElementById("loginForm").addEventListener("submit", function (event) {
     event.preventDefault();
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
-    try {
-        const response = await fetch("/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-        });
-
-        if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.statusText}`);
+    $.ajax({
+        url: "/auth/login",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ email, password }),
+        success: function (data) {
+            if (data.success) {
+                alert("Login successful");
+                window.localStorage.setItem("jwtToken", data.token);
+                window.location.href = "/home/index";
+            } else {
+                alert(`Failed to login: ${data.message}`);
+            }
+        },
+        error: function (xhr) {
+            let errorMessage = "An error occurred";
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage = xhr.responseJSON.message;
+            }
+            alert(`Error: ${errorMessage}`);
         }
-
-        const data = await response.json();
-
-        if (data.success) {
-            alert("Login successful");
-            window.localStorage.setItem("jwtToken", data.token);
-            window.location.href = "/home/index";
-        } else {
-            alert(`Failed to login: ${data.message}`);
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        alert(`Error: ${error.message}`);
-    }
+    });
 });

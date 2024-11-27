@@ -232,6 +232,9 @@ button {
 .space_bottom {
     margin-bottom: 20px;
 }
+.space_bottom_2 {
+    margin-bottom: 5px;
+}
 .nospace {
     margin-top: 0px;
 }
@@ -283,7 +286,7 @@ button {
 
 .dropdown-info a{
     color: #000 !important;
-    font-size: 12px !important;
+    font-size: 14px !important;
 }
 .dropdown:hover .dropdown-content {
     display: block;

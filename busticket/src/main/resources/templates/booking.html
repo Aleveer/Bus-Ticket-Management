@@ -47,7 +47,7 @@
 <body>
     <!-- header top section start -->
     <div class="logo_2 d-flex justify-content-center">
-        <a th:href="@{../index}"><img th:src="@{/images/EasyBus_processed.png}" /></a>
+        <a href="/home/index"><img th:src="@{/images/EasyBus_processed.png}" /></a>
     </div>
     <!-- header top section end -->
 
@@ -256,64 +256,7 @@
     <script>
       
 
-      document.addEventListener("DOMContentLoaded", function() {
-        const cardNumberInput = document.getElementById("cardNumber");
-        const expiryDateInput = document.getElementById("expiryDate");
-    
-        let cardNumberPlaceholderCleared = false;
-        let expiryDatePlaceholderCleared = false;
-    
-        cardNumberInput.addEventListener("input", function() {
-            if (!cardNumberPlaceholderCleared) {
-                cardNumberInput.value = '';
-                cardNumberPlaceholderCleared = true;
-            }
-            let value = cardNumberInput.value.replace(/\D/g, ''); // Remove all non-digit characters
-            if (value.length > 16) {
-                value = value.slice(0, 16); // Limit to 16 digits
-            }
-            let formattedValue = value.replace(/(\d{4})(?=\d)/g, "$1 "); // Add space every 4 digits
-            cardNumberInput.value = formattedValue; // No padding with asterisks
-        });
-    
-        expiryDateInput.addEventListener("input", function() {
-            if (!expiryDatePlaceholderCleared) {
-                expiryDateInput.value = '';
-                expiryDatePlaceholderCleared = true;
-            }
-            let value = expiryDateInput.value.replace(/\D/g, ''); // Remove all non-digit characters
-            if (value.length > 4) {
-                value = value.slice(0, 4); // Limit to 4 digits
-            }
-            let formattedValue = value.replace(/(\d{2})(?=\d)/g, "$1/"); // Add slash after 2 digits
-            expiryDateInput.value = formattedValue;
-        });
-    
-        // Prevent default behavior of contenteditable divs
-        cardNumberInput.addEventListener("keydown", function(e) {
-            if (e.key === "Backspace" || e.key === "Delete") {
-                return;
-            }
-            if (cardNumberInput.value.length >= 19 && !e.ctrlKey && !e.metaKey) {
-                e.preventDefault();
-            }
-        });
-    
-        expiryDateInput.addEventListener("keydown", function(e) {
-            if (e.key === "Backspace" || e.key === "Delete") {
-                return;
-            }
-            if (expiryDateInput.value.length >= 5 && !e.ctrlKey && !e.metaKey) {
-                e.preventDefault();
-            }
-        });
-    });
-    
-    function showVisaCard() {
-      const visaCardSection = document.getElementById("visaCardSection");
-      visaCardSection.classList.remove("hidden");
-      visaCardSection.classList.add("visible");
-  }
+      document.addEventListener('DOMContentLoaded', function() {
         const container = document.querySelector(".seat_container");
         const seats = document.querySelectorAll(".row_2 .seat:not(.booked)");
         const count = document.getElementById("count");
@@ -324,6 +267,8 @@
         const seatIdsInput = document.getElementById("seat_ids");
         const totalPriceInput = document.getElementById("total_price");
        
+        // Clear local storage on page load to avoid using outdated data
+        localStorage.removeItem("selectedSeats");
         populateUI();
 
         const updateSelectedCount = () => {
@@ -370,7 +315,7 @@
               e.target.classList.contains("seat") &&
               !e.target.classList.contains("booked")
           ) {
-            const selectedSeatsCount = document.querySelectorAll(".row_2_1 .seat.selected, .row_2 .seat.selected").length;
+            const selectedSeatsCount = document.querySelectorAll(".row_2 .seat.selected").length;
             if (e.target.classList.contains("selected")) {
               e.target.classList.remove("selected");
           } else if (selectedSeatsCount < 5) {
@@ -381,12 +326,14 @@
           updateSelectedCount();
           }
        });
+      
+    
        
-       const selectedSeats = document.querySelectorAll(".row_2 .seat.selected");
-       const listselectedSeatID = [...selectedSeats].map(seat => seat.id);
         const submitForm = document.getElementById('form-test');
         submitForm.addEventListener('submit', function (event) {
             event.preventDefault();
+            const selectedSeats = document.querySelectorAll(".row_2 .seat.selected");
+            const listselectedSeatID = [...selectedSeats].map(seat => seat.id);
             const formData = new FormData(submitForm);
             console.log(document.getElementById('trip_id').value);
             console.log(document.getElementById('count').innerText);
@@ -429,6 +376,7 @@
         });
 
       updateSelectedCount();
+    });
     </script>
 </body>
 </html>

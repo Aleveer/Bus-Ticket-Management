@@ -349,7 +349,7 @@
     <script>
       
 
-      
+      document.addEventListener('DOMContentLoaded', function() {  
     const containerGo = document.querySelector(".seat_container");
     const containerReturn = document.querySelector(".seat_container_2");
     const seatsGo = document.querySelectorAll(".row_2 .seat:not(.booked)");
@@ -365,7 +365,8 @@
     const ticketReturnPrice = document.getElementById("ticketPriceReturn").value;
     const seatIdsInput = document.getElementById("seat_ids");
     const totalPriceInput = document.getElementById("total_price");
-   
+    // Clear local storage on page load to avoid using outdated data
+    localStorage.removeItem("selectedSeats");
     populateUI();
 
     const updateSelectedCount = () => {
@@ -498,6 +499,7 @@
         });
 
       updateSelectedCount();
+    });
     </script>
 </body>
 </html>

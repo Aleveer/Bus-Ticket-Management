@@ -7,8 +7,6 @@ import java.util.Locale;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
@@ -47,7 +45,7 @@ public class BookingService {
             BillService billService,
             BillDetailService billDetailService,
             EmailService emailService,
-           Bus_SeatsService busSeatsService) {
+            Bus_SeatsService busSeatsService) {
         this.bookingRepository = bookingRepository;
         this.tripService = tripService;
         this.accountService = accountService;
@@ -75,12 +73,12 @@ public class BookingService {
         // xử lý thông tin khách hàng
         String email = null;
         // Có login
-        if (checkLogin() != null ) {
+        if (checkLogin() != null) {
             // đã từng đặt xe chưa, rồi thì lấy cus đó
-            if (customerService.existsByEmail(checkLogin())){
+            if (customerService.existsByEmail(checkLogin())) {
                 newBooking.setCustomer(customerService.getCustomerByEmail(checkLogin()));
                 email = checkLogin();
-            } else {     //chưa thì thêm cus
+            } else { // chưa thì thêm cus
                 newCustomer.setEmail(checkLogin());
                 newCustomer.setName(booking.getCustomer().getName());
                 newCustomer.setPhone(booking.getCustomer().getPhone());
@@ -103,7 +101,6 @@ public class BookingService {
                 newBooking.setCustomer(newCustomer);
             }
         }
-
 
         // lưu vé
         int tripId = booking.getTicketInfoDTO().getTripId();
@@ -327,6 +324,10 @@ public class BookingService {
 
     public List<Booking> findByCustomer(Customer customer) {
         return bookingRepository.findByCustomer(customer);
+    }
+
+    public Page<Booking> searchBookings(String searchValue, Pageable pageable) {
+        return bookingRepository.searchBookings(searchValue, pageable);
     }
 
 }

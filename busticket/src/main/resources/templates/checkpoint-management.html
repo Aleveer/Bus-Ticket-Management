@@ -5,12 +5,26 @@
   <title>Checkpoint Management</title>
   <div th:insert="~{dashboard-header.html}"></div>
   <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+<!--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />-->
   <style>
     .pagination-container {
       display: flex;
       justify-content: center;
     }
+
+    /*.search-box {*/
+    /*  display: flex;*/
+    /*  align-items: center;*/
+    /*  background-color: #f1f1f1;*/
+    /*  border-radius: 25px;*/
+    /*  padding: 5px 10px;*/
+    /*  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
+    /*  width: 100%;*/
+    /*  max-width: 600px;*/
+    /*  !* Adjust the max-width as needed *!*/
+    /*  margin: 20px auto;*/
+    /*  !* Center the search box and add some margin *!*/
+    /*}*/
 
     .search-box {
       display: flex;
@@ -21,10 +35,25 @@
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       width: 100%;
       max-width: 600px;
-      /* Adjust the max-width as needed */
       margin: 20px auto;
-      /* Center the search box and add some margin */
+      cursor: text; /* Đảm bảo con trỏ chuột hiển thị dạng văn bản trên toàn bộ hộp */
     }
+
+    .search-box form {
+      flex: 1; /* Giúp form chiếm toàn bộ không gian của search-box */
+      display: flex; /* Đảm bảo input bên trong form cũng căn chỉnh đúng */
+      align-items: center;
+    }
+
+    .search-box input {
+      flex: 1; /* Đảm bảo input chiếm toàn bộ không gian trong form */
+      border: none;
+      outline: none;
+      padding: 5px 10px;
+      font-size: 16px;
+      background-color: transparent; /* Để input hoà hợp với hộp nền */
+    }
+
 
     .input-search {
       flex: 1;

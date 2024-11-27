@@ -39,9 +39,59 @@
             margin: 0 auto;
         }
 
+        /*.search-box {*/
+        /*    display: flex;*/
+        /*    flex-wrap: wrap;*/
+        /*    align-items: center;*/
+        /*    background-color: #f1f1f1;*/
+        /*    border-radius: 10px;*/
+        /*    padding: 15px;*/
+        /*    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
+        /*    margin-bottom: 20px;*/
+        /*}*/
+
+        /*.search-box .form-group {*/
+        /*    flex: 1;*/
+        /*    margin-right: 15px;*/
+        /*}*/
+
+        /*.search-box .form-group label {*/
+        /*    display: block;*/
+        /*    margin-bottom: 5px;*/
+        /*    font-weight: bold;*/
+        /*}*/
+
+        /*.search-box .form-group input {*/
+        /*    width: 100%;*/
+        /*    padding: 10px;*/
+        /*    border: 1px solid #ccc;*/
+        /*    border-radius: 5px;*/
+        /*    font-size: 16px;*/
+        /*}*/
+
+        /*.search-box .btn-search {*/
+        /*    background-color: #007bff;*/
+        /*    border: none;*/
+        /*    color: white;*/
+        /*    padding: 10px 20px;*/
+        /*    border-radius: 5px;*/
+        /*    cursor: pointer;*/
+        /*    display: flex;*/
+        /*    align-items: center;*/
+        /*    justify-content: center;*/
+        /*    font-size: 16px;*/
+        /*}*/
+
+        /*.search-box .btn-search i {*/
+        /*    margin-right: 5px;*/
+        /*}*/
+
+        /*.search-box .btn-search:hover {*/
+        /*    background-color: #0056b3;*/
+        /*}*/
+
         .search-box {
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
             background-color: #f1f1f1;
             border-radius: 10px;
@@ -51,8 +101,12 @@
         }
 
         .search-box .form-group {
-            flex: 1;
-            margin-right: 15px;
+            flex: 1; /* Giúp các form-group chiếm tối đa không gian */
+            margin-right: 15px; /* Tạo khoảng cách giữa các trường nhập liệu */
+        }
+
+        .search-box .form-group:last-child {
+            margin-right: 0; /* Xóa khoảng cách phải cho phần tử cuối cùng */
         }
 
         .search-box .form-group label {
@@ -62,7 +116,7 @@
         }
 
         .search-box .form-group input {
-            width: 100%;
+            width: 100%; /* Đảm bảo input chiếm toàn bộ không gian của form-group */
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -76,7 +130,7 @@
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            display: flex;
+            display: inline-flex; /* Inline-flex để căn chỉnh icon và text trong nút */
             align-items: center;
             justify-content: center;
             font-size: 16px;
@@ -119,9 +173,9 @@
             <h2 class="mt-4">Select Bus</h2>
             <div class="search-box">
                 <input type="text" class="form-control" id="busSearchBox" placeholder="Search bus..." />
-                <button class="btn-search" id="searchBusButton" type="button" onclick="loadBuses(0)">
-                    <i class="ft-search"></i> Search
-                </button>
+<!--                <button class="btn-search" id="searchBusButton" type="button" onclick="loadBuses(0)">-->
+<!--                    <i class="ft-search"></i> Search-->
+<!--                </button>-->
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -151,9 +205,9 @@
             <h2 class="mt-4">Select Driver</h2>
             <div class="search-box">
                 <input type="text" class="form-control" id="driverSearchBox" placeholder="Search driver..." />
-                <button class="btn-search" id="searchDriverButton" type="button" onclick="loadDrivers(0)">
-                    <i class="ft-search"></i> Search
-                </button>
+<!--                <button class="btn-search" id="searchDriverButton" type="button" onclick="loadDrivers(0)">-->
+<!--                    <i class="ft-search"></i> Search-->
+<!--                </button>-->
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -186,9 +240,9 @@
             <h2 class="mt-4">Select Controller</h2>
             <div class="search-box">
                 <input type="text" class="form-control" id="controllerSearchBox" placeholder="Search controller..." />
-                <button class="btn-search" id="searchControllerButton" type="button" onclick="loadControllers(0)">
-                    <i class="ft-search"></i> Search
-                </button>
+<!--                <button class="btn-search" id="searchControllerButton" type="button" onclick="loadControllers(0)">-->
+<!--                    <i class="ft-search"></i> Search-->
+<!--                </button>-->
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -221,9 +275,9 @@
             <h2 class="mt-4">Select Staff</h2>
             <div class="search-box">
                 <input type="text" class="form-control" id="staffSearchBox" placeholder="Search staff..." />
-                <button class="btn-search" id="searchStaffButton" type="button" onclick="loadStaff(0)">
-                    <i class="ft-search"></i> Search
-                </button>
+<!--                <button class="btn-search" id="searchStaffButton" type="button" onclick="loadStaff(0)">-->
+<!--                    <i class="ft-search"></i> Search-->
+<!--                </button>-->
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -251,9 +305,9 @@
             <h2 class="mt-4">Select Route</h2>
             <div class="search-box">
                 <input type="text" class="form-control" id="routeSearchBox" placeholder="Search route..." />
-                <button class="btn-search" id="searchRouteButton" type="button" onclick="loadRoutes(0)">
-                    <i class="ft-search"></i> Search
-                </button>
+<!--                <button class="btn-search" id="searchRouteButton" type="button" onclick="loadRoutes(0)">-->
+<!--                    <i class="ft-search"></i> Search-->
+<!--                </button>-->
             </div>
             <div class="table-responsive">
                 <table class="table table-striped">

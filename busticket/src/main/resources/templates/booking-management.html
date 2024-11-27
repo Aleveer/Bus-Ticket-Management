@@ -5,6 +5,53 @@
     <title>Booking Management</title>
     <div th:insert="~{dashboard-header.html}"></div>
     <link rel="stylesheet" th:href="@{/theme-assets/css/pagination.css}">
+    <style>
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #f1f1f1;
+            border-radius: 25px;
+            padding: 5px 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .input-search {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 25px;
+        }
+
+        .input-search::placeholder {
+            color: #999;
+        }
+
+        .btn-search {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-search i {
+            font-size: 18px;
+        }
+
+        .btn-search:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar" data-open="click"
@@ -46,14 +93,15 @@
                                 <div class="heading-elements">
                                     <ul class="list-inline mb-0">
                                         <li><a data-action="search" title="Search"><i class="ft-search"></i></a></li>
-                                        <a th:href="@{/easy-bus/new-booking}" data-action="add-booking"
+                                        <!-- <a th:href="@{/easy-bus/new-booking}" data-action="add-booking"
                                             title="Add Booking">
                                             <i class="ft-plus"></i>
-                                        </a>
+                                        </a> -->
                                     </ul>
                                 </div>
-                                <div class="search-box" id="searchBox" style="display: none;">
-                                    <input type="text" class="input-search" placeholder="Search booking...">
+                                <div class="search-box" id="searchBox">
+                                    <input type="text" class="input-search" placeholder="Search booking..."
+                                        id="searchValue">
                                     <button class="btn-search" id="searchButton">
                                         <i class="ft-search"></i>
                                     </button>
@@ -75,22 +123,14 @@
                                         <tbody id="bookingTableBody">
                                             <tr th:each="booking : ${bookings}">
                                                 <td th:text="${booking.bookingId}"></td>
-                                                <td th:text="${booking.customer}"></td>
-                                                <td th:text="${booking.trip}"></td>
+                                                <td th:text="${booking.customer.name}"></td>
+                                                <td th:text="${booking.trip.route.name}"></td>
                                                 <td th:text="${booking.numberOfSeat}"></td>
-                                                <td th:text="${booking.roundTrip}"></td>
+                                                <td th:text="${booking.roundTrip ? 'Yes' : 'No'}"></td>
                                                 <td>
                                                     <button class="btn btn-primary btn-sm" title="View Details"
                                                         onclick="viewBookingDetails('${booking.bookingId}')">
                                                         <i class="ft-eye"></i>
-                                                    </button>
-                                                    <button class="btn btn-warning btn-sm" title="Update Booking"
-                                                        onclick="updateBooking('${booking.bookingId}')">
-                                                        <i class="ft-settings"></i>
-                                                    </button>
-                                                    <button class="btn btn-danger btn-sm" title="Delete Booking"
-                                                        onclick="deleteBooking('${booking.bookingId}')">
-                                                        <i class="ft-trash"></i>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -144,10 +184,10 @@
     <!-- BEGIN PAGE LEVEL JS-->
     <!-- END PAGE LEVEL JS-->
     <script>
-        function loadBookings(page) {
+        function loadBookings(page, searchValue = "") {
             $.ajax({
                 url: '/api/booking/bookings',
-                data: { page: page, size: 15 },
+                data: { page: page, size: 15, searchValue: searchValue },
                 success: function (data) {
                     var bookings = data.bookings;
                     var totalPages = data.totalPages;
@@ -162,7 +202,7 @@
                             '<tr>' +
                             '<td>' + booking.bookingId + '</td>' +
                             '<td>' + booking.customer.name + '</td>' +
-                            '<td>' + booking.trip.tripId + '</td>' +
+                            '<td>' + booking.trip.route.name + '</td>' +
                             '<td>' + booking.numberOfSeat + '</td>' +
                             '<td>' + (booking.roundTrip ? "Yes" : "No") + '</td>' +
                             "<td>" +
@@ -170,16 +210,6 @@
                             booking.bookingId +
                             "')\">" +
                             '<i class="ft-eye"></i>' +
-                            "</button>" +
-                            '<button class="btn btn-warning btn-sm" title="Update Booking" onclick="updateBooking(\'' +
-                            booking.bookingId +
-                            "')\">" +
-                            '<i class="ft-settings"></i>' +
-                            "</button>" +
-                            '<button class="btn btn-danger btn-sm" title="Delete Booking" onclick="deleteBooking(\'' +
-                            booking.bookingId +
-                            "')\">" +
-                            '<i class="ft-trash"></i>' +
                             "</button>" +
                             "</td>" +
                             '</tr>'
@@ -192,7 +222,7 @@
                     // Add Previous button
                     if (currentPage > 0) {
                         $('#paginationControls').append(
-                            '<li><a onclick="loadBookings(' + (currentPage - 1) + ')">&laquo;</a></li>'
+                            '<li><a onclick="loadBookings(' + (currentPage - 1) + ', \'' + searchValue + '\')">&laquo;</a></li>'
                         );
                     }
 
@@ -202,7 +232,7 @@
 
                     if (startPage > 0) {
                         $('#paginationControls').append(
-                            '<li><a onclick="loadBookings(0)">1</a></li>'
+                            '<li><a onclick="loadBookings(0, \'' + searchValue + '\')">1</a></li>'
                         );
                         if (startPage > 1) {
                             $('#paginationControls').append(
@@ -213,7 +243,7 @@
 
                     for (var i = startPage; i <= endPage; i++) {
                         $('#paginationControls').append(
-                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadBookings(' + i + ')">' + (i + 1) + '</a></li>'
+                            '<li class="' + (i === currentPage ? 'active' : '') + '"><a onclick="loadBookings(' + i + ', \'' + searchValue + '\')">' + (i + 1) + '</a></li>'
                         );
                     }
 
@@ -224,14 +254,14 @@
                             );
                         }
                         $('#paginationControls').append(
-                            '<li><a onclick="loadBookings(' + (totalPages - 1) + ')">' + totalPages + '</a></li>'
+                            '<li><a onclick="loadBookings(' + (totalPages - 1) + ', \'' + searchValue + '\')">' + totalPages + '</a></li>'
                         );
                     }
 
                     // Add Next button
                     if (currentPage < totalPages - 1) {
                         $('#paginationControls').append(
-                            '<li><a onclick="loadBookings(' + (currentPage + 1) + ')">&raquo;</a></li>'
+                            '<li><a onclick="loadBookings(' + (currentPage + 1) + ', \'' + searchValue + '\')">&raquo;</a></li>'
                         );
                     }
                 }
@@ -273,6 +303,18 @@
 
         $(document).ready(function () {
             loadBookings(0);
+
+            $('#searchButton').click(function () {
+                const searchValue = $('#searchValue').val();
+                loadBookings(0, searchValue);
+            });
+
+            $('#searchValue').on('keypress', function (e) {
+                if (e.which === 13) {
+                    const searchValue = $(this).val();
+                    loadBookings(0, searchValue);
+                }
+            });
         });
     </script>
 </body>

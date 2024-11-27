@@ -68,9 +68,16 @@ public class BookingAPI {
     @GetMapping("/bookings")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getBookings(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
+            @RequestParam(defaultValue = "15") int size,
+            @RequestParam(required = false) String searchValue) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Booking> bookingPages = bookingService.getAll(pageable);
+        Page<Booking> bookingPages;
+
+        if (searchValue != null && !searchValue.isEmpty()) {
+            bookingPages = bookingService.searchBookings(searchValue, pageable);
+        } else {
+            bookingPages = bookingService.getAll(pageable);
+        }
 
         // Group bookings by round_trip_id and get only the first booking of each group
         List<BookingDTO> bookings = bookingPages.getContent().stream()

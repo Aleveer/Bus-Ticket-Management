@@ -34,4 +34,7 @@ public class Bus_SeatsService {
         bus_SeatsRepository.deleteAll(seats);
     }
 
+    public String getSeatNameById(Integer seatId) {
+        return bus_SeatsRepository.findSeatNameById(seatId);
+    }
 }

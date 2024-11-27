@@ -1,13 +1,12 @@
 package com.myproject.busticket.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
@@ -36,6 +35,7 @@ public class BookingService {
     private BillDetailService billDetailService;
 
     private EmailService emailService;
+    private Bus_SeatsService busSeatsService;
 
     public BookingService(BookingRepository bookingRepository,
             TripService tripService,
@@ -44,7 +44,8 @@ public class BookingService {
             SeatReservationsService seatReservationsService,
             BillService billService,
             BillDetailService billDetailService,
-            EmailService emailService) {
+            EmailService emailService,
+            Bus_SeatsService busSeatsService) {
         this.bookingRepository = bookingRepository;
         this.tripService = tripService;
         this.accountService = accountService;
@@ -53,15 +54,16 @@ public class BookingService {
         this.billService = billService;
         this.billDetailService = billDetailService;
         this.emailService = emailService;
+        this.busSeatsService = busSeatsService;
     }
 
     public Booking getBookingById(int bookingId) {
         return bookingRepository.findById(bookingId).orElse(null);
     }
 
-    public boolean checkLogin() {
+    public String checkLogin() {
         Account account = SecurityUtil.getCurrentAccount();
-        return account != null;
+        return account != null ? account.getEmail() : null;
     }
 
     public void createTicketOneWay(BookingInfoDTO booking, LocalDateTime paymentDate) {
@@ -69,13 +71,25 @@ public class BookingService {
         Customer newCustomer = new Customer();
 
         // xử lý thông tin khách hàng
-        String email = booking.getCustomer().getEmail();
+        String email = null;
         // Có login
-        if (checkLogin()) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Account currentAccount = (Account) authentication.getPrincipal();
-            newBooking.setCustomer(customerService.getCustomerByEmail(currentAccount.getEmail()));
+        if (checkLogin() != null) {
+            // đã từng đặt xe chưa, rồi thì lấy cus đó
+            if (customerService.existsByEmail(checkLogin())) {
+                newBooking.setCustomer(customerService.getCustomerByEmail(checkLogin()));
+                email = checkLogin();
+            } else { // chưa thì thêm cus
+                newCustomer.setEmail(checkLogin());
+                newCustomer.setName(booking.getCustomer().getName());
+                newCustomer.setPhone(booking.getCustomer().getPhone());
+                customerService.create(newCustomer);
+                newBooking.setCustomer(newCustomer);
+
+                email = checkLogin();
+            }
+
         } else { // ko login
+            email = booking.getCustomer().getEmail();
             // email có tồn tại account thì dùng account đó
             if (accountService.getUserByEmail(email).isPresent()) {
                 newBooking.setCustomer(customerService.getCustomerByEmail(email));
@@ -89,7 +103,6 @@ public class BookingService {
                 newBooking.setCustomer(newCustomer);
             }
         }
-
 
         // lưu vé
         int tripId = booking.getTicketInfoDTO().getTripId();
@@ -107,6 +120,12 @@ public class BookingService {
                 .toList();
         int bookingID = newBooking.getBookingId();
         seatReservationsService.updateStatusWithBooking(listSeatId, bookingID);
+
+        // lấy seat name tương ứng với từng seat id
+        List<String> seatName = new ArrayList<>();
+        for (Integer seatId : listSeatId) {
+            seatName.add((busSeatsService.getSeatNameById(seatId)));
+        }
 
         // lưu hóa đơn
         Bill bill = new Bill();
@@ -131,7 +150,7 @@ public class BookingService {
         context.setVariable("departureTime", newBooking.getTrip().getDepartureTime());
         context.setVariable("departureTime", newBooking.getTrip().getDepartureTime());
         context.setVariable("numberOfSeat", numberOfSeat);
-        context.setVariable("listSeat", booking.getTicketInfoDTO().getSeatNumbers());
+        context.setVariable("listSeat", seatName);
         context.setVariable("totalFee", billDetail.getFee());
         try {
             emailService.sendBookingEmail(email, subject, "email-template", context);
@@ -171,6 +190,10 @@ public class BookingService {
 
     public List<Booking> findByCustomer(Customer customer) {
         return bookingRepository.findByCustomer(customer);
+    }
+
+    public Page<Booking> searchBookings(String searchValue, Pageable pageable) {
+        return bookingRepository.searchBookings(searchValue, pageable);
     }
 
 }

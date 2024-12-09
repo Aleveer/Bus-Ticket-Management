@@ -19,7 +19,9 @@
 ## 1. Introduction
 The **Bus Ticket Management Web App** is designed to facilitate easy booking, managing trips, and invoicing for both passengers and administrators. This system offers a seamless experience, ensuring accurate ticket reservations and customer notifications.
 
-![Introduction Image](#)  <!-- Replace # with the actual image path -->
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d6497955-19a5-4f0b-87fa-3ab1f96bb70b" alt="Home Page" width="1000">
+</p>
 
 ---
 
@@ -81,24 +83,24 @@ The core entities include:
 ### Login Page
 ![Login Page](#)  <!-- Replace # with the actual image path -->
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/c1ca2604-4542-4d33-8c24-bf47d40c98f1" alt="Login Page" width="500">
+  <img src="https://github.com/user-attachments/assets/c1ca2604-4542-4d33-8c24-bf47d40c98f1" alt="Login Page" width="1000">
 </p>
 
 
 ### Trip Search and Booking
 ![Trip Search](#)  <!-- Replace # with the actual image path -->
 <p align="center">
-  <img src="(https://github.com/user-attachments/assets/204ed904-7d41-4201-8a23-43befeb8286c" alt="Trip Search" width="500">
+  <img src="(https://github.com/user-attachments/assets/204ed904-7d41-4201-8a23-43befeb8286c" alt="Trip Search" width="1000">
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/5d10a146-fdf1-424b-a25a-7d4974dd6f2b" alt="Booking" width="500">
+  <img src="https://github.com/user-attachments/assets/5d10a146-fdf1-424b-a25a-7d4974dd6f2b" alt="Booking" width="1000">
 </p>
 
 ### Admin Dashboard
 ![Admin Dashboard](#)  <!-- Replace # with the actual image path -->
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/9beb8a91-3bbb-4eb2-9466-e5d599a47f43" alt="Admin Dashboard" width="500">
+  <img src="https://github.com/user-attachments/assets/9beb8a91-3bbb-4eb2-9466-e5d599a47f43" alt="Admin Dashboard" width="1000">
 </p>
 ---
 

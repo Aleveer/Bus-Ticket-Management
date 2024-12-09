@@ -48,22 +48,21 @@ This project follows a client-server architecture, with separate components for 
 
 ## 5. Database Structure
 The core entities include:
-- **Account**: Quản lý thông tin tài khoản người dùng.
-- **Customer, Driver, Controller**: Quản lý thông tin của khách hàng, tài xế, phụ xe có trong hệ thống.
-- **Bill**: Quản lý hóa đơn thanh toán.
-- **Bill_Detail**: Lưu chi tiết từng hóa đơn.
-- **Bus**: Quản lý thông tin xe.
-- **Bus**: Quản lý thông tin các ghế của xe.
-- **Trip**: Quản lý thông tin chuyến đi.
-- **Booking**: Quản lý thông tin các vé.
-- **Route**: Quản lý thông tin các tuyến đường.
-- **Checkpoint**: Quản lý các trạm xe, điểm dừng chân.
-- **RouteCheckpoint**: Quản lý các checkpoint trên từng route.
-- **SeatReservation**: Quản lý trạng thái đặt chỗ của các ghế theo bus.
+- **Account**: Manages user account information.
+- **Customer, Driver, Controller**: Manages information about customers, drivers, and bus controllers in the system.
+- **Bill**: Manages payment invoices.
+- **Bill_Detail**: Stores details of each invoice.
+- **Bus**: Manages information about buses.
+- **Seat**: Manages information about the seats on buses.
+- **Trip**: Manages trip information.
+- **Booking**: Manages ticket information.
+- **Route**: Manages route information.
+- **Checkpoint**: Manages bus stops and rest stations.
+- **RouteCheckpoint**: Manages checkpoints on each route.
+- **SeatReservation**: Manages the reservation status of seats on buses.
   
-![Database Diagram](https://github.com/user-attachments/assets/54b005fc-b49f-42ae-91d8-bc7cf433cec2)
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/54b005fc-b49f-42ae-91d8-bc7cf433cec2" alt="Database Diagram" width="500">
+  <img src="https://github.com/user-attachments/assets/54b005fc-b49f-42ae-91d8-bc7cf433cec2" alt="Database Diagram" width="800">
 </p>
 
 
@@ -72,8 +71,8 @@ The core entities include:
 ## 7. Usage
 1. **Login or Register** as a user or admin.
 2. **Search for available trips** by entering origin, destination, and date.
-3. **Book a trip** and proceed to payment.
-4. **Receive a booking confirmation and invoice**.
+3. **Book a trip** and proceed to payment via online (VNPAY).
+4. **Receive a booking confirmation and invoice via Email**.
 5. **Admin access**: Manage trips, routes, users, and view reports.
 
 ---
@@ -81,27 +80,42 @@ The core entities include:
 ## 8. Screenshots
 ### Login Page
 ![Login Page](#)  <!-- Replace # with the actual image path -->
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c1ca2604-4542-4d33-8c24-bf47d40c98f1" alt="Login Page" width="500">
+</p>
+
 
 ### Trip Search and Booking
 ![Trip Search](#)  <!-- Replace # with the actual image path -->
+<p align="center">
+  <img src="(https://github.com/user-attachments/assets/204ed904-7d41-4201-8a23-43befeb8286c" alt="Trip Search" width="500">
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/5d10a146-fdf1-424b-a25a-7d4974dd6f2b" alt="Booking" width="500">
+</p>
 
 ### Admin Dashboard
 ![Admin Dashboard](#)  <!-- Replace # with the actual image path -->
-
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9beb8a91-3bbb-4eb2-9466-e5d599a47f43" alt="Admin Dashboard" width="500">
+</p>
 ---
 
 ## 9. Future Improvements
-- **Integration with payment gateways** for online payments.
+- **Add more payment method online (Momo,...)**
 - **Support for multiple languages**.
+- **View history booking**
 - **Mobile app version** for Android and iOS.
 - **Analytics dashboard** for sales reports and insights.
 
 ---
 
 ## 10. Contributors
-- **Your Name** – Developer
-- **Collaborator Name** – Designer
-- **Mentor Name** – Project Advisor
+- **Do Nguyen Hoang Tuan** – Manages the ticket booking process
+- **Phan Duy** - Manages the ticket booking process
+- **Nguyen Anh Danh** - Manages admin feature
+- **Van Phu Hieu** - Manages admin feature
 
 ---
 

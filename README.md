@@ -1,7 +1,6 @@
 
 # Bus Ticket Management Web Application 🚌
 
-![Cover Image](#)  <!-- Replace # with the actual image path -->
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -9,12 +8,11 @@
 3. [Technologies Used](#technologies-used)
 4. [System Architecture](#system-architecture)
 5. [Database Structure](#database-structure)
-6. [Setup and Installation](#setup-and-installation)
-7. [Usage](#usage)
-8. [Screenshots](#screenshots)
-9. [Future Improvements](#future-improvements)
-10. [Contributors](#contributors)
-11. [License](#license)
+6. [Usage](#usage)
+7. [Screenshots](#screenshots)
+8. [Future Improvements](#future-improvements)
+9. [Contributors](#contributors)
+
 
 ---
 
@@ -28,40 +26,46 @@ The **Bus Ticket Management Web App** is designed to facilitate easy booking, ma
 ## 2. Features
 - User registration and login.
 - Search and filter trips by route and date.
-- Book tickets for single and round trips.
-- Real-time notification system.
-- Admin dashboard for managing trips, routes, and customers.
+- Book tickets for single and round trips..
+- Admin dashboard for managing trips, routes, customers and bill.
 - Generate and send invoices upon successful booking.
 - View booking history and manage cancellations.
 
 ---
 
 ## 3. Technologies Used
-- **Frontend**: HTML, CSS, JavaScript, React
+- **Frontend**: HTML, CSS, JavaScript, Bootstrap, Thymleaf
 - **Backend**: Spring Boot
 - **Database**: MySQL
-- **Others**: GitHub Actions (CI/CD), Postman (API Testing)
+- **Others**: Postman (API Testing)
 
 ---
 
 ## 4. System Architecture
-![Architecture Diagram](#)  <!-- Replace # with the actual image path -->
 This project follows a client-server architecture, with separate components for the frontend, backend, and database for improved scalability and maintainability.
 
 ---
 
 ## 5. Database Structure
 The core entities include:
-- **Trips**: Stores all scheduled trips.
-- **Users**: Stores customer and admin information.
-- **Invoices**: Tracks payment and booking information.
-- **Notifications**: Manages system alerts for users.
-
-![Database ER Diagram](#)  <!-- Replace # with the actual image path -->
+- **Account**: Quản lý thông tin tài khoản người dùng.
+- **Customer, Driver, Controller**: Quản lý thông tin của khách hàng, tài xế, phụ xe có trong hệ thống.
+- **Bill**: Quản lý hóa đơn thanh toán.
+- **Bill_Detail**: Lưu chi tiết từng hóa đơn.
+- **Bus**: Quản lý thông tin xe.
+- **Bus**: Quản lý thông tin các ghế của xe.
+- **Trip**: Quản lý thông tin chuyến đi.
+- **Booking**: Quản lý thông tin các vé.
+- **Route**: Quản lý thông tin các tuyến đường.
+- **Checkpoint**: Quản lý các trạm xe, điểm dừng chân.
+- **RouteCheckpoint**: Quản lý các checkpoint trên từng route.
+- **SeatReservation**: Quản lý trạng thái đặt chỗ của các ghế theo bus.
+![Database ER Diagram](#![Database](https://github.com/user-attachments/assets/54b005fc-b49f-42ae-91d8-bc7cf433cec2)
+)  <!-- Replace # with the actual image path -->
 
 ---
 
-## 6. Setup and Installation (Updatinggg)
+## 6. Setup and Installation (Updating)
 Follow these steps to set up the project on your local machine:
 
 1. **Clone the repository**

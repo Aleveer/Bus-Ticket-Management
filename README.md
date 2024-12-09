@@ -62,6 +62,10 @@ The core entities include:
 - **SeatReservation**: Quản lý trạng thái đặt chỗ của các ghế theo bus.
   
 ![Database Diagram](https://github.com/user-attachments/assets/54b005fc-b49f-42ae-91d8-bc7cf433cec2)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/54b005fc-b49f-42ae-91d8-bc7cf433cec2" alt="Database Diagram" width="500">
+</p>
+
 
 ---
 

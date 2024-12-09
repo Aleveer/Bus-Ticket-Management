@@ -60,33 +60,11 @@ The core entities include:
 - **Checkpoint**: Quản lý các trạm xe, điểm dừng chân.
 - **RouteCheckpoint**: Quản lý các checkpoint trên từng route.
 - **SeatReservation**: Quản lý trạng thái đặt chỗ của các ghế theo bus.
-![Database ER Diagram](https://github.com/user-attachments/assets/54b005fc-b49f-42ae-91d8-bc7cf433cec2)
-
-
----
-
-## 6. Setup and Installation (Updating)
-Follow these steps to set up the project on your local machine:
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-repo/bus-ticket-management.git
-   cd bus-ticket-management
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install  # or mvn install (if using Spring Boot)
-   ```
-
-3. **Configure the environment variables**  
-   Create a `.env` file and add the necessary configurations (e.g., database URL, API keys).
-
-4. **Run the application**
-   ```bash
-   npm start  # For frontend  
-   npm run backend  # For backend  
-   ```
+  
+![Database Diagram](https://github.com/user-attachments/assets/54b005fc-b49f-42ae-91d8-bc7cf433cec2)
+<p align="center">
+  <img src="path/to/image.jpg](https://github.com/user-attachments/assets/54b005fc-b49f-42ae-91d8-bc7cf433cec2" alt="Database Diagram" width="500">
+</p>
 
 ---
 

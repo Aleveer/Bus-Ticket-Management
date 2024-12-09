@@ -81,14 +81,12 @@ The core entities include:
 
 ## 8. Screenshots
 ### Login Page
-![Login Page](#)  <!-- Replace # with the actual image path -->
 <p align="center">
   <img src="https://github.com/user-attachments/assets/c1ca2604-4542-4d33-8c24-bf47d40c98f1" alt="Login Page" width="1000">
 </p>
 
 
 ### Trip Search and Booking
-![Trip Search](#)  <!-- Replace # with the actual image path -->
 <p align="center">
   <img src="(https://github.com/user-attachments/assets/204ed904-7d41-4201-8a23-43befeb8286c" alt="Trip Search" width="1000">
 </p>
@@ -98,7 +96,6 @@ The core entities include:
 </p>
 
 ### Admin Dashboard
-![Admin Dashboard](#)  <!-- Replace # with the actual image path -->
 <p align="center">
   <img src="https://github.com/user-attachments/assets/9beb8a91-3bbb-4eb2-9466-e5d599a47f43" alt="Admin Dashboard" width="1000">
 </p>

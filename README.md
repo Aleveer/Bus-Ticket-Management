@@ -60,8 +60,8 @@ The core entities include:
 - **Checkpoint**: Quản lý các trạm xe, điểm dừng chân.
 - **RouteCheckpoint**: Quản lý các checkpoint trên từng route.
 - **SeatReservation**: Quản lý trạng thái đặt chỗ của các ghế theo bus.
-![Database ER Diagram](#![Database](https://github.com/user-attachments/assets/54b005fc-b49f-42ae-91d8-bc7cf433cec2)
-)  <!-- Replace # with the actual image path -->
+![Database ER Diagram](https://github.com/user-attachments/assets/54b005fc-b49f-42ae-91d8-bc7cf433cec2)
+
 
 ---
 
